@@ -52,22 +52,29 @@ function nextSteps(n) { return L.nextSteps(PATH, S, EXAMS, n); }
 function progress(stage) { return L.stageProgress(PATH, S, EXAMS, stage); }
 function touchDay() { var t = today(); if (S.days.indexOf(t) < 0) S.days.push(t); }
 
+var NOTE = '';
+/* Awards the one-time stage bonus for every stage that is now fully done. Call after any change of progress. */
+function awardAll() {
+  var got = [];
+  STAGES.forEach(function (g) {
+    var p = progress(g.id);
+    if (p.total && p.done === p.total && !S.bonus[g.id]) { S.bonus[g.id] = true; S.xp = Math.round((S.xp + BONUS) * 10) / 10; got.push(g); }
+  });
+  if (got.length) NOTE = '&#9733; &iexcl;Etapa completada! ' + got.map(function (g) { return esc(g.title); }).join(', ') + ' (+' + BONUS * got.length + ' XP)';
+  return got;
+}
+
 function rate(key, r, hints) {
-  var a = byKey[key], t = today(), st = L.stepOfKey(PATH, key), before = st ? progress(st.stage) : null;
+  var a = byKey[key], t = today();
   var xp = L.xpFor(pts(a), hints, r);
   S.ex[key] = L.applyRating(S.ex[key], r, hints, xp, t);
-  var bonus = null;
-  if (st) {
-    var after = progress(st.stage);
-    if (after.done === after.total && !S.bonus[st.stage] && before.done < before.total) {
-      S.bonus[st.stage] = true; xp += BONUS; bonus = stageById[st.stage];
-    }
-  }
   S.xp = Math.round((S.xp + xp) * 10) / 10; touchDay();
   S.log.push({ t: t, k: key, label: a.exam.title + ' · ' + a.e.title, r: r, xp: xp });
   if (S.log.length > 300) S.log.shift();
+  var got = awardAll();
   save();
-  return { xp: Math.round(xp * 10) / 10, bonus: bonus };
+  NOTE = '';
+  return { xp: xp, bonus: got[0] || null };
 }
 
 /* ---------- views ---------- */
@@ -199,7 +206,7 @@ function vDetail(key) {
   var maxH = hasSol ? 3 : 1, canRate = hasSol ? V.hints >= 3 : V.self;
   if (V.done != null) {
     var nx = st ? L.nextAfter(PATH, S, EXAMS, st.id) : null;
-    h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' &#9733; <b>&iexcl;Etapa completada!</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP incluidos)' : '') + '</div>';
+    h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' &#9733; <b>&iexcl;Etapa completada!</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
     h += '<div class="card row">' + (nx ? '<a class="btn pri" href="' + stepHref(nx) + '">Siguiente en la ruta &rarr;</a><span class="muted">' + stepLabel(nx) + '</span>' : '<span>&#127881; Ruta completada.</span>') + ' <a class="btn" href="#/ejercicios">Ver ejercicios</a></div>';
   } else if (canRate) {
     h += '<div class="card row">&iquest;C&oacute;mo te fue? ' + RN.map(function (n, i) { return '<button class="btn ' + ['bad', 'warn', 'ok'][i] + '" data-act="rate" data-r="' + i + '">' + n + '</button>'; }).join('') + '</div>';
@@ -263,14 +270,15 @@ function vTheory(lid, idx, stepId) {
   if (!LECT.length) return h + '<div class="warnbox">No se encontr&oacute; <code>data-lectures.js</code>.</div>';
   var cur = LECT.find(function (l) { return l.id === lid; }) || LECT[0], st = stepId && stepById[stepId];
   h += '<div class="theory"><div class="side">' + LECT.map(function (l) { return '<a href="#/teoria/' + enc(l.id) + '"' + (l === cur ? ' class="on"' : '') + '>' + esc(l.title) + '</a>'; }).join('') + '</div><div>';
-  if (st) {
-    var done = L.stepDone(st, S, EXAMS);
-    h += '<div class="card next row"><span>&#128214; Paso de la ruta: lee <b>' + esc(st.label) + '</b> (etapa ' + stageById[st.stage].n + ').</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
-  }
   h += '<h2>' + esc(cur.title) + '</h2>';
   cur.sections.forEach(function (s, i) {
     var lv = Math.min(6, 3 + Math.max(0, (s.level || 1) - 1));
-    h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && s.title === cur.title ? '' : '<h' + lv + '>' + esc(s.title) + '</h' + lv + '>') + mdRender(s.md) + '</section>';
+    var card = '';
+    if (st && st.lecture === cur.id && String(st.idx) === String(idx) && i === +idx) {
+      var done = L.stepDone(st, S, EXAMS);
+      card = '<div class="card next row"><span>&#128214; Paso de la ruta (etapa ' + stageById[st.stage].n + '): has le&iacute;do esta secci&oacute;n?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
+    }
+    h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && s.title === cur.title ? '' : '<h' + lv + '>' + esc(s.title) + '</h' + lv + '>') + mdRender(s.md) + card + '</section>';
   });
   return h + '</div></div>';
 }
@@ -307,6 +315,7 @@ function route() {
   else if (tab === 'progreso') h = vProgress();
   else if (tab === 'ajustes') h = vSettings();
   else { tab = 'hoy'; h = vHoy(); }
+  if (NOTE && tab !== 'ejercicios') { h = '<div class="card next">' + NOTE + '</div>' + h; NOTE = ''; }
   $('#app').innerHTML = h; stats();
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) { a.classList.toggle('on', a.dataset.tab === tab); });
   if (tab === 'teoria' && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
@@ -318,6 +327,8 @@ function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
 
 /* ---------- events ---------- */
 document.addEventListener('click', function (ev) {
+  var lk = ev.target.closest('a[href^="#/"]');
+  if (lk && lk.getAttribute && lk.getAttribute('href') === location.hash) setTimeout(route, 0);
   var b = ev.target.closest('[data-act]'); if (!b || b.tagName === 'INPUT') return;
   var act = b.dataset.act;
   if (act === 'hint') { V.hints++; rerender(); }
@@ -325,12 +336,12 @@ document.addEventListener('click', function (ev) {
   else if (act === 'timer') { V.started = Date.now(); rerender(); }
   else if (act === 'rate') { V.done = rate(V.key, +b.dataset.r, Math.min(3, V.hints)); rerender(); }
   else if (act === 'skip') {
-    var sid = b.dataset.step; S.skip[sid] = true; save();
+    var sid = b.dataset.step; S.skip[sid] = true; awardAll(); save();
     var nx = L.nextAfter(PATH, S, EXAMS, sid);
     location.hash = nx ? stepHref(nx) : '#/ruta'; if (!nx) route();
   }
   else if (act === 'theorydone') {
-    var tid = b.dataset.step; S.theory[tid] = true; touchDay(); save();
+    var tid = b.dataset.step; S.theory[tid] = true; touchDay(); awardAll(); save();
     var nt = L.nextAfter(PATH, S, EXAMS, tid);
     location.hash = nt ? stepHref(nt) : '#/ruta'; route();
   }
@@ -348,7 +359,7 @@ document.addEventListener('click', function (ev) {
       var t = today(); touchDay();
       S.exams[X.ex.id] = { grade: Math.round(tot / mx * 100) / 10, t: t };
       S.log.push({ t: t, k: 'exam/' + X.ex.id, label: 'Examen ' + X.ex.title + ' (' + (tot / mx * 10).toFixed(1) + '/10)', r: tot / mx > 0.7 ? 2 : tot / mx > 0.4 ? 1 : 0, xp: X.xp });
-      save();
+      awardAll(); save();
     }
     route();
   }

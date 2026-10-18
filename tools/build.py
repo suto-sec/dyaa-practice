@@ -311,6 +311,19 @@ def main():
     ovp = TOOLS / "overrides.json"
     overrides = json.loads(ovp.read_text(encoding="utf-8")) if ovp.exists() else {}
     exams = [parse_exam(p, skills, overrides, roadmap) for p in sorted(EXA.glob("*.md"), key=lambda p: p.name)]
+    # the same statement can appear in two exams; reuse the solution of the twin that has one
+    seen = {}
+    for e in exams:
+        for x in e["exercises"]:
+            k = re.sub(r"[^a-z0-9]", "", x["statement"].lower())[:300]
+            seen.setdefault(k, []).append(x)
+    for twins in seen.values():
+        have = [t for t in twins if t["solution"]]
+        if len(twins) > 1 and have:
+            for t in twins:
+                if not t["solution"]:
+                    t["solution"] = have[0]["solution"]
+                    t["solutionFrom"] = have[0]["id"]
     write_js(APP / "data-exams.js", "EXAMS", exams)
     order = {}
     for g in roadmap["stages"]:

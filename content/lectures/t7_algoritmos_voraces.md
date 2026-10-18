@@ -172,7 +172,7 @@ $$\max_x\sum_{i=1}^{n}x_iv_i\quad\text{sujeto a}\quad x_i\in\{0,1\},\ i=1,\dots,
 ### Algoritmo de Kruskal
 - Seleccionar la arista más corta en cada etapa y construir el árbol.
 - Se basa en la propiedad de los árboles de recubrimiento de coste mínimo: partiendo del árbol vacío, se selecciona en cada paso la arista de menor peso que no provoque ciclo sin requerir ninguna otra condición sobre sus extremos. Es una estrategia óptima.
-- Ejemplo paso a paso en el grafo con vértices a,b,c,d,e,f y aristas: a-b:3, b-c:1, b-f:4, a-f:5, c-f:4, c-d:6, f-d:5, f-e:2, a-e:6, e-d:8. Orden de selección: b-c (1), f-e (2), a-b (3), b-f (4), f-d (5); las aristas a-f (5), c-f (4) y c-d (6) se descartan por formar ciclo. Coste total del árbol: 15.
+- Ejemplo paso a paso en el grafo con vértices a,b,c,d,e,f y aristas: a-b:3, b-c:1, b-f:4, a-f:5, c-f:4, c-d:6, f-d:5, f-e:2, a-e:6, e-d:8. Orden de selección: b-c (1), f-e (2), a-b (3), b-f (4), f-d (5); con 5 aristas (|V|-1) el árbol queda completo. Coste total del árbol: 15.
 ```
 Kruskal(G)
     // Entrada: G = <V,E>, es un grafo no dirigido, conexo,

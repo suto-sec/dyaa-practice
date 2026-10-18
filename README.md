@@ -14,7 +14,7 @@ xdg-open app/index.html     # works from file://
 ## How it works
 
 - **Ruta** (roadmap): 9 stages in curriculum order. Analysis: sumatorios y cotas, notación asintótica, coste iterativo, recurrencias por expansión, método general y teorema maestro. Design: recursión básica, divide y vencerás, backtracking, voraces.
-  Each stage = theory sections to read → warm-up exercises from the extra exercise sets → past-exam exercises, from easier to harder (solved ones first). After the last analysis and the last design stage there is a full mock exam checkpoint.
+  Each stage = theory sections to read → warm-up exercises from the extra exercise sets → past-exam exercises, from easier to harder. Exercises with an official solution are tagged, since self-grading needs one. After the last analysis and the last design stage there is a full mock exam checkpoint.
 - **Siguiente paso**: after rating an exercise the app offers the next undone step. A *Fallé* does not block you: it enters spaced repetition and comes back in **Hoy**. Any step can be skipped.
 - **Hoy**: due reviews plus the next steps of the roadmap.
 - **Rating** after each exercise: Fallé / Dudoso / Dominado. XP depends on points, hints used and rating; finishing a stage gives a bonus.

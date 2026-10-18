@@ -66,7 +66,7 @@ L.stepDone = function (step, S, exams) {
   if (step.type === 'theory') return !!(S.theory && S.theory[step.id]);
   if (step.type === 'ex') return !!(S.ex[step.key] && S.ex[step.key].hist.length);
   var done = S.exams || {};
-  return (exams || []).some(function (e) { return e.kind === step.world && done[e.id]; });
+  return (exams || []).some(function (e) { return (e.kind === step.world || e.kind === 'mixto') && done[e.id]; });
 };
 L.nextSteps = function (path, S, exams, n) {
   var out = [];

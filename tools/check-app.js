@@ -66,6 +66,10 @@ ok(m, 'first path step is a theory link');
 if (m) {
   go(m[1].replace(/&amp;/g, '&'));
   ok(/Le&iacute;do, continuar/.test(app()), 'theory step shows the continue button');
+  const idx = m[1].split('/')[3];
+  ok(app().indexOf('id="sec-' + idx + '"') >= 0 && app().indexOf('id="sec-' + idx + '"') < app().indexOf('data-act="theorydone"') &&
+     app().indexOf('data-act="theorydone"') < (app().indexOf('id="sec-' + (+idx + 1) + '"') + 1e9 * (app().indexOf('id="sec-' + (+idx + 1) + '"') < 0)),
+     'continue button sits at the end of the target section, not above the lecture');
   const sid = decodeURIComponent(m[1].split('/')[4]);
   click({ act: 'theorydone', step: sid });
   go('#/ruta');
@@ -92,6 +96,12 @@ if (hasExams) {
   go('#/ejercicios/' + encodeURIComponent(second));
   click({ act: 'skip', step: 'e:' + second });
   ok(JSON.parse(store['dyaa-practice-v1']).skip['e:' + second] === true, 'skip saved');
+  // finishing a stage by skipping its last steps still awards the one-time bonus
+  const g0 = win.STAGES[0], xp0 = JSON.parse(store['dyaa-practice-v1']).xp;
+  g0.theory.forEach((t, i) => click({ act: 'theorydone', step: 't:' + g0.id + ':' + i }));
+  stageEx[g0.id].forEach(k => click({ act: 'skip', step: 'e:' + k }));
+  const S1 = JSON.parse(store['dyaa-practice-v1']);
+  ok(S1.bonus[g0.id] === true && S1.xp === Math.round((xp0 + 15) * 10) / 10, 'stage bonus awarded once when the stage completes');
   // any exercise in any stage can be opened directly (nothing locked)
   const late = stageEx.voraz[stageEx.voraz.length - 1];
   go('#/ejercicios/' + encodeURIComponent(late));
