@@ -258,7 +258,7 @@ function vTheory(lid) {
   h += '<h2>' + esc(cur.title) + '</h2>';
   cur.sections.forEach(function (s, i) {
     var lv = Math.min(6, 3 + Math.max(0, (s.level || 1) - 1));
-    h += '<section class="sec" id="sec-' + i + '"><h' + lv + '>' + esc(s.title) + '</h' + lv + '>' + mdRender(s.md) + '</section>';
+    h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && s.title === cur.title ? '' : '<h' + lv + '>' + esc(s.title) + '</h' + lv + '>') + mdRender(s.md) + '</section>';
   });
   return h + '</div></div>';
 }
