@@ -36,6 +36,25 @@ EXAMS.forEach(function (ex) { (ex.exercises || []).forEach(function (e) { ALL.pu
 var byKey = {}; ALL.forEach(function (a) { byKey[a.key] = a; });
 var PATH = L.annotateMinutes(L.buildPath(STAGES, STAGE_EX, LECT), LECT, EXAMS);
 var stepById = {}; PATH.forEach(function (s, i) { s.i = i; stepById[s.id] = s; });
+/* Study preferences, stored apart from the progress: which part of the course the route covers, and how it is organised. */
+var PK = { org: 'dyaa-practice-org', scope: 'dyaa-practice-path' };
+var SCOPES = window.SCOPES || [{ id: 'todo', title: 'Temario completo', blurb: '', worlds: ['analisis', 'diseno'] }];
+var ORGS = [['etapas', 'Etapas', 'Bloques por técnica, de menos a más difícil.'], ['temas', 'Temas', 'Los temas del curso, como en las diapositivas.']];
+function prefGet(k, ok, d) { try { var v = localStorage.getItem(PK[k]); return v != null && ok(v) ? v : d; } catch (e) { return d; } }
+function prefSet(k, v) { try { localStorage.setItem(PK[k], v); } catch (e) { } }
+var ORG, SCOPE, ACTIVE, GROUPS_ALL, GROUPS, groupOfStage = {}, inScope = {};
+function refreshPrefs() {
+  ORG = prefGet('org', function (v) { return v === 'etapas' || v === 'temas'; }, 'etapas');
+  var sc = prefGet('scope', function (v) { return SCOPES.some(function (x) { return x.id === v; }); }, SCOPES[0].id);
+  SCOPE = SCOPES.find(function (x) { return x.id === sc; });
+  ACTIVE = L.scopeSteps(PATH, STAGES, SCOPE);                       // the steps of the chosen route
+  GROUPS_ALL = L.groups(STAGES, LECT, ORG);                         // every etapa/tema, ...
+  GROUPS = GROUPS_ALL.filter(function (g) { return SCOPE.worlds.indexOf(g.world) >= 0; });   // ...and those of the route
+  groupOfStage = {}; GROUPS_ALL.forEach(function (g) { g.stages.forEach(function (id) { groupOfStage[id] = g; }); });
+  inScope = {}; ACTIVE.forEach(function (st) { inScope[st.id] = true; });
+}
+function keepScope(st) { return !!inScope[st.id]; }
+refreshPrefs();
 var LECMIN = {}; LECT.forEach(function (l) { LECMIN[l.id] = L.readMinutes(l.sections, 0, l.sections.length - 1); });
 var XKIND = { analisis: 'análisis', diseno: 'diseño', adic: 'adicional', ejs: 'adicional' };
 
@@ -62,8 +81,10 @@ function streakHtml() { return '<span class="streak ' + streakState() + '" title
 function mins(m) { return '~' + L.fmtMin(m); }
 function minTag(m) { return '<span class="tag min" title="Estimaci&oacute;n orientativa para estudiar y comprobar, no para el examen">' + mins(m) + '</span>'; }
 function minsOf(steps) { return steps.reduce(function (t, x) { return t + (x.min || 0); }, 0); }
-function nextSteps(n) { return L.nextSteps(PATH, S, EXAMS, n); }
+function nextSteps(n) { return L.nextSteps(ACTIVE, S, EXAMS, n); }
 function progress(stage) { return L.stageProgress(PATH, S, EXAMS, stage); }
+function gprog(g) { return L.groupProgress(PATH, S, EXAMS, g); }
+function doneWord() { return ORG === 'temas' ? '&iexcl;Bloque completado!' : '&iexcl;Etapa completada!'; }
 function touchDay() { var t = today(); if (S.days.indexOf(t) < 0) S.days.push(t); }
 
 var NOTE = '';
@@ -74,7 +95,7 @@ function awardAll() {
     var p = progress(g.id);
     if (p.total && p.done === p.total && !S.bonus[g.id]) { S.bonus[g.id] = true; S.xp = Math.round((S.xp + BONUS) * 10) / 10; got.push(g); }
   });
-  if (got.length) NOTE = flame('sm') + ' &iexcl;Etapa completada! ' + got.map(function (g) { return esc(g.title); }).join(', ') + ' (+' + BONUS * got.length + ' XP)';
+  if (got.length) NOTE = flame('sm') + ' ' + doneWord() + ' ' + got.map(function (g) { return esc(g.title); }).join(', ') + ' (+' + BONUS * got.length + ' XP)';
   return got;
 }
 
@@ -134,13 +155,13 @@ function stepRow(st, cur) {
   return '<a class="item step' + (done ? ' done' : '') + (cur ? ' cur' : '') + '" href="' + stepHref(st) + '"><span>' + mark + ' ' + stepLabel(st) + '</span><span>' + tags + '</span></a>';
 }
 function exRow(a) {
-  return '<a class="item" href="#/ejercicios/' + enc(a.key) + '"><span><b>' + exTitle(a) + '</b> <span class="tag">' + esc(XKIND[a.e.kind] || a.e.kind) + '</span> <span class="tag">' + esc((stageById[a.e.stage] || {}).title || '') + '</span></span><span>' + status(a.key) + dueTag(a.key) + minTag((stepById['e:' + a.key] || {}).min || 15) + '</span></a>';
+  return '<a class="item" href="#/ejercicios/' + enc(a.key) + '"><span><b>' + exTitle(a) + '</b> <span class="tag">' + esc(XKIND[a.e.kind] || a.e.kind) + '</span> <span class="tag">' + esc((groupOfStage[a.e.stage] || {}).short || '') + '</span></span><span>' + status(a.key) + dueTag(a.key) + minTag((stepById['e:' + a.key] || {}).min || 15) + '</span></a>';
 }
 function nextCard(extra) {
   var n = nextSteps(1)[0];
-  if (!n) return '<div class="card">&#127881; Has completado toda la ruta. Sigue repasando lo pendiente en <a href="#/hoy">Hoy</a>.</div>';
-  var g = stageById[n.stage];
-  return '<div class="card next"><div class="muted">Siguiente en la ruta &middot; Etapa ' + g.n + ': ' + esc(g.title) + '</div><div class="big">' + stepLabel(n) + '</div><div class="muted">' + mins(n.min) + ' estimados</div><div class="row"><a class="btn pri" href="' + stepHref(n) + '">Continuar &rarr;</a>' + (extra || '') + '</div></div>';
+  if (!n) return '<div class="card">&#127881; Has completado toda la ruta (' + esc(SCOPE.title) + '). Sigue repasando lo pendiente en <a href="#/hoy">Hoy</a>.</div>';
+  var g = groupOfStage[n.stage];
+  return '<div class="card next"><div class="muted">Siguiente en la ruta &middot; ' + esc(g.label) + '</div><div class="big">' + stepLabel(n) + '</div><div class="muted">' + mins(n.min) + ' estimados</div><div class="row"><a class="btn pri" href="' + stepHref(n) + '">Continuar &rarr;</a>' + (extra || '') + '</div></div>';
 }
 
 function vHoy() {
@@ -156,7 +177,7 @@ function vHoy() {
     h += '<h3>Ruta</h3>' + nextCard();
     var more = nextSteps(4).slice(1);
     more.forEach(function (st) { h += stepRow(st); });
-    var four = nextSteps(4), all = L.pathMinutes(PATH, S, EXAMS);
+    var four = nextSteps(4), all = L.pathMinutes(ACTIVE, S, EXAMS);
     if (four.length) h += '<p class="muted">Estos ' + four.length + (four.length === 1 ? ' paso: ' : ' pasos: ') + mins(minsOf(four)) + ' &middot; quedan ' + mins(all.left) + ' en toda la ruta.</p>';
     h += '<p><a href="#/ruta">Ver toda la ruta &rarr;</a></p>';
   }
@@ -164,18 +185,21 @@ function vHoy() {
 }
 
 function vRoad() {
-  var h = '<h2>Ruta de estudio</h2>' + missingBanner() + '<p class="muted">Un orden recomendado, sin bloqueos: puedes entrar en cualquier paso. Cada etapa empieza con la teor&iacute;a, sigue con ejercicios de f&aacute;ciles a dif&iacute;ciles y los de enunciado con soluci&oacute;n est&aacute;n marcados.</p>';
-  var n = nextSteps(1)[0], tot = L.pathMinutes(PATH, S, EXAMS);
-  h += '<p class="muted">Ruta completa: ' + mins(tot.total) + ' estimados &middot; quedan ' + mins(tot.left) + '. Son tiempos orientativos para estudiar y comprobar cada paso.</p>';
+  var unit = ORG === 'temas' ? 'tema' : 'etapa';
+  var h = '<h2>Ruta de estudio</h2>' + missingBanner() + '<p class="muted">Un orden recomendado, sin bloqueos: puedes entrar en cualquier paso. Cada ' + unit + ' empieza con la teor&iacute;a, sigue con ejercicios de f&aacute;ciles a dif&iacute;ciles y los de enunciado con soluci&oacute;n est&aacute;n marcados.</p>';
+  var n = nextSteps(1)[0], tot = L.pathMinutes(ACTIVE, S, EXAMS);
+  h += '<div class="card row pathbar"><span><b>' + esc(SCOPE.title) + '</b> &middot; por ' + (ORG === 'temas' ? 'temas' : 'etapas') + '</span><button type="button" class="btn" data-act="settings">Cambiar ruta u organizaci&oacute;n</button></div>';
+  h += '<p class="muted">' + (SCOPE.id === SCOPES[0].id ? 'Ruta completa' : 'Esta ruta') + ': ' + mins(tot.total) + ' estimados &middot; quedan ' + mins(tot.left) + '. Son tiempos orientativos para estudiar y comprobar cada paso.</p>';
   h += nextCard();
   var world = null;
-  STAGES.forEach(function (g) {
+  GROUPS.forEach(function (g) {
     if (g.world !== world) { world = g.world; h += '<h3>' + esc(WORLDS[world] || world) + '</h3>'; }
-    var p = progress(g.id), pct = p.total ? Math.round(p.done / p.total * 100) : 0, open = n && n.stage === g.id;
-    h += '<details class="stage"' + (open ? ' open' : '') + '><summary><b>Etapa ' + g.n + '. ' + esc(g.title) + '</b> <span class="bar sm"><i style="width:' + pct + '%"></i></span> <span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; quedan ' + mins(p.left) : '') + '</span>' + (S.bonus[g.id] ? ' ' + flame('sm') : '') + '</summary><p class="muted">' + esc(g.blurb) + ' Tiempo estimado de la etapa: ' + mins(p.min) + '.</p>';
+    var p = gprog(g), pct = p.total ? Math.round(p.done / p.total * 100) : 0, open = n && g.stages.indexOf(n.stage) >= 0;
+    h += '<details class="stage"' + (open ? ' open' : '') + '><summary><b>' + esc(g.label) + '</b> <span class="bar sm"><i style="width:' + pct + '%"></i></span> <span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; quedan ' + mins(p.left) : '') + '</span>' + (g.stages.every(function (id) { return S.bonus[id]; }) ? ' ' + flame('sm') : '') + '</summary><p class="muted">' + esc(g.blurb) + ' Tiempo estimado ' + (ORG === 'temas' ? 'del tema' : 'de la etapa') + ': ' + mins(p.min) + '.</p>';
     var groups = [], cur = null;
-    PATH.filter(function (s) { return s.stage === g.id; }).forEach(function (st) {
-      var grp = st.type === 'theory' ? 'Teor&iacute;a' : st.type === 'exam' ? 'Checkpoint' : byKey[st.key].e.src === 'adic' ? 'Calentamiento: ejercicios adicionales' : 'Nivel examen: ejercicios de ex&aacute;menes anteriores';
+    L.groupSteps(PATH, g).forEach(function (st) {
+      var base = st.type === 'theory' ? 'Teor&iacute;a' : st.type === 'exam' ? 'Checkpoint' : byKey[st.key].e.src === 'adic' ? 'Calentamiento: ejercicios adicionales' : 'Nivel examen: ejercicios de ex&aacute;menes anteriores';
+      var grp = (g.stages.length > 1 ? esc(stageById[st.stage].title) + ' &middot; ' : '') + base;   // a tema made of several etapas says which one
       if (!cur || cur.name !== grp) { cur = { name: grp, steps: [] }; groups.push(cur); }
       cur.steps.push(st);
     });
@@ -185,18 +209,21 @@ function vRoad() {
     });
     h += '</details>';
   });
+  var rest = GROUPS_ALL.filter(function (g) { return GROUPS.indexOf(g) < 0; });
+  if (rest.length) h += '<p class="muted">Fuera de esta ruta: ' + rest.map(function (g) { return esc(g.label); }).join('; ') + '. Siguen disponibles en Ejercicios, Examen y Teor&iacute;a.</p>';
   return h;
 }
 
 function vList() {
   var h = '<h2>Ejercicios</h2>' + missingBanner();
-  function sel(name, opts) { return '<select data-f="' + name + '"><option value="">' + name + ': todos</option>' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (F[name] === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select>'; }
-  h += '<div class="row card">' + sel('stage', STAGES.map(function (g) { return [g.id, g.n + '. ' + g.title]; })) + sel('exam', EXAMS.map(function (e) { return [e.id, e.title]; })) + sel('skill', SK.map(function (s) { return [s.id, s.label]; })) +
+  var FL = { stage: ORG === 'temas' ? 'tema' : 'etapa', exam: 'examen', skill: 'habilidad', kind: 'tipo', status: 'estado' };
+  function sel(name, opts) { return '<select data-f="' + name + '"><option value="">' + FL[name] + ': todos</option>' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (F[name] === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select>'; }
+  h += '<div class="row card">' + sel('stage', GROUPS_ALL.map(function (g) { return [g.id, g.label]; })) + sel('exam', EXAMS.map(function (e) { return [e.id, e.title]; })) + sel('skill', SK.map(function (s) { return [s.id, s.label]; })) +
     sel('kind', [['analisis', 'análisis'], ['diseno', 'diseño'], ['ejs', 'adicionales']]) +
     sel('status', [['new', 'nuevo'], ['due', 'repasar hoy'], ['0', 'Fallé'], ['1', 'Dudoso'], ['2', 'Dominado']]) + '</div>';
   var t = today();
   var list = ALL.filter(function (a) {
-    if (F.stage && a.e.stage !== F.stage) return false;
+    if (F.stage && (groupOfStage[a.e.stage] || {}).id !== F.stage) return false;
     if (F.exam && a.exam.id !== F.exam) return false;
     if (F.skill && (a.e.skills || []).indexOf(F.skill) < 0) return false;
     if (F.kind && a.e.kind !== F.kind) return false;
@@ -216,9 +243,12 @@ function vDetail(key) {
   var a = byKey[key];
   if (!a) return '<p>Ejercicio no encontrado. <a href="#/ejercicios">Volver</a></p>';
   if (V.key !== key) V = { key: key, hints: 0, started: null, self: false, done: null };
-  var e = a.e, sol = e.solution, hasSol = sol != null && String(sol).trim() !== '', st = stepById['e:' + key], pos = L.posInStage(PATH, key);
+  var e = a.e, sol = e.solution, hasSol = sol != null && String(sol).trim() !== '', st = stepById['e:' + key], gp = st && groupOfStage[st.stage];
   var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a></p>';
-  if (pos) h += '<p class="muted">Etapa ' + stageById[pos.stage].n + ': ' + esc(stageById[pos.stage].title) + ' &middot; ejercicio ' + pos.n + ' de ' + pos.of + '</p>';
+  if (gp) {
+    var inG = PATH.filter(function (x) { return x.type === 'ex' && gp.stages.indexOf(x.stage) >= 0; });
+    h += '<p class="muted">' + esc(gp.label) + ' &middot; ejercicio ' + (inG.indexOf(st) + 1) + ' de ' + inG.length + (inScope[st.id] ? '' : ' &middot; fuera de tu ruta (' + esc(SCOPE.title) + ')') + '</p>';
+  }
   h += '<div class="card"><h2>' + exTitle(a) + '</h2>' +
     '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados</div>' + mdRender(e.statement) + '</div>';
   h += '<div class="card row"><span class="timer" id="tm"></span> <button class="btn" data-act="timer">' + (V.started ? 'Reiniciar cron&oacute;metro' : 'Iniciar cron&oacute;metro') + '</button></div>';
@@ -227,8 +257,8 @@ function vDetail(key) {
   if (V.hints >= 3) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';
   var maxH = hasSol ? 3 : 1, canRate = hasSol ? V.hints >= 3 : V.self;
   if (V.done != null) {
-    var nx = st ? L.nextAfter(PATH, S, EXAMS, st.id) : null;
-    h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' ' + flame('sm') + ' <b>&iexcl;Etapa completada!</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
+    var nx = st ? L.nextAfter(PATH, S, EXAMS, st.id, keepScope) : null;
+    h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' ' + flame('sm') + ' <b>' + doneWord() + '</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
     h += '<div class="card row">' + (nx ? '<a class="btn pri" href="' + stepHref(nx) + '">Siguiente en la ruta &rarr;</a><span class="muted">' + stepLabel(nx) + '</span>' : '<span>&#127881; Ruta completada.</span>') + ' <a class="btn" href="#/ejercicios">Ver ejercicios</a></div>';
   } else if (canRate) {
     h += '<div class="card row">&iquest;C&oacute;mo te fue? ' + RN.map(function (n, i) { return '<button class="btn ' + ['bad', 'warn', 'ok'][i] + '" data-act="rate" data-r="' + i + '">' + n + '</button>'; }).join('') + '</div>';
@@ -294,7 +324,7 @@ function vTheory(lid, idx, stepId) {
     var card = '';
     if (i === cardAt) {   // after the last section the step covers, so it is not confirmed before reading it
       var done = L.stepDone(st, S, EXAMS);
-      card = '<div class="card next row"><span>&#128214; Paso de la ruta (etapa ' + stageById[st.stage].n + ') &middot; ' + mins(st.min) + ' de lectura: &iquest;lo has le&iacute;do?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
+      card = '<div class="card next row"><span>&#128214; Paso de la ruta (' + esc(groupOfStage[st.stage].label) + ') &middot; ' + mins(st.min) + ' de lectura: &iquest;lo has le&iacute;do?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
     }
     h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && s.title === cur.title ? '' : '<h' + lv + '>' + esc(s.title) + '</h' + lv + '>') + mdRender(s.md) + card + '</section>';
   });
@@ -302,10 +332,10 @@ function vTheory(lid, idx, stepId) {
 }
 
 function vProgress() {
-  var h = '<h2>Progreso</h2><div class="card row">XP <b>' + S.xp + '</b> &middot; Nivel <b>' + level() + '</b> &middot; <span class="streakline">' + streakHtml() + '<span>d&iacute;as de racha</span></span> &middot; quedan ' + mins(L.pathMinutes(PATH, S, EXAMS).left) + ' de ruta</div><h3>Ruta por etapas</h3>';
-  STAGES.forEach(function (g) {
-    var p = progress(g.id), pct = p.total ? Math.round(p.done / p.total * 100) : 0;
-    h += '<div class="row" style="margin-bottom:8px"><span style="width:300px;max-width:100%">' + g.n + '. ' + esc(g.title) + (S.bonus[g.id] ? ' ' + flame('sm') : '') + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; ' + mins(p.left) : '') + '</span></div>';
+  var h = '<h2>Progreso</h2><div class="card row">XP <b>' + S.xp + '</b> &middot; Nivel <b>' + level() + '</b> &middot; <span class="streakline">' + streakHtml() + '<span>d&iacute;as de racha</span></span> &middot; quedan ' + mins(L.pathMinutes(ACTIVE, S, EXAMS).left) + ' de ruta</div><h3>Ruta por ' + (ORG === 'temas' ? 'temas' : 'etapas') + '</h3>';
+  GROUPS_ALL.forEach(function (g) {
+    var p = gprog(g), pct = p.total ? Math.round(p.done / p.total * 100) : 0, off = GROUPS.indexOf(g) < 0;
+    h += '<div class="row' + (off ? ' off' : '') + '" style="margin-bottom:8px"><span style="width:300px;max-width:100%">' + esc(g.label) + (g.stages.every(function (id) { return S.bonus[id]; }) ? ' ' + flame('sm') : '') + (off ? ' <span class="tag">fuera de tu ruta</span>' : '') + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; ' + mins(p.left) : '') + '</span></div>';
   });
   h += '<h3>Dominio por habilidad</h3><p class="muted">Porcentaje de ejercicios de la habilidad cuya &uacute;ltima valoraci&oacute;n fue Dominado (Dudoso cuenta la mitad).</p>';
   SK.forEach(function (s) {
@@ -317,7 +347,7 @@ function vProgress() {
 }
 
 function vSettings() {
-  return '<h2>Datos</h2><div class="card"><p>El tema y el color de acento se cambian con el engranaje de la barra superior.</p><p>Tu progreso se guarda en este navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>';
+  return '<h2>Datos</h2><div class="card"><p>El tema, el color de acento, la ruta de estudio (temario completo o primer examen) y la organizaci&oacute;n por etapas o por temas se cambian con el engranaje de la barra superior.</p><p>Tu progreso se guarda en este navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>';
 }
 
 /* ---------- settings popover (top bar, right): theme and accent colour ---------- */
@@ -330,6 +360,10 @@ function renderPop() {
   pop.innerHTML = '<div class="pop-title">Ajustes</div>' +
     '<div class="pop-row"><span class="muted">Tema</span><div class="segs" role="radiogroup" aria-label="Tema">' +
     TH.MODES.map(function (m) { return '<button type="button" class="seg' + (m === mode ? ' on' : '') + '" role="radio" aria-checked="' + (m === mode) + '" data-act="theme" data-m="' + m + '">' + MODE_LABEL[m] + '</button>'; }).join('') + '</div></div>' +
+    '<div class="pop-block"><div class="pop-row"><span class="muted">Ruta de estudio</span></div><div class="choices" role="radiogroup" aria-label="Ruta de estudio">' +
+    SCOPES.map(function (sc) { var on = sc.id === SCOPE.id; return '<button type="button" class="choice' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" data-act="scope" data-v="' + esc(sc.id) + '"><b>' + esc(sc.title) + '</b><span class="muted">' + esc(sc.blurb) + '</span></button>'; }).join('') + '</div>' +
+    '<div class="pop-row"><span class="muted">Organizar por</span><div class="segs" role="radiogroup" aria-label="Organizaci&oacute;n de la ruta">' +
+    ORGS.map(function (o) { var on = o[0] === ORG; return '<button type="button" class="seg' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" title="' + esc(o[2]) + '" data-act="org" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div></div></div>' +
     '<div class="pop-block"><div class="pop-row"><span class="muted">Color de acento</span><button type="button" class="linkbtn" data-act="accent-reset">Autom&aacute;tico</button></div>' +
     '<div class="swatches"><button type="button" class="sw auto' + (!acc ? ' on' : '') + '" data-act="accent-reset" title="Autom&aacute;tico (seg&uacute;n el tema)" aria-label="Autom&aacute;tico"></button>' +
     TH.PRESETS.map(function (p) { return '<button type="button" class="sw' + (acc && acc.toLowerCase() === p[1] ? ' on' : '') + '" style="background:' + p[1] + '" data-act="accent-set" data-c="' + p[1] + '" title="' + p[0] + '" aria-label="' + p[0] + '"></button>'; }).join('') + '</div>' +
@@ -337,7 +371,7 @@ function renderPop() {
     '<div class="pop-note bad" id="acc-msg" hidden>Eso no es un color que CSS entienda.</div></div>' +
     '<div class="pop-note">El acento colorea botones, barras, la llama, el logo y el icono de la pesta&ntilde;a.</div>' +
     '<div class="pop-block"><a href="#/ajustes" data-act="settings-close">Datos: exportar, importar o reiniciar el progreso &rarr;</a></div>';
-  if (keep && keep.dataset && keep.dataset.act) { var again = pop.querySelector('[data-act="' + keep.dataset.act + '"]' + (keep.dataset.m ? '[data-m="' + keep.dataset.m + '"]' : '') + (keep.dataset.c ? '[data-c="' + keep.dataset.c + '"]' : '')); if (again && again.focus) again.focus(); }
+  if (keep && keep.dataset && keep.dataset.act) { var again = pop.querySelector('[data-act="' + keep.dataset.act + '"]' + (keep.dataset.m ? '[data-m="' + keep.dataset.m + '"]' : '') + (keep.dataset.v ? '[data-v="' + keep.dataset.v + '"]' : '') + (keep.dataset.c ? '[data-c="' + keep.dataset.c + '"]' : '')); if (again && again.focus) again.focus(); }
 }
 function setPop(open) {
   var pop = popEl(), btn = $('#settings'); if (!pop || !btn) return;
@@ -393,6 +427,8 @@ document.addEventListener('click', function (ev) {
   if (act === 'settings') { setPop(!popOpen()); return; }
   if (act === 'settings-close') { setPop(false); return; }
   if (act === 'theme') { if (TH) TH.setMode(b.dataset.m); renderPop(); return; }
+  if (act === 'scope') { prefSet('scope', b.dataset.v); refreshPrefs(); renderPop(); rerender(); return; }
+  if (act === 'org') { prefSet('org', b.dataset.v); F.stage = ''; refreshPrefs(); renderPop(); rerender(); return; }
   if (act === 'accent-set') { if (TH) TH.setAccent(b.dataset.c); renderPop(); return; }
   if (act === 'accent-reset') { if (TH) TH.setAccent(null); renderPop(); return; }
   if (act === 'hint') { V.hints++; rerender(); }
@@ -401,12 +437,12 @@ document.addEventListener('click', function (ev) {
   else if (act === 'rate') { V.done = rate(V.key, +b.dataset.r, Math.min(3, V.hints)); rerender(); }
   else if (act === 'skip') {
     var sid = b.dataset.step; S.skip[sid] = true; awardAll(); save();
-    var nx = L.nextAfter(PATH, S, EXAMS, sid);
+    var nx = L.nextAfter(PATH, S, EXAMS, sid, keepScope);
     location.hash = nx ? stepHref(nx) : '#/ruta'; if (!nx) route();
   }
   else if (act === 'theorydone') {
     var tid = b.dataset.step; S.theory[tid] = true; touchDay(); awardAll(); save();
-    var nt = L.nextAfter(PATH, S, EXAMS, tid);
+    var nt = L.nextAfter(PATH, S, EXAMS, tid, keepScope);
     location.hash = nt ? stepHref(nt) : '#/ruta'; route();
   }
   else if (act === 'exstart') {

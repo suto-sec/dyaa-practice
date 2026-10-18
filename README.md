@@ -13,13 +13,15 @@ xdg-open app/index.html     # works from file://
 
 ## How it works
 
-- **Ruta** (roadmap): 9 stages in curriculum order. Analysis: sumatorios y cotas, notación asintótica, coste iterativo, recurrencias por expansión, método general y teorema maestro. Design: recursión básica, divide y vencerás, backtracking, voraces.
+- **Ruta** (roadmap): 10 stages in curriculum order. Analysis: introducción (tema 1, reading only), sumatorios y cotas, notación asintótica, coste iterativo, recurrencias por expansión, método general y teorema maestro. Design: recursión básica, divide y vencerás, backtracking, voraces.
   Each stage = theory sections to read → warm-up exercises from the extra exercise sets → past-exam exercises, from easier to harder. Exercises with an official solution are tagged, since self-grading needs one. After the last analysis and the last design stage there is a full mock exam checkpoint.
+- **Your route** (settings): *Temario completo* (temas 1 to 7) or *Primer examen* (temas 1 to 3: the analysis stages and the analysis checkpoint). Everything outside the chosen route stays reachable, it just is not recommended or counted in the time left. The two routes are defined in `tools/roadmap.json` (`scopes`).
+- **Organise by** (settings): *Etapas* (the stages above) or *Temas* (one block per lecture, as in the slides; tema 3.2 holds two stages). Only the grouping and the names change, not the order or the progress.
 - **Siguiente paso**: after rating an exercise the app offers the next undone step. A *Fallé* does not block you: it enters spaced repetition and comes back in **Hoy**. Any step can be skipped.
 - **Hoy**: due reviews plus the next steps of the roadmap.
 - **Time estimates**: every reading, exercise, stage and checkpoint shows an orientative time (`~12 min`), with the time left per stage and for the whole route. Reading is a study pace of about 35 words per minute (formulas count as three words, minimum 3 minutes); an exercise is the time the exam gives it ×1.25 plus the time to check it (warm-ups go by difficulty); a checkpoint is an exam plus 20 minutes to mark it. The model is in `app/logic.js`.
 - **Streak flame**: the top bar and **Hoy** show a flame that is lit once you have done something today, dim while the streak is at risk and off at zero.
-- **Settings** (gear, top right): theme (system, light, dark) and accent colour (presets, a picker, or any CSS colour). The accent colours buttons, bars, the flame, the logo and the tab icon. Saved in the browser apart from the progress, so resetting progress keeps it. Export, import and reset live under *Datos* (`#/ajustes`).
+- **Settings** (gear, top right): route, organisation, theme (system, light, dark) and accent colour (presets, a picker, or any CSS colour). The accent colours buttons, bars, the flame, the logo and the tab icon. Saved in the browser apart from the progress, so resetting progress keeps it (also the route and organisation). Export, import and reset live under *Datos* (`#/ajustes`).
 - **Rating** after each exercise: Fallé / Dudoso / Dominado. XP depends on points, hints used and rating; finishing a stage gives a bonus.
 - **Examen**: timed simulator over whole past exams, self-scored.
 - **Teoría**: the lecture notes, with deep links from hints and roadmap steps. The figures are cropped from the slides (`app/img/`, listed in `tools/figures.json`); `python3 tools/figures.py <folder with the slide PDFs>` regenerates them (needs `pdftoppm` and ImageMagick).

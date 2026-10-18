@@ -95,7 +95,7 @@ if (hasExams) {
   const exams = win.EXAMS, stageEx = win.STAGE_EX;
   const first = stageEx.sumatorios[0];
   go('#/ejercicios/' + encodeURIComponent(first));
-  ok(/Etapa 1/.test(app()) && /ejercicio 1 de/.test(app()), 'exercise shows its place in the stage');
+  ok(/Etapa 2\. /.test(app()) && /ejercicio 1 de/.test(app()), 'exercise shows its place in the stage');
   const hasSol = /Mostrar pista \(1\/3\)/.test(app());
   if (hasSol) { click({ act: 'hint' }); click({ act: 'hint' }); click({ act: 'hint' }); } else { click({ act: 'hint' }); click({ act: 'self' }); }
   ok(/Fallé/.test(app()) && /Dominado/.test(app()), 'rating buttons appear after checking');
@@ -172,6 +172,32 @@ click({ act: 'settings-close' }); ok(els['#settings-pop'].hidden === true, 'popo
 (handlers.keydown || []).forEach(f => f({ key: 'Escape' }));
 ok(/<svg/.test(els['#logo'].innerHTML), 'logo is drawn in the top bar');
 click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-practice-accent'] == null, 'resetting progress leaves theme and accent alone');
+
+// route preferences: the path (whole course or first exam) and the organisation (etapas or temas), kept apart from the progress
+{
+  const stages = (h) => (h.match(/<details class="stage"/g) || []).length;
+  go('#/ruta');
+  ok(/Temario completo/.test(app()) && /Etapa 2\. Sumatorios/.test(app()) && stages(app()) === win.STAGES.length, 'default route: the whole course, by etapas');
+  click({ act: 'settings' });
+  ok(/Primer examen \(temas 1 a 3\)/.test(els['#settings-pop'].innerHTML) && /data-act="org"/.test(els['#settings-pop'].innerHTML), 'settings offer the route and the organisation');
+  click({ act: 'scope', v: 'parcial1' });
+  ok(store['dyaa-practice-path'] === 'parcial1' && /choice on[^>]*data-v="parcial1"/.test(els['#settings-pop'].innerHTML), 'path choice is remembered and marked in the popover');
+  go('#/ruta');
+  const analysis = win.STAGES.filter(g => g.world === 'analisis').length;
+  ok(/Primer examen/.test(app()) && stages(app()) === analysis && /Fuera de esta ruta/.test(app()), 'first-exam route lists only the analysis stages and mentions the rest');
+  ok(!/Simulacro: un examen completo de dise/.test(app()) , 'first-exam route has no design checkpoint');
+  click({ act: 'org', v: 'temas' });
+  ok(store['dyaa-practice-org'] === 'temas', 'organisation choice is remembered');
+  go('#/ruta');
+  ok(/Tema 3\.2\. An&aacute;lisis|Tema 3\.2\. Análisis/.test(app()) && /Tiempo estimado del tema/.test(app()) && stages(app()) === 5, 'by temas: one block per tema (3.2 merges two etapas)');
+  ok(/Recurrencias: expansi/.test(app()) && /Recurrencias: m&eacute;todo|Recurrencias: método/.test(app()), 'a tema made of several etapas names each one');
+  go('#/progreso'); ok(/Ruta por temas/.test(app()) && /fuera de tu ruta/.test(app()), 'progress lists temas and marks those outside the route');
+  go('#/ejercicios'); ok(/tema: todos/.test(app()), 'exercise filter speaks of temas');
+  click({ act: 'reset' }); ok(store['dyaa-practice-path'] === 'parcial1' && store['dyaa-practice-org'] === 'temas', 'resetting progress keeps the route preferences');
+  click({ act: 'scope', v: 'todo' }); click({ act: 'org', v: 'etapas' });
+  go('#/ruta'); ok(stages(app()) === win.STAGES.length && /Etapa 2\. Sumatorios/.test(app()), 'back to the whole course by etapas');
+  click({ act: 'settings-close' });
+}
 
 // export/import round trip keeps state
 const before = store['dyaa-practice-v1'];

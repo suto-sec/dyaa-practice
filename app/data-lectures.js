@@ -1904,7 +1904,67 @@ window.SKILLS = [
  }
 ];
 window.WORLDS = {"analisis": "Análisis de algoritmos", "diseno": "Diseño de algoritmos"};
+window.SCOPES = [
+ {
+  "id": "todo",
+  "title": "Temario completo",
+  "blurb": "Temas 1 a 7: análisis y diseño de algoritmos.",
+  "worlds": [
+   "analisis",
+   "diseno"
+  ]
+ },
+ {
+  "id": "parcial1",
+  "title": "Primer examen (temas 1 a 3)",
+  "blurb": "Solo análisis: introducción, preliminares matemáticos, notación asintótica y coste de algoritmos iterativos y recursivos. Acaba con un simulacro de análisis.",
+  "worlds": [
+   "analisis"
+  ]
+ }
+];
 window.STAGES = [
+ {
+  "id": "intro",
+  "world": "analisis",
+  "title": "Introducción a la algoritmia",
+  "blurb": "Problemas y algoritmos, clases de complejidad, optimización y una visión de la IA. Solo lectura: no hay ejercicios de este tema.",
+  "skills": [],
+  "theory": [
+   {
+    "lecture": "t1_intro_algoritmia",
+    "section": "Problema computacional",
+    "to": "Demostración mcd2",
+    "label": "Tema 1 · Problemas computacionales y algoritmos",
+    "idx": 1,
+    "upto": 9
+   },
+   {
+    "lecture": "t1_intro_algoritmia",
+    "section": "Eficiencia en tiempo y espacio",
+    "to": "Problema de la parada",
+    "label": "Tema 1 · Clases de complejidad computacional",
+    "idx": 10,
+    "upto": 26
+   },
+   {
+    "lecture": "t1_intro_algoritmia",
+    "section": "Problemas matemáticos de optimización",
+    "to": "Pseudocódigo",
+    "label": "Tema 1 · Problemas de optimización",
+    "idx": 27,
+    "upto": 39
+   },
+   {
+    "lecture": "t1_intro_algoritmia",
+    "section": "Predicción - Regresión",
+    "to": "@end",
+    "label": "Tema 1 · Problemas de IA y aprendizaje automático",
+    "idx": 40,
+    "upto": 48
+   }
+  ]
+ },
  {
   "id": "sumatorios",
   "world": "analisis",

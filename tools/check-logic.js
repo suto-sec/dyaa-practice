@@ -130,6 +130,30 @@ ok(css.indexOf('--bg:#f6f7f9') >= 0 && css.indexOf('--bg:#12151c') >= 0, 'theme.
 const LG = require(path.join(APP, 'logo.js'));
 { const svg = LG.svg('#c2410c', '#ffffff'); ok(/^<svg[^>]*>.*<\/svg>$/.test(svg) && !/NaN|undefined/.test(svg), 'logo draws cleanly'); }
 
+// route scope and organisation
+{
+  const scopes = win.SCOPES, p1 = scopes.find(x => x.id === 'parcial1'), all = scopes[0];
+  ok(scopes.length >= 2 && all.worlds.length === 2 && p1.worlds.length === 1 && p1.worlds[0] === 'analisis', 'scopes: the whole course and the first exam (analysis only)');
+  const path = L.annotateMinutes(L.buildPath(stages, win.STAGE_EX || {}, lectures), lectures, win.EXAMS || []);
+  const world = {}; stages.forEach(x => { world[x.id] = x.world; });
+  const part = L.scopeSteps(path, stages, p1);
+  ok(part.length > 0 && part.every(x => world[x.stage] === 'analisis'), 'first-exam route holds only analysis steps');
+  ok(part.some(x => x.id === 'x:analisis') && !part.some(x => x.id === 'x:diseno'), 'first-exam route ends with the analysis checkpoint only');
+  ok(L.scopeSteps(path, stages, all).length === path.length, 'the whole-course scope keeps every step');
+  ok(part.length === path.filter(x => world[x.stage] === 'analisis').length, 'scope keeps the order and does not drop analysis steps');
+  const S0 = { ex: {}, theory: {}, skip: {}, exams: {} }; part.forEach(x => { S0.skip[x.id] = true; });
+  ok(L.nextSteps(part, S0, win.EXAMS || [], 1).length === 0 && L.nextSteps(path, S0, win.EXAMS || [], 1).length === 1, 'when the first-exam route is done the full route still has steps');
+  const last = part[part.length - 1];
+  ok(L.nextAfter(path, S0, win.EXAMS || [], last.id, x => world[x.stage] === 'analisis') === null && L.nextAfter(path, S0, win.EXAMS || [], last.id) !== null, 'nextAfter can stay inside the route');
+  const et = L.groups(stages, lectures, 'etapas'), te = L.groups(stages, lectures, 'temas');
+  ok(et.length === stages.length && et.every(x => x.stages.length === 1 && /^Etapa \d+\. /.test(x.label)), 'etapas: one group per stage');
+  ok(te.length === 9 && te.every(x => /^Tema [\d.]+\. /.test(x.label)), 'temas: one group per tema, labelled like the slides');
+  ok(te.reduce((n, x) => n + x.stages.length, 0) === stages.length && te.some(x => x.stages.length === 2), 'temas merge the stages that share a tema and lose none');
+  const tot = (gs) => gs.reduce((n, x) => n + L.groupSteps(path, x).length, 0);
+  ok(tot(et) === path.filter(x => x.type !== 'exam').length + path.filter(x => x.type === 'exam').length && tot(te) === tot(et), 'every step belongs to exactly one group in both organisations');
+  ok(path.filter(x => x.type === 'theory' && x.stage === 'intro').length === 4 && path.find(x => x.stage === 'intro').upto != null, 'tema 1 has its readings, each covering several sections');
+}
+
 // figures cut from the slides: every {{fig img/x.png | ...}} points at a file that exists, and no image is left unused
 {
   const used = new Set(), have = fs.readdirSync(path.join(APP, 'img')).filter(f => f[0] !== '.').map(f => 'img/' + f);

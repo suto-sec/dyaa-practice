@@ -122,6 +122,12 @@ def load_roadmap(lectures):
                 warn("unresolved theory ref in stage %s: %s / %s" % (st["id"], t["lecture"], t["section"]))
                 idx = 0
             t["idx"] = idx
+            if t.get("to") and l:   # a reading that covers several sections: up to this one (or "@end" = the end of the lecture)
+                up = len(l["sections"]) - 1 if t["to"] == "@end" else next((i for i in range(idx, len(l["sections"])) if t["to"] in l["sections"][i]["title"]), None)
+                if up is None:
+                    warn("unresolved end of reading in stage %s: %s / %s" % (st["id"], t["lecture"], t["to"]))
+                else:
+                    t["upto"] = up
     return rm
 
 
@@ -303,6 +309,7 @@ def main():
     with open(APP / "data-lectures.js", "a", encoding="utf-8") as f:
         f.write("window.SKILLS = %s;\n" % json.dumps(pub, ensure_ascii=False, indent=1))
         f.write("window.WORLDS = %s;\n" % json.dumps(roadmap["worlds"], ensure_ascii=False))
+        f.write("window.SCOPES = %s;\n" % json.dumps(roadmap["scopes"], ensure_ascii=False, indent=1))
         f.write("window.STAGES = %s;\n" % json.dumps(roadmap["stages"], ensure_ascii=False, indent=1))
     print("lectures: %d (%d sections)" % (len(lectures), sum(len(l["sections"]) for l in lectures)))
     if not EXA.is_dir():

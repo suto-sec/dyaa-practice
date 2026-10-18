@@ -49,7 +49,7 @@ L.buildPath = function (stages, stageEx, lectures) {
     (g.theory || []).forEach(function (t, i) {
       var li = (lectures || []).findIndex(function (l) { return l.id === t.lecture; });
       var title = li >= 0 && lectures[li].sections[t.idx] ? lectures[li].sections[t.idx].title : t.section;
-      path.push({ id: 't:' + g.id + ':' + i, type: 'theory', stage: g.id, label: title, lecture: t.lecture, idx: t.idx });
+      path.push({ id: 't:' + g.id + ':' + i, type: 'theory', stage: g.id, label: t.label || title, lecture: t.lecture, idx: t.idx, upto: t.upto });
     });
     (stageEx[g.id] || []).forEach(function (k) {
       path.push({ id: 'e:' + k, type: 'ex', stage: g.id, key: k });
@@ -74,11 +74,11 @@ L.nextSteps = function (path, S, exams, n) {
   return out;
 };
 /* Next undone step after the given step id; wraps around; null if the whole path is done. */
-L.nextAfter = function (path, S, exams, stepId) {
+L.nextAfter = function (path, S, exams, stepId, keep) {
   var at = path.findIndex(function (s) { return s.id === stepId; });
   for (var j = 1; j <= path.length; j++) {
     var s = path[(at + j) % path.length];
-    if (s.id !== stepId && !L.stepDone(s, S, exams)) return s;
+    if (s.id !== stepId && !L.stepDone(s, S, exams) && (!keep || keep(s))) return s;
   }
   return null;
 };
@@ -96,6 +96,34 @@ L.pathMinutes = function (path, S, exams, steps) {
   var tot = 0, left = 0;
   (steps || path).forEach(function (s) { var m = s.min || 0; tot += m; if (!L.stepDone(s, S, exams)) left += m; });
   return { total: tot, left: left };
+};
+/* ---------- which part of the course the route covers, and how it is organised ----------
+   scope = one of window.SCOPES ({id, title, worlds}): the route of a student who only sits the first exam stops after the analysis stages. */
+L.scopeSteps = function (path, stages, scope) {
+  if (!scope || !scope.worlds) return path.slice();
+  var w = {}; stages.forEach(function (g) { w[g.id] = g.world; });
+  return path.filter(function (s) { return scope.worlds.indexOf(w[s.stage]) >= 0; });
+};
+/* The units the route is shown in: one per etapa, or (org 'temas') one per lecture, which merges the stages that read the same tema. */
+L.groups = function (stages, lectures, org) {
+  var title = {}, out = [];
+  (lectures || []).forEach(function (l) { title[l.id] = l.title; });
+  stages.forEach(function (g, i) {
+    if (org === 'temas') {
+      var t = g.theory && g.theory.length ? g.theory[0].lecture : g.id, last = out[out.length - 1];
+      if (last && last.id === t) { last.stages.push(g.id); last.blurb += ' ' + g.blurb; return; }
+      var lab = String(title[t] || g.title).replace(/^(Tema [\d.]*\d)\.?\s+/, '$1. ');
+      out.push({ id: t, label: lab, short: lab, world: g.world, stages: [g.id], blurb: g.blurb });
+    } else out.push({ id: g.id, label: 'Etapa ' + (i + 1) + '. ' + g.title, short: g.title, world: g.world, stages: [g.id], blurb: g.blurb });
+  });
+  out.forEach(function (g, i) { g.n = i + 1; });
+  return out;
+};
+L.groupSteps = function (path, grp) { return path.filter(function (s) { return grp.stages.indexOf(s.stage) >= 0; }); };
+L.groupProgress = function (path, S, exams, grp) {
+  var r = { done: 0, total: 0, min: 0, left: 0 };
+  grp.stages.forEach(function (id) { var p = L.stageProgress(path, S, exams, id); r.done += p.done; r.total += p.total; r.min += p.min; r.left += p.left; });
+  return r;
 };
 L.stepOfKey = function (path, key) {
   return path.find(function (s) { return s.type === 'ex' && s.key === key; }) || null;
@@ -167,7 +195,7 @@ L.annotateMinutes = function (path, lectures, exams) {
   path.forEach(function (s) { if (s.type === 'theory') (starts[s.lecture] = starts[s.lecture] || []).push(s.idx); });
   path.forEach(function (s) {
     if (s.type === 'theory') {
-      var secs = lm[s.lecture] ? lm[s.lecture].sections : [], sp = L.sectionSpan(secs, s.idx), to = sp.to;
+      var secs = lm[s.lecture] ? lm[s.lecture].sections : [], sp = s.upto != null ? { from: s.idx, to: s.upto } : L.sectionSpan(secs, s.idx), to = sp.to;
       (starts[s.lecture] || []).forEach(function (i) { if (i > s.idx && i <= to) to = i - 1; });
       s.to = to; s.min = secs.length ? L.readMinutes(secs, sp.from, to) : 3;
     } else if (s.type === 'ex') s.min = ex[s.key] ? L.exMinutes(ex[s.key].e, ex[s.key].exam) : 15;
