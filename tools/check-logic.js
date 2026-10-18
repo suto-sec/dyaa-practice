@@ -80,6 +80,15 @@ if (hasExams) {
   // time estimates: every step has a whole-minute estimate, stage totals add up, remaining time shrinks as steps are done
   L.annotateMinutes(path_, lectures, exams);
   path_.forEach(s => ok(Number.isInteger(s.min) && s.min >= 1 && s.min <= 240, 'step has a sane estimate: ' + s.id + ' = ' + s.min));
+  // a reading covers its section and the deeper ones that follow, but never another step's section: spans are disjoint per lecture
+  const byLec = {};
+  path_.filter(s => s.type === 'theory').forEach(s => (byLec[s.lecture] = byLec[s.lecture] || []).push(s));
+  Object.keys(byLec).forEach(l => {
+    const cover = {};
+    byLec[l].forEach(s => { ok(s.to >= s.idx, 'span is not empty: ' + s.id); for (let i = s.idx; i <= s.to; i++) { ok(!cover[i], 'section ' + i + ' of ' + l + ' is read by two steps: ' + s.id + ' and ' + cover[i]); cover[i] = s.id; } });
+  });
+  const bs = stages.find(s => s.id === 'bucles').theory.map((t, i) => path_.find(p => p.id === 't:bucles:' + i));
+  ok(bs.length > 1 && bs[0].to < bs[1].idx, 'bucles: the first reading stops before the second one starts');
   const blankS = { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {} };
   let sumStages = 0;
   stages.forEach(s => { const p = L.stageProgress(path_, blankS, exams, s.id); sumStages += p.min; ok(p.min === path_.filter(x => x.stage === s.id).reduce((t, x) => t + x.min, 0), 'stage total is the sum of its steps: ' + s.id); ok(p.left === p.min, 'nothing done: all time left in ' + s.id); });

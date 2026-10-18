@@ -157,7 +157,7 @@ function vHoy() {
     var more = nextSteps(4).slice(1);
     more.forEach(function (st) { h += stepRow(st); });
     var four = nextSteps(4), all = L.pathMinutes(PATH, S, EXAMS);
-    h += '<p class="muted">Estos ' + four.length + ' pasos: ' + mins(minsOf(four)) + ' &middot; quedan ' + mins(all.left) + ' en toda la ruta.</p>';
+    if (four.length) h += '<p class="muted">Estos ' + four.length + (four.length === 1 ? ' paso: ' : ' pasos: ') + mins(minsOf(four)) + ' &middot; quedan ' + mins(all.left) + ' en toda la ruta.</p>';
     h += '<p><a href="#/ruta">Ver toda la ruta &rarr;</a></p>';
   }
   return h;

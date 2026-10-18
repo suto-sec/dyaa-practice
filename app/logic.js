@@ -155,7 +155,7 @@ L.exMinutes = function (e, exam) {
   }
   return L.roundMin(Math.min(90, Math.max(5, m)));
 };
-/* Fill step.min on every path step. */
+/* Fill step.min (and, for readings, step.to = last section covered) on every path step. */
 L.annotateMinutes = function (path, lectures, exams) {
   var lm = {}, ex = {}, sum = {}, cnt = {};
   (lectures || []).forEach(function (l) { lm[l.id] = l; });
@@ -163,10 +163,13 @@ L.annotateMinutes = function (path, lectures, exams) {
     x.exercises.forEach(function (e) { ex[x.id + '/' + e.id] = { e: e, exam: x }; });
     if (x.kind === 'analisis' || x.kind === 'diseno') { sum[x.kind] = (sum[x.kind] || 0) + L.examMin(x); cnt[x.kind] = (cnt[x.kind] || 0) + 1; }
   });
+  var starts = {};   // section indexes where some theory step begins, per lecture: a span stops before the next one
+  path.forEach(function (s) { if (s.type === 'theory') (starts[s.lecture] = starts[s.lecture] || []).push(s.idx); });
   path.forEach(function (s) {
     if (s.type === 'theory') {
-      var secs = lm[s.lecture] ? lm[s.lecture].sections : [], sp = L.sectionSpan(secs, s.idx);
-      s.to = sp.to; s.min = secs.length ? L.readMinutes(secs, sp.from, sp.to) : 3;
+      var secs = lm[s.lecture] ? lm[s.lecture].sections : [], sp = L.sectionSpan(secs, s.idx), to = sp.to;
+      (starts[s.lecture] || []).forEach(function (i) { if (i > s.idx && i <= to) to = i - 1; });
+      s.to = to; s.min = secs.length ? L.readMinutes(secs, sp.from, to) : 3;
     } else if (s.type === 'ex') s.min = ex[s.key] ? L.exMinutes(ex[s.key].e, ex[s.key].exam) : 15;
     else s.min = L.roundMin((cnt[s.world] ? sum[s.world] / cnt[s.world] : 90) + 20);   // an exam of that world plus 20 min to mark it
   });

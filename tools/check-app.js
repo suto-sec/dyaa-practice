@@ -64,9 +64,10 @@ ok(/Ruta de estudio|Siguiente en la ruta/.test((go('#/ruta'), app())), 'Ruta sho
 // theory step -> marks read and moves on
 const L = win.DYAA;
 // the continue button comes after the last section the step covers (a step may span subsections) and before the next one
+const PATHX = L.annotateMinutes(L.buildPath(win.STAGES, win.STAGE_EX || {}, win.LECTURES), win.LECTURES, win.EXAMS || []);
+const stepOf = (href) => PATHX.find(x => x.id === decodeURIComponent(href.split('/')[4]));
 function atEndOfSpan(href, idx) {
-  const lec = win.LECTURES.find(l => l.id === decodeURIComponent(href.split('/')[2]));
-  const to = L.sectionSpan(lec.sections, +idx).to, a = app(), b = a.indexOf('data-act="theorydone"');
+  const to = stepOf(href).to, a = app(), b = a.indexOf('data-act="theorydone"');
   const nxt = a.indexOf('id="sec-' + (to + 1) + '"');
   return a.indexOf('id="sec-' + to + '"') >= 0 && a.indexOf('id="sec-' + to + '"') < b && (nxt < 0 || b < nxt) && a.split('data-act="theorydone"').length === 2;
 }
@@ -85,6 +86,10 @@ if (m) {
   ok(!/Siguiente en la ruta[^<]*[^<]*<\/div><div class="big">&#128214; Leer: Suma de los primeros n naturales/.test(app()), 'path advanced after reading');
 }
 
+{
+  const bs = win.STAGES.find(g => g.id === 'bucles'), t0 = bs.theory[0], href = '#/teoria/' + encodeURIComponent(t0.lecture) + '/' + t0.idx + '/' + encodeURIComponent('t:bucles:0');
+  go(href); ok(stepOf(href).to > t0.idx && atEndOfSpan(href, t0.idx), 'a reading with subsections puts the continue button after the last of them');
+}
 if (hasExams) {
   // open the next exercise from the path, rate it, check XP and the "next in route" button
   const exams = win.EXAMS, stageEx = win.STAGE_EX;
