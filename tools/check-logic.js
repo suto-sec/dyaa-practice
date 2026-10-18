@@ -170,5 +170,14 @@ const LG = require(path.join(APP, 'logo.js'));
   const src = fs.readFileSync(path.join(APP, f), 'utf8');
   ok(!/locked|bloquead|designTaught|&#128274;/i.test(src), 'no lock logic left in ' + f);
 });
+// page metadata
+{
+  const html = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
+  ['description', 'keywords', 'theme-color', 'color-scheme'].forEach(n => ok(new RegExp('<meta name="' + n + '" ').test(html), 'index.html has meta ' + n));
+  ['og:title', 'og:description', 'og:type'].forEach(n => ok(html.indexOf('property="' + n + '"') >= 0, 'index.html has ' + n));
+  ok(/<noscript>/.test(html), 'index.html tells people without JavaScript what to do');
+  const T = require('../app/theme.js');
+  ok(typeof T.chrome === 'function', 'theme.js updates the browser chrome colour');
+}
 console.log(fails ? fails + ' FAILURES' : 'logic checks passed');
 process.exit(fails ? 1 : 0);

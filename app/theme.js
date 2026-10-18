@@ -101,7 +101,15 @@ T.favicon = function () {
   } catch (e) { /* keep the static icon */ }
 };
 
-T.onChange = function () { T.favicon(); };
+/* Browser chrome colour (mobile address bar) follows the page background of the theme in use. */
+T.chrome = function () {
+  try {
+    var m = root.document.getElementById('tc');
+    if (m) m.setAttribute('content', T.hex(T.isDark() ? T.BG.dark : T.BG.light));
+  } catch (e) { /* keep the static colour */ }
+};
+
+T.onChange = function () { T.favicon(); T.chrome(); };
 
 T.init = function () {
   T.applyMode();
