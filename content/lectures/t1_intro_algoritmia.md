@@ -87,7 +87,7 @@ $$mcd2(m,n)=\begin{cases} n & m=0\\ mcd2(n\%m,m) & m\ne 0\end{cases}$$
 - Otras:
   - EXP: resolubles en tiempo exponencial
   - R: resolubles en tiempo finito
-- [figura, se construye en capas en las diapositivas 18-34: diagrama de Venn de dificultad computacional creciente. Anidamiento: P (polinómico) ⊆ NP ("no-determinista" polinómico) ⊆ EXP (computable en tiempo exponencial) ⊆ R (computable en tiempo finito); fuera de R: indecidibles (no computables). Marcadas las zonas NP-completos (frontera superior de NP), EXP-completos (frontera de EXP), NP-duros y EXP-duros (zonas que abarcan los completos y lo que queda por encima). Anotación: "¿P = NP? Problema del milenio"]
+- {{fig img/t1-p34.png | diagrama de Venn de dificultad computacional creciente. Anidamiento: P (polinómico) ⊆ NP ("no-determinista" polinómico) ⊆ EXP (computable en tiempo exponencial) ⊆ R (computable en tiempo finito); fuera de R: indecidibles (no computables). Marcadas las zonas NP-completos (frontera superior de NP), EXP-completos (frontera de EXP), NP-duros y EXP-duros (zonas que abarcan los completos y lo que queda por encima). Anotación: "¿P = NP? Problema del milenio"}}
 
 ## P: computable en tiempo polinómico
 - $O(p(n))$, p(n): polinomio (de variable n)
@@ -110,7 +110,7 @@ $$mcd2(m,n)=\begin{cases} n & m=0\\ mcd2(n\%m,m) & m\ne 0\end{cases}$$
 ## Algoritmo no determinista "con suerte"
 - Toma decisiones aleatorias (adivina). Siempre acierta
 - Si el resultado del problema de decisión es SÍ (o verdadero) las decisiones aleatorias conducen a obtener ese SÍ
-- [figura: árbol de decisiones con varias ramas por nodo; la elección de la rama correcta lleva a la hoja SÍ; las otras hojas son NO]
+- {{fig img/t1-p24.png | árbol de decisiones con varias ramas por nodo; la elección de la rama correcta lleva a la hoja SÍ; las otras hojas son NO}}
 
 ## Ejemplo: búsqueda no determinista
 ```
@@ -169,7 +169,7 @@ Algoritmo busquedaNoDeterminista(A,n,elemento) # O(1)
 - Reducción
   - En general: transformar cada instancia de un problema Q a otra de un problema A
   - Al resolver A el resultado es el mismo que para Q
-  - [figura: entrada x para Q --T (transformación)--> T(x) entrada para A --> Algoritmo para A --> Sí/No; el conjunto T + algoritmo para A forma el "Algoritmo para Q"]
+  - {{fig img/t1-p31.png | entrada x para Q --T (transformación)--> T(x) entrada para A --> Algoritmo para A --> Sí/No; el conjunto T + algoritmo para A forma el "Algoritmo para Q"}}
   - Cada problema NP-completo se puede reducir a los demás
 
 ## Reducciones como técnica de diseño de algoritmos
@@ -189,7 +189,7 @@ Algoritmo busquedaNoDeterminista(A,n,elemento) # O(1)
   - Hay problemas para los que obtener una solución es más difícil que verificarla
 
 ## R: computable en tiempo finito
-- [figura: diagrama completo de clases (ver arriba): P ⊆ NP ⊆ EXP ⊆ R; indecidibles (no computables) fuera de R; ¿P = NP? problema del milenio]
+- {{fig img/t1-p34.png | diagrama completo de clases (ver arriba): P ⊆ NP ⊆ EXP ⊆ R; indecidibles (no computables) fuera de R; ¿P = NP? problema del milenio}}
 - R = "recursivo" (no en el sentido de función recursiva que se llama a sí misma)
 - Problemas no computables = indecidibles = no "recursivos"
   - No existen algoritmos que los resuelvan
@@ -220,7 +220,7 @@ d(d):
 - Maximizar/minimizar una función objetivo
   - Encontrar las variables ("parámetros") donde una función toma su mayor/menor valor
   - Las variables deben satisfacer restricciones que definen la región factible donde se encontrará la solución
-- [figura: dos gráficas de ejemplo, una función de 2 variables con curvas de nivel y región factible, y una función de 1 variable (eje y de -5 a 15, x de -2 a 4)]
+- {{fig img/t1-p38.png | dos gráficas de ejemplo, una función de 2 variables con curvas de nivel y región factible, y una función de 1 variable (eje y de -5 a 15, x de -2 a 4)}}
 
 ## Ejemplo: problema de la mochila 0/1
 - Considérese un conjunto de n objetos, cada uno con un peso $p_i$ y un valor $v_i$, para $i=1,\dots,n$, y una mochila con capacidad C, que es el máximo peso que puede soportar la mochila
@@ -249,13 +249,13 @@ $$\underset{x}{\text{maximiza}}\ \sum_{i=1}^{n}x_iv_i\quad \text{sujeto a}\ x_i\
 ## Problemas lineales: interpretación geométrica
 - Función objetivo: hiperplano
 - Restricciones: también hiperplanos. Definen una región factible (donde debe estar la solución)
-- [figura: en 2D (ejes X1, X2), polígono convexo gris "Región factible" con rectas paralelas de nivel de la función objetivo; el "Óptimo" es el vértice más extremo en la dirección de mejora (flecha). En 3D (ejes X1, X2, Z), el mismo caso con la función objetivo como plano y el óptimo en un vértice]
+- {{fig img/t1-p43.png | en 2D (ejes X1, X2), polígono convexo gris "Región factible" con rectas paralelas de nivel de la función objetivo; el "Óptimo" es el vértice más extremo en la dirección de mejora (flecha). En 3D (ejes X1, X2, Z), el mismo caso con la función objetivo como plano y el óptimo en un vértice}}
 
 ## Problemas lineales: algoritmo Simplex
 - Parte de un punto inicial: vértice de región factible (poliedro convexo)
 - Avanza por aristas hasta un vértice mejor, hasta encontrar el óptimo
 - Hay otros algoritmos para resolver problemas lineales
-- [figura: poliedro con camino por aristas desde "Punto inicial" hasta "Óptimo"]
+- {{fig img/t1-p44.png | poliedro con camino por aristas desde "Punto inicial" hasta "Óptimo"}}
 
 ## Problemas convexos
 - $f_0,\dots,f_m$ son funciones convexas: $f_i(\alpha x_1+\beta x_2)\le\alpha f_i(x_1)+\beta f_i(x_2)$, $\forall x_1,x_2\in\mathbb{R}^n$, $\forall\alpha,\beta\in[0,1]$, donde $\alpha+\beta=1$
@@ -266,15 +266,15 @@ $$\underset{x}{\text{maximiza}}\ \sum_{i=1}^{n}x_iv_i\quad \text{sujeto a}\ x_i\
 
 ## Conjuntos convexos
 - Cualquier segmento entre dos puntos del conjunto debe estar completamente contenido en el conjunto
-- [figura: ejemplos de conjuntos convexos y de conjuntos no convexos]
+- {{fig img/t1-p46.png | ejemplos de conjuntos convexos y de conjuntos no convexos}}
 
 ## Funciones convexas
-- [figura: curva convexa de una variable; el segmento (cuerda) entre $(x_1,f(x_1))$ y $(x_2,f(x_2))$ queda por encima de la curva; en $\alpha x_1+\beta x_2$ la curva vale $f(\alpha x_1+\beta x_2)$ y la cuerda $\alpha f(x_1)+\beta f(x_2)$]
+- {{fig img/t1-p47.png | curva convexa de una variable; el segmento (cuerda) entre $(x_1,f(x_1))$ y $(x_2,f(x_2))$ queda por encima de la curva; en $\alpha x_1+\beta x_2$ la curva vale $f(\alpha x_1+\beta x_2)$ y la cuerda $\alpha f(x_1)+\beta f(x_2)$}}
 - $f_i(\alpha x_1+\beta x_2)\le\alpha f_i(x_1)+\beta f_i(x_2)$
-- [figura: superficie convexa en 3D (valores 0 a 50, un único mínimo)]
+- {{fig img/t1-p48.png | superficie convexa en 3D (valores 0 a 50, un único mínimo)}}
 
 ## Funciones no convexas
-- [figura: superficies 3D con varios mínimos/máximos locales]
+- {{fig img/t1-p49.png | superficies 3D con varios mínimos/máximos locales}}
 - Pueden tener múltiples óptimos locales
 - Si el dominio es discreto no tiene sentido hablar de una función convexa
 - No siempre se pueden resolver en tiempo polinómico
@@ -287,7 +287,7 @@ $$\underset{x}{\text{maximiza}}\ \sum_{i=1}^{n}x_iv_i\quad \text{sujeto a}\ x_i\
 - Gradiente: vector de derivadas parciales de una función
 - Indica la dirección de mayor pendiente en un punto
 - Algoritmo iterativo que asciende o desciende poco a poco hasta llegar a un óptimo
-- [figura: curvas de nivel en el plano $(x_1,x_2)$ y superficie $f(x)$ (0 a 600) con la trayectoria del descenso]
+- {{fig img/t1-p51.png | curvas de nivel en el plano $(x_1,x_2)$ y superficie $f(x)$ (0 a 600) con la trayectoria del descenso}}
 
 ### Pseudocódigo
 ```
@@ -308,13 +308,13 @@ function AlgoritmoDescensoGradiente()
 - Predices un valor real
 - Generas un modelo matemático que se ajuste a los datos lo mejor posible
   - ¿Qué tipo de modelo? ¿Mejor posible en qué sentido?
-- [figura: dos gráficas de dispersión con curva de ajuste (ejemplo con eje x de 600 a 1800 y eje y de 0 a 300; otro con x de 0 a 6 e y de 0 a 1500)]
+- {{fig img/t1-p54.png | dos gráficas de dispersión con curva de ajuste (ejemplo con eje x de 600 a 1800 y eje y de 0 a 300; otro con x de 0 a 6 e y de 0 a 1500)}}
 
 ## Predicción - Clasificación
 - Predices una clase (categoría)
 - Generas un modelo matemático que defina fronteras entre las clases en el espacio de los datos, para separar las clases lo mejor posible
   - ¿Qué tipo de modelo y fronteras? ¿Mejor posible en qué sentido?
-- [figura: tres gráficas 2D (x de -5 a 5, y de -4 a 4) con distintas fronteras entre clases]
+- {{fig img/t1-p55.png | tres gráficas 2D (x de -5 a 5, y de -4 a 4) con distintas fronteras entre clases}}
 
 ## Predicción
 - Para estos "problemas" no hay una solución "correcta"
@@ -328,21 +328,21 @@ function AlgoritmoDescensoGradiente()
 ## Aprendizaje automático
 - Construir algoritmos a través de ejemplos
   - Caso concreto: reconocimiento de dígitos escritos a mano: base de datos MNIST
-- [figura: muestra de dígitos MNIST]
-- Dígitos difíciles: [figura: ejemplos de dígitos manuscritos ambiguos]
+- {{fig img/t1-p57.png | muestra de dígitos MNIST}}
+- Dígitos difíciles: {{fig img/t1-p58.png | ejemplos de dígitos manuscritos ambiguos}}
 
 ## Técnicas: problemas computacionales concretos
-- Enfoque 1: K vecinos más cercanos, K-NN (K-nearest neighbors). [figura: punto a clasificar "¿?" con K=7 vecinos]
-- Enfoque 2: máquinas de vectores soporte, SVM (support vector machines). [figura: frontera de máximo margen entre dos clases]
+- Enfoque 1: K vecinos más cercanos, K-NN (K-nearest neighbors). {{fig img/t1-p59a.png | punto a clasificar "¿?" con K=7 vecinos}}
+- Enfoque 2: máquinas de vectores soporte, SVM (support vector machines). {{fig img/t1-p59b.png | frontera de máximo margen entre dos clases}}
 - Hay muchos más enfoques
 
 ## Clustering - agrupamiento
 - La única información con la que contamos es la posición de los puntos (no hay información sobre clases)
 - Queremos encontrar una agrupación o partición "razonable"
-- [figura: nube de puntos en 3D]
+- {{fig img/t1-p60.png | nube de puntos en 3D}}
 
 ## Posibles agrupaciones
-- [figura: la misma nube de puntos 3D con dos agrupaciones posibles distintas]
+- {{fig img/t1-p61.png | la misma nube de puntos 3D con dos agrupaciones posibles distintas}}
 - ¿Cuál es la agrupación correcta? No se sabe...
   - La tarea no está claramente definida
   - Aunque existen medidas de bondad para evaluar la calidad de una agrupación

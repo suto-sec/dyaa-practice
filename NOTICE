@@ -19,6 +19,10 @@ Licensing overview
    LaTeX, and figures were replaced by short text descriptions or placeholders
    (in tema 7 the weights of the example graphs were transcribed from the
    figures; in temas 4 to 7 some figure-only slides are summarised in words).
+   Later, 48 images (app/img/) were cut out of the original slides, cropped to
+   the figure and scaled down, and put in place of the placeholders. They are
+   part of the adaptation and carry the same license (CC BY-SA 4.0). The page and
+   crop of each one are listed in tools/figures.json.
    The text content was kept. Errors from the conversion may exist.
    The author has not reviewed or endorsed these adaptations.
 

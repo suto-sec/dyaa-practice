@@ -61,7 +61,7 @@ window.LECTURES = [
    {
     "title": "Clases de complejidad",
     "level": 2,
-    "md": "- Los problemas (de decisión) se pueden categorizar en clases de complejidad según su dificultad computacional\n- Clases más importantes:\n  - P: resolubles en tiempo polinómico\n  - NP: resolubles en tiempo polinómico mediante un algoritmo no-determinista\n  - NP-completos: los más difíciles de NP\n  - NP-duros: tan difícil o más que el problema más difícil en NP\n- Otras:\n  - EXP: resolubles en tiempo exponencial\n  - R: resolubles en tiempo finito\n- [figura, se construye en capas en las diapositivas 18-34: diagrama de Venn de dificultad computacional creciente. Anidamiento: P (polinómico) ⊆ NP (\"no-determinista\" polinómico) ⊆ EXP (computable en tiempo exponencial) ⊆ R (computable en tiempo finito); fuera de R: indecidibles (no computables). Marcadas las zonas NP-completos (frontera superior de NP), EXP-completos (frontera de EXP), NP-duros y EXP-duros (zonas que abarcan los completos y lo que queda por encima). Anotación: \"¿P = NP? Problema del milenio\"]"
+    "md": "- Los problemas (de decisión) se pueden categorizar en clases de complejidad según su dificultad computacional\n- Clases más importantes:\n  - P: resolubles en tiempo polinómico\n  - NP: resolubles en tiempo polinómico mediante un algoritmo no-determinista\n  - NP-completos: los más difíciles de NP\n  - NP-duros: tan difícil o más que el problema más difícil en NP\n- Otras:\n  - EXP: resolubles en tiempo exponencial\n  - R: resolubles en tiempo finito\n- {{fig img/t1-p34.png | diagrama de Venn de dificultad computacional creciente. Anidamiento: P (polinómico) ⊆ NP (\"no-determinista\" polinómico) ⊆ EXP (computable en tiempo exponencial) ⊆ R (computable en tiempo finito); fuera de R: indecidibles (no computables). Marcadas las zonas NP-completos (frontera superior de NP), EXP-completos (frontera de EXP), NP-duros y EXP-duros (zonas que abarcan los completos y lo que queda por encima). Anotación: \"¿P = NP? Problema del milenio\"}}"
    },
    {
     "title": "P: computable en tiempo polinómico",
@@ -81,7 +81,7 @@ window.LECTURES = [
    {
     "title": "Algoritmo no determinista \"con suerte\"",
     "level": 2,
-    "md": "- Toma decisiones aleatorias (adivina). Siempre acierta\n- Si el resultado del problema de decisión es SÍ (o verdadero) las decisiones aleatorias conducen a obtener ese SÍ\n- [figura: árbol de decisiones con varias ramas por nodo; la elección de la rama correcta lleva a la hoja SÍ; las otras hojas son NO]"
+    "md": "- Toma decisiones aleatorias (adivina). Siempre acierta\n- Si el resultado del problema de decisión es SÍ (o verdadero) las decisiones aleatorias conducen a obtener ese SÍ\n- {{fig img/t1-p24.png | árbol de decisiones con varias ramas por nodo; la elección de la rama correcta lleva a la hoja SÍ; las otras hojas son NO}}"
    },
    {
     "title": "Ejemplo: búsqueda no determinista",
@@ -116,7 +116,7 @@ window.LECTURES = [
    {
     "title": "Reducciones",
     "level": 2,
-    "md": "- ¿Cómo demostrar que un problema A es NP-completo?\n  1. Demostrar $A\\in NP$\n  2. Demostrar que es NP-duro\n     - Lo más habitual: \"reducir\" un problema NP-completo Q a A\n     - Si Q NP-completo hay que demostrar que A es tan difícil o más que Q\n- Reducción\n  - En general: transformar cada instancia de un problema Q a otra de un problema A\n  - Al resolver A el resultado es el mismo que para Q\n  - [figura: entrada x para Q --T (transformación)--> T(x) entrada para A --> Algoritmo para A --> Sí/No; el conjunto T + algoritmo para A forma el \"Algoritmo para Q\"]\n  - Cada problema NP-completo se puede reducir a los demás"
+    "md": "- ¿Cómo demostrar que un problema A es NP-completo?\n  1. Demostrar $A\\in NP$\n  2. Demostrar que es NP-duro\n     - Lo más habitual: \"reducir\" un problema NP-completo Q a A\n     - Si Q NP-completo hay que demostrar que A es tan difícil o más que Q\n- Reducción\n  - En general: transformar cada instancia de un problema Q a otra de un problema A\n  - Al resolver A el resultado es el mismo que para Q\n  - {{fig img/t1-p31.png | entrada x para Q --T (transformación)--> T(x) entrada para A --> Algoritmo para A --> Sí/No; el conjunto T + algoritmo para A forma el \"Algoritmo para Q\"}}\n  - Cada problema NP-completo se puede reducir a los demás"
    },
    {
     "title": "Reducciones como técnica de diseño de algoritmos",
@@ -131,7 +131,7 @@ window.LECTURES = [
    {
     "title": "R: computable en tiempo finito",
     "level": 2,
-    "md": "- [figura: diagrama completo de clases (ver arriba): P ⊆ NP ⊆ EXP ⊆ R; indecidibles (no computables) fuera de R; ¿P = NP? problema del milenio]\n- R = \"recursivo\" (no en el sentido de función recursiva que se llama a sí misma)\n- Problemas no computables = indecidibles = no \"recursivos\"\n  - No existen algoritmos que los resuelvan\n  - Ejemplo más conocido: problema de la parada. Determinar si cualquier programa va a parar en tiempo finito"
+    "md": "- {{fig img/t1-p34.png | diagrama completo de clases (ver arriba): P ⊆ NP ⊆ EXP ⊆ R; indecidibles (no computables) fuera de R; ¿P = NP? problema del milenio}}\n- R = \"recursivo\" (no en el sentido de función recursiva que se llama a sí misma)\n- Problemas no computables = indecidibles = no \"recursivos\"\n  - No existen algoritmos que los resuelvan\n  - Ejemplo más conocido: problema de la parada. Determinar si cualquier programa va a parar en tiempo finito"
    },
    {
     "title": "Problema de la parada",
@@ -141,7 +141,7 @@ window.LECTURES = [
    {
     "title": "Problemas matemáticos de optimización",
     "level": 2,
-    "md": "- Importante clase de problemas computacionales\n- Maximizar/minimizar una función objetivo\n  - Encontrar las variables (\"parámetros\") donde una función toma su mayor/menor valor\n  - Las variables deben satisfacer restricciones que definen la región factible donde se encontrará la solución\n- [figura: dos gráficas de ejemplo, una función de 2 variables con curvas de nivel y región factible, y una función de 1 variable (eje y de -5 a 15, x de -2 a 4)]"
+    "md": "- Importante clase de problemas computacionales\n- Maximizar/minimizar una función objetivo\n  - Encontrar las variables (\"parámetros\") donde una función toma su mayor/menor valor\n  - Las variables deben satisfacer restricciones que definen la región factible donde se encontrará la solución\n- {{fig img/t1-p38.png | dos gráficas de ejemplo, una función de 2 variables con curvas de nivel y región factible, y una función de 1 variable (eje y de -5 a 15, x de -2 a 4)}}"
    },
    {
     "title": "Ejemplo: problema de la mochila 0/1",
@@ -166,12 +166,12 @@ window.LECTURES = [
    {
     "title": "Problemas lineales: interpretación geométrica",
     "level": 2,
-    "md": "- Función objetivo: hiperplano\n- Restricciones: también hiperplanos. Definen una región factible (donde debe estar la solución)\n- [figura: en 2D (ejes X1, X2), polígono convexo gris \"Región factible\" con rectas paralelas de nivel de la función objetivo; el \"Óptimo\" es el vértice más extremo en la dirección de mejora (flecha). En 3D (ejes X1, X2, Z), el mismo caso con la función objetivo como plano y el óptimo en un vértice]"
+    "md": "- Función objetivo: hiperplano\n- Restricciones: también hiperplanos. Definen una región factible (donde debe estar la solución)\n- {{fig img/t1-p43.png | en 2D (ejes X1, X2), polígono convexo gris \"Región factible\" con rectas paralelas de nivel de la función objetivo; el \"Óptimo\" es el vértice más extremo en la dirección de mejora (flecha). En 3D (ejes X1, X2, Z), el mismo caso con la función objetivo como plano y el óptimo en un vértice}}"
    },
    {
     "title": "Problemas lineales: algoritmo Simplex",
     "level": 2,
-    "md": "- Parte de un punto inicial: vértice de región factible (poliedro convexo)\n- Avanza por aristas hasta un vértice mejor, hasta encontrar el óptimo\n- Hay otros algoritmos para resolver problemas lineales\n- [figura: poliedro con camino por aristas desde \"Punto inicial\" hasta \"Óptimo\"]"
+    "md": "- Parte de un punto inicial: vértice de región factible (poliedro convexo)\n- Avanza por aristas hasta un vértice mejor, hasta encontrar el óptimo\n- Hay otros algoritmos para resolver problemas lineales\n- {{fig img/t1-p44.png | poliedro con camino por aristas desde \"Punto inicial\" hasta \"Óptimo\"}}"
    },
    {
     "title": "Problemas convexos",
@@ -181,22 +181,22 @@ window.LECTURES = [
    {
     "title": "Conjuntos convexos",
     "level": 2,
-    "md": "- Cualquier segmento entre dos puntos del conjunto debe estar completamente contenido en el conjunto\n- [figura: ejemplos de conjuntos convexos y de conjuntos no convexos]"
+    "md": "- Cualquier segmento entre dos puntos del conjunto debe estar completamente contenido en el conjunto\n- {{fig img/t1-p46.png | ejemplos de conjuntos convexos y de conjuntos no convexos}}"
    },
    {
     "title": "Funciones convexas",
     "level": 2,
-    "md": "- [figura: curva convexa de una variable; el segmento (cuerda) entre $(x_1,f(x_1))$ y $(x_2,f(x_2))$ queda por encima de la curva; en $\\alpha x_1+\\beta x_2$ la curva vale $f(\\alpha x_1+\\beta x_2)$ y la cuerda $\\alpha f(x_1)+\\beta f(x_2)$]\n- $f_i(\\alpha x_1+\\beta x_2)\\le\\alpha f_i(x_1)+\\beta f_i(x_2)$\n- [figura: superficie convexa en 3D (valores 0 a 50, un único mínimo)]"
+    "md": "- {{fig img/t1-p47.png | curva convexa de una variable; el segmento (cuerda) entre $(x_1,f(x_1))$ y $(x_2,f(x_2))$ queda por encima de la curva; en $\\alpha x_1+\\beta x_2$ la curva vale $f(\\alpha x_1+\\beta x_2)$ y la cuerda $\\alpha f(x_1)+\\beta f(x_2)$}}\n- $f_i(\\alpha x_1+\\beta x_2)\\le\\alpha f_i(x_1)+\\beta f_i(x_2)$\n- {{fig img/t1-p48.png | superficie convexa en 3D (valores 0 a 50, un único mínimo)}}"
    },
    {
     "title": "Funciones no convexas",
     "level": 2,
-    "md": "- [figura: superficies 3D con varios mínimos/máximos locales]\n- Pueden tener múltiples óptimos locales\n- Si el dominio es discreto no tiene sentido hablar de una función convexa\n- No siempre se pueden resolver en tiempo polinómico\n- Para \"resolverlos\" se recurre a heurísticas, pero no garantizan llegar al óptimo global\n  - Búsqueda aleatoria\n  - Algoritmos genéticos\n- Teorema \"no hay comida gratis\": ninguna heurística es mejor que todas en general"
+    "md": "- {{fig img/t1-p49.png | superficies 3D con varios mínimos/máximos locales}}\n- Pueden tener múltiples óptimos locales\n- Si el dominio es discreto no tiene sentido hablar de una función convexa\n- No siempre se pueden resolver en tiempo polinómico\n- Para \"resolverlos\" se recurre a heurísticas, pero no garantizan llegar al óptimo global\n  - Búsqueda aleatoria\n  - Algoritmos genéticos\n- Teorema \"no hay comida gratis\": ninguna heurística es mejor que todas en general"
    },
    {
     "title": "Descenso/ascenso de gradiente",
     "level": 2,
-    "md": "- Gradiente: vector de derivadas parciales de una función\n- Indica la dirección de mayor pendiente en un punto\n- Algoritmo iterativo que asciende o desciende poco a poco hasta llegar a un óptimo\n- [figura: curvas de nivel en el plano $(x_1,x_2)$ y superficie $f(x)$ (0 a 600) con la trayectoria del descenso]"
+    "md": "- Gradiente: vector de derivadas parciales de una función\n- Indica la dirección de mayor pendiente en un punto\n- Algoritmo iterativo que asciende o desciende poco a poco hasta llegar a un óptimo\n- {{fig img/t1-p51.png | curvas de nivel en el plano $(x_1,x_2)$ y superficie $f(x)$ (0 a 600) con la trayectoria del descenso}}"
    },
    {
     "title": "Pseudocódigo",
@@ -206,12 +206,12 @@ window.LECTURES = [
    {
     "title": "Predicción - Regresión",
     "level": 2,
-    "md": "- Predices un valor real\n- Generas un modelo matemático que se ajuste a los datos lo mejor posible\n  - ¿Qué tipo de modelo? ¿Mejor posible en qué sentido?\n- [figura: dos gráficas de dispersión con curva de ajuste (ejemplo con eje x de 600 a 1800 y eje y de 0 a 300; otro con x de 0 a 6 e y de 0 a 1500)]"
+    "md": "- Predices un valor real\n- Generas un modelo matemático que se ajuste a los datos lo mejor posible\n  - ¿Qué tipo de modelo? ¿Mejor posible en qué sentido?\n- {{fig img/t1-p54.png | dos gráficas de dispersión con curva de ajuste (ejemplo con eje x de 600 a 1800 y eje y de 0 a 300; otro con x de 0 a 6 e y de 0 a 1500)}}"
    },
    {
     "title": "Predicción - Clasificación",
     "level": 2,
-    "md": "- Predices una clase (categoría)\n- Generas un modelo matemático que defina fronteras entre las clases en el espacio de los datos, para separar las clases lo mejor posible\n  - ¿Qué tipo de modelo y fronteras? ¿Mejor posible en qué sentido?\n- [figura: tres gráficas 2D (x de -5 a 5, y de -4 a 4) con distintas fronteras entre clases]"
+    "md": "- Predices una clase (categoría)\n- Generas un modelo matemático que defina fronteras entre las clases en el espacio de los datos, para separar las clases lo mejor posible\n  - ¿Qué tipo de modelo y fronteras? ¿Mejor posible en qué sentido?\n- {{fig img/t1-p55.png | tres gráficas 2D (x de -5 a 5, y de -4 a 4) con distintas fronteras entre clases}}"
    },
    {
     "title": "Predicción",
@@ -221,22 +221,22 @@ window.LECTURES = [
    {
     "title": "Aprendizaje automático",
     "level": 2,
-    "md": "- Construir algoritmos a través de ejemplos\n  - Caso concreto: reconocimiento de dígitos escritos a mano: base de datos MNIST\n- [figura: muestra de dígitos MNIST]\n- Dígitos difíciles: [figura: ejemplos de dígitos manuscritos ambiguos]"
+    "md": "- Construir algoritmos a través de ejemplos\n  - Caso concreto: reconocimiento de dígitos escritos a mano: base de datos MNIST\n- {{fig img/t1-p57.png | muestra de dígitos MNIST}}\n- Dígitos difíciles: {{fig img/t1-p58.png | ejemplos de dígitos manuscritos ambiguos}}"
    },
    {
     "title": "Técnicas: problemas computacionales concretos",
     "level": 2,
-    "md": "- Enfoque 1: K vecinos más cercanos, K-NN (K-nearest neighbors). [figura: punto a clasificar \"¿?\" con K=7 vecinos]\n- Enfoque 2: máquinas de vectores soporte, SVM (support vector machines). [figura: frontera de máximo margen entre dos clases]\n- Hay muchos más enfoques"
+    "md": "- Enfoque 1: K vecinos más cercanos, K-NN (K-nearest neighbors). {{fig img/t1-p59a.png | punto a clasificar \"¿?\" con K=7 vecinos}}\n- Enfoque 2: máquinas de vectores soporte, SVM (support vector machines). {{fig img/t1-p59b.png | frontera de máximo margen entre dos clases}}\n- Hay muchos más enfoques"
    },
    {
     "title": "Clustering - agrupamiento",
     "level": 2,
-    "md": "- La única información con la que contamos es la posición de los puntos (no hay información sobre clases)\n- Queremos encontrar una agrupación o partición \"razonable\"\n- [figura: nube de puntos en 3D]"
+    "md": "- La única información con la que contamos es la posición de los puntos (no hay información sobre clases)\n- Queremos encontrar una agrupación o partición \"razonable\"\n- {{fig img/t1-p60.png | nube de puntos en 3D}}"
    },
    {
     "title": "Posibles agrupaciones",
     "level": 2,
-    "md": "- [figura: la misma nube de puntos 3D con dos agrupaciones posibles distintas]\n- ¿Cuál es la agrupación correcta? No se sabe...\n  - La tarea no está claramente definida\n  - Aunque existen medidas de bondad para evaluar la calidad de una agrupación"
+    "md": "- {{fig img/t1-p61.png | la misma nube de puntos 3D con dos agrupaciones posibles distintas}}\n- ¿Cuál es la agrupación correcta? No se sabe...\n  - La tarea no está claramente definida\n  - Aunque existen medidas de bondad para evaluar la calidad de una agrupación"
    },
    {
     "title": "Tareas - Problemas - Algoritmos",
@@ -317,7 +317,7 @@ window.LECTURES = [
    {
     "title": "Geometría",
     "level": 2,
-    "md": "- Producto escalar: $\\vec a\\cdot\\vec b=\\langle a,b\\rangle=\\mathbf{a}^T\\mathbf{b}=\\sum_{i=1}^{n}a_ib_i=|a|\\cdot|b|\\cdot\\cos(\\alpha)$\n- Módulo o norma Euclídea: $|a|=\\|a\\|_2=\\sqrt{a_1^2+\\cdots+a_n^2}=\\sqrt{\\mathbf{a}^T\\mathbf{a}}$\n- Otras normas: $\\|a\\|_1=|a_1|+|a_2|+\\cdots+|a_n|$; $\\|a\\|_\\infty=\\max_{i=1,\\dots,n}\\{a_1,a_2,\\dots,a_n\\}$\n- Matriz de rotación: $\\mathbf{R}=\\begin{pmatrix}\\cos t&-\\sin t\\\\\\sin t&\\cos t\\end{pmatrix}$\n- El vector $\\mathbf{R}\\cdot\\mathbf{u}$ corresponde al vector $\\mathbf{u}$ rotado $t$ radianes en sentido contrario a las agujas del reloj\n- [figura: vector u y Ru formando ángulo t]\n\n# Sumatorios"
+    "md": "- Producto escalar: $\\vec a\\cdot\\vec b=\\langle a,b\\rangle=\\mathbf{a}^T\\mathbf{b}=\\sum_{i=1}^{n}a_ib_i=|a|\\cdot|b|\\cdot\\cos(\\alpha)$\n- Módulo o norma Euclídea: $|a|=\\|a\\|_2=\\sqrt{a_1^2+\\cdots+a_n^2}=\\sqrt{\\mathbf{a}^T\\mathbf{a}}$\n- Otras normas: $\\|a\\|_1=|a_1|+|a_2|+\\cdots+|a_n|$; $\\|a\\|_\\infty=\\max_{i=1,\\dots,n}\\{a_1,a_2,\\dots,a_n\\}$\n- Matriz de rotación: $\\mathbf{R}=\\begin{pmatrix}\\cos t&-\\sin t\\\\\\sin t&\\cos t\\end{pmatrix}$\n- El vector $\\mathbf{R}\\cdot\\mathbf{u}$ corresponde al vector $\\mathbf{u}$ rotado $t$ radianes en sentido contrario a las agujas del reloj\n- {{fig img/t2.1-p19.png | vector u y Ru formando ángulo t}}\n\n# Sumatorios"
    },
    {
     "title": "Notación básica",
@@ -332,12 +332,12 @@ window.LECTURES = [
    {
     "title": "Suma de los primeros n naturales",
     "level": 2,
-    "md": "$S(n)=\\sum_{i=1}^{n}i=1+2+\\cdots+(n-1)+n=\\frac{n(n+1)}{2}$\n\nDemostración:\n```\n  S(n) =   1     +   2     + ... + (n-1) +   n\n+ S(n) =   n     + (n-1)   + ... +   2     +   1\n 2S(n) = (n+1)   + (n+1)   + ... + (n+1)   + (n+1)\n```\n$2S(n)=n(n+1)\\Rightarrow S(n)=\\frac{n(n+1)}{2}$\n\nDemostración visual: [figura: dos escaleras de $S(n)$ unidas forman un rectángulo de $n\\times(n+1)$, $2S(n)=n(n+1)$]"
+    "md": "$S(n)=\\sum_{i=1}^{n}i=1+2+\\cdots+(n-1)+n=\\frac{n(n+1)}{2}$\n\nDemostración:\n```\n  S(n) =   1     +   2     + ... + (n-1) +   n\n+ S(n) =   n     + (n-1)   + ... +   2     +   1\n 2S(n) = (n+1)   + (n+1)   + ... + (n+1)   + (n+1)\n```\n$2S(n)=n(n+1)\\Rightarrow S(n)=\\frac{n(n+1)}{2}$\n\nDemostración visual: {{fig img/t2.1-p25.png | dos escaleras de $S(n)$ unidas forman un rectángulo de $n\\times(n+1)$, $2S(n)=n(n+1)$}}"
    },
    {
     "title": "Suma de los primeros n impares",
     "level": 2,
-    "md": "$S(n)=\\sum_{i=1}^{n}(2i-1)=1+3+\\cdots+(2n-3)+(2n-1)=n^2$\n\nDemostración: $\\sum_{i=1}^{n}(2i-1)=\\sum_{i=1}^{n}2i-\\sum_{i=1}^{n}1=2\\sum_{i=1}^{n}i-n=2\\frac{n(n+1)}{2}-n=n^2+n-n=n^2$\n\nDemostración visual: [figura: $S(n)$ como cuadrado $n\\times n$ formado por L's de impares] $\\Rightarrow S(n)=n^2$\n\nDemostración visual alternativa: [figura: dos copias de $S(n)$ forman rectángulo $2n\\times n$; cada fila $2n-1+1=2n$] $2S(n)=2n\\cdot n\\Rightarrow S(n)=n^2$\n\nAnálogamente:\n```\n  S(n) =   1     +   3     + ... + (2n-3) + (2n-1)\n+ S(n) = (2n-1)  + (2n-3)  + ... +   3     +   1\n 2S(n) =  2n     +  2n     + ... +  2n     +  2n\n```\n$2S(n)=2n(n)\\Rightarrow S(n)=n^2$"
+    "md": "$S(n)=\\sum_{i=1}^{n}(2i-1)=1+3+\\cdots+(2n-3)+(2n-1)=n^2$\n\nDemostración: $\\sum_{i=1}^{n}(2i-1)=\\sum_{i=1}^{n}2i-\\sum_{i=1}^{n}1=2\\sum_{i=1}^{n}i-n=2\\frac{n(n+1)}{2}-n=n^2+n-n=n^2$\n\nDemostración visual: {{fig img/t2.1-p26.png | $S(n)$ como cuadrado $n\\times n$ formado por L's de impares}} $\\Rightarrow S(n)=n^2$\n\nDemostración visual alternativa: {{fig img/t2.1-p27.png | dos copias de $S(n)$ forman rectángulo $2n\\times n$; cada fila $2n-1+1=2n$}} $2S(n)=2n\\cdot n\\Rightarrow S(n)=n^2$\n\nAnálogamente:\n```\n  S(n) =   1     +   3     + ... + (2n-3) + (2n-1)\n+ S(n) = (2n-1)  + (2n-3)  + ... +   3     +   1\n 2S(n) =  2n     +  2n     + ... +  2n     +  2n\n```\n$2S(n)=2n(n)\\Rightarrow S(n)=n^2$"
    },
    {
     "title": "Sumas parciales de series aritméticas",
@@ -357,12 +357,12 @@ window.LECTURES = [
    {
     "title": "Suma de los primeros n cuadrados: demostración visual",
     "level": 2,
-    "md": "Usaremos esta descomposición de la suma de cuadrados: [figura: cuadrados de lado 1, 2, 3, 4, ... con áreas 1, 4, 9, 16, ..., suma $S(n)$; cada cuadrado coloreado por capas]\n\nDemostración visual: [figura: tres copias de $S(n)$ se combinan en un rectángulo de lados $(2n+1)$ y $\\frac{n(n+1)}{2}=1+2+3+\\cdots+n$]\n$3S(n)=(2n+1)\\frac{n(n+1)}{2}\\Rightarrow S(n)=\\frac{n(2n+1)(n+1)}{6}$"
+    "md": "Usaremos esta descomposición de la suma de cuadrados: {{fig img/t2.1-p33.png | cuadrados de lado 1, 2, 3, 4, ... con áreas 1, 4, 9, 16, ..., suma $S(n)$; cada cuadrado coloreado por capas}}\n\nDemostración visual: {{fig img/t2.1-p34.png | tres copias de $S(n)$ se combinan en un rectángulo de lados $(2n+1)$ y $\\frac{n(n+1)}{2}=1+2+3+\\cdots+n$}}\n$3S(n)=(2n+1)\\frac{n(n+1)}{2}\\Rightarrow S(n)=\\frac{n(2n+1)(n+1)}{6}$"
    },
    {
     "title": "Suma de los primeros n cubos",
     "level": 2,
-    "md": "$S(n)=\\sum_{i=1}^{n}i^3=\\left(\\sum_{i=1}^{n}i\\right)^2=\\left(\\frac{n(n+1)}{2}\\right)^2$\n\nSe puede ver gracias a:\n- $1^3=1=1^2=(1)^2$\n- $1^3+2^3=9=3^2=(1+2)^2$\n- $1^3+2^3+3^3=36=6^2=(1+2+3)^2$\n- $1^3+2^3+3^3+4^3=100=10^2=(1+2+3+4)^2$\n\nDemostración visual: [figura: cuadrado de lado $2(1+2+\\cdots+n)$ (tramos $\\ldots,3,2,1,1,2,3,\\ldots$) dividido en marcos concéntricos de $k$ cuadrados]\n- Marcos: $4\\cdot1^2=4\\cdot1^3$; $8\\cdot2^2=4\\cdot2^3$; $12\\cdot3^2=4\\cdot3^3$; $\\vdots$; $4n\\cdot n^2=4\\cdot n^3$\n- Área total $=\\left[2(1+2+3+\\cdots+n)\\right]^2=4\\cdot S(n)$\n- $S(n)=1^3+2^3+3^3+\\cdots+n^3=(1+2+3+\\cdots+n)^2=\\left(\\frac{n(n+1)}{2}\\right)^2$"
+    "md": "$S(n)=\\sum_{i=1}^{n}i^3=\\left(\\sum_{i=1}^{n}i\\right)^2=\\left(\\frac{n(n+1)}{2}\\right)^2$\n\nSe puede ver gracias a:\n- $1^3=1=1^2=(1)^2$\n- $1^3+2^3=9=3^2=(1+2)^2$\n- $1^3+2^3+3^3=36=6^2=(1+2+3)^2$\n- $1^3+2^3+3^3+4^3=100=10^2=(1+2+3+4)^2$\n\nDemostración visual: {{fig img/t2.1-p36.png | cuadrado de lado $2(1+2+\\cdots+n)$ (tramos $\\ldots,3,2,1,1,2,3,\\ldots$) dividido en marcos concéntricos de $k$ cuadrados}}\n- Marcos: $4\\cdot1^2=4\\cdot1^3$; $8\\cdot2^2=4\\cdot2^3$; $12\\cdot3^2=4\\cdot3^3$; $\\vdots$; $4n\\cdot n^2=4\\cdot n^3$\n- Área total $=\\left[2(1+2+3+\\cdots+n)\\right]^2=4\\cdot S(n)$\n- $S(n)=1^3+2^3+3^3+\\cdots+n^3=(1+2+3+\\cdots+n)^2=\\left(\\frac{n(n+1)}{2}\\right)^2$"
    },
    {
     "title": "Sumatorios telescópicos",
@@ -377,7 +377,7 @@ window.LECTURES = [
    {
     "title": "Ejercicio",
     "level": 2,
-    "md": "Contar el número de cajas para una pirámide de altura $n$ [figura: pirámide escalonada de cubos descompuesta en capas triangulares de 1, 3, 6, 10, ... cajas]"
+    "md": "Contar el número de cajas para una pirámide de altura $n$ {{fig img/t2.1-p41.png | pirámide escalonada de cubos descompuesta en capas triangulares de 1, 3, 6, 10, ... cajas}}"
    },
    {
     "title": "Solución",
@@ -417,22 +417,22 @@ window.LECTURES = [
    {
     "title": "Función creciente",
     "level": 3,
-    "md": "[figura: curva creciente $f(x)$ con segmentos verticales de longitud $f(m),f(m+1),\\dots,f(n)$ en $x=m,\\dots,n$]\n$\\sum_{i=m}^{n}f(i)$ = suma de longitudes de segmentos"
+    "md": "{{fig img/t2.1-p50.png | curva creciente $f(x)$ con segmentos verticales de longitud $f(m),f(m+1),\\dots,f(n)$ en $x=m,\\dots,n$}}\n$\\sum_{i=m}^{n}f(i)$ = suma de longitudes de segmentos"
    },
    {
     "title": "Función creciente - Cota superior",
     "level": 3,
-    "md": "[figura: rectángulos de ancho 1 y altura $f(i)$ sobre $[i,i+1]$, por encima de la curva]\n$\\sum_{i=m}^{n}f(i)$ = suma de áreas $\\le\\int_m^{n+1}f(x)dx$ (área debajo de la curva desde $m$ hasta $n+1$)"
+    "md": "{{fig img/t2.1-p51.png | rectángulos de ancho 1 y altura $f(i)$ sobre $[i,i+1]$, por encima de la curva}}\n$\\sum_{i=m}^{n}f(i)$ = suma de áreas $\\le\\int_m^{n+1}f(x)dx$ (área debajo de la curva desde $m$ hasta $n+1$)"
    },
    {
     "title": "Función creciente - Cota inferior",
     "level": 3,
-    "md": "[figura: rectángulos de ancho 1 y altura $f(i)$ sobre $[i-1,i]$, por debajo de la curva]\n$\\int_{m-1}^{n}f(x)dx\\le$ suma de áreas $=\\sum_{i=m}^{n}f(i)$ (área debajo de la curva desde $m-1$ hasta $n$)"
+    "md": "{{fig img/t2.1-p52.png | rectángulos de ancho 1 y altura $f(i)$ sobre $[i-1,i]$, por debajo de la curva}}\n$\\int_{m-1}^{n}f(x)dx\\le$ suma de áreas $=\\sum_{i=m}^{n}f(i)$ (área debajo de la curva desde $m-1$ hasta $n$)"
    },
    {
     "title": "Función decreciente",
     "level": 3,
-    "md": "[figura: curva decreciente con segmentos verticales $f(m),\\dots,f(n)$]\n$\\sum_{i=m}^{n}f(i)$ = suma de longitudes de segmentos"
+    "md": "{{fig img/t2.1-p53.png | curva decreciente con segmentos verticales $f(m),\\dots,f(n)$}}\n$\\sum_{i=m}^{n}f(i)$ = suma de longitudes de segmentos"
    },
    {
     "title": "Función decreciente - Cota superior",
@@ -488,12 +488,12 @@ window.LECTURES = [
    {
     "title": "Tiempo de ejecución de un algoritmo",
     "level": 3,
-    "md": "- Expresaremos el tiempo de ejecución mediante una fórmula (función) matemática\n  - Generalmente la llamaremos $T(n)$\n  - Es importante saber qué argumentos debe tomar dicha función\n- Ejemplo: $T(n)=\\frac{1}{2}n^2+2000n+50000$\n  - [figura: curva de $T(n)$ para $n\\in[0,10000]$, eje y hasta $7\\cdot10^7$, creciente convexa]\n  - ¿Qué términos de $T(n)$ importan más para entender cómo crece?"
+    "md": "- Expresaremos el tiempo de ejecución mediante una fórmula (función) matemática\n  - Generalmente la llamaremos $T(n)$\n  - Es importante saber qué argumentos debe tomar dicha función\n- Ejemplo: $T(n)=\\frac{1}{2}n^2+2000n+50000$\n  - {{fig img/t2.2-p6.png | curva de $T(n)$ para $n\\in[0,10000]$, eje y hasta $7\\cdot10^7$, creciente convexa}}\n  - ¿Qué términos de $T(n)$ importan más para entender cómo crece?"
    },
    {
     "title": "Descomposición",
     "level": 3,
-    "md": "- [figura: dos gráficos con $\\frac{1}{2}n^2$ y $2000n+50000$. Izquierda $n\\in[0,10000]$ (eje y hasta $5\\cdot10^7$): $\\frac{1}{2}n^2$ supera a $2000n+50000$ a partir de $n\\approx4000$. Derecha $n\\in[0,200]$ (eje y hasta $5\\cdot10^5$): $2000n+50000$ queda muy por encima de $\\frac{1}{2}n^2$]\n- El término cuadrático determina el \"orden\" de crecimiento de la función\n- Para valores pequeños de $n$ todos los términos pueden ser relevantes"
+    "md": "- {{fig img/t2.2-p7.png | dos gráficos con $\\frac{1}{2}n^2$ y $2000n+50000$. Izquierda $n\\in[0,10000]$ (eje y hasta $5\\cdot10^7$): $\\frac{1}{2}n^2$ supera a $2000n+50000$ a partir de $n\\approx4000$. Derecha $n\\in[0,200]$ (eje y hasta $5\\cdot10^5$): $2000n+50000$ queda muy por encima de $\\frac{1}{2}n^2$}}\n- El término cuadrático determina el \"orden\" de crecimiento de la función\n- Para valores pequeños de $n$ todos los términos pueden ser relevantes"
    },
    {
     "title": "Términos de mayor orden",
@@ -513,7 +513,7 @@ window.LECTURES = [
    {
     "title": "Curvas de órdenes",
     "level": 3,
-    "md": "[figura: curvas de los órdenes anteriores, $n\\in[1,20]$, eje y en escala logarítmica de 1 a 16777216 ($2^{24}$)]"
+    "md": "{{fig img/t2.2-p11.png | curvas de los órdenes anteriores, $n\\in[1,20]$, eje y en escala logarítmica de 1 a 16777216 ($2^{24}$)}}"
    },
    {
     "title": "Valores de funciones",
@@ -538,7 +538,7 @@ window.LECTURES = [
    {
     "title": "Definición formal de cota superior $O$",
     "level": 3,
-    "md": "$O(g(n))=\\{f(n): \\exists c>0\\ \\text{y}\\ n_0>0\\ |\\ 0\\le f(n)\\le c\\cdot g(n),\\ \\forall n\\ge n_0\\}$\n- [figura: $f(n)\\in O(g(n))$. Eje $n$ con $n_0$ marcado; $f(n)$ oscila antes de $n_0$ y a partir de $n_0$ queda por debajo de $c\\cdot g(n)$]\n- A partir de un $n_0$, $c\\cdot g(n)$ siempre supera (o iguala) a $f(n)$\n- $O(g(n))$ es un conjunto de funciones"
+    "md": "$O(g(n))=\\{f(n): \\exists c>0\\ \\text{y}\\ n_0>0\\ |\\ 0\\le f(n)\\le c\\cdot g(n),\\ \\forall n\\ge n_0\\}$\n- {{fig img/t2.2-p16.png | $f(n)\\in O(g(n))$. Eje $n$ con $n_0$ marcado; $f(n)$ oscila antes de $n_0$ y a partir de $n_0$ queda por debajo de $c\\cdot g(n)$}}\n- A partir de un $n_0$, $c\\cdot g(n)$ siempre supera (o iguala) a $f(n)$\n- $O(g(n))$ es un conjunto de funciones"
    },
    {
     "title": "Cota superior $O$ (1)",
@@ -563,7 +563,7 @@ window.LECTURES = [
    {
     "title": "Ejemplo. Demostrar que: $5n+2\\in O(n^2)$",
     "level": 3,
-    "md": "1. Elegir una constante adecuada (por ejemplo $c=1$)\n2. Plantear $5n+2\\le n^2$ (es decir, $5n+2\\le 1\\cdot n^2$)\n3. Buscar qué valores de $n$ hacen que se cumpla que $5n+2\\le n^2$\n   - Ahora no podemos despejar $n$\n   - Analizamos la desigualdad $n^2-5n-2\\ge0$\n   - [figura: parábola $n^2-5n-2$ para $n\\in[-2,7]$, eje y de $-8$ a $6$, cortando el eje x cerca de $-0{,}37$ y $5{,}37$]\n\nContinuación:\n- $n^2-5n-2$ es una función cuadrática (convexa) con raíces en $-0{,}37$ y $5{,}37$\n- Por tanto, siempre será positiva para $n\\ge6$\n- Para $c=1$ y $n_0=5{,}37$ se cumplen las condiciones de la definición y queda demostrado\n  - $n_0$ también puede ser cualquier valor mayor que $5{,}37$, por ejemplo, $n_0=6$ o $n_0=1000$.\n- Si escogemos $c=5$, $n_0=2$ es suficiente\n- Si escogemos $c=8$, $n_0=1$ es suficiente"
+    "md": "1. Elegir una constante adecuada (por ejemplo $c=1$)\n2. Plantear $5n+2\\le n^2$ (es decir, $5n+2\\le 1\\cdot n^2$)\n3. Buscar qué valores de $n$ hacen que se cumpla que $5n+2\\le n^2$\n   - Ahora no podemos despejar $n$\n   - Analizamos la desigualdad $n^2-5n-2\\ge0$\n   - {{fig img/t2.2-p21.png | parábola $n^2-5n-2$ para $n\\in[-2,7]$, eje y de $-8$ a $6$, cortando el eje x cerca de $-0{,}37$ y $5{,}37$}}\n\nContinuación:\n- $n^2-5n-2$ es una función cuadrática (convexa) con raíces en $-0{,}37$ y $5{,}37$\n- Por tanto, siempre será positiva para $n\\ge6$\n- Para $c=1$ y $n_0=5{,}37$ se cumplen las condiciones de la definición y queda demostrado\n  - $n_0$ también puede ser cualquier valor mayor que $5{,}37$, por ejemplo, $n_0=6$ o $n_0=1000$.\n- Si escogemos $c=5$, $n_0=2$ es suficiente\n- Si escogemos $c=8$, $n_0=1$ es suficiente"
    },
    {
     "title": "Ejemplo. Verificar si $3n^2+2n-2\\in O(n)$",
@@ -573,12 +573,12 @@ window.LECTURES = [
    {
     "title": "Verificar si $3n^2+2n-2\\in O(n)$ (gráficamente)",
     "level": 3,
-    "md": "- [figura: parábola $3n^2+(2-c)n-2$ con $c=4$, $n\\in[-1.5,3]$, eje y de $-2$ a $10$; forma de \"U\"]\n- Sea cual sea $c$ (en el ejemplo $c=4$) la parábola siempre será convexa (con forma de \"U\"), ya que el coeficiente asociado a $n^2$ es positivo\n- $3n^2+(2-c)n-2\\le0$ se cumplirá, como mucho, en un intervalo finito, y nunca en uno de tipo $[n_0,\\infty)$"
+    "md": "- {{fig img/t2.2-p24.png | parábola $3n^2+(2-c)n-2$ con $c=4$, $n\\in[-1.5,3]$, eje y de $-2$ a $10$; forma de \"U\"}}\n- Sea cual sea $c$ (en el ejemplo $c=4$) la parábola siempre será convexa (con forma de \"U\"), ya que el coeficiente asociado a $n^2$ es positivo\n- $3n^2+(2-c)n-2\\le0$ se cumplirá, como mucho, en un intervalo finito, y nunca en uno de tipo $[n_0,\\infty)$"
    },
    {
     "title": "Definición formal de cota inferior $\\Omega$",
     "level": 3,
-    "md": "$\\Omega(g(n))=\\{f(n): \\exists c>0\\ \\text{y}\\ n_0>0\\ |\\ 0\\le c\\cdot g(n)\\le f(n),\\ \\forall n\\ge n_0\\}$\n- [figura: $f(n)\\in\\Omega(g(n))$; a partir de $n_0$, $f(n)$ queda por encima de $c\\cdot g(n)$]\n- A partir de $n_0$, $f(n)$ siempre supera (o iguala) a $c\\cdot g(n)$"
+    "md": "$\\Omega(g(n))=\\{f(n): \\exists c>0\\ \\text{y}\\ n_0>0\\ |\\ 0\\le c\\cdot g(n)\\le f(n),\\ \\forall n\\ge n_0\\}$\n- {{fig img/t2.2-p25.png | $f(n)\\in\\Omega(g(n))$; a partir de $n_0$, $f(n)$ queda por encima de $c\\cdot g(n)$}}\n- A partir de $n_0$, $f(n)$ siempre supera (o iguala) a $c\\cdot g(n)$"
    },
    {
     "title": "Cota inferior $\\Omega$",
@@ -593,7 +593,7 @@ window.LECTURES = [
    {
     "title": "Definición formal de cota ajustada $\\Theta$",
     "level": 3,
-    "md": "$\\Theta(g(n))=\\{f(n): \\exists c_1>0,\\ c_2>0\\ \\text{y}\\ n_0>0\\ |\\ 0\\le c_1g(n)\\le f(n)\\le c_2g(n),\\ \\forall n\\ge n_0\\}$\n- [figura: $f(n)\\in\\Theta(g(n))$; a partir de $n_0$, $f(n)$ queda entre $c_1\\cdot g(n)$ (abajo) y $c_2\\cdot g(n)$ (arriba)]\n- A partir de $n_0$, $f(n)$ siempre queda en medio de $c_1g(n)$ y $c_2g(n)$"
+    "md": "$\\Theta(g(n))=\\{f(n): \\exists c_1>0,\\ c_2>0\\ \\text{y}\\ n_0>0\\ |\\ 0\\le c_1g(n)\\le f(n)\\le c_2g(n),\\ \\forall n\\ge n_0\\}$\n- {{fig img/t2.2-p28.png | $f(n)\\in\\Theta(g(n))$; a partir de $n_0$, $f(n)$ queda entre $c_1\\cdot g(n)$ (abajo) y $c_2\\cdot g(n)$ (arriba)}}\n- A partir de $n_0$, $f(n)$ siempre queda en medio de $c_1g(n)$ y $c_2g(n)$"
    },
    {
     "title": "Cota ajustada $\\Theta$",
@@ -683,7 +683,7 @@ window.LECTURES = [
    {
     "title": "Algoritmos de ordenación y comparaciones",
     "level": 3,
-    "md": "Deben realizar varias comparaciones hasta determinar la permutación correcta para cualquier entrada.\n- Ejemplo, entrada 5 8 2: se compara 1º:2º (resultado $\\le$), luego 2º:3º (resultado $>$), luego 1º:3º (resultado $>$), y se llega a la permutación $\\langle3º,1º,2º\\rangle$, salida 2 5 8\n- [figura: a medida que se hacen comparaciones se reduce la incertidumbre sobre el orden (estados 2 5 2 8 2 / 2 5 2 8 / 2 5 8, con elementos marcados como \"incertidumbre\" y \"ordenados correctamente\"); a la derecha, flechas de la entrada 5 8 2 a la salida 2 5 8]"
+    "md": "Deben realizar varias comparaciones hasta determinar la permutación correcta para cualquier entrada.\n- Ejemplo, entrada 5 8 2: se compara 1º:2º (resultado $\\le$), luego 2º:3º (resultado $>$), luego 1º:3º (resultado $>$), y se llega a la permutación $\\langle3º,1º,2º\\rangle$, salida 2 5 8\n- {{fig img/t2.2-p46.png | a medida que se hacen comparaciones se reduce la incertidumbre sobre el orden (estados 2 5 2 8 2 / 2 5 2 8 / 2 5 8, con elementos marcados como \"incertidumbre\" y \"ordenados correctamente\"); a la derecha, flechas de la entrada 5 8 2 a la salida 2 5 8}}"
    },
    {
     "title": "Algoritmos de ordenación como árboles de decisión",
@@ -754,7 +754,7 @@ window.LECTURES = [
    {
     "title": "Un ejemplo: Insert-sort",
     "level": 3,
-    "md": "Algoritmo de ordenación por inserción directa (insert-sort).\n\n[figura: traza sobre el vector `2 4 7 9 5 1 8 3`; parte ordenada a la izquierda, desordenada a la derecha; se toma el elemento a insertar (5), se compara con los anteriores desplazando 9 y 7 a la derecha, y se inserta: `2 4 5 7 9 1 8 3`]\n\nCódigo y coste por línea (n = len(a)):\n\n```python\n0 def insert_sort(a):                      # Coste   Nº de veces\n1     for j in range(1,len(a)):            # C1      n\n2         val = a[j]                       # C2      n-1\n3         # Inserta a[j] en la lista\n          # ordenada a[0:j-1]              # 0       n-1\n4         i = j-1                          # C4      n-1\n5         while (i>=0) and (a[i]>val):     # C5      sum_{j=1}^{n-1} (t_j + 1)\n6             a[i+1] = a[i]                # C6      sum_{j=1}^{n-1} t_j\n7             i = i-1                      # C7      sum_{j=1}^{n-1} t_j\n8         a[i+1] = val                     # C8      n-1\n```\n\n- $t_j$ = nº de veces que la condición del bucle de la línea 5 es verdadera (que se ejecuta el cuerpo del bucle), para un determinado valor de j\n- Ignoramos el coste concreto de cada operación básica\n- Cada línea l tardará un determinado tiempo o coste, que denotamos por $C_l$\n- La función de coste o tiempo, en función del tamaño del vector n es:\n\n$$T(n)=C_1 n+C_2(n-1)+C_4(n-1)+C_5\\sum_{j=1}^{n-1}(t_j+1)+C_6\\sum_{j=1}^{n-1}t_j+C_7\\sum_{j=1}^{n-1}t_j+C_8(n-1)$$\n\n- $t_j$ depende del vector de entrada particular\n\nMejor caso (vector ordenado de menor a mayor): $t_j=0$, para todo j\n\n$$T(n)=C_1 n+C_2(n-1)+C_4(n-1)+C_5(n-1)+C_8(n-1)$$\n$$=(C_1+C_2+C_4+C_5+C_8)n-(C_2+C_4+C_5+C_8)=K_1 n+K_2\\in\\Theta(n)$$\n\n- El orden de T(n) es lineal\n- ¡Para el orden, el valor de las constantes no importa!\n\nPeor caso (vector ordenado de mayor a menor): $t_j=j$ (valor máximo para cada j)\n\nEn primer lugar observamos que:\n\n$$\\sum_{j=1}^{n-1}(j+1)=\\sum_{j=2}^{n}j=\\frac{n(n+1)}{2}-1 \\qquad\\qquad \\sum_{j=1}^{n-1}j=\\frac{n(n-1)}{2}$$\n\nSustituyendo:\n\n$$T(n)=C_1 n+C_2(n-1)+C_4(n-1)+C_5\\left(\\frac{n(n+1)}{2}-1\\right)+C_6\\frac{n(n-1)}{2}+C_7\\frac{n(n-1)}{2}+C_8(n-1)$$\n$$=\\left(\\frac{C_5}{2}+\\frac{C_6}{2}+\\frac{C_7}{2}\\right)n^2+\\left(C_1+C_2+C_4+\\frac{C_5}{2}-\\frac{C_6}{2}-\\frac{C_7}{2}+C_8\\right)n-(C_2+C_4+C_5+C_8)=K_1 n^2+K_2 n+K_3\\in\\Theta(n^2)$$\n\n- El orden de T(n) es cuadrático"
+    "md": "Algoritmo de ordenación por inserción directa (insert-sort).\n\n{{fig img/t3.1-p8.png | traza sobre el vector `2 4 7 9 5 1 8 3`; parte ordenada a la izquierda, desordenada a la derecha; se toma el elemento a insertar (5), se compara con los anteriores desplazando 9 y 7 a la derecha, y se inserta: `2 4 5 7 9 1 8 3`}}\n\nCódigo y coste por línea (n = len(a)):\n\n```python\n0 def insert_sort(a):                      # Coste   Nº de veces\n1     for j in range(1,len(a)):            # C1      n\n2         val = a[j]                       # C2      n-1\n3         # Inserta a[j] en la lista\n          # ordenada a[0:j-1]              # 0       n-1\n4         i = j-1                          # C4      n-1\n5         while (i>=0) and (a[i]>val):     # C5      sum_{j=1}^{n-1} (t_j + 1)\n6             a[i+1] = a[i]                # C6      sum_{j=1}^{n-1} t_j\n7             i = i-1                      # C7      sum_{j=1}^{n-1} t_j\n8         a[i+1] = val                     # C8      n-1\n```\n\n- $t_j$ = nº de veces que la condición del bucle de la línea 5 es verdadera (que se ejecuta el cuerpo del bucle), para un determinado valor de j\n- Ignoramos el coste concreto de cada operación básica\n- Cada línea l tardará un determinado tiempo o coste, que denotamos por $C_l$\n- La función de coste o tiempo, en función del tamaño del vector n es:\n\n$$T(n)=C_1 n+C_2(n-1)+C_4(n-1)+C_5\\sum_{j=1}^{n-1}(t_j+1)+C_6\\sum_{j=1}^{n-1}t_j+C_7\\sum_{j=1}^{n-1}t_j+C_8(n-1)$$\n\n- $t_j$ depende del vector de entrada particular\n\nMejor caso (vector ordenado de menor a mayor): $t_j=0$, para todo j\n\n$$T(n)=C_1 n+C_2(n-1)+C_4(n-1)+C_5(n-1)+C_8(n-1)$$\n$$=(C_1+C_2+C_4+C_5+C_8)n-(C_2+C_4+C_5+C_8)=K_1 n+K_2\\in\\Theta(n)$$\n\n- El orden de T(n) es lineal\n- ¡Para el orden, el valor de las constantes no importa!\n\nPeor caso (vector ordenado de mayor a menor): $t_j=j$ (valor máximo para cada j)\n\nEn primer lugar observamos que:\n\n$$\\sum_{j=1}^{n-1}(j+1)=\\sum_{j=2}^{n}j=\\frac{n(n+1)}{2}-1 \\qquad\\qquad \\sum_{j=1}^{n-1}j=\\frac{n(n-1)}{2}$$\n\nSustituyendo:\n\n$$T(n)=C_1 n+C_2(n-1)+C_4(n-1)+C_5\\left(\\frac{n(n+1)}{2}-1\\right)+C_6\\frac{n(n-1)}{2}+C_7\\frac{n(n-1)}{2}+C_8(n-1)$$\n$$=\\left(\\frac{C_5}{2}+\\frac{C_6}{2}+\\frac{C_7}{2}\\right)n^2+\\left(C_1+C_2+C_4+\\frac{C_5}{2}-\\frac{C_6}{2}-\\frac{C_7}{2}+C_8\\right)n-(C_2+C_4+C_5+C_8)=K_1 n^2+K_2 n+K_3\\in\\Theta(n^2)$$\n\n- El orden de T(n) es cuadrático"
    },
    {
     "title": "Caso medio frente a caso peor",
@@ -769,7 +769,7 @@ window.LECTURES = [
    {
     "title": "Otro ejemplo: Bubble-sort (variante)",
     "level": 3,
-    "md": "Algoritmo de ordenación \"burbuja\" (bubble-sort). Variante: tras cada iteración los elementos más pequeños quedan correctamente ordenados.\n\n[figura: traza sobre `1 2 3 4 7 9 5 8`; parte ordenada a la izquierda (1 2 3), desordenada a la derecha; se comparan elementos adyacentes recorriendo de derecha a izquierda y se intercambian si están desordenados: `...7 9 5 8` -> `...7 5 9 8` -> `...5 7 9 8`]\n\n```python\n1   def bubble_sort(a):\n2\n3       n = len(a)\n4\n5       for i in range(0,n-1):               # i=0..n-2\n6\n7           for j in range(n-1, i, -1):      # j=n-1..i+1\n8\n9               if(a[j-1]>a[j]):\n10\n11                  aux = a[j-1]\n12                  a[j-1] = a[j]\n13                  a[j] = aux\n```"
+    "md": "Algoritmo de ordenación \"burbuja\" (bubble-sort). Variante: tras cada iteración los elementos más pequeños quedan correctamente ordenados.\n\n{{fig img/t3.1-p16.png | traza sobre `1 2 3 4 7 9 5 8`; parte ordenada a la izquierda (1 2 3), desordenada a la derecha; se comparan elementos adyacentes recorriendo de derecha a izquierda y se intercambian si están desordenados: `...7 9 5 8` -> `...7 5 9 8` -> `...5 7 9 8`}}\n\n```python\n1   def bubble_sort(a):\n2\n3       n = len(a)\n4\n5       for i in range(0,n-1):               # i=0..n-2\n6\n7           for j in range(n-1, i, -1):      # j=n-1..i+1\n8\n9               if(a[j-1]>a[j]):\n10\n11                  aux = a[j-1]\n12                  a[j-1] = a[j]\n13                  a[j] = aux\n```"
    },
    {
     "title": "Operaciones de un bucle de n iteraciones",
@@ -835,7 +835,7 @@ window.LECTURES = [
    {
     "title": "Soluciones generales a relaciones de recurrencia",
     "level": 3,
-    "md": "- $T(n)=\\begin{cases}a & n=0\\\\ b+T(n-1) & n>0\\end{cases}$ ⇒ $T(n)=bn+a\\in\\Theta(n)$\n- $T(n)=\\begin{cases}a & n=1\\\\ b+T(n-1) & n>1\\end{cases}$ ⇒ $T(n)=b(n-1)+a\\in\\Theta(n)$\n- $T(n)=\\begin{cases}a & n=1\\\\ b+T(n/2) & n>1\\end{cases}$ ⇒ $T(n)=b\\log_2 n+a\\in\\Theta(\\log n)$\n- $T(n)=\\begin{cases}a & n=0\\\\ b+T(n/2) & n>0\\end{cases}$ ⇒ $T(n)=b\\log_2 n+b+a\\in\\Theta(\\log n)$\n\n#### $T(n)=\\begin{cases}a & n=0\\\\ bn+c+T(n-1) & n>0\\end{cases}$\n$T(n)=bn+c+T(n-1)$\n$=bn+c+b(n-1)+c+T(n-2)=2bn-b+2c+T(n-2)$\n$=2bn-b+2c+b(n-2)+c+T(n-3)=3bn-b(1+2)+3c+T(n-3)$\n$=3bn-b(1+2)+3c+b(n-3)+c+T(n-4)=4bn-b(1+2+3)+4c+T(n-4)$\n$\\dots=ibn-b\\sum_{j=1}^{i-1}j+ic+T(n-i)=ibn+ic-b\\frac{i(i-1)}{2}+T(n-i)$\n- Se alcanza T(0) para i=n. Sustituyendo: $T(n)=bn^2-\\frac b2 n(n-1)+cn+a$\n- $T(n)=\\frac b2 n^2+(c+\\frac b2)n+a\\in\\Theta(n^2)$\n- Tiene sentido: se hacen $n+(n-1)+(n-2)+\\dots+1$ operaciones.\n\n#### $T(n)=\\begin{cases}a & n=0\\\\ bn+c+2T(n/2) & n>0\\end{cases}$\n$T(n)=bn+c+2T(n/2)$\n$=bn+c+2\\left[b\\frac n2+c+2T(n/4)\\right]$\n$=bn+c+2\\left[b\\frac n2+c+2\\left[b\\frac n4+c+2T(n/8)\\right]\\right]$\n$=3bn+c(1+2+4)+2^3T(n/2^3)=3bn+c(2^3-1)+2^3T(n/2^3)$\n$\\dots=ibn+c(2^i-1)+2^iT(n/2^i)$\n- Se alcanza T(1) para $n/2^i=1$, es decir $i=\\log_2 n$. Sustituyendo:\n$T(n)=bn\\log_2 n+c(n-1)+nT(1)=bn\\log_2 n+c(n-1)+n(b+c+2T(0))=bn\\log_2 n+cn-c+nb+nc+2na$\n$T(n)=bn\\log_2 n+(2c+b+2a)n-c\\in\\Theta(n\\log n)$\n- Tiene sentido: se hacen n operaciones $1+\\log_2 n$ veces.\n[figura: árbol de recursión binario completo; raíz n, nivel 1: n/2, n/2; nivel 2: n/4 (x4); ... hojas: n hojas de coste 1; 1+log2 n niveles, cada nivel suma n]"
+    "md": "- $T(n)=\\begin{cases}a & n=0\\\\ b+T(n-1) & n>0\\end{cases}$ ⇒ $T(n)=bn+a\\in\\Theta(n)$\n- $T(n)=\\begin{cases}a & n=1\\\\ b+T(n-1) & n>1\\end{cases}$ ⇒ $T(n)=b(n-1)+a\\in\\Theta(n)$\n- $T(n)=\\begin{cases}a & n=1\\\\ b+T(n/2) & n>1\\end{cases}$ ⇒ $T(n)=b\\log_2 n+a\\in\\Theta(\\log n)$\n- $T(n)=\\begin{cases}a & n=0\\\\ b+T(n/2) & n>0\\end{cases}$ ⇒ $T(n)=b\\log_2 n+b+a\\in\\Theta(\\log n)$\n\n#### $T(n)=\\begin{cases}a & n=0\\\\ bn+c+T(n-1) & n>0\\end{cases}$\n$T(n)=bn+c+T(n-1)$\n$=bn+c+b(n-1)+c+T(n-2)=2bn-b+2c+T(n-2)$\n$=2bn-b+2c+b(n-2)+c+T(n-3)=3bn-b(1+2)+3c+T(n-3)$\n$=3bn-b(1+2)+3c+b(n-3)+c+T(n-4)=4bn-b(1+2+3)+4c+T(n-4)$\n$\\dots=ibn-b\\sum_{j=1}^{i-1}j+ic+T(n-i)=ibn+ic-b\\frac{i(i-1)}{2}+T(n-i)$\n- Se alcanza T(0) para i=n. Sustituyendo: $T(n)=bn^2-\\frac b2 n(n-1)+cn+a$\n- $T(n)=\\frac b2 n^2+(c+\\frac b2)n+a\\in\\Theta(n^2)$\n- Tiene sentido: se hacen $n+(n-1)+(n-2)+\\dots+1$ operaciones.\n\n#### $T(n)=\\begin{cases}a & n=0\\\\ bn+c+2T(n/2) & n>0\\end{cases}$\n$T(n)=bn+c+2T(n/2)$\n$=bn+c+2\\left[b\\frac n2+c+2T(n/4)\\right]$\n$=bn+c+2\\left[b\\frac n2+c+2\\left[b\\frac n4+c+2T(n/8)\\right]\\right]$\n$=3bn+c(1+2+4)+2^3T(n/2^3)=3bn+c(2^3-1)+2^3T(n/2^3)$\n$\\dots=ibn+c(2^i-1)+2^iT(n/2^i)$\n- Se alcanza T(1) para $n/2^i=1$, es decir $i=\\log_2 n$. Sustituyendo:\n$T(n)=bn\\log_2 n+c(n-1)+nT(1)=bn\\log_2 n+c(n-1)+n(b+c+2T(0))=bn\\log_2 n+cn-c+nb+nc+2na$\n$T(n)=bn\\log_2 n+(2c+b+2a)n-c\\in\\Theta(n\\log n)$\n- Tiene sentido: se hacen n operaciones $1+\\log_2 n$ veces.\n{{fig img/t3.2-p18.png | árbol de recursión binario completo; raíz n, nivel 1: n/2, n/2; nivel 2: n/4 (x4); ... hojas: n hojas de coste 1; 1+log2 n niveles, cada nivel suma n}}"
    },
    {
     "title": "Teorema maestro - versión simple",
@@ -870,7 +870,7 @@ window.LECTURES = [
    {
     "title": "Análisis de eficiencia en tiempo: método general",
     "level": 2,
-    "md": "- No siempre se puede aplicar la expansión de recurrencias. Para muchas recurrencias no se conoce la forma de resolverlas (como con integrales o ecuaciones diferenciales: se sabe resolver un subconjunto, no todas).\n- El método general amplía el conjunto de recurrencias resolubles.\n[figura: diagrama de conjuntos; \"Método general de resolución de recurrencias\" contiene a \"Expansión de recurrencias\", dentro del conjunto \"Recurrencias\"]"
+    "md": "- No siempre se puede aplicar la expansión de recurrencias. Para muchas recurrencias no se conoce la forma de resolverlas (como con integrales o ecuaciones diferenciales: se sabe resolver un subconjunto, no todas).\n- El método general amplía el conjunto de recurrencias resolubles.\n{{fig img/t3.2-p28.png | diagrama de conjuntos; \"Método general de resolución de recurrencias\" contiene a \"Expansión de recurrencias\", dentro del conjunto \"Recurrencias\"}}"
    },
    {
     "title": "Recurrencias homogéneas",
@@ -885,7 +885,7 @@ window.LECTURES = [
    {
     "title": "Ejemplo: Números de Fibonacci",
     "level": 3,
-    "md": "$$T(n)=\\begin{cases}0 & n=0\\\\ 1 & n=1\\\\ T(n-1)+T(n-2) & n>1\\end{cases}$$\n- Ecuación característica $x^2-x-1=0$, raíces $r_1=\\frac{1+\\sqrt5}2$, $r_2=\\frac{1-\\sqrt5}2$\n- Al ser distintas: $T(n)=C_1r_1^n+C_2r_2^n=C_1\\left(\\frac{1+\\sqrt5}2\\right)^n+C_2\\left(\\frac{1-\\sqrt5}2\\right)^n$\n- Constantes a partir de condiciones iniciales (casos base):\n  - $C_1+C_2=0=T(0)$\n  - $C_1\\frac{1+\\sqrt5}2+C_2\\frac{1-\\sqrt5}2=1=T(1)$\n- Resolviendo: $C_1=\\frac1{\\sqrt5}$, $C_2=-\\frac1{\\sqrt5}$\n- Finalmente: $T(n)=\\frac1{\\sqrt5}\\left(\\frac{1+\\sqrt5}2\\right)^n-\\frac1{\\sqrt5}\\left(\\frac{1-\\sqrt5}2\\right)^n$\n- El segundo término tiende a 0 según n→∞, por tanto $T(n)\\in\\Theta\\left(\\left(\\frac{1+\\sqrt5}2\\right)^n\\right)$\n- El orden es exponencial. El árbol de recursión es binario pero está podado. Para un árbol binario completo el orden es $2^n$. Aquí la base del exponente es $(1+\\sqrt5)/2\\approx1.618<2$.\n[figura: árbol de recursión de Fibonacci con raíz 7; cada nodo k>1 tiene hijos k-1 y k-2; hojas 1 y 0 (árbol podado)]"
+    "md": "$$T(n)=\\begin{cases}0 & n=0\\\\ 1 & n=1\\\\ T(n-1)+T(n-2) & n>1\\end{cases}$$\n- Ecuación característica $x^2-x-1=0$, raíces $r_1=\\frac{1+\\sqrt5}2$, $r_2=\\frac{1-\\sqrt5}2$\n- Al ser distintas: $T(n)=C_1r_1^n+C_2r_2^n=C_1\\left(\\frac{1+\\sqrt5}2\\right)^n+C_2\\left(\\frac{1-\\sqrt5}2\\right)^n$\n- Constantes a partir de condiciones iniciales (casos base):\n  - $C_1+C_2=0=T(0)$\n  - $C_1\\frac{1+\\sqrt5}2+C_2\\frac{1-\\sqrt5}2=1=T(1)$\n- Resolviendo: $C_1=\\frac1{\\sqrt5}$, $C_2=-\\frac1{\\sqrt5}$\n- Finalmente: $T(n)=\\frac1{\\sqrt5}\\left(\\frac{1+\\sqrt5}2\\right)^n-\\frac1{\\sqrt5}\\left(\\frac{1-\\sqrt5}2\\right)^n$\n- El segundo término tiende a 0 según n→∞, por tanto $T(n)\\in\\Theta\\left(\\left(\\frac{1+\\sqrt5}2\\right)^n\\right)$\n- El orden es exponencial. El árbol de recursión es binario pero está podado. Para un árbol binario completo el orden es $2^n$. Aquí la base del exponente es $(1+\\sqrt5)/2\\approx1.618<2$.\n{{fig img/t3.2-p33.png | árbol de recursión de Fibonacci con raíz 7; cada nodo k>1 tiene hijos k-1 y k-2; hojas 1 y 0 (árbol podado)}}"
    },
    {
     "title": "Segundo caso: raíces con multiplicidad mayor que 1",
@@ -1217,7 +1217,7 @@ window.LECTURES = [
    {
     "title": "Estimación del valor de π",
     "level": 3,
-    "md": "- Planteamos un problema alternativo: buscamos una aproximación del perímetro p de un círculo de radio R: $p=2\\pi R\\Rightarrow\\pi=\\dfrac{p}{2R}$.\n- Aproximamos un círculo con un polígono regular inscrito o circunscrito al círculo. El perímetro del polígono inscrito $p_i$ nos dará una cota inferior de p; el del circunscrito $p_c$ una cota superior:\n$$\\frac{p_i}{2R}\\le\\pi\\le\\frac{p_c}{2R}$$\n- Comenzamos por un polígono regular inscrito (por ejemplo, un hexágono), cuyo perímetro será 6R. A continuación, doblamos el número de lados, obteniendo una mejor aproximación (hexágono, dodecágono, ...).\n- El perímetro de un polígono con el doble de lados se puede obtener fácilmente a partir del primero. Los perímetros de los polígonos circunscritos se pueden obtener de los perímetros de los polígonos inscritos.\n- Relaciones geométricas (figura: triángulo con lado inscrito L, lado l del polígono con doble de lados, lado circunscrito L', radio R): $R^2=y^2+\\left(\\tfrac{L}{2}\\right)^2$, $R=x+y$, $l^2=x^2+\\left(\\tfrac{L}{2}\\right)^2$, $\\dfrac{L'}{R}=\\dfrac{l}{y}$.\n- Si el lado de un polígono inscrito mide L, se puede hallar la longitud l de un lado del polígono con el doble de lados:\n$$R^2=y^2+\\left(\\tfrac{L}{2}\\right)^2\\Rightarrow y=\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2},\\quad x=R-y=R-\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2}$$\n$$l=\\sqrt{\\left(\\tfrac{L}{2}\\right)^2+R^2+R^2-\\left(\\tfrac{L}{2}\\right)^2-2R\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2}}=R\\sqrt{2-\\sqrt{4-\\left(\\tfrac{L}{R}\\right)^2}}$$\n- El lado L' de un polígono circunscrito se puede hallar a partir del lado L de un inscrito: $\\dfrac{L'}{R}=\\dfrac{L}{y}\\Rightarrow L'=\\dfrac{LR}{y}$.\n- La estimación de π se obtiene a partir de los perímetros hallados:\n$$\\frac{L\\cdot\\text{número de lados}}{2R}\\le\\pi\\le\\frac{L'\\cdot\\text{número de lados}}{2R}$$\n- Otros métodos para estimar π: simulación Monte Carlo; integración numérica; series: $\\arctan x=x-\\frac{x^3}{3}+\\frac{x^5}{5}-\\frac{x^7}{7}+\\cdots$ para x=1 $\\Rightarrow$ $\\frac{\\pi}{4}=1-\\frac13+\\frac15-\\frac17+\\cdots$."
+    "md": "- Planteamos un problema alternativo: buscamos una aproximación del perímetro p de un círculo de radio R: $p=2\\pi R\\Rightarrow\\pi=\\dfrac{p}{2R}$.\n- Aproximamos un círculo con un polígono regular inscrito o circunscrito al círculo. El perímetro del polígono inscrito $p_i$ nos dará una cota inferior de p; el del circunscrito $p_c$ una cota superior:\n$$\\frac{p_i}{2R}\\le\\pi\\le\\frac{p_c}{2R}$$\n- Comenzamos por un polígono regular inscrito (por ejemplo, un hexágono), cuyo perímetro será 6R. A continuación, doblamos el número de lados, obteniendo una mejor aproximación (hexágono, dodecágono, ...).\n- El perímetro de un polígono con el doble de lados se puede obtener fácilmente a partir del primero. Los perímetros de los polígonos circunscritos se pueden obtener de los perímetros de los polígonos inscritos.\n- Relaciones geométricas:\n{{fig img/t5-p12.png | triángulo con lado inscrito L, lado l del polígono con doble de lados, lado circunscrito L', radio R}}\n$R^2=y^2+\\left(\\tfrac{L}{2}\\right)^2$, $R=x+y$, $l^2=x^2+\\left(\\tfrac{L}{2}\\right)^2$, $\\dfrac{L'}{R}=\\dfrac{l}{y}$.\n- Si el lado de un polígono inscrito mide L, se puede hallar la longitud l de un lado del polígono con el doble de lados:\n$$R^2=y^2+\\left(\\tfrac{L}{2}\\right)^2\\Rightarrow y=\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2},\\quad x=R-y=R-\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2}$$\n$$l=\\sqrt{\\left(\\tfrac{L}{2}\\right)^2+R^2+R^2-\\left(\\tfrac{L}{2}\\right)^2-2R\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2}}=R\\sqrt{2-\\sqrt{4-\\left(\\tfrac{L}{R}\\right)^2}}$$\n- El lado L' de un polígono circunscrito se puede hallar a partir del lado L de un inscrito: $\\dfrac{L'}{R}=\\dfrac{L}{y}\\Rightarrow L'=\\dfrac{LR}{y}$.\n- La estimación de π se obtiene a partir de los perímetros hallados:\n$$\\frac{L\\cdot\\text{número de lados}}{2R}\\le\\pi\\le\\frac{L'\\cdot\\text{número de lados}}{2R}$$\n- Otros métodos para estimar π: simulación Monte Carlo; integración numérica; series: $\\arctan x=x-\\frac{x^3}{3}+\\frac{x^5}{5}-\\frac{x^7}{7}+\\cdots$ para x=1 $\\Rightarrow$ $\\frac{\\pi}{4}=1-\\frac13+\\frac15-\\frac17+\\cdots$."
    },
    {
     "title": "Raíz cuadrada",
@@ -1634,7 +1634,7 @@ window.LECTURES = [
    {
     "title": "Árbol de recubrimiento de coste mínimo",
     "level": 3,
-    "md": "- Árbol libre: es un grafo no dirigido conexo acíclico. Todo árbol libre con n vértices tiene n-1 aristas. Si se añade una arista se introduce un ciclo. Si se borra una arista quedan vértices no conectados. Cualquier par de vértices está unido por un único camino simple.\n- Árbol de recubrimiento de un grafo no dirigido y ponderado no negativamente: es cualquier subgrafo que contenga todos los vértices y que sea un árbol libre.\n- Árbol de recubrimiento de coste mínimo: es un árbol de recubrimiento y no hay ningún otro árbol de recubrimiento cuya suma de los pesos de las aristas sea menor. Lo denotamos arm(G), donde G es un grafo no dirigido, conexo, y ponderado no negativamente.\n- Problema: dado un grafo $G=\\langle V,E\\rangle$ no dirigido, conexo, y ponderado no negativamente, hallar arm(G). (Figura: grafo ponderado de 10 vértices cuyo árbol de recubrimiento de coste mínimo tiene valor 38. No tiene por qué ser único.)"
+    "md": "- Árbol libre: es un grafo no dirigido conexo acíclico. Todo árbol libre con n vértices tiene n-1 aristas. Si se añade una arista se introduce un ciclo. Si se borra una arista quedan vértices no conectados. Cualquier par de vértices está unido por un único camino simple.\n- Árbol de recubrimiento de un grafo no dirigido y ponderado no negativamente: es cualquier subgrafo que contenga todos los vértices y que sea un árbol libre.\n- Árbol de recubrimiento de coste mínimo: es un árbol de recubrimiento y no hay ningún otro árbol de recubrimiento cuya suma de los pesos de las aristas sea menor. Lo denotamos arm(G), donde G es un grafo no dirigido, conexo, y ponderado no negativamente.\n- Problema: dado un grafo $G=\\langle V,E\\rangle$ no dirigido, conexo, y ponderado no negativamente, hallar arm(G). {{fig img/t7-p48.png | grafo ponderado de 10 vértices cuyo árbol de recubrimiento de coste mínimo tiene valor 38. No tiene por qué ser único.}}"
    },
    {
     "title": "Propiedad fundamental",
@@ -1649,7 +1649,7 @@ window.LECTURES = [
    {
     "title": "Algoritmo de Prim",
     "level": 3,
-    "md": "- Seleccionar un nodo y construir el árbol a partir de él.\n- Aplica reiteradamente la propiedad de los árboles de recubrimiento de coste mínimo incorporando a cada paso una arista. Se usa un conjunto U de vértices tratados y se selecciona en cada paso la arista mínima que une un vértice de U con otro de su complementario. Es una estrategia óptima.\n- Ejemplo paso a paso en el mismo grafo que Kruskal [figura: aristas añadidas en cada paso a partir de un vértice inicial].\n```\nPrim(G)\n    // Entrada: G = <V,E>, es un grafo no dirigido, conexo\n    // (puede usar pesos negativos)\n    // Salida: ET = conjunto de aristas que forman un arm(G)\n\n    VT <- {v0}            // v0 puede ser cualquier vértice\n    ET <- ∅\n\n    desde i <- 1 hasta |V| - 1 hacer\n        encontrar una arista e* = (v*, u*) de peso mínimo entre todas\n            las aristas (v, u) tales que v ∈ VT y u ∈ V \\ VT\n        VT <- VT ∪ {u*}\n        ET <- ET ∪ {e*}\n\n    devolver ET\n```"
+    "md": "- Seleccionar un nodo y construir el árbol a partir de él.\n- Aplica reiteradamente la propiedad de los árboles de recubrimiento de coste mínimo incorporando a cada paso una arista. Se usa un conjunto U de vértices tratados y se selecciona en cada paso la arista mínima que une un vértice de U con otro de su complementario. Es una estrategia óptima.\n- Ejemplo paso a paso en el mismo grafo que Kruskal {{fig img/t7-p54.png | aristas añadidas en cada paso a partir de un vértice inicial}}.\n```\nPrim(G)\n    // Entrada: G = <V,E>, es un grafo no dirigido, conexo\n    // (puede usar pesos negativos)\n    // Salida: ET = conjunto de aristas que forman un arm(G)\n\n    VT <- {v0}            // v0 puede ser cualquier vértice\n    ET <- ∅\n\n    desde i <- 1 hasta |V| - 1 hacer\n        encontrar una arista e* = (v*, u*) de peso mínimo entre todas\n            las aristas (v, u) tales que v ∈ VT y u ∈ V \\ VT\n        VT <- VT ∪ {u*}\n        ET <- ET ∪ {e*}\n\n    devolver ET\n```"
    },
    {
     "title": "Caminos mínimos desde un nodo",

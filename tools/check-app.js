@@ -135,6 +135,9 @@ if (hasExams) {
 go('#/ruta'); ok(/~\d+ min/.test(app()) && /quedan ~/.test(app()) && /estimados/.test(app()), 'Ruta shows estimated times and time left');
 ok(/Tiempo estimado de la etapa: ~/.test(app()) && /class="sub">Teor&iacute;a <span class="t">&middot; ~/.test(app()), 'stages and groups show their total time');
 go('#/hoy'); ok(/Estos \d+ pasos: ~/.test(app()) && /en toda la ruta/.test(app()), 'Hoy shows the time of the next steps and of the whole route');
+// figures from the slides: block figures, inline figures and the alt text that stands in if a file is missing
+go('#/teoria/t1_intro_algoritmia'); ok(/<figure class="fig"><img class="fig" src="img\/t1-p\d+\.png" alt="Figura: [^"]+" loading="lazy"><\/figure>/.test(app()) && !/\{\{fig/.test(app()), 'theory renders slide figures with alt text');
+go('#/teoria/t7_algoritmos_voraces'); ok(/hallar arm[^<]*(<[^>]+>)*\s*<img class="fig" src="img\/t7-p48\.png"/.test(app()) || /<img class="fig" src="img\/t7-p48\.png"/.test(app()), 'an inline figure renders inside its bullet');
 go('#/teoria'); ok(/de lectura<\/span><\/a>/.test(app()), 'theory sidebar shows the reading time of each tema');
 if (hasExams) {
   go('#/ejercicios'); ok(/~[\d ]+(h|min)[^<]*<\/span>/.test(app()) && /en total\./.test(app()), 'exercise list shows times and the total');

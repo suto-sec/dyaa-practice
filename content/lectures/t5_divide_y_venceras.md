@@ -33,7 +33,9 @@ Contenido: 1 Introducción; 2 Transforma y vencerás; 3 Divide y vencerás (máx
 $$\frac{p_i}{2R}\le\pi\le\frac{p_c}{2R}$$
 - Comenzamos por un polígono regular inscrito (por ejemplo, un hexágono), cuyo perímetro será 6R. A continuación, doblamos el número de lados, obteniendo una mejor aproximación (hexágono, dodecágono, ...).
 - El perímetro de un polígono con el doble de lados se puede obtener fácilmente a partir del primero. Los perímetros de los polígonos circunscritos se pueden obtener de los perímetros de los polígonos inscritos.
-- Relaciones geométricas (figura: triángulo con lado inscrito L, lado l del polígono con doble de lados, lado circunscrito L', radio R): $R^2=y^2+\left(\tfrac{L}{2}\right)^2$, $R=x+y$, $l^2=x^2+\left(\tfrac{L}{2}\right)^2$, $\dfrac{L'}{R}=\dfrac{l}{y}$.
+- Relaciones geométricas:
+{{fig img/t5-p12.png | triángulo con lado inscrito L, lado l del polígono con doble de lados, lado circunscrito L', radio R}}
+$R^2=y^2+\left(\tfrac{L}{2}\right)^2$, $R=x+y$, $l^2=x^2+\left(\tfrac{L}{2}\right)^2$, $\dfrac{L'}{R}=\dfrac{l}{y}$.
 - Si el lado de un polígono inscrito mide L, se puede hallar la longitud l de un lado del polígono con el doble de lados:
 $$R^2=y^2+\left(\tfrac{L}{2}\right)^2\Rightarrow y=\sqrt{R^2-\left(\tfrac{L}{2}\right)^2},\quad x=R-y=R-\sqrt{R^2-\left(\tfrac{L}{2}\right)^2}$$
 $$l=\sqrt{\left(\tfrac{L}{2}\right)^2+R^2+R^2-\left(\tfrac{L}{2}\right)^2-2R\sqrt{R^2-\left(\tfrac{L}{2}\right)^2}}=R\sqrt{2-\sqrt{4-\left(\tfrac{L}{R}\right)^2}}$$

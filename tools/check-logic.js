@@ -130,6 +130,17 @@ ok(css.indexOf('--bg:#f6f7f9') >= 0 && css.indexOf('--bg:#12151c') >= 0, 'theme.
 const LG = require(path.join(APP, 'logo.js'));
 { const svg = LG.svg('#c2410c', '#ffffff'); ok(/^<svg[^>]*>.*<\/svg>$/.test(svg) && !/NaN|undefined/.test(svg), 'logo draws cleanly'); }
 
+// figures cut from the slides: every {{fig img/x.png | ...}} points at a file that exists, and no image is left unused
+{
+  const used = new Set(), have = fs.readdirSync(path.join(APP, 'img')).filter(f => f[0] !== '.').map(f => 'img/' + f);
+  lectures.forEach(l => l.sections.forEach(s => { (s.md.match(/\{\{fig\s+\S+/g) || []).forEach(m => used.add(m.replace(/\{\{fig\s+/, ''))); }));
+  used.forEach(f => ok(have.indexOf(f) >= 0, 'figure file exists: ' + f));
+  have.forEach(f => ok(used.has(f), 'figure used by some lecture: ' + f));
+  ok(!lectures.some(l => l.sections.some(s => /\[figura|\(figura/i.test(s.md))), 'no [figura: ...] placeholder is left in the lectures');
+  const figs = JSON.parse(fs.readFileSync(path.join(__dirname, 'figures.json'), 'utf8')).map(f => f.file).sort();
+  ok(JSON.stringify(figs) === JSON.stringify(have.slice().sort()), 'tools/figures.json lists exactly the images in app/img');
+}
+
 // no locking anywhere in the app sources
 ['app.js', 'index.html', 'style.css'].forEach(f => {
   const src = fs.readFileSync(path.join(APP, f), 'utf8');

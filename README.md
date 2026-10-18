@@ -22,7 +22,7 @@ xdg-open app/index.html     # works from file://
 - **Settings** (gear, top right): theme (system, light, dark) and accent colour (presets, a picker, or any CSS colour). The accent colours buttons, bars, the flame, the logo and the tab icon. Saved in the browser apart from the progress, so resetting progress keeps it. Export, import and reset live under *Datos* (`#/ajustes`).
 - **Rating** after each exercise: Fallé / Dudoso / Dominado. XP depends on points, hints used and rating; finishing a stage gives a bonus.
 - **Examen**: timed simulator over whole past exams, self-scored.
-- **Teoría**: the lecture notes, with deep links from hints and roadmap steps.
+- **Teoría**: the lecture notes, with deep links from hints and roadmap steps. The figures are cropped from the slides (`app/img/`, listed in `tools/figures.json`); `python3 tools/figures.py <folder with the slide PDFs>` regenerates them (needs `pdftoppm` and ImageMagick).
 
 ## Layout
 
@@ -31,9 +31,10 @@ content/lectures/   lecture notes (temas 1-7) converted from the slides (CC BY-S
 content/exams/      past exams and extra exercises (NOT in git, see below)
 tools/build.py      Markdown -> app/data-lectures.js, app/data-exams.js
 tools/skills.json   skills, theory links, tagging patterns
+tools/figures.*     slide figures: figures.json (page and crop of each) and figures.py (cuts them out of the PDFs)
 tools/roadmap.json  stages, theory per stage, manual stage overrides
 tools/check-*.js    node checks: math rendering, roadmap logic, app click-through
-app/                index.html, app.js, logic.js (pure roadmap/SRS/time logic), theme.js (theme and accent, loaded in <head>), logo.js, md.js, style.css, vendor/katex
+app/                index.html, app.js, logic.js (pure roadmap/SRS/time logic), theme.js (theme and accent, loaded in <head>), logo.js, md.js, style.css, img/ (figures), vendor/katex
 ```
 
 Checks (need Node): `node tools/check-math.js`, `node tools/check-logic.js`, `node tools/check-app.js`.

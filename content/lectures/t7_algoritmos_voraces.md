@@ -163,7 +163,7 @@ $$\max_x\sum_{i=1}^{n}x_iv_i\quad\text{sujeto a}\quad x_i\in\{0,1\},\ i=1,\dots,
 - Árbol libre: es un grafo no dirigido conexo acíclico. Todo árbol libre con n vértices tiene n-1 aristas. Si se añade una arista se introduce un ciclo. Si se borra una arista quedan vértices no conectados. Cualquier par de vértices está unido por un único camino simple.
 - Árbol de recubrimiento de un grafo no dirigido y ponderado no negativamente: es cualquier subgrafo que contenga todos los vértices y que sea un árbol libre.
 - Árbol de recubrimiento de coste mínimo: es un árbol de recubrimiento y no hay ningún otro árbol de recubrimiento cuya suma de los pesos de las aristas sea menor. Lo denotamos arm(G), donde G es un grafo no dirigido, conexo, y ponderado no negativamente.
-- Problema: dado un grafo $G=\langle V,E\rangle$ no dirigido, conexo, y ponderado no negativamente, hallar arm(G). (Figura: grafo ponderado de 10 vértices cuyo árbol de recubrimiento de coste mínimo tiene valor 38. No tiene por qué ser único.)
+- Problema: dado un grafo $G=\langle V,E\rangle$ no dirigido, conexo, y ponderado no negativamente, hallar arm(G). {{fig img/t7-p48.png | grafo ponderado de 10 vértices cuyo árbol de recubrimiento de coste mínimo tiene valor 38. No tiene por qué ser único.}}
 
 ### Propiedad fundamental
 - Sea $G=\langle V,E\rangle$ un grafo no dirigido, conexo, y ponderado no negativamente, $G\in\{f:V\times V\to E\}$. Sea U un conjunto de vértices $U\subset V$, $U\ne\emptyset$.
@@ -197,7 +197,7 @@ Kruskal(G)
 ### Algoritmo de Prim
 - Seleccionar un nodo y construir el árbol a partir de él.
 - Aplica reiteradamente la propiedad de los árboles de recubrimiento de coste mínimo incorporando a cada paso una arista. Se usa un conjunto U de vértices tratados y se selecciona en cada paso la arista mínima que une un vértice de U con otro de su complementario. Es una estrategia óptima.
-- Ejemplo paso a paso en el mismo grafo que Kruskal [figura: aristas añadidas en cada paso a partir de un vértice inicial].
+- Ejemplo paso a paso en el mismo grafo que Kruskal {{fig img/t7-p54.png | aristas añadidas en cada paso a partir de un vértice inicial}}.
 ```
 Prim(G)
     // Entrada: G = <V,E>, es un grafo no dirigido, conexo

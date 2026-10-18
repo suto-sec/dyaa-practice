@@ -103,3 +103,8 @@ details.stage[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:8px}
 .linkbtn{background:none;border:0;padding:0;font:inherit;font-size:.85rem;color:var(--ac-text);cursor:pointer;text-decoration:underline}
 @media (max-width:520px){.bname{display:none}}
 @media (max-width:700px){.brand{flex:1}#nav{order:3;flex:1 0 100%}#nav a{padding:5px 9px}}
+
+/* figures cut from the slides: they have a white background, so they get a frame in the dark theme as well */
+.md img.fig{display:block;max-width:min(100%,760px);height:auto;margin:10px 0;background:#fff;border:1px solid var(--bd);border-radius:8px;padding:4px;box-sizing:border-box}
+.md figure.fig{margin:10px 0}
+.md figure.fig img.fig{margin:0}

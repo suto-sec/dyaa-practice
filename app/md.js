@@ -10,6 +10,12 @@ function mdRender(src) {
     catch (e) { return '<code>' + esc(t) + '</code>'; }
   }
   var s = String(src || '').replace(/\r/g, '');
+  /* {{fig img/x.png | description}}: a figure cut from the slides. The description is the alt text, shown if the image is missing. */
+  function figImg(path, d) {
+    return '<img class="fig" src="' + esc(path) + '" alt="' + esc('Figura: ' + d.replace(/[$\\{}`]/g, '').replace(/\s+/g, ' ').trim()) + '" loading="lazy">';
+  }
+  s = s.replace(/^[ \t]*(?:[-*+][ \t]+)?\{\{fig\s+(\S+)\s*\|([\s\S]*?)\}\}[ \t]*$/gm, function (m, path, d) { return '\n' + put('<figure class="fig">' + figImg(path, d) + '</figure>', true) + '\n'; });
+  s = s.replace(/\{\{fig\s+(\S+)\s*\|([\s\S]*?)\}\}/g, function (m, path, d) { return put(figImg(path, d)); });
   s = s.replace(/```[^\n]*\n([\s\S]*?)```/g, function (m, c) { return '\n' + put('<pre><code>' + esc(c.replace(/\n$/, '')) + '</code></pre>', true) + '\n'; });
   s = s.replace(/`([^`\n]+)`/g, function (m, c) { return put('<code>' + esc(c) + '</code>'); });
   s = s.replace(/\$\$([\s\S]+?)\$\$/g, function (m, c) { return put(tex(c, true)); });

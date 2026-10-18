@@ -1,0 +1,530 @@
+[
+ {
+  "file": "img/t1-p24.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 24,
+  "crop": [
+   30,
+   158,
+   345,
+   226
+  ]
+ },
+ {
+  "file": "img/t1-p31.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 31,
+  "crop": [
+   60,
+   189,
+   340,
+   247
+  ]
+ },
+ {
+  "file": "img/t1-p34.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 34,
+  "crop": [
+   28,
+   50,
+   338,
+   243
+  ]
+ },
+ {
+  "file": "img/t1-p38.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 38,
+  "crop": [
+   36,
+   155,
+   322,
+   246
+  ]
+ },
+ {
+  "file": "img/t1-p43.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 43,
+  "crop": [
+   40,
+   112,
+   335,
+   240
+  ]
+ },
+ {
+  "file": "img/t1-p44.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 44,
+  "crop": [
+   200,
+   66,
+   340,
+   222
+  ]
+ },
+ {
+  "file": "img/t1-p46.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 46,
+  "crop": [
+   38,
+   118,
+   332,
+   215
+  ]
+ },
+ {
+  "file": "img/t1-p47.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 47,
+  "crop": [
+   30,
+   48,
+   340,
+   238
+  ]
+ },
+ {
+  "file": "img/t1-p48.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 48,
+  "crop": [
+   60,
+   46,
+   330,
+   240
+  ]
+ },
+ {
+  "file": "img/t1-p49.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 49,
+  "crop": [
+   30,
+   50,
+   352,
+   193
+  ]
+ },
+ {
+  "file": "img/t1-p51.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 51,
+  "crop": [
+   30,
+   132,
+   352,
+   249
+  ]
+ },
+ {
+  "file": "img/t1-p54.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 54,
+  "crop": [
+   30,
+   142,
+   335,
+   247
+  ]
+ },
+ {
+  "file": "img/t1-p55.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 55,
+  "crop": [
+   30,
+   158,
+   345,
+   238
+  ]
+ },
+ {
+  "file": "img/t1-p57.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 57,
+  "crop": [
+   60,
+   87,
+   330,
+   250
+  ]
+ },
+ {
+  "file": "img/t1-p58.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 58,
+  "crop": [
+   24,
+   68,
+   340,
+   222
+  ]
+ },
+ {
+  "file": "img/t1-p59a.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 59,
+  "crop": [
+   28,
+   48,
+   170,
+   224
+  ]
+ },
+ {
+  "file": "img/t1-p59b.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 59,
+  "crop": [
+   185,
+   48,
+   335,
+   224
+  ]
+ },
+ {
+  "file": "img/t1-p60.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 60,
+  "crop": [
+   95,
+   108,
+   275,
+   240
+  ]
+ },
+ {
+  "file": "img/t1-p61.png",
+  "pdf": "t1_intro_alg.pdf",
+  "page": 61,
+  "crop": [
+   25,
+   56,
+   345,
+   170
+  ]
+ },
+ {
+  "file": "img/t2.1-p19.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 19,
+  "crop": [
+   140,
+   118,
+   235,
+   202
+  ]
+ },
+ {
+  "file": "img/t2.1-p25.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 25,
+  "crop": [
+   25,
+   48,
+   322,
+   252
+  ]
+ },
+ {
+  "file": "img/t2.1-p26.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 26,
+  "crop": [
+   25,
+   188,
+   300,
+   258
+  ]
+ },
+ {
+  "file": "img/t2.1-p27.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 27,
+  "crop": [
+   25,
+   46,
+   340,
+   150
+  ]
+ },
+ {
+  "file": "img/t2.1-p33.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 33,
+  "crop": [
+   40,
+   88,
+   358,
+   218
+  ]
+ },
+ {
+  "file": "img/t2.1-p34.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 34,
+  "crop": [
+   25,
+   46,
+   345,
+   248
+  ]
+ },
+ {
+  "file": "img/t2.1-p36.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 36,
+  "crop": [
+   25,
+   46,
+   345,
+   250
+  ]
+ },
+ {
+  "file": "img/t2.1-p41.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 41,
+  "crop": [
+   20,
+   112,
+   345,
+   222
+  ]
+ },
+ {
+  "file": "img/t2.1-p50.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 50,
+  "crop": [
+   20,
+   48,
+   345,
+   232
+  ]
+ },
+ {
+  "file": "img/t2.1-p51.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 51,
+  "crop": [
+   20,
+   48,
+   345,
+   246
+  ]
+ },
+ {
+  "file": "img/t2.1-p52.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 52,
+  "crop": [
+   20,
+   48,
+   345,
+   246
+  ]
+ },
+ {
+  "file": "img/t2.1-p53.png",
+  "pdf": "t2.1_prelims_matem.pdf",
+  "page": 53,
+  "crop": [
+   20,
+   48,
+   345,
+   232
+  ]
+ },
+ {
+  "file": "img/t2.2-p11.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 11,
+  "crop": [
+   20,
+   44,
+   340,
+   250
+  ]
+ },
+ {
+  "file": "img/t2.2-p16.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 16,
+  "crop": [
+   50,
+   95,
+   340,
+   226
+  ]
+ },
+ {
+  "file": "img/t2.2-p21.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 21,
+  "crop": [
+   80,
+   142,
+   290,
+   250
+  ]
+ },
+ {
+  "file": "img/t2.2-p24.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 24,
+  "crop": [
+   60,
+   66,
+   300,
+   175
+  ]
+ },
+ {
+  "file": "img/t2.2-p25.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 25,
+  "crop": [
+   30,
+   96,
+   330,
+   236
+  ]
+ },
+ {
+  "file": "img/t2.2-p28.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 28,
+  "crop": [
+   30,
+   114,
+   330,
+   230
+  ]
+ },
+ {
+  "file": "img/t2.2-p46.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 46,
+  "crop": [
+   30,
+   92,
+   335,
+   242
+  ]
+ },
+ {
+  "file": "img/t2.2-p6.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 6,
+  "crop": [
+   35,
+   130,
+   212,
+   250
+  ]
+ },
+ {
+  "file": "img/t2.2-p7.png",
+  "pdf": "t2.2_notac_asint.pdf",
+  "page": 7,
+  "crop": [
+   35,
+   88,
+   340,
+   184
+  ]
+ },
+ {
+  "file": "img/t3.1-p16.png",
+  "pdf": "t3.1_analis_alg_ite.pdf",
+  "page": 16,
+  "crop": [
+   25,
+   98,
+   345,
+   248
+  ]
+ },
+ {
+  "file": "img/t3.1-p8.png",
+  "pdf": "t3.1_analis_alg_ite.pdf",
+  "page": 8,
+  "crop": [
+   25,
+   86,
+   350,
+   236
+  ]
+ },
+ {
+  "file": "img/t3.2-p18.png",
+  "pdf": "t3.2_analis_alg_rec.pdf",
+  "page": 18,
+  "crop": [
+   45,
+   92,
+   330,
+   200
+  ]
+ },
+ {
+  "file": "img/t3.2-p28.png",
+  "pdf": "t3.2_analis_alg_rec.pdf",
+  "page": 28,
+  "crop": [
+   70,
+   163,
+   295,
+   251
+  ]
+ },
+ {
+  "file": "img/t3.2-p33.png",
+  "pdf": "t3.2_analis_alg_rec.pdf",
+  "page": 33,
+  "crop": [
+   30,
+   190,
+   345,
+   256
+  ]
+ },
+ {
+  "file": "img/t5-p12.png",
+  "pdf": "t5_div_y_venceras.pdf",
+  "page": 12,
+  "crop": [
+   20,
+   44,
+   345,
+   250
+  ]
+ },
+ {
+  "file": "img/t7-p48.png",
+  "pdf": "t7_alg_voraces.pdf",
+  "page": 48,
+  "crop": [
+   105,
+   98,
+   305,
+   214
+  ]
+ },
+ {
+  "file": "img/t7-p54.png",
+  "pdf": "t7_alg_voraces.pdf",
+  "page": 54,
+  "crop": [
+   30,
+   44,
+   335,
+   252
+  ]
+ }
+]
