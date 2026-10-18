@@ -1,0 +1,33 @@
+[
+ {"id":"asint-definiciones","label":"Definición de O/Ω/Θ","tema":"analisis","theory":[
+  {"lecture":"t2.2_notaciones_asintoticas","section":"Definición formal de cota superior"},
+  {"lecture":"t2.2_notaciones_asintoticas","section":"Definición formal de cota inferior"},
+  {"lecture":"t2.2_notaciones_asintoticas","section":"Definición formal de cota ajustada"}],
+  "patterns":["\\\\in\\s*(O|\\\\Omega|\\\\Theta|\\\\theta)\\b","definición de .*(O|complejidad asintótica)","Ordena de menor a mayor"]},
+ {"id":"contar-bucles","label":"Contar operaciones de bucles","tema":"analisis","theory":[
+  {"lecture":"t3.1_analisis_alg_iterativos","section":"Procedimiento general basado en sumatorios"},
+  {"lecture":"t3.1_analisis_alg_iterativos","section":"Operaciones de un bucle de n iteraciones"}],
+  "patterns":["número de operaciones","bucle de tipo FOR","procesa\\("]},
+ {"id":"sumatorios","label":"Sumatorios y fórmulas cerradas","tema":"analisis","theory":[
+  {"lecture":"t2.1_prelim_matematicos","section":"Suma de los primeros n naturales"},
+  {"lecture":"t2.1_prelim_matematicos","section":"Sumas parciales de series geométricas"}],
+  "patterns":["fórmulas que no incluyan","sumatorio","Simplifica el siguiente sumatorio"]},
+ {"id":"cotas-integral","label":"Cotas por integrales","tema":"analisis","theory":[
+  {"lecture":"t2.1_prelim_matematicos","section":"Aproximación por integrales"}],
+  "patterns":["aproximación por integrales","cota inferior y una superior"]},
+ {"id":"rec-expansion","label":"Recurrencias: expansión","tema":"analisis","theory":[
+  {"lecture":"t3.2_analisis_alg_recursivos","section":"Resolución por expansión de recurrencias"},
+  {"lecture":"t3.2_analisis_alg_recursivos","section":"Función potencia - versión 1"}],
+  "patterns":["expansión de recurrencias"]},
+ {"id":"rec-general","label":"Recurrencias: método general","tema":"analisis","theory":[
+  {"lecture":"t3.2_analisis_alg_recursivos","section":"Análisis de eficiencia en tiempo: método general"},
+  {"lecture":"t3.2_analisis_alg_recursivos","section":"Recurrencias no homogéneas - caso general"},
+  {"lecture":"t3.2_analisis_alg_recursivos","section":"Método de cambio de variable"}],
+  "patterns":["método general","relación de recurrencia"]},
+ {"id":"complejidad-general","label":"Complejidad (general)","tema":"analisis","theory":[
+  {"lecture":"t3.2_analisis_alg_recursivos","section":"Teorema maestro - versión completa"}],"patterns":[]},
+ {"id":"recursion-basica","label":"Recursión básica","tema":"diseno","theory":[],"patterns":[]},
+ {"id":"divide-y-venceras","label":"Divide y vencerás","tema":"diseno","theory":[],"patterns":[]},
+ {"id":"backtracking","label":"Backtracking","tema":"diseno","theory":[],"patterns":[]},
+ {"id":"voraz","label":"Algoritmos voraces","tema":"diseno","theory":[],"patterns":[]}
+]

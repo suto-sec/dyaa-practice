@@ -1,0 +1,7 @@
+# Unlicensed material: personal study only (see NOTICE)
+content/exams/
+app/data-exams.js
+
+__pycache__/
+*.pyc
+.DS_Store
