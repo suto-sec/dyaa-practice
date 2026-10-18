@@ -146,7 +146,7 @@ function nextCard(extra) {
 function vHoy() {
   var t = today(), h = '<h2>Misi&oacute;n de hoy</h2>' + missingBanner();
   var lv = level(), lo = (lv - 1) * (lv - 1) * 10, hi = lv * lv * 10, pct = Math.round((S.xp - lo) / (hi - lo) * 100);
-  h += '<div class="card row"><span>Nivel <b>' + lv + '</b></span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + S.xp + ' / ' + hi + ' XP</span><span>' + streakHtml() + ' <span class="muted">d&iacute;as de racha</span></span></div>';
+  h += '<div class="card row"><span>Nivel <b>' + lv + '</b></span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + S.xp + ' / ' + hi + ' XP</span><span class="streakline">' + streakHtml() + '<span class="muted">d&iacute;as de racha</span></span></div>';
   var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t);
   if (due.length) {
     h += '<h3>Repaso pendiente (' + due.length + ')</h3>';
@@ -302,7 +302,7 @@ function vTheory(lid, idx, stepId) {
 }
 
 function vProgress() {
-  var h = '<h2>Progreso</h2><div class="card row">XP <b>' + S.xp + '</b> &middot; Nivel <b>' + level() + '</b> &middot; ' + streakHtml() + ' d&iacute;as de racha &middot; quedan ' + mins(L.pathMinutes(PATH, S, EXAMS).left) + ' de ruta</div><h3>Ruta por etapas</h3>';
+  var h = '<h2>Progreso</h2><div class="card row">XP <b>' + S.xp + '</b> &middot; Nivel <b>' + level() + '</b> &middot; <span class="streakline">' + streakHtml() + '<span>d&iacute;as de racha</span></span> &middot; quedan ' + mins(L.pathMinutes(PATH, S, EXAMS).left) + ' de ruta</div><h3>Ruta por etapas</h3>';
   STAGES.forEach(function (g) {
     var p = progress(g.id), pct = p.total ? Math.round(p.done / p.total * 100) : 0;
     h += '<div class="row" style="margin-bottom:8px"><span style="width:300px;max-width:100%">' + g.n + '. ' + esc(g.title) + (S.bonus[g.id] ? ' ' + flame('sm') : '') + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; ' + mins(p.left) : '') + '</span></div>';

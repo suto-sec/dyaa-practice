@@ -64,13 +64,15 @@ details.stage[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:8px}
 .tag.min{font-variant-numeric:tabular-nums;white-space:nowrap}
 .sub .t{text-transform:none;letter-spacing:0}
 /* flame: the streak, drawn in the accent colour */
-.flame{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.28em;color:var(--ac)}
+.flame{display:inline-block;flex:none;width:1.25em;height:1.25em;vertical-align:-.28em;color:var(--ac)}
 .flame svg{display:block;width:100%;height:100%;fill:currentColor}
 .flame .core{fill:#fff;fill-opacity:.55}
 .flame.sm{width:1em;height:1em;vertical-align:-.15em}
 .flame.lg{width:2.6rem;height:2.6rem}
-.streak{display:inline-flex;align-items:center;gap:3px;font-weight:700;color:var(--fg)}
-.stats .flame{width:1.5em;height:1.5em;vertical-align:-.4em}
+.streak{display:inline-flex;align-items:center;gap:4px;line-height:1;font-weight:700;color:var(--fg)}
+.streak b{display:block;line-height:1;font-variant-numeric:tabular-nums}
+.streakline{display:inline-flex;align-items:center;gap:6px}
+.stats .flame{width:1.5em;height:1.5em}
 .streak.on .flame{filter:drop-shadow(0 0 4px color-mix(in srgb,var(--ac) 55%,transparent))}
 .streak.risk .flame{color:var(--mut)}.streak.risk{color:var(--mut)}
 .streak.off .flame{color:var(--mut);opacity:.45}.streak.off{color:var(--mut)}
