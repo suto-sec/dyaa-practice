@@ -128,7 +128,7 @@ T.PRESETS.concat([['auto-light', '#c2410c'], ['auto-dark', '#fb923c'], ['pale', 
 const css = fs.readFileSync(path.join(APP, 'style.css'), 'utf8');
 ok(css.indexOf('--bg:#f6f7f9') >= 0 && css.indexOf('--bg:#12151c') >= 0, 'theme.js page colours match style.css');
 const LG = require(path.join(APP, 'logo.js'));
-LG.designs.forEach((d, i) => ok(/^<svg[^>]*>.*<\/svg>$/.test(LG.svg('#c2410c', '#ffffff', i)) && !/NaN|undefined/.test(LG.svg('#c2410c', '#ffffff', i)), 'logo draws cleanly: ' + d.id));
+{ const svg = LG.svg('#c2410c', '#ffffff'); ok(/^<svg[^>]*>.*<\/svg>$/.test(svg) && !/NaN|undefined/.test(svg), 'logo draws cleanly'); }
 
 // no locking anywhere in the app sources
 ['app.js', 'index.html', 'style.css'].forEach(f => {
