@@ -102,6 +102,58 @@ def tag(skills, text, kind):
     return res
 
 
+# ---------------- roadmap ----------------
+def load_roadmap(lectures):
+    rm = json.loads((TOOLS / "roadmap.json").read_text(encoding="utf-8"))
+    lm = {l["id"]: l for l in lectures}
+    for st in rm["stages"]:
+        for t in st["theory"]:
+            l = lm.get(t["lecture"])
+            idx = None
+            if l:
+                for i, sec in enumerate(l["sections"]):
+                    if sec["title"] == t["section"]:
+                        idx = i; break
+                if idx is None:
+                    for i, sec in enumerate(l["sections"]):
+                        if t["section"] in sec["title"]:
+                            idx = i; break
+            if idx is None:
+                warn("unresolved theory ref in stage %s: %s / %s" % (st["id"], t["lecture"], t["section"]))
+                idx = 0
+            t["idx"] = idx
+    return rm
+
+
+TECH = [("backtracking", r"backtracking|vuelta atr[aá]s"), ("divide-y-venceras", r"divide y vencer"),
+        ("voraz", r"voraz|greedy")]
+
+
+def design_skill(text):
+    """Primary design technique = the one mentioned first in the statement."""
+    best = None
+    for sid, rx in TECH:
+        m = re.search(rx, text, re.I)
+        if m and (best is None or m.start() < best[0]):
+            best = (m.start(), sid)
+    return best[1] if best else "recursion-basica"
+
+
+ADIC_BASE = {"3": 0.5, "4": 1.0, "5": 1.5, "9": 2.0, "6": 1.0, "7": 1.0, "8": 1.0}
+
+
+def difficulty(ex, adic, ch, has_sol):
+    ln = len(ex["statement"])
+    if adic:
+        d = ADIC_BASE.get(ch, 1.0) + min(ln, 900) / 900.0
+    else:
+        pts = ex["points"] if ex["points"] is not None else 3.0
+        d = 3.0 + 0.5 * pts + min(ln, 1500) / 750.0
+    if has_sol:
+        d -= 0.3
+    return round(d, 2)
+
+
 # ---------------- exams ----------------
 MARKER = re.compile(r"^(###\s+(Solución|Posible solución|Posibles soluciones)\s*:?\s*|\*\*Solución:\*\*\s*)$")
 
@@ -149,7 +201,7 @@ def kind_from_name(stem):
     return None
 
 
-def parse_exam(path, skills, overrides):
+def parse_exam(path, skills, overrides, roadmap):
     stem = path.stem
     text = path.read_text(encoding="utf-8")
     adic = stem.startswith("ejercicios_adicionales")
@@ -157,7 +209,8 @@ def parse_exam(path, skills, overrides):
     for line in text.split("\n"):
         m = re.match(r"^# +(.*)", line)
         if m: title = m.group(1).strip(); break
-    exam = {"id": stem, "title": title, "durationMin": None if adic else exam_duration(text), "exercises": []}
+    exam = {"id": stem, "title": title, "durationMin": None if adic else exam_duration(text), "exercises": [],
+            "kind": "adic" if adic else (kind_from_name(stem) or "mixto")}
     head_re = re.compile(r"^###\s+Ejercicio\s+(\d+\.\d+)(.*)$") if adic else re.compile(r"^#{2,3}\s+Ejercicio\s+(\d+)(.*)$")
     kind = "ejs" if adic else kind_from_name(stem)
     chapter = None
@@ -189,8 +242,32 @@ def parse_exam(path, skills, overrides):
             elif not sk: sk = ["complejidad-general"]
         else:
             sk = tag(skills, st + "\n" + h, cur["kind"])
+        sm = {k: i for i, g in enumerate(roadmap["stages"]) for k in g["skills"]}
+        stage_of = {g["id"]: g for g in roadmap["stages"]}
+        ov = roadmap.get("stage_overrides", {}).get("%s#%s" % (stem, n))
+        if cur["kind"] == "diseno" or (adic and n.split(".")[0] in ("3", "4", "5", "6", "7", "8", "9")):
+            if not adic:
+                sk = [design_skill(st + "\n" + h)]
+            stg = [g for g in roadmap["stages"] if sk[0] in g["skills"]][0]["id"]
+        else:
+            if "rec-expansion" in sk or "rec-general" in sk:
+                full = st + "\n" + h
+                has_exp = re.search(r"expansi[oó]n", full, re.I)
+                has_gen = re.search(r"m[eé]todo general|teorema maestro|ecuaci[oó]n caracter", full, re.I)
+                if has_exp and not has_gen:
+                    sk = [x for x in sk if x != "rec-general"]
+                elif has_gen and not has_exp:
+                    sk = [x for x in sk if x != "rec-expansion"]
+            stg = roadmap["stages"][max(sm[x] for x in sk)]["id"]
+        if ov:
+            stg = ov
+            keep = [x for x in sk if sm[x] <= [g["id"] for g in roadmap["stages"]].index(ov)]
+            sk = keep or [stage_of[ov]["skills"][0]]
+        assert stg in stage_of, (eid, stg)
         exam["exercises"].append({"id": eid, "n": n, "title": t, "points": pts, "durationMin": dur,
-                                  "kind": cur["kind"], "statement": st, "solution": so, "skills": sk})
+                                  "kind": cur["kind"], "statement": st, "solution": so, "skills": sk,
+                                  "stage": stg, "src": "adic" if adic else "exam",
+                                  "diff": difficulty({"statement": st, "points": pts}, adic, n.split(".")[0] if adic else "", bool(so and so.strip()))})
         cur = None
 
     for line, infence in iter_lines(text):
@@ -218,20 +295,30 @@ def parse_exam(path, skills, overrides):
 def main():
     lectures = [parse_lecture(p) for p in sorted(LEC.glob("*.md"))]
     skills = load_skills(lectures)
+    roadmap = load_roadmap(lectures)
     APP.mkdir(exist_ok=True)
     write_js(APP / "data-lectures.js", "LECTURES", lectures)
     # append SKILLS to same file
     pub = [{k: v for k, v in s.items() if not k.startswith("_")} for s in skills]
     with open(APP / "data-lectures.js", "a", encoding="utf-8") as f:
         f.write("window.SKILLS = %s;\n" % json.dumps(pub, ensure_ascii=False, indent=1))
+        f.write("window.WORLDS = %s;\n" % json.dumps(roadmap["worlds"], ensure_ascii=False))
+        f.write("window.STAGES = %s;\n" % json.dumps(roadmap["stages"], ensure_ascii=False, indent=1))
     print("lectures: %d (%d sections)" % (len(lectures), sum(len(l["sections"]) for l in lectures)))
     if not EXA.is_dir():
         print("content/exams missing; skipping data-exams.js")
         return
     ovp = TOOLS / "overrides.json"
     overrides = json.loads(ovp.read_text(encoding="utf-8")) if ovp.exists() else {}
-    exams = [parse_exam(p, skills, overrides) for p in sorted(EXA.glob("*.md"), key=lambda p: p.name)]
+    exams = [parse_exam(p, skills, overrides, roadmap) for p in sorted(EXA.glob("*.md"), key=lambda p: p.name)]
     write_js(APP / "data-exams.js", "EXAMS", exams)
+    order = {}
+    for g in roadmap["stages"]:
+        items = [(x["diff"], e["id"] + "/" + x["id"]) for e in exams for x in e["exercises"] if x["stage"] == g["id"]]
+        order[g["id"]] = [k for _, k in sorted(items)]
+    with open(APP / "data-exams.js", "a", encoding="utf-8") as f:
+        f.write("window.STAGE_EX = %s;\n" % json.dumps(order, ensure_ascii=False, indent=1))
+    print("stage sizes:", {k: len(v) for k, v in order.items()})
     print("%-42s %5s %5s %6s" % ("exam", "exs", "sols", "min"))
     te = ts = 0
     for e in exams:

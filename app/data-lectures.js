@@ -1826,28 +1826,369 @@ window.SKILLS = [
   "id": "recursion-basica",
   "label": "Recursión básica",
   "tema": "diseno",
-  "theory": [],
+  "theory": [
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Metodología para diseñar algoritmos recursivos"
+   },
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Suma de los dígitos de un número"
+   },
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Búsqueda en lista ordenada"
+   }
+  ],
   "patterns": []
  },
  {
   "id": "divide-y-venceras",
   "label": "Divide y vencerás",
   "tema": "diseno",
-  "theory": [],
+  "theory": [
+   {
+    "lecture": "t5_divide_y_venceras",
+    "section": "Merge-sort"
+   },
+   {
+    "lecture": "t5_divide_y_venceras",
+    "section": "Quicksort"
+   },
+   {
+    "lecture": "t5_divide_y_venceras",
+    "section": "Multiplicación rápida de números en binario"
+   }
+  ],
   "patterns": []
  },
  {
   "id": "backtracking",
   "label": "Backtracking",
   "tema": "diseno",
-  "theory": [],
+  "theory": [
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Permutaciones: implementación"
+   },
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Implementación (N reinas)"
+   },
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Aspectos a considerar al usar backtracking"
+   }
+  ],
   "patterns": []
  },
  {
   "id": "voraz",
   "label": "Algoritmos voraces",
   "tema": "diseno",
-  "theory": [],
+  "theory": [
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Esquema general"
+   },
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Códigos de Huffman"
+   },
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Algoritmo de Dijkstra"
+   }
+  ],
   "patterns": []
+ }
+];
+window.WORLDS = {"analisis": "Análisis de algoritmos", "diseno": "Diseño de algoritmos"};
+window.STAGES = [
+ {
+  "id": "sumatorios",
+  "world": "analisis",
+  "title": "Sumatorios y cotas por integrales",
+  "blurb": "La caja de herramientas matemática: sumas cerradas, series geométricas y acotar sumas con integrales.",
+  "skills": [
+   "sumatorios",
+   "cotas-integral"
+  ],
+  "theory": [
+   {
+    "lecture": "t2.1_prelim_matematicos",
+    "section": "Suma de los primeros n naturales",
+    "idx": 15
+   },
+   {
+    "lecture": "t2.1_prelim_matematicos",
+    "section": "Sumas parciales de series geométricas",
+    "idx": 26
+   },
+   {
+    "lecture": "t2.1_prelim_matematicos",
+    "section": "Aproximación por integrales",
+    "idx": 31
+   }
+  ]
+ },
+ {
+  "id": "asintotica",
+  "world": "analisis",
+  "title": "Notación asintótica",
+  "blurb": "O, Ω y Θ: definir, demostrar con la definición o con límites, simplificar y ordenar funciones.",
+  "skills": [
+   "asint-definiciones"
+  ],
+  "theory": [
+   {
+    "lecture": "t2.2_notaciones_asintoticas",
+    "section": "Definición formal de cota superior",
+    "idx": 13
+   },
+   {
+    "lecture": "t2.2_notaciones_asintoticas",
+    "section": "Definición formal de cota inferior",
+    "idx": 21
+   },
+   {
+    "lecture": "t2.2_notaciones_asintoticas",
+    "section": "Definición formal de cota ajustada",
+    "idx": 24
+   },
+   {
+    "lecture": "t2.2_notaciones_asintoticas",
+    "section": "Simplificación",
+    "idx": 30
+   }
+  ]
+ },
+ {
+  "id": "bucles",
+  "world": "analisis",
+  "title": "Coste de algoritmos iterativos",
+  "blurb": "Contar operaciones de bucles anidados con sumatorios y deducir su orden.",
+  "skills": [
+   "contar-bucles"
+  ],
+  "theory": [
+   {
+    "lecture": "t3.1_analisis_alg_iterativos",
+    "section": "Procedimiento general basado en sumatorios",
+    "idx": 7
+   },
+   {
+    "lecture": "t3.1_analisis_alg_iterativos",
+    "section": "Operaciones de un bucle de n iteraciones",
+    "idx": 9
+   }
+  ]
+ },
+ {
+  "id": "expansion",
+  "world": "analisis",
+  "title": "Recurrencias: expansión",
+  "blurb": "Plantear la recurrencia de un algoritmo recursivo y resolverla expandiéndola.",
+  "skills": [
+   "rec-expansion"
+  ],
+  "theory": [
+   {
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "section": "Función potencia - versión 1",
+    "idx": 4
+   },
+   {
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "section": "Resolución por expansión de recurrencias",
+    "idx": 5
+   },
+   {
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "section": "Errores frecuentes - Expansión de recurrencias",
+    "idx": 14
+   }
+  ]
+ },
+ {
+  "id": "general",
+  "world": "analisis",
+  "title": "Recurrencias: método general y teorema maestro",
+  "blurb": "Recurrencias lineales (homogéneas y no homogéneas), cambio de variable y teorema maestro.",
+  "skills": [
+   "rec-general",
+   "complejidad-general"
+  ],
+  "theory": [
+   {
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "section": "Teorema maestro - versión completa",
+    "idx": 13
+   },
+   {
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "section": "Recurrencias homogéneas",
+    "idx": 16
+   },
+   {
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "section": "Recurrencias no homogéneas - caso general",
+    "idx": 22
+   },
+   {
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "section": "Método de cambio de variable",
+    "idx": 23
+   }
+  ]
+ },
+ {
+  "id": "recursion",
+  "world": "diseno",
+  "title": "Diseño recursivo básico",
+  "blurb": "Pensar en subproblemas: casos base, descomposición e inducción. Listas, dígitos, búsqueda y Hanoi.",
+  "skills": [
+   "recursion-basica"
+  ],
+  "theory": [
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Conceptos clave en la recursividad",
+    "idx": 5
+   },
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Metodología para diseñar algoritmos recursivos",
+    "idx": 12
+   },
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Arrays y listas: suma de los elementos de una lista",
+    "idx": 19
+   },
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Suma de los dígitos de un número",
+    "idx": 23
+   },
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Búsqueda en lista ordenada",
+    "idx": 36
+   },
+   {
+    "lecture": "t4_intro_recursividad",
+    "section": "Torres de Hanoi",
+    "idx": 40
+   }
+  ]
+ },
+ {
+  "id": "dyv",
+  "world": "diseno",
+  "title": "Divide y vencerás",
+  "blurb": "Dividir en varios subproblemas, resolverlos y combinar: mergesort, quicksort, Karatsuba y más.",
+  "skills": [
+   "divide-y-venceras"
+  ],
+  "theory": [
+   {
+    "lecture": "t5_divide_y_venceras",
+    "section": "Máximo de una lista a de n números",
+    "idx": 14
+   },
+   {
+    "lecture": "t5_divide_y_venceras",
+    "section": "Merge-sort",
+    "idx": 18
+   },
+   {
+    "lecture": "t5_divide_y_venceras",
+    "section": "Quicksort",
+    "idx": 22
+   },
+   {
+    "lecture": "t5_divide_y_venceras",
+    "section": "Multiplicación rápida de números en binario",
+    "idx": 27
+   }
+  ]
+ },
+ {
+  "id": "backtracking",
+  "world": "diseno",
+  "title": "Vuelta atrás (backtracking)",
+  "blurb": "Esquemas de subconjuntos y permutaciones, poda por restricciones, N reinas y ramificación y poda.",
+  "skills": [
+   "backtracking"
+  ],
+  "theory": [
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Subconjuntos de {a,b,c}: solución con árbol binario",
+    "idx": 4
+   },
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Permutaciones: implementación",
+    "idx": 13
+   },
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Implementación (N reinas)",
+    "idx": 20
+   },
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Suma de subconjuntos",
+    "idx": 22
+   },
+   {
+    "lecture": "t6_vuelta_atras_backtracking",
+    "section": "Ramificación y poda: mochila 0-1",
+    "idx": 30
+   }
+  ]
+ },
+ {
+  "id": "voraz",
+  "world": "diseno",
+  "title": "Algoritmos voraces",
+  "blurb": "Función de selección, factibilidad y cuándo la estrategia es óptima: monedas, Huffman, mochila, Kruskal, Prim, Dijkstra.",
+  "skills": [
+   "voraz"
+  ],
+  "theory": [
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Esquema general",
+    "idx": 5
+   },
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Cambio de monedas",
+    "idx": 11
+   },
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Códigos de Huffman",
+    "idx": 14
+   },
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Problema de la mochila - Versión 3",
+    "idx": 18
+   },
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Algoritmo de Kruskal",
+    "idx": 23
+   },
+   {
+    "lecture": "t7_algoritmos_voraces",
+    "section": "Algoritmo de Dijkstra",
+    "idx": 26
+   }
+  ]
  }
 ];

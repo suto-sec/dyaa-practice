@@ -1,0 +1,96 @@
+{
+ "worlds": {
+  "analisis": "Análisis de algoritmos",
+  "diseno": "Diseño de algoritmos"
+ },
+ "stages": [
+  {"id":"sumatorios","world":"analisis","title":"Sumatorios y cotas por integrales",
+   "blurb":"La caja de herramientas matemática: sumas cerradas, series geométricas y acotar sumas con integrales.",
+   "skills":["sumatorios","cotas-integral"],
+   "theory":[
+    {"lecture":"t2.1_prelim_matematicos","section":"Suma de los primeros n naturales"},
+    {"lecture":"t2.1_prelim_matematicos","section":"Sumas parciales de series geométricas"},
+    {"lecture":"t2.1_prelim_matematicos","section":"Aproximación por integrales"}]},
+  {"id":"asintotica","world":"analisis","title":"Notación asintótica",
+   "blurb":"O, Ω y Θ: definir, demostrar con la definición o con límites, simplificar y ordenar funciones.",
+   "skills":["asint-definiciones"],
+   "theory":[
+    {"lecture":"t2.2_notaciones_asintoticas","section":"Definición formal de cota superior"},
+    {"lecture":"t2.2_notaciones_asintoticas","section":"Definición formal de cota inferior"},
+    {"lecture":"t2.2_notaciones_asintoticas","section":"Definición formal de cota ajustada"},
+    {"lecture":"t2.2_notaciones_asintoticas","section":"Simplificación"}]},
+  {"id":"bucles","world":"analisis","title":"Coste de algoritmos iterativos",
+   "blurb":"Contar operaciones de bucles anidados con sumatorios y deducir su orden.",
+   "skills":["contar-bucles"],
+   "theory":[
+    {"lecture":"t3.1_analisis_alg_iterativos","section":"Procedimiento general basado en sumatorios"},
+    {"lecture":"t3.1_analisis_alg_iterativos","section":"Operaciones de un bucle de n iteraciones"}]},
+  {"id":"expansion","world":"analisis","title":"Recurrencias: expansión",
+   "blurb":"Plantear la recurrencia de un algoritmo recursivo y resolverla expandiéndola.",
+   "skills":["rec-expansion"],
+   "theory":[
+    {"lecture":"t3.2_analisis_alg_recursivos","section":"Función potencia - versión 1"},
+    {"lecture":"t3.2_analisis_alg_recursivos","section":"Resolución por expansión de recurrencias"},
+    {"lecture":"t3.2_analisis_alg_recursivos","section":"Errores frecuentes - Expansión de recurrencias"}]},
+  {"id":"general","world":"analisis","title":"Recurrencias: método general y teorema maestro",
+   "blurb":"Recurrencias lineales (homogéneas y no homogéneas), cambio de variable y teorema maestro.",
+   "skills":["rec-general","complejidad-general"],
+   "theory":[
+    {"lecture":"t3.2_analisis_alg_recursivos","section":"Teorema maestro - versión completa"},
+    {"lecture":"t3.2_analisis_alg_recursivos","section":"Recurrencias homogéneas"},
+    {"lecture":"t3.2_analisis_alg_recursivos","section":"Recurrencias no homogéneas - caso general"},
+    {"lecture":"t3.2_analisis_alg_recursivos","section":"Método de cambio de variable"}]},
+  {"id":"recursion","world":"diseno","title":"Diseño recursivo básico",
+   "blurb":"Pensar en subproblemas: casos base, descomposición e inducción. Listas, dígitos, búsqueda y Hanoi.",
+   "skills":["recursion-basica"],
+   "theory":[
+    {"lecture":"t4_intro_recursividad","section":"Conceptos clave en la recursividad"},
+    {"lecture":"t4_intro_recursividad","section":"Metodología para diseñar algoritmos recursivos"},
+    {"lecture":"t4_intro_recursividad","section":"Arrays y listas: suma de los elementos de una lista"},
+    {"lecture":"t4_intro_recursividad","section":"Suma de los dígitos de un número"},
+    {"lecture":"t4_intro_recursividad","section":"Búsqueda en lista ordenada"},
+    {"lecture":"t4_intro_recursividad","section":"Torres de Hanoi"}]},
+  {"id":"dyv","world":"diseno","title":"Divide y vencerás",
+   "blurb":"Dividir en varios subproblemas, resolverlos y combinar: mergesort, quicksort, Karatsuba y más.",
+   "skills":["divide-y-venceras"],
+   "theory":[
+    {"lecture":"t5_divide_y_venceras","section":"Máximo de una lista a de n números"},
+    {"lecture":"t5_divide_y_venceras","section":"Merge-sort"},
+    {"lecture":"t5_divide_y_venceras","section":"Quicksort"},
+    {"lecture":"t5_divide_y_venceras","section":"Multiplicación rápida de números en binario"}]},
+  {"id":"backtracking","world":"diseno","title":"Vuelta atrás (backtracking)",
+   "blurb":"Esquemas de subconjuntos y permutaciones, poda por restricciones, N reinas y ramificación y poda.",
+   "skills":["backtracking"],
+   "theory":[
+    {"lecture":"t6_vuelta_atras_backtracking","section":"Subconjuntos de {a,b,c}: solución con árbol binario"},
+    {"lecture":"t6_vuelta_atras_backtracking","section":"Permutaciones: implementación"},
+    {"lecture":"t6_vuelta_atras_backtracking","section":"Implementación (N reinas)"},
+    {"lecture":"t6_vuelta_atras_backtracking","section":"Suma de subconjuntos"},
+    {"lecture":"t6_vuelta_atras_backtracking","section":"Ramificación y poda: mochila 0-1"}]},
+  {"id":"voraz","world":"diseno","title":"Algoritmos voraces",
+   "blurb":"Función de selección, factibilidad y cuándo la estrategia es óptima: monedas, Huffman, mochila, Kruskal, Prim, Dijkstra.",
+   "skills":["voraz"],
+   "theory":[
+    {"lecture":"t7_algoritmos_voraces","section":"Esquema general"},
+    {"lecture":"t7_algoritmos_voraces","section":"Cambio de monedas"},
+    {"lecture":"t7_algoritmos_voraces","section":"Códigos de Huffman"},
+    {"lecture":"t7_algoritmos_voraces","section":"Problema de la mochila - Versión 3"},
+    {"lecture":"t7_algoritmos_voraces","section":"Algoritmo de Kruskal"},
+    {"lecture":"t7_algoritmos_voraces","section":"Algoritmo de Dijkstra"}]}
+ ],
+ "stage_overrides": {
+  "ejercicios_adicionales_1-2#1.1": "asintotica",
+  "ejercicios_adicionales_1-2#1.6": "sumatorios",
+  "ejercicios_adicionales_1-2#1.7": "sumatorios",
+  "ejercicios_adicionales_1-2#1.10": "expansion",
+  "ejercicios_adicionales_1-2#2.1": "asintotica",
+  "ejercicios_adicionales_1-2#2.2": "asintotica",
+  "ejercicios_adicionales_1-2#2.3": "asintotica",
+  "ejercicios_adicionales_1-2#2.6": "bucles",
+  "ejercicios_adicionales_1-2#2.7": "bucles",
+  "ejercicios_adicionales_1-2#2.8": "bucles",
+  "ejercicios_adicionales_1-2#2.9": "bucles",
+  "ejercicios_adicionales_1-2#2.10": "expansion",
+  "ejercicios_adicionales_1-2#2.12": "general"
+ }
+}
