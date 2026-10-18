@@ -34,8 +34,9 @@ var stageById = {}; STAGES.forEach(function (g, i) { g.n = i + 1; stageById[g.id
 var ALL = [];
 EXAMS.forEach(function (ex) { (ex.exercises || []).forEach(function (e) { ALL.push({ key: ex.id + '/' + e.id, exam: ex, e: e }); }); });
 var byKey = {}; ALL.forEach(function (a) { byKey[a.key] = a; });
-var PATH = L.buildPath(STAGES, STAGE_EX, LECT);
+var PATH = L.annotateMinutes(L.buildPath(STAGES, STAGE_EX, LECT), LECT, EXAMS);
 var stepById = {}; PATH.forEach(function (s, i) { s.i = i; stepById[s.id] = s; });
+var LECMIN = {}; LECT.forEach(function (l) { LECMIN[l.id] = L.readMinutes(l.sections, 0, l.sections.length - 1); });
 var XKIND = { analisis: 'análisis', diseno: 'diseño', adic: 'adicional', ejs: 'adicional' };
 
 function pts(a) { return a.e.points == null ? 2 : a.e.points; }
@@ -48,6 +49,19 @@ function mastery(sid) {
 }
 function level() { return L.level(S.xp); }
 function streak() { return L.streak(S.days, today()); }
+/* Streak flame: lit (accent colour) once something was done today, dim while the streak is at risk, off at zero. */
+var FLAME = '<svg viewBox="0 0 24 24"><path d="M12 2C12.3 5 15.5 6.6 15.6 10.4 16.9 9.5 17.7 8.2 17.8 6.8 19.9 8.8 21 11.2 21 13.8 21 18.3 17 22 12 22 7 22 3 18.3 3 13.8 3 10.7 4.7 8.3 6.6 6.6 6.8 8.2 7.6 9.4 8.9 10.2 8.4 7 9.8 4 12 2Z"/><path class="core" d="M12 22C9.6 22 8 20.4 8 18.4 8 16.5 9.4 15.4 10.5 13.6 11.3 14.8 11.9 15 12.6 14.3 13.9 15.4 16 16.4 16 18.4 16 20.4 14.4 22 12 22Z"/></svg>';
+function flame(cls) { return '<span class="flame' + (cls ? ' ' + cls : '') + '" aria-hidden="true">' + FLAME + '</span>'; }
+function streakState() { var n = streak(); return S.days.indexOf(today()) >= 0 ? 'on' : n > 0 ? 'risk' : 'off'; }
+function streakTitle() {
+  var n = streak(), d = n + (n === 1 ? ' d\u00eda' : ' d\u00edas'), st = streakState();
+  return st === 'on' ? 'Racha: ' + d + '. Hoy ya has estudiado.' : st === 'risk' ? 'Racha: ' + d + '. Haz algo hoy para no perderla.' : 'Sin racha. Haz un paso de la ruta para empezarla.';
+}
+function streakHtml() { return '<span class="streak ' + streakState() + '" title="' + streakTitle() + '">' + flame() + '<b>' + streak() + '</b></span>'; }
+/* Estimated time ("~12 min"), in a tag. */
+function mins(m) { return '~' + L.fmtMin(m); }
+function minTag(m) { return '<span class="tag min" title="Estimaci&oacute;n orientativa para estudiar y comprobar, no para el examen">' + mins(m) + '</span>'; }
+function minsOf(steps) { return steps.reduce(function (t, x) { return t + (x.min || 0); }, 0); }
 function nextSteps(n) { return L.nextSteps(PATH, S, EXAMS, n); }
 function progress(stage) { return L.stageProgress(PATH, S, EXAMS, stage); }
 function touchDay() { var t = today(); if (S.days.indexOf(t) < 0) S.days.push(t); }
@@ -60,7 +74,7 @@ function awardAll() {
     var p = progress(g.id);
     if (p.total && p.done === p.total && !S.bonus[g.id]) { S.bonus[g.id] = true; S.xp = Math.round((S.xp + BONUS) * 10) / 10; got.push(g); }
   });
-  if (got.length) NOTE = '&#9733; &iexcl;Etapa completada! ' + got.map(function (g) { return esc(g.title); }).join(', ') + ' (+' + BONUS * got.length + ' XP)';
+  if (got.length) NOTE = flame('sm') + ' &iexcl;Etapa completada! ' + got.map(function (g) { return esc(g.title); }).join(', ') + ' (+' + BONUS * got.length + ' XP)';
   return got;
 }
 
@@ -116,22 +130,23 @@ function stepRow(st, cur) {
     var a = byKey[st.key];
     tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution ? '<span class="tag">con soluci&oacute;n</span>' : '') + '<span class="tag">' + (a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>';
   } else if (S.skip[st.id]) tags = '<span class="tag">saltado</span>';
+  tags += minTag(st.min);
   return '<a class="item step' + (done ? ' done' : '') + (cur ? ' cur' : '') + '" href="' + stepHref(st) + '"><span>' + mark + ' ' + stepLabel(st) + '</span><span>' + tags + '</span></a>';
 }
 function exRow(a) {
-  return '<a class="item" href="#/ejercicios/' + enc(a.key) + '"><span><b>' + exTitle(a) + '</b> <span class="tag">' + esc(XKIND[a.e.kind] || a.e.kind) + '</span> <span class="tag">' + esc((stageById[a.e.stage] || {}).title || '') + '</span></span><span>' + status(a.key) + dueTag(a.key) + '</span></a>';
+  return '<a class="item" href="#/ejercicios/' + enc(a.key) + '"><span><b>' + exTitle(a) + '</b> <span class="tag">' + esc(XKIND[a.e.kind] || a.e.kind) + '</span> <span class="tag">' + esc((stageById[a.e.stage] || {}).title || '') + '</span></span><span>' + status(a.key) + dueTag(a.key) + minTag((stepById['e:' + a.key] || {}).min || 15) + '</span></a>';
 }
 function nextCard(extra) {
   var n = nextSteps(1)[0];
   if (!n) return '<div class="card">&#127881; Has completado toda la ruta. Sigue repasando lo pendiente en <a href="#/hoy">Hoy</a>.</div>';
   var g = stageById[n.stage];
-  return '<div class="card next"><div class="muted">Siguiente en la ruta &middot; Etapa ' + g.n + ': ' + esc(g.title) + '</div><div class="big">' + stepLabel(n) + '</div><div class="row"><a class="btn pri" href="' + stepHref(n) + '">Continuar &rarr;</a>' + (extra || '') + '</div></div>';
+  return '<div class="card next"><div class="muted">Siguiente en la ruta &middot; Etapa ' + g.n + ': ' + esc(g.title) + '</div><div class="big">' + stepLabel(n) + '</div><div class="muted">' + mins(n.min) + ' estimados</div><div class="row"><a class="btn pri" href="' + stepHref(n) + '">Continuar &rarr;</a>' + (extra || '') + '</div></div>';
 }
 
 function vHoy() {
   var t = today(), h = '<h2>Misi&oacute;n de hoy</h2>' + missingBanner();
   var lv = level(), lo = (lv - 1) * (lv - 1) * 10, hi = lv * lv * 10, pct = Math.round((S.xp - lo) / (hi - lo) * 100);
-  h += '<div class="card row"><span>Nivel <b>' + lv + '</b></span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + S.xp + ' / ' + hi + ' XP</span><span>Racha <b>' + streak() + '</b> d&iacute;as</span></div>';
+  h += '<div class="card row"><span>Nivel <b>' + lv + '</b></span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + S.xp + ' / ' + hi + ' XP</span><span>' + streakHtml() + ' <span class="muted">d&iacute;as de racha</span></span></div>';
   var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t);
   if (due.length) {
     h += '<h3>Repaso pendiente (' + due.length + ')</h3>';
@@ -141,6 +156,8 @@ function vHoy() {
     h += '<h3>Ruta</h3>' + nextCard();
     var more = nextSteps(4).slice(1);
     more.forEach(function (st) { h += stepRow(st); });
+    var four = nextSteps(4), all = L.pathMinutes(PATH, S, EXAMS);
+    h += '<p class="muted">Estos ' + four.length + ' pasos: ' + mins(minsOf(four)) + ' &middot; quedan ' + mins(all.left) + ' en toda la ruta.</p>';
     h += '<p><a href="#/ruta">Ver toda la ruta &rarr;</a></p>';
   }
   return h;
@@ -148,18 +165,23 @@ function vHoy() {
 
 function vRoad() {
   var h = '<h2>Ruta de estudio</h2>' + missingBanner() + '<p class="muted">Un orden recomendado, sin bloqueos: puedes entrar en cualquier paso. Cada etapa empieza con la teor&iacute;a, sigue con ejercicios de f&aacute;ciles a dif&iacute;ciles y los de enunciado con soluci&oacute;n est&aacute;n marcados.</p>';
-  var n = nextSteps(1)[0];
+  var n = nextSteps(1)[0], tot = L.pathMinutes(PATH, S, EXAMS);
+  h += '<p class="muted">Ruta completa: ' + mins(tot.total) + ' estimados &middot; quedan ' + mins(tot.left) + '. Son tiempos orientativos para estudiar y comprobar cada paso.</p>';
   h += nextCard();
   var world = null;
   STAGES.forEach(function (g) {
     if (g.world !== world) { world = g.world; h += '<h3>' + esc(WORLDS[world] || world) + '</h3>'; }
     var p = progress(g.id), pct = p.total ? Math.round(p.done / p.total * 100) : 0, open = n && n.stage === g.id;
-    h += '<details class="stage"' + (open ? ' open' : '') + '><summary><b>Etapa ' + g.n + '. ' + esc(g.title) + '</b> <span class="bar sm"><i style="width:' + pct + '%"></i></span> <span class="muted">' + p.done + '/' + p.total + (S.bonus[g.id] ? ' &#9733;' : '') + '</span></summary><p class="muted">' + esc(g.blurb) + '</p>';
-    var prev = null;
+    h += '<details class="stage"' + (open ? ' open' : '') + '><summary><b>Etapa ' + g.n + '. ' + esc(g.title) + '</b> <span class="bar sm"><i style="width:' + pct + '%"></i></span> <span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; quedan ' + mins(p.left) : '') + '</span>' + (S.bonus[g.id] ? ' ' + flame('sm') : '') + '</summary><p class="muted">' + esc(g.blurb) + ' Tiempo estimado de la etapa: ' + mins(p.min) + '.</p>';
+    var groups = [], cur = null;
     PATH.filter(function (s) { return s.stage === g.id; }).forEach(function (st) {
       var grp = st.type === 'theory' ? 'Teor&iacute;a' : st.type === 'exam' ? 'Checkpoint' : byKey[st.key].e.src === 'adic' ? 'Calentamiento: ejercicios adicionales' : 'Nivel examen: ejercicios de ex&aacute;menes anteriores';
-      if (grp !== prev) { h += '<div class="sub">' + grp + '</div>'; prev = grp; }
-      h += stepRow(st, n && n.id === st.id);
+      if (!cur || cur.name !== grp) { cur = { name: grp, steps: [] }; groups.push(cur); }
+      cur.steps.push(st);
+    });
+    groups.forEach(function (gr) {
+      h += '<div class="sub">' + gr.name + ' <span class="t">&middot; ' + mins(minsOf(gr.steps)) + '</span></div>';
+      gr.steps.forEach(function (st) { h += stepRow(st, n && n.id === st.id); });
     });
     h += '</details>';
   });
@@ -185,7 +207,7 @@ function vList() {
     return true;
   });
   list.sort(function (a, b) { var x = stepById['e:' + a.key], y = stepById['e:' + b.key]; return (x ? x.i : 1e9) - (y ? y.i : 1e9); });
-  h += '<p class="muted">' + list.length + ' ejercicios, en orden de ruta.</p>';
+  h += '<p class="muted">' + list.length + ' ejercicios, en orden de ruta &middot; ' + mins(list.reduce(function (t, a) { return t + ((stepById['e:' + a.key] || {}).min || 0); }, 0)) + ' en total.</p>';
   h += list.map(exRow).join('') || '<p class="muted">Sin resultados.</p>';
   return h;
 }
@@ -198,7 +220,7 @@ function vDetail(key) {
   var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a></p>';
   if (pos) h += '<p class="muted">Etapa ' + stageById[pos.stage].n + ': ' + esc(stageById[pos.stage].title) + ' &middot; ejercicio ' + pos.n + ' de ' + pos.of + '</p>';
   h += '<div class="card"><h2>' + exTitle(a) + '</h2>' +
-    '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + (e.durationMin ? ' &middot; ~' + e.durationMin + ' min' : '') + '</div>' + mdRender(e.statement) + '</div>';
+    '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados</div>' + mdRender(e.statement) + '</div>';
   h += '<div class="card row"><span class="timer" id="tm"></span> <button class="btn" data-act="timer">' + (V.started ? 'Reiniciar cron&oacute;metro' : 'Iniciar cron&oacute;metro') + '</button></div>';
   if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> Habilidad: ' + (e.skills || []).map(function (id) { return esc(skillById[id] ? skillById[id].label : id) + ' (' + (theoryLinks(id) || 'sin teor&iacute;a') + ')'; }).join('; ') + '</div>';
   if (V.hints >= 2 && hasSol) h += '<div class="card"><b>Pista 2.</b>' + mdRender(String(sol).split('\n').filter(function (l) { return l.trim(); }).slice(0, 3).join('\n')) + '</div>';
@@ -206,7 +228,7 @@ function vDetail(key) {
   var maxH = hasSol ? 3 : 1, canRate = hasSol ? V.hints >= 3 : V.self;
   if (V.done != null) {
     var nx = st ? L.nextAfter(PATH, S, EXAMS, st.id) : null;
-    h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' &#9733; <b>&iexcl;Etapa completada!</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
+    h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' ' + flame('sm') + ' <b>&iexcl;Etapa completada!</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
     h += '<div class="card row">' + (nx ? '<a class="btn pri" href="' + stepHref(nx) + '">Siguiente en la ruta &rarr;</a><span class="muted">' + stepLabel(nx) + '</span>' : '<span>&#127881; Ruta completada.</span>') + ' <a class="btn" href="#/ejercicios">Ver ejercicios</a></div>';
   } else if (canRate) {
     h += '<div class="card row">&iquest;C&oacute;mo te fue? ' + RN.map(function (n, i) { return '<button class="btn ' + ['bad', 'warn', 'ok'][i] + '" data-act="rate" data-r="' + i + '">' + n + '</button>'; }).join('') + '</div>';
@@ -221,13 +243,8 @@ function vDetail(key) {
   return h;
 }
 
-function examPts(ex) {
-  var n = ex.exercises.length, known = ex.exercises.filter(function (e) { return e.points != null; }), sum = known.reduce(function (t, e) { return t + e.points; }, 0), p = {};
-  var fill = known.length ? (known.length < n ? sum / known.length : 0) : 10 / n;
-  ex.exercises.forEach(function (e) { p[e.id] = e.points != null ? e.points : fill; });
-  return p;
-}
-function examMin(ex) { if (ex.durationMin) return ex.durationMin; var p = examPts(ex), t = 0; for (var k in p) t += p[k]; return Math.round(t * 9); }
+function examPts(ex) { return L.examPts(ex); }
+function examMin(ex) { return L.examMin(ex); }
 function examSols(ex) { return ex.exercises.filter(function (e) { return e.solution; }).length; }
 
 function vExam() {
@@ -269,14 +286,15 @@ function vTheory(lid, idx, stepId) {
   var h = '<h2>Teor&iacute;a</h2>';
   if (!LECT.length) return h + '<div class="warnbox">No se encontr&oacute; <code>data-lectures.js</code>.</div>';
   var cur = LECT.find(function (l) { return l.id === lid; }) || LECT[0], st = stepId && stepById[stepId];
-  h += '<div class="theory"><div class="side">' + LECT.map(function (l) { return '<a href="#/teoria/' + enc(l.id) + '"' + (l === cur ? ' class="on"' : '') + '>' + esc(l.title) + '</a>'; }).join('') + '</div><div>';
+  h += '<div class="theory"><div class="side">' + LECT.map(function (l) { return '<a href="#/teoria/' + enc(l.id) + '"' + (l === cur ? ' class="on"' : '') + '>' + esc(l.title) + '<br><span class="muted">~' + L.fmtMin(LECMIN[l.id]) + ' de lectura</span></a>'; }).join('') + '</div><div>';
   h += '<h2>' + esc(cur.title) + '</h2>';
+  var here = st && st.lecture === cur.id && String(st.idx) === String(idx), cardAt = here ? (st.to != null ? st.to : +idx) : -1;
   cur.sections.forEach(function (s, i) {
     var lv = Math.min(6, 3 + Math.max(0, (s.level || 1) - 1));
     var card = '';
-    if (st && st.lecture === cur.id && String(st.idx) === String(idx) && i === +idx) {
+    if (i === cardAt) {   // after the last section the step covers, so it is not confirmed before reading it
       var done = L.stepDone(st, S, EXAMS);
-      card = '<div class="card next row"><span>&#128214; Paso de la ruta (etapa ' + stageById[st.stage].n + '): has le&iacute;do esta secci&oacute;n?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
+      card = '<div class="card next row"><span>&#128214; Paso de la ruta (etapa ' + stageById[st.stage].n + ') &middot; ' + mins(st.min) + ' de lectura: &iquest;lo has le&iacute;do?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
     }
     h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && s.title === cur.title ? '' : '<h' + lv + '>' + esc(s.title) + '</h' + lv + '>') + mdRender(s.md) + card + '</section>';
   });
@@ -284,10 +302,10 @@ function vTheory(lid, idx, stepId) {
 }
 
 function vProgress() {
-  var h = '<h2>Progreso</h2><div class="card">XP <b>' + S.xp + '</b> &middot; Nivel <b>' + level() + '</b> &middot; Racha <b>' + streak() + '</b> d&iacute;as</div><h3>Ruta por etapas</h3>';
+  var h = '<h2>Progreso</h2><div class="card row">XP <b>' + S.xp + '</b> &middot; Nivel <b>' + level() + '</b> &middot; ' + streakHtml() + ' d&iacute;as de racha &middot; quedan ' + mins(L.pathMinutes(PATH, S, EXAMS).left) + ' de ruta</div><h3>Ruta por etapas</h3>';
   STAGES.forEach(function (g) {
     var p = progress(g.id), pct = p.total ? Math.round(p.done / p.total * 100) : 0;
-    h += '<div class="row" style="margin-bottom:8px"><span style="width:300px;max-width:100%">' + g.n + '. ' + esc(g.title) + (S.bonus[g.id] ? ' &#9733;' : '') + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + p.done + '/' + p.total + '</span></div>';
+    h += '<div class="row" style="margin-bottom:8px"><span style="width:300px;max-width:100%">' + g.n + '. ' + esc(g.title) + (S.bonus[g.id] ? ' ' + flame('sm') : '') + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; ' + mins(p.left) : '') + '</span></div>';
   });
   h += '<h3>Dominio por habilidad</h3><p class="muted">Porcentaje de ejercicios de la habilidad cuya &uacute;ltima valoraci&oacute;n fue Dominado (Dudoso cuenta la mitad).</p>';
   SK.forEach(function (s) {
@@ -299,11 +317,51 @@ function vProgress() {
 }
 
 function vSettings() {
-  return '<h2>Ajustes</h2><div class="card"><p>Tu progreso se guarda en este navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>';
+  return '<h2>Datos</h2><div class="card"><p>El tema y el color de acento se cambian con el engranaje de la barra superior.</p><p>Tu progreso se guarda en este navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>';
+}
+
+/* ---------- settings popover (top bar, right): theme and accent colour ---------- */
+var TH = window.DYAA_THEME, LOGO = window.DYAA_LOGO;
+var MODE_LABEL = { system: 'Sistema', light: 'Claro', dark: 'Oscuro' };
+function popEl() { return $('#settings-pop'); }
+function renderPop() {
+  var pop = popEl(); if (!pop || !TH) return;
+  var mode = TH.mode(), acc = TH.accent(), cur = TH.hex(TH.current()), keep = document.activeElement;
+  pop.innerHTML = '<div class="pop-title">Ajustes</div>' +
+    '<div class="pop-row"><span class="muted">Tema</span><div class="segs" role="radiogroup" aria-label="Tema">' +
+    TH.MODES.map(function (m) { return '<button type="button" class="seg' + (m === mode ? ' on' : '') + '" role="radio" aria-checked="' + (m === mode) + '" data-act="theme" data-m="' + m + '">' + MODE_LABEL[m] + '</button>'; }).join('') + '</div></div>' +
+    '<div class="pop-block"><div class="pop-row"><span class="muted">Color de acento</span><button type="button" class="linkbtn" data-act="accent-reset">Autom&aacute;tico</button></div>' +
+    '<div class="swatches"><button type="button" class="sw auto' + (!acc ? ' on' : '') + '" data-act="accent-reset" title="Autom&aacute;tico (seg&uacute;n el tema)" aria-label="Autom&aacute;tico"></button>' +
+    TH.PRESETS.map(function (p) { return '<button type="button" class="sw' + (acc && acc.toLowerCase() === p[1] ? ' on' : '') + '" style="background:' + p[1] + '" data-act="accent-set" data-c="' + p[1] + '" title="' + p[0] + '" aria-label="' + p[0] + '"></button>'; }).join('') + '</div>' +
+    '<div class="accentrow"><input type="color" class="accentpick" id="acc-pick" value="' + cur + '" aria-label="Elegir el color de acento"><input type="text" class="accenttext" id="acc-text" value="' + (acc ? esc(acc) : '') + '" placeholder="#c2410c, rgb(194 65 12), tomato&hellip;" spellcheck="false" autocomplete="off" aria-label="Color de acento como texto" title="Cualquier color CSS: #hex, rgb(), hsl() o un nombre"></div>' +
+    '<div class="pop-note bad" id="acc-msg" hidden>Eso no es un color que CSS entienda.</div></div>' +
+    '<div class="pop-note">El acento colorea botones, barras, la llama, el logo y el icono de la pesta&ntilde;a.</div>' +
+    '<div class="pop-block"><a href="#/ajustes" data-act="settings-close">Datos: exportar, importar o reiniciar el progreso &rarr;</a></div>';
+  if (keep && keep.dataset && keep.dataset.act) { var again = pop.querySelector('[data-act="' + keep.dataset.act + '"]' + (keep.dataset.m ? '[data-m="' + keep.dataset.m + '"]' : '') + (keep.dataset.c ? '[data-c="' + keep.dataset.c + '"]' : '')); if (again && again.focus) again.focus(); }
+}
+function setPop(open) {
+  var pop = popEl(), btn = $('#settings'); if (!pop || !btn) return;
+  if (open) renderPop();
+  pop.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+}
+function popOpen() { var pop = popEl(); return !!pop && !pop.hidden; }
+function drawLogo() { var el = $('#logo'); if (el && LOGO) el.innerHTML = LOGO.svg('var(--ac)', 'var(--ac-ink)'); }
+function colorInput(ev) {
+  var t = ev.target, TH_ = TH; if (!TH_ || !t) return false;
+  if (t.id === 'acc-pick') { TH_.setAccent(t.value); var x = document.getElementById('acc-text'); if (x) { x.value = t.value; x.classList.remove('bad'); } return true; }
+  if (t.id === 'acc-text') {
+    var v = String(t.value).trim(), msg = document.getElementById('acc-msg');
+    if (!v) { TH_.setAccent(null); if (msg) msg.hidden = true; t.classList.remove('bad'); return true; }
+    var c = TH_.parse(v);
+    t.classList.toggle('bad', !c); if (msg) msg.hidden = !!c;
+    if (c) { TH_.setAccent(v); var p = document.getElementById('acc-pick'); if (p) p.value = TH_.hex(c); }
+    return true;
+  }
+  return false;
 }
 
 /* ---------- router ---------- */
-function stats() { $('#stats').innerHTML = 'XP <b>' + S.xp + '</b> &middot; Nv <b>' + level() + '</b> &middot; Racha <b>' + streak() + '</b>'; }
+function stats() { $('#stats').innerHTML = streakHtml() + '<span>XP <b>' + S.xp + '</b> &middot; Nv <b>' + level() + '</b></span>'; }
 function route() {
   stopTimers();
   var p = (location.hash || '#/hoy').slice(2).split('/').map(decodeURIComponent), tab = p[0] || 'hoy', h;
@@ -327,10 +385,16 @@ function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
 
 /* ---------- events ---------- */
 document.addEventListener('click', function (ev) {
+  if (popOpen() && ev.target && ev.target.closest && !ev.target.closest('#settings-pop') && !ev.target.closest('#settings')) setPop(false);
   var lk = ev.target.closest('a[href^="#/"]');
   if (lk && lk.getAttribute && lk.getAttribute('href') === location.hash) setTimeout(route, 0);
   var b = ev.target.closest('[data-act]'); if (!b || b.tagName === 'INPUT') return;
   var act = b.dataset.act;
+  if (act === 'settings') { setPop(!popOpen()); return; }
+  if (act === 'settings-close') { setPop(false); return; }
+  if (act === 'theme') { if (TH) TH.setMode(b.dataset.m); renderPop(); return; }
+  if (act === 'accent-set') { if (TH) TH.setAccent(b.dataset.c); renderPop(); return; }
+  if (act === 'accent-reset') { if (TH) TH.setAccent(null); renderPop(); return; }
   if (act === 'hint') { V.hints++; rerender(); }
   else if (act === 'self') { V.self = true; rerender(); }
   else if (act === 'timer') { V.started = Date.now(); rerender(); }
@@ -370,6 +434,8 @@ document.addEventListener('click', function (ev) {
   }
   else if (act === 'reset') { if (confirm('¿Borrar todo el progreso?')) { S = blank(); save(); route(); } }
 });
+document.addEventListener('input', function (ev) { colorInput(ev); });
+document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && popOpen()) { setPop(false); var b = $('#settings'); if (b && b.focus) b.focus(); } });
 document.addEventListener('change', function (ev) {
   var t = ev.target;
   if (t.dataset && t.dataset.f) { F[t.dataset.f] = t.value; route(); }
@@ -383,5 +449,6 @@ document.addEventListener('change', function (ev) {
   }
 });
 window.addEventListener('hashchange', route);
+drawLogo();
 route();
 })();

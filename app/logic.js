@@ -83,9 +83,19 @@ L.nextAfter = function (path, S, exams, stepId) {
   return null;
 };
 L.stageProgress = function (path, S, exams, stageId) {
-  var steps = path.filter(function (s) { return s.stage === stageId; }), done = 0;
-  steps.forEach(function (s) { if (L.stepDone(s, S, exams)) done++; });
-  return { done: done, total: steps.length };
+  var steps = path.filter(function (s) { return s.stage === stageId; }), done = 0, min = 0, left = 0;
+  steps.forEach(function (s) {
+    var d = L.stepDone(s, S, exams), m = s.min || 0;
+    if (d) done++; else left += m;
+    min += m;
+  });
+  return { done: done, total: steps.length, min: min, left: left };
+};
+/* Minutes of the whole path (or of a subset): total and still to do. Sums the per-step values, so the numbers shown add up. */
+L.pathMinutes = function (path, S, exams, steps) {
+  var tot = 0, left = 0;
+  (steps || path).forEach(function (s) { var m = s.min || 0; tot += m; if (!L.stepDone(s, S, exams)) left += m; });
+  return { total: tot, left: left };
 };
 L.stepOfKey = function (path, key) {
   return path.find(function (s) { return s.type === 'ex' && s.key === key; }) || null;
@@ -96,6 +106,79 @@ L.posInStage = function (path, key) {
   if (!st) return null;
   var list = path.filter(function (s) { return s.type === 'ex' && s.stage === st.stage; });
   return { n: list.indexOf(st) + 1, of: list.length, stage: st.stage };
+};
+
+/* ---------- time estimates (minutes) ----------
+   Orientative, meant for planning a session. Reading is a study pace (slides are dense and the examples are worked through),
+   not a skim. Exercises start from the time the exam gives them and add the time to check the answer. */
+L.STUDY_WPM = 35;
+L.words = function (md) {
+  var math = 0;
+  md = String(md || '').replace(/```[\s\S]*?```/g, function (m) { return ' code '.repeat(Math.ceil(m.split('\n').length / 2)); });
+  md = md.replace(/\$\$[\s\S]*?\$\$|\$[^$\n]+\$/g, function () { math++; return ' '; });   // a formula takes about as long as three words
+  return md.split(/\s+/).filter(Boolean).length + math * 3;
+};
+/* Round for display: exact below 10 minutes, then to the nearest 5. */
+L.roundMin = function (m) { m = Math.max(1, m); return m < 10 ? Math.round(m) : Math.round(m / 5) * 5; };
+/* Sections a theory step covers: the section itself and the deeper-level sections that follow it. */
+L.sectionSpan = function (sections, idx) {
+  var s = sections[idx]; if (!s) return { from: idx, to: idx };
+  var to = idx;
+  while (to + 1 < sections.length && (sections[to + 1].level || 1) > (s.level || 1)) to++;
+  return { from: idx, to: to };
+};
+L.readMinutes = function (sections, from, to) {
+  var w = 0;
+  for (var i = from; i <= to; i++) if (sections[i]) w += L.words(sections[i].md);
+  return L.roundMin(Math.max(3, w / L.STUDY_WPM));
+};
+/* Points each exercise of an exam is worth; exercises without a mark share what is left of 10. */
+L.examPts = function (ex) {
+  var n = ex.exercises.length, known = ex.exercises.filter(function (e) { return e.points != null; }), sum = known.reduce(function (t, e) { return t + e.points; }, 0), p = {};
+  var fill = known.length ? (known.length < n ? sum / known.length : 0) : 10 / n;
+  ex.exercises.forEach(function (e) { p[e.id] = e.points != null ? e.points : fill; });
+  return p;
+};
+L.examMin = function (ex) {
+  if (ex.durationMin) return ex.durationMin;
+  var p = L.examPts(ex), t = 0; for (var k in p) t += p[k];
+  return Math.round(t * 9);
+};
+/* Time to do one exercise and check it: exam pace x 1.25, plus the time to compare with the solution (or with your notes). */
+L.exMinutes = function (e, exam) {
+  var m;
+  if (e.src === 'adic' || exam.kind === 'adic') m = 5 + 5 * (e.diff || 1);   // warm-ups: no marks, so go by difficulty
+  else {
+    var p = L.examPts(exam), tot = 0, k; for (k in p) tot += p[k];
+    var budget = e.durationMin || (exam.durationMin && tot ? exam.durationMin * p[e.id] / tot : p[e.id] * 9);
+    m = budget * 1.25 + (e.solution ? 3 : 5);
+  }
+  return L.roundMin(Math.min(90, Math.max(5, m)));
+};
+/* Fill step.min on every path step. */
+L.annotateMinutes = function (path, lectures, exams) {
+  var lm = {}, ex = {}, sum = {}, cnt = {};
+  (lectures || []).forEach(function (l) { lm[l.id] = l; });
+  (exams || []).forEach(function (x) {
+    x.exercises.forEach(function (e) { ex[x.id + '/' + e.id] = { e: e, exam: x }; });
+    if (x.kind === 'analisis' || x.kind === 'diseno') { sum[x.kind] = (sum[x.kind] || 0) + L.examMin(x); cnt[x.kind] = (cnt[x.kind] || 0) + 1; }
+  });
+  path.forEach(function (s) {
+    if (s.type === 'theory') {
+      var secs = lm[s.lecture] ? lm[s.lecture].sections : [], sp = L.sectionSpan(secs, s.idx);
+      s.to = sp.to; s.min = secs.length ? L.readMinutes(secs, sp.from, sp.to) : 3;
+    } else if (s.type === 'ex') s.min = ex[s.key] ? L.exMinutes(ex[s.key].e, ex[s.key].exam) : 15;
+    else s.min = L.roundMin((cnt[s.world] ? sum[s.world] / cnt[s.world] : 90) + 20);   // an exam of that world plus 20 min to mark it
+  });
+  return path;
+};
+/* "45 min", "2 h 05 min", "12 h". */
+L.fmtMin = function (m) {
+  m = Math.round(m);
+  if (m < 60) return m + ' min';
+  if (m >= 600) return Math.round(m / 60) + ' h';
+  var h = Math.floor(m / 60), r = m % 60;
+  return h + ' h' + (r ? ' ' + (r < 10 ? '0' : '') + r + ' min' : '');
 };
 
 if (typeof module !== 'undefined' && module.exports) module.exports = L; else root.DYAA = L;

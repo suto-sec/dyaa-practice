@@ -8,7 +8,9 @@ const APP = path.join(__dirname, '..', 'app');
 let fails = 0;
 function ok(c, m) { if (!c) { fails++; console.log('FAIL:', m); } }
 
-const els = { '#app': { innerHTML: '' }, '#stats': { innerHTML: '' }, '#sc': { value: '1' }, '#io': { textContent: '' } };
+const root = { dataset: {}, style: { props: {}, setProperty(k, v) { this.props[k] = v; }, removeProperty(k) { delete this.props[k]; } } };
+const els = { '#app': { innerHTML: '' }, '#stats': { innerHTML: '' }, '#sc': { value: '1' }, '#io': { textContent: '' },
+  '#settings-pop': { innerHTML: '', hidden: true, querySelector: () => null }, '#settings': { setAttribute() {}, focus() {} }, '#logo': { innerHTML: '' } };
 const handlers = {};
 const store = {};
 let hash = '#/hoy';
@@ -28,9 +30,10 @@ const ctx = {
     querySelector: (s) => els[s] || null,
     querySelectorAll: () => [],
     getElementById: () => null,
+    documentElement: root,
     addEventListener: (n, f) => { (handlers[n] = handlers[n] || []).push(f); },
   },
-  localStorage: { getItem: (k) => store[k] || null, setItem: (k, v) => { store[k] = v; } },
+  localStorage: { getItem: (k) => store[k] || null, setItem: (k, v) => { store[k] = v; }, removeItem: (k) => { delete store[k]; } },
   confirm: () => true, setInterval: () => 1, clearInterval() {}, Date, Math, JSON, Array, Object, String, Number, parseFloat, decodeURIComponent, encodeURIComponent, isNaN,
 };
 ctx.window.window = win;
@@ -42,7 +45,7 @@ function run(f) { vm.runInContext(fs.readFileSync(path.join(APP, f), 'utf8'), ct
 run('data-lectures.js');
 const hasExams = fs.existsSync(path.join(APP, 'data-exams.js'));
 if (hasExams) run('data-exams.js');
-run('md.js'); run('logic.js');
+run('md.js'); run('logic.js'); run('logo.js'); run('theme.js');
 run('app.js');
 
 const app = () => els['#app'].innerHTML;
@@ -60,6 +63,13 @@ ok(/Ruta de estudio|Siguiente en la ruta/.test((go('#/ruta'), app())), 'Ruta sho
 
 // theory step -> marks read and moves on
 const L = win.DYAA;
+// the continue button comes after the last section the step covers (a step may span subsections) and before the next one
+function atEndOfSpan(href, idx) {
+  const lec = win.LECTURES.find(l => l.id === decodeURIComponent(href.split('/')[2]));
+  const to = L.sectionSpan(lec.sections, +idx).to, a = app(), b = a.indexOf('data-act="theorydone"');
+  const nxt = a.indexOf('id="sec-' + (to + 1) + '"');
+  return a.indexOf('id="sec-' + to + '"') >= 0 && a.indexOf('id="sec-' + to + '"') < b && (nxt < 0 || b < nxt) && a.split('data-act="theorydone"').length === 2;
+}
 go('#/hoy');
 const m = app().match(/href="(#\/teoria\/[^"]+)"/);
 ok(m, 'first path step is a theory link');
@@ -67,9 +77,7 @@ if (m) {
   go(m[1].replace(/&amp;/g, '&'));
   ok(/Le&iacute;do, continuar/.test(app()), 'theory step shows the continue button');
   const idx = m[1].split('/')[3];
-  ok(app().indexOf('id="sec-' + idx + '"') >= 0 && app().indexOf('id="sec-' + idx + '"') < app().indexOf('data-act="theorydone"') &&
-     app().indexOf('data-act="theorydone"') < (app().indexOf('id="sec-' + (+idx + 1) + '"') + 1e9 * (app().indexOf('id="sec-' + (+idx + 1) + '"') < 0)),
-     'continue button sits at the end of the target section, not above the lecture');
+  ok(atEndOfSpan(m[1], idx), 'continue button sits at the end of the step\'s sections, not above the lecture');
   const sid = decodeURIComponent(m[1].split('/')[4]);
   click({ act: 'theorydone', step: sid });
   go('#/ruta');
@@ -117,6 +125,45 @@ if (hasExams) {
   click({ act: 'exquit' }, 'A'); go('#/examen'); ok(/recomendado/.test(app()), 'exam list recommends a next exam');
   go('#/progreso'); ok(/Ruta por etapas/.test(app()), 'progress lists stages');
 }
+
+// time estimates are shown on the route, in lists, on the exercise page and in the theory sidebar
+go('#/ruta'); ok(/~\d+ min/.test(app()) && /quedan ~/.test(app()) && /estimados/.test(app()), 'Ruta shows estimated times and time left');
+ok(/Tiempo estimado de la etapa: ~/.test(app()) && /class="sub">Teor&iacute;a <span class="t">&middot; ~/.test(app()), 'stages and groups show their total time');
+go('#/hoy'); ok(/Estos \d+ pasos: ~/.test(app()) && /en toda la ruta/.test(app()), 'Hoy shows the time of the next steps and of the whole route');
+go('#/teoria'); ok(/de lectura<\/span><\/a>/.test(app()), 'theory sidebar shows the reading time of each tema');
+if (hasExams) {
+  go('#/ejercicios'); ok(/~[\d ]+(h|min)[^<]*<\/span>/.test(app()) && /en total\./.test(app()), 'exercise list shows times and the total');
+  go('#/ejercicios/' + encodeURIComponent(win.STAGE_EX.recursion[0])); ok(/estimados<\/div>/.test(app()) && !/\d+ pts &middot; ~\d+ min<\/div>/.test(app()), 'exercise page shows the estimate, once');
+}
+
+// streak flame: off at the start, lit after doing something today
+{
+  const fresh = JSON.parse(store['dyaa-practice-v1']);
+  ok(/class="streak (on|risk|off)"/.test(els['#stats'].innerHTML) && /class="flame"/.test(els['#stats'].innerHTML), 'top bar shows the streak flame');
+  ok(hasExams ? /streak on/.test(els['#stats'].innerHTML) : true, 'flame is lit once something was done today');
+}
+
+// settings popover: theme and accent colour, saved apart from the progress
+click({ act: 'settings' });
+ok(els['#settings-pop'].hidden === false && /Color de acento/.test(els['#settings-pop'].innerHTML) && /Sistema/.test(els['#settings-pop'].innerHTML), 'settings popover opens with theme and accent controls');
+click({ act: 'theme', m: 'dark' });
+ok(root.dataset.theme === 'dark' && store['dyaa-practice-theme'] === 'dark', 'dark theme applied and remembered');
+click({ act: 'theme', m: 'system' });
+ok(root.dataset.theme === undefined && store['dyaa-practice-theme'] == null, 'system theme removes the override');
+click({ act: 'accent-set', c: '#7c3aed' });
+ok(root.style.props['--ac'] === '#7c3aed' && root.style.props['--ac-ink'] === '#ffffff' && store['dyaa-practice-accent'] === '#7c3aed', 'preset accent applied with a readable ink and remembered');
+ok(/class="sw on"[^>]*data-c="#7c3aed"/.test(els['#settings-pop'].innerHTML), 'the chosen preset is marked');
+(handlers.input || []).forEach(f => f({ target: { id: 'acc-text', value: '#fde047', classList: { toggle() {}, remove() {} } } }));
+ok(root.style.props['--ac'] === '#fde047' && root.style.props['--ac-ink'] === '#1a0f08', 'typed light accent gets dark ink');
+ok(win.DYAA_THEME.contrast(win.DYAA_THEME.parseHex(root.style.props['--ac-text']), win.DYAA_THEME.BG.light) >= 4.5, 'accent text colour is readable on the page');
+(handlers.input || []).forEach(f => f({ target: { id: 'acc-text', value: 'not a colour', classList: { toggle() {}, remove() {} } } }));
+ok(root.style.props['--ac'] === '#fde047', 'an invalid colour does not change the accent');
+click({ act: 'accent-reset' });
+ok(root.style.props['--ac'] === undefined && store['dyaa-practice-accent'] == null, 'automatic accent restores the theme default');
+click({ act: 'settings-close' }); ok(els['#settings-pop'].hidden === true, 'popover closes');
+(handlers.keydown || []).forEach(f => f({ key: 'Escape' }));
+ok(/<svg/.test(els['#logo'].innerHTML), 'logo is drawn in the top bar');
+click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-practice-accent'] == null, 'resetting progress leaves theme and accent alone');
 
 // export/import round trip keeps state
 const before = store['dyaa-practice-v1'];

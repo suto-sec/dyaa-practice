@@ -77,12 +77,49 @@ if (hasExams) {
   ok(L.dueKeys(keys, S, L.addDays(t, 400)).length === keys.length, 'all rated exercises become due eventually');
   // skipping a step counts as done, and nothing is ever blocked
   const S2 = { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {} };
+  // time estimates: every step has a whole-minute estimate, stage totals add up, remaining time shrinks as steps are done
+  L.annotateMinutes(path_, lectures, exams);
+  path_.forEach(s => ok(Number.isInteger(s.min) && s.min >= 1 && s.min <= 240, 'step has a sane estimate: ' + s.id + ' = ' + s.min));
+  const blankS = { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {} };
+  let sumStages = 0;
+  stages.forEach(s => { const p = L.stageProgress(path_, blankS, exams, s.id); sumStages += p.min; ok(p.min === path_.filter(x => x.stage === s.id).reduce((t, x) => t + x.min, 0), 'stage total is the sum of its steps: ' + s.id); ok(p.left === p.min, 'nothing done: all time left in ' + s.id); });
+  const pm = L.pathMinutes(path_, blankS, exams);
+  ok(pm.total === sumStages && pm.left === pm.total, 'path total is the sum of the stage totals');
+  const st0 = path_[0], Sdone = { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: { [st0.id]: true }, exams: {}, bonus: {} };
+  ok(L.pathMinutes(path_, Sdone, exams).left === pm.total - st0.min, 'remaining time drops by the finished step');
+  console.log('estimates: ' + stages.map(s => s.id + '=' + L.fmtMin(L.stageProgress(path_, blankS, exams, s.id).min)).join(' ') + ' | total ' + L.fmtMin(pm.total));
   const a = L.nextSteps(path_, S2, exams, 3);
   S2.skip[a[0].id] = true;
   ok(L.nextSteps(path_, S2, exams, 1)[0].id === a[1].id, 'skip advances path');
   ok(L.stageProgress(path_, S2, exams, a[0].stage).done === 1, 'stage progress counts skipped step');
   console.log('stages: ' + stages.map(s => s.id + '=' + path_.filter(p => p.stage === s.id).length).join(' '));
 } else console.log('(data-exams.js missing: exam checks skipped)');
+
+// pure helpers
+ok(L.fmtMin(7) === '7 min' && L.fmtMin(60) === '1 h' && L.fmtMin(125) === '2 h 05 min' && L.fmtMin(700) === '12 h', 'fmtMin formats minutes');
+ok(L.roundMin(0) === 1 && L.roundMin(7.4) === 7 && L.roundMin(12) === 10 && L.roundMin(13) === 15, 'roundMin: exact below 10, then multiples of 5');
+ok(L.words('uno $x^2$ dos') === 2 + 3 && L.words('$$a$$') === 3, 'a formula counts as three words');
+const secs = [{ level: 2, md: '' }, { level: 3, md: 'a' }, { level: 3, md: 'b' }, { level: 2, md: 'c' }];
+ok(L.sectionSpan(secs, 0).to === 2 && L.sectionSpan(secs, 1).to === 1 && L.sectionSpan(secs, 3).to === 3, 'a step spans the section and its deeper children');
+ok(L.readMinutes(secs, 0, 0) === 3, 'reading has a floor of 3 minutes');
+// theory steps cover their children, so the estimate follows the span
+const buc = lectures.find(l => l.id === (stages.find(s => s.id === 'bucles').theory[0] || {}).lecture);
+if (buc) { const t0 = stages.find(s => s.id === 'bucles').theory[0], sp = L.sectionSpan(buc.sections, t0.idx); ok(sp.to > sp.from, 'bucles step spans its subsections (its own section is empty)'); }
+
+// theme colour maths
+const T = require(path.join(APP, 'theme.js'));
+ok(T.hex(T.parseHex('#0D9')) === '#00dd99' && T.parseHex('nope') === null && T.parseHex('#12345') === null, 'parseHex: short and long forms, rejects the rest');
+ok(T.hex(T.ink(T.parseHex('#fde047'))) === '#1a0f08' && T.hex(T.ink(T.parseHex('#1e3a8a'))) === '#ffffff', 'ink: dark text on light accents, white on dark ones');
+T.PRESETS.concat([['auto-light', '#c2410c'], ['auto-dark', '#fb923c'], ['pale', '#fff3b0'], ['black', '#000000']]).forEach(([n, h]) => {
+  const c = T.parseHex(h);
+  ok(T.contrast(c, T.ink(c)) >= 3.5, 'button text is readable on accent ' + n);
+  ok(T.contrast(T.readable(c, T.BG.light, false), T.BG.light) >= 4.5, 'accent text readable on the light page: ' + n);
+  ok(T.contrast(T.readable(c, T.BG.dark, true), T.BG.dark) >= 4.5, 'accent text readable on the dark page: ' + n);
+});
+const css = fs.readFileSync(path.join(APP, 'style.css'), 'utf8');
+ok(css.indexOf('--bg:#f6f7f9') >= 0 && css.indexOf('--bg:#12151c') >= 0, 'theme.js page colours match style.css');
+const LG = require(path.join(APP, 'logo.js'));
+LG.designs.forEach((d, i) => ok(/^<svg[^>]*>.*<\/svg>$/.test(LG.svg('#c2410c', '#ffffff', i)) && !/NaN|undefined/.test(LG.svg('#c2410c', '#ffffff', i)), 'logo draws cleanly: ' + d.id));
 
 // no locking anywhere in the app sources
 ['app.js', 'index.html', 'style.css'].forEach(f => {
