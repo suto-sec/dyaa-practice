@@ -958,6 +958,735 @@ window.LECTURES = [
     "md": "- La complejidad depende de la profundidad del árbol recursivo de llamadas (para ilustrarlo, los nodos de un mismo nivel se colorean igual).\n- También depende de los recursos que requiera cada subprograma (función/método/subrutina) ejecutado:\n  - Parámetros de los subprogramas\n  - Variables locales a los subprogramas\n  - Memoria dinámica reservada al ejecutar el subprograma"
    }
   ]
+ },
+ {
+  "id": "t4_intro_recursividad",
+  "title": "Tema 4 Introducción a la recursividad",
+  "sections": [
+   {
+    "title": "Tema 4 Introducción a la recursividad",
+    "level": 2,
+    "md": "Diseño y Análisis de Algoritmos. Manuel Rubio Sánchez (URJC), 13 de mayo de 2024. Licencia CC BY-SA 4.0.\nContenido: 1 Introducción; 2 Metodología; 3 Problemas básicos; 4 Problemas adicionales."
+   },
+   {
+    "title": "Introducción",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Recursividad",
+    "level": 3,
+    "md": "- Métodos/funciones/subprogramas que se invocan a sí mismos. Si A llama a B, y B llama a A: A y B también son recursivos.\n- La definición de conceptos en términos de sí mismos.\n- Herramienta muy potente para la resolución de problemas computacionales y matemáticos: una forma de pensar al abordar problemas, enfoque de diseño de algoritmos.\n- Alternativa a los bucles (para ejecutar instrucciones de manera repetida) y a algunas estructuras de datos (pilas y colas)."
+   },
+   {
+    "title": "¿Se puede usar en un diccionario?",
+    "level": 3,
+    "md": "- Descendientes (RAE): \"Hijos, nietos o personas que descienden de otra\". Descender: \"Proceder, por natural propagación, de un mismo principio o persona común, que es la cabeza de la familia\". Proceder: \"Dicho de una persona o de una cosa: Tener su origen en un determinado lugar, o descender de cierta persona, familia o cosa\".\n- Mejor definición: los hijos más los descendientes de los hijos (H: hijos, D: descendientes, p: persona):\n$$D(p)=\\begin{cases}\\emptyset & H(p)=\\emptyset\\\\ H(p)\\cup D(H(p)) & H(p)\\neq\\emptyset\\end{cases}$$"
+   },
+   {
+    "title": "¿Cuándo es útil aplicar la recursividad?",
+    "level": 3,
+    "md": "- Especialmente útil cuando la \"estructura\" del problema, algoritmo o los datos no es \"lineal\": arrays, listas (iteración / bucles) frente a grafos, árboles (recursividad).\n- Cuando el método realice dos o más llamadas a sí mismo.\n- Cuando sea más fácil comprender la versión recursiva."
+   },
+   {
+    "title": "Conceptos clave en la recursividad",
+    "level": 3,
+    "md": "- Descomposición/simplificación de problemas: reconocer que para resolver un problema podemos valernos de soluciones a \"subproblemas\" idénticos al original, pero más sencillos o de menor tamaño.\n- Inducción: construimos nuestra solución suponiendo que ya sabemos la solución a estos problemas más simples. No tenemos que calcular estas \"subsoluciones\" desde cero; se obtienen a través de llamadas recursivas."
+   },
+   {
+    "title": "Primer ejemplo: Factorial",
+    "level": 3,
+    "md": "$$n!=\\underbrace{1\\times2\\times3\\times\\cdots\\times(n-1)}_{\\text{subproblema: }(n-1)!}\\times n=\\begin{cases}1 & n=0\\\\ n\\times(n-1)! & n>0\\end{cases}$$\n(problema: n!)\n```python\ndef factorial(n):\n    if n==0:\n        return 1\n    else:\n        return factorial(n-1) * n\n```"
+   },
+   {
+    "title": "El paradigma de programación declarativa",
+    "level": 3,
+    "md": "- En general, hay que pensar en qué se va a hacer mucho más que en cómo se va a hacer.\n- A diferencia del paradigma imperativo, evitaremos pensar en cómo se modifican los parámetros y variables a medida que se ejecuta un programa paso a paso.\n- Suponemos que sabemos qué se resuelve (el subproblema), pero no nos interesa saber cómo.\n- Salto de fe recursivo: usas la función que estás programando, asumiendo que funciona, aunque todavía no la hayas terminado de implementar."
+   },
+   {
+    "title": "Factorial: implementaciones \"iterativas\" (a evitar)",
+    "level": 3,
+    "md": "```python\ndef fact1(n):\n    p = 1\n    while n>0:\n        p = p*n\n        n = n-1\n    return p\n\nfact1(n)\n```\n```python\ndef fact2(n,p):\n    if n==0:\n        return p\n    else:\n        return fact2(n-1,p*n)\n\nfact2(n,1)\n```\n- Traza de fact1 para n=4: (iteración, n, p) = (0,4,1), (1,3,4), (2,2,12), (3,1,24), (4,0,24).\n- Aunque fact2 sea recursivo (por cola), es equivalente a la versión iterativa fact1.\n- fact2 surge de un enfoque imperativo, donde pensamos en los valores que toman variables y parámetros. No surge de pensar en subproblemas, ni de pensar de manera \"recursiva\"."
+   },
+   {
+    "title": "¿Árbol de recursión?",
+    "level": 3,
+    "md": "- Si podemos, evitaremos pensar en el árbol de recursión (ejemplo: árbol de llamadas de Fibonacci con raíz 7).\n- Generalmente no ayuda a diseñar el algoritmo. Lo importante es definir la regla recursiva: la relación entre un nodo padre y los hijos, que se aplica en todo el árbol. Aquí es $F(n)=F(n-1)+F(n-2)$ (números de Fibonacci o similares).\n- No perdemos tiempo en pensar cómo se resolverán los subproblemas."
+   },
+   {
+    "title": "Tipos de recursividad",
+    "level": 3,
+    "md": "- Lineal (no final):\n$$f(n,A)=\\begin{cases}I & n=1\\\\ A\\cdot f(n-1,A) & n>1\\end{cases}\\qquad g(n)=f\\!\\left(n,\\begin{pmatrix}1&1\\\\1&0\\end{pmatrix}\\right)_{1,2}$$\n- Lineal final (por cola):\n$$f(n,a,b)=\\begin{cases}a & n=0\\\\ f(n-1,a+b,a) & n\\ge1\\end{cases}\\qquad g(n)=f(n,0,1)$$\n- Múltiple:\n$$f(n)=\\begin{cases}1 & n=1,2\\\\ 1+\\sum_{i=1}^{n-2}f(i) & n\\ge3\\end{cases}\\qquad g(n)=f(n)$$\n- Mutua:\n$$B(i)=\\begin{cases}1 & i=1\\\\ A(i-1) & i\\ge2\\end{cases}\\qquad A(i)=\\begin{cases}0 & i=1\\\\ A(i-1)+B(i-1) & i\\ge2\\end{cases}\\qquad g(n)=B(n)+A(n)$$\n- Anidada:\n$$f(n,y)=\\begin{cases}1+y & n=1,2\\\\ f(n-1,\\,y+f(n-2,0)) & n\\ge3\\end{cases}\\qquad g(n)=f(n,0)$$"
+   },
+   {
+    "title": "Metodología",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Metodología para diseñar algoritmos recursivos",
+    "level": 3,
+    "md": "1. Identificar el tamaño del problema: lo que determina el número de operaciones a realizar.\n2. Establecer los casos base: instancias sencillas del problema que no requieren llamadas recursivas. Suelen ser instancias de menor tamaño.\n3. Descomposición: escoger instancias del problema de menor tamaño.\n4. Inducción: establecer los casos recursivos a partir de las soluciones de las instancias seleccionadas en la fase de descomposición.\n5. Implementar y probar."
+   },
+   {
+    "title": "Ejemplo: suma de los primeros naturales",
+    "level": 3,
+    "md": "$$S(n)^{*}=\\sum_{i=1}^{n}i=1+2+3+\\cdots+(n-1)+n$$\n(\\* Suponemos que no conocemos la fórmula $S(n)=n(n+1)/2$, que se calcula en tiempo constante $\\Theta(1)$.)\n- Paso 1 (tamaño del problema): n.\n- Paso 2 (casos base): n=0, S(0)=0. n=1, S(1)=1 (redundante si consideramos S(0)=0).\n- Paso 3 (descomposición): consideramos problemas de tamaño menor: n-1, n-2, n/2, n/10. Algunas descomposiciones no conducen a algoritmos sencillos o eficientes. Lo más sencillo en este caso es considerar S(n-1).\n- Paso 4 (casos recursivos):\n$$S(n)=\\underbrace{1+2+3+\\cdots+(n-1)}_{\\text{subproblema: }S(n-1)}+n=\\begin{cases}0 & n=0\\\\ n+S(n-1) & n>0\\end{cases}$$\n```python\ndef suma(n):\n    if n==0:\n        return 0\n    else:\n        return suma(n-1) + n\n```\n$$T(n)=\\begin{cases}1 & n=0\\\\ T(n-1)+1 & n>0\\end{cases}\\qquad T(n)\\in\\Theta(n)$$"
+   },
+   {
+    "title": "Gráficamente",
+    "level": 3,
+    "md": "- Paso 3 (descomposición): buena idea usar diagramas para identificar el problema original y el o los subproblemas a considerar.\n- Problema ≡ \"número de cuadrados en una pirámide triangular de altura (y base) n\"; el subproblema es la pirámide de altura n-1."
+   },
+   {
+    "title": "Dividir el tamaño del problema por dos - I",
+    "level": 3,
+    "md": "- Paso 3 (descomposición): problemas de tamaño n/2 (aproximadamente). // indica división entera ($8//2=4$, $7//2=3$): $x//y=\\lfloor x/y\\rfloor$. Se distingue n par y n impar.\n$$S(n)=\\begin{cases}0 & n=0\\\\ 1 & n=1\\\\ 3S(n/2)+S(n/2-1) & n>1,\\ n\\text{ par}\\\\ 3S((n-1)/2)+S((n+1)/2) & n>1,\\ n\\text{ impar}\\end{cases}$$\n```python\ndef suma(n):\n    if n==0:\n        return 0\n    elif n==1:\n        return 1\n    elif n%2==0:\n        return 3*suma(n//2) + suma(n//2 - 1)\n    else:\n        return 3*suma(n//2) + suma(n//2 + 1)\n```\n- $T(n)=2T(n/2)+1$, con $T(0)=1$ y $T(1)=1$ $\\Rightarrow$ $T(n)\\in\\Theta(n)$."
+   },
+   {
+    "title": "Dividir el tamaño del problema por dos - II",
+    "level": 3,
+    "md": "- Paso 3 (descomposición): problemas de tamaño n/2 (aproximadamente), con dos subproblemas del mismo tamaño n//2 (n par), o n//2 y n//2+1 (n impar) según el diagrama.\n$$S(n)=\\begin{cases}0 & n=0\\\\ 1 & n=1\\\\ 2S(n/2)+(n/2)^2 & n>1,\\ n\\text{ par}\\\\ 2S((n-1)/2)+((n+1)/2)^2 & n>1,\\ n\\text{ impar}\\end{cases}$$\n```python\ndef suma(n):\n    if n==0:\n        return 0\n    elif n==1:\n        return 1\n    elif n%2==0:\n        return 2*suma(n//2) + (n//2)**2\n    else:\n        return 2*suma(n//2) + (n//2 + 1)**2\n```\n- $T(n)=T(n/2)+1$, con $T(0)=1$ y $T(1)=1$ $\\Rightarrow$ $T(n)\\in\\Theta(\\log n)$."
+   },
+   {
+    "title": "Dividir el tamaño del problema por dos - III",
+    "level": 3,
+    "md": "- Paso 3 (descomposición): problemas de tamaño n/2 (aproximadamente), con signos \"-\" y \"+\" en el diagrama según n par o impar.\n$$S(n)=\\begin{cases}0 & n=0\\\\ 1 & n=1\\\\ 4S(n/2)-n/2 & n>1,\\ n\\text{ par}\\\\ 4S((n-1)/2)+(n+1)/2 & n>1,\\ n\\text{ impar}\\end{cases}$$\n```python\ndef suma(n):\n    if n==0:\n        return 0\n    elif n==1:\n        return 1\n    elif n%2==0:\n        return 4*suma(n//2) - n//2\n    else:\n        return 4*suma(n//2) + n//2 + 1\n```\n- $T(n)=T(n/2)+1$, con $T(0)=1$ y $T(1)=1$ $\\Rightarrow$ $T(n)\\in\\Theta(\\log n)$."
+   },
+   {
+    "title": "Arrays y listas",
+    "level": 3,
+    "md": "- Es importante conocer dos formas de implementar código relacionado con listas o arrays:\n  1. Las funciones reciben la lista completa, pudiendo acceder a su longitud (ej. a = [5,-1,3,2,4,-3], len = 6).\n  2. Las funciones reciben la lista completa, pero se trabaja con una sublista de ésta, definida por un índice inferior (inf) y otro superior (sup) (ej. a = [7,0,5,-1,3,2,4,-3,9,2], inf=2, sup=7). Suele ser más eficiente, aunque también más compleja."
+   },
+   {
+    "title": "Arrays y listas: suma de los elementos de una lista",
+    "level": 3,
+    "md": "- Dado una lista a de n números, hallar la suma de éstos: $s(a)=\\sum_{i=0}^{n-1}a_i$.\n- Hay varias formas de emplear recursividad para resolver este problema, y varias implementaciones posibles:\n  1. $s(a)=\\sum_{i=0}^{n-1}a_i=a_0+\\sum_{i=1}^{n-1}a_i=a_0+s(a_{1..n-1})$\n  2. $s(a)=\\sum_{i=0}^{n-1}a_i=\\sum_{i=0}^{n-2}a_i+a_{n-1}=s(a_{0..n-2})+a_{n-1}$\n  3. $s(a)=\\sum_{i=0}^{n-1}a_i=\\sum_{i=0}^{m}a_i+\\sum_{i=m+1}^{n-1}a_i=s(a_{0..m})+s(a_{m+1..n-1})$"
+   },
+   {
+    "title": "Arrays y listas - Implementación tipo 1",
+    "level": 3,
+    "md": "```python\n# s(a) => a[0] + s(a[1:n])\ndef suma_lista_1(a):\n    if len(a) == 0:\n        return 0\n    else:\n        return a[0] + suma_lista_1(a[1:])\n\n\n# s(a) => s(a[0:n-1]) + a[n-1]\ndef suma_lista_2(a):\n    if len(a) == 0:\n        return 0\n    else:\n        return suma_lista_2(a[:-1]) + a[-1]\n\n\n# s(a) => s(a[0:n//2]) + s(a[n//2:n])\ndef suma_lista_3(a):\n    if len(a) == 0:\n        return 0\n    elif len(a) == 1:\n        return a[0]\n    else:\n        mitad = len(a)//2\n        return suma_lista_3(a[:mitad]) + suma_lista_3(a[mitad:])\n```"
+   },
+   {
+    "title": "Arrays y listas - Implementación tipo 2",
+    "level": 3,
+    "md": "```python\n# s(a) => a[0] + s(a[1:n])\ndef suma_lista_limites_1(a,inf,sup):\n    if inf>sup:\n        return 0\n    else:\n        return a[inf] + suma_lista_limites_1(a,inf+1,sup)\n\n\n# s(a) => s(a[0:n-1]) + a[n-1]\ndef suma_lista_limites_2(a,inf,sup):\n    if inf>sup:\n        return 0\n    else:\n        return a[sup] + suma_lista_limites_2(a,inf,sup-1)\n\n\n# s(a) => s(a[0:n//2]) + s(a[n//2:n])\ndef suma_lista_limites_3(a,inf,sup):\n    if inf>sup:\n        return 0\n    elif inf==sup:\n        return a[inf] # or a[sup]\n    else:\n        mitad = (sup+inf)//2\n        return suma_lista_limites_3(a,inf,mitad) + suma_lista_limites_3(a,mitad+1,sup)\n```"
+   },
+   {
+    "title": "Problemas básicos",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Suma de los dígitos de un número",
+    "level": 3,
+    "md": "- Dado un número $n\\in\\mathbb{N}$, hallar la suma de sus dígitos. Ejemplo: para n=3652, se devuelve $s(3652)=3+6+5+2=16$.\n- Paso 1 (tamaño): el número de dígitos de n.\n- Paso 2 (casos base): instancia más pequeña: que el número solo contenga un dígito. Si n<10, s(n)=n.\n- Paso 3 (descomposición). Opciones: eliminar el dígito menos significativo s(365) (más sencillo); eliminar el más significativo s(652); dividir el número por la mitad s(36), s(52).\n- Paso 3: s(n//10) es la suma de todos los dígitos de n, salvo el menos significativo. s(365)=14.\n- Paso 4 (casos recursivos): si conocemos s(n//10) solamente hace falta sumarle el dígito menos significativo de n: (n%10). En el ejemplo: s(3652)=s(365)+2. Caso recursivo: $s(n)=s(n//10)+(n\\%10)$.\n```python\ndef suma_digitos(n):\n    if n<10:\n        return n\n    else:\n        return suma_digitos(n//10) + n%10\n```"
+   },
+   {
+    "title": "Suma lenta",
+    "level": 3,
+    "md": "- Dados $a,b\\in\\mathbb{N}$, hallar su suma. Solo se puede sumar o restar una unidad a los números. Ejemplo: $s(a,b)=a+b$. Para a=3 y b=5, s(3,5)=8.\n- Paso 1 (tamaño): hay varias opciones. Puede ser a, b o mín(a,b). Empecemos tomando como tamaño a.\n- Paso 2 (casos base): instancia más pequeña: a=0. En ese caso s(0,b)=b.\n- Paso 3 (descomposición): varias opciones válidas: el subproblema s(a-1,b); s(a-1,b+1); s(a-1,b-1).\n\n#### Suma lenta - I\n- Paso 3: s(a-1,b)=a-1+b. Paso 4: ¿cómo conseguir s(a,b) si ya sabemos s(a-1,b)? Solo hace falta sumarle 1. Caso recursivo: s(a,b)=s(a-1,b)+1.\n```python\ndef suma_lenta1(a,b):\n    if a==0:\n        return b\n    else:\n        return suma_lenta1(a-1,b) + 1\n```\n#### Suma lenta - II\n- Paso 3: s(a-1,b+1)=a-1+b+1=a+b. Paso 4: no hace falta hacer nada. Caso recursivo: s(a,b)=s(a-1,b+1).\n```python\ndef suma_lenta2(a,b):\n    if a==0:\n        return b\n    else:\n        return suma_lenta2(a-1,b+1)\n```\n#### Suma lenta - III\n- Paso 3: s(a-1,b-1)=a-1+b-1=a+b-2. Paso 4: sumar 1 dos veces. Caso recursivo: s(a,b)=s(a-1,b-1)+1+1.\n```python\ndef suma_lenta3(a,b):\n    if a==0:\n        return b\n    else:\n        return suma_lenta3(a-1,b-1) + 1 + 1\n```\n#### Suma lenta - IV\n- Paso 1 (tamaño): ahora, tomemos mín(a,b) como tamaño del problema.\n- Paso 2 (casos base): instancia más pequeña: a=0 o b=0. Si a=0 se retorna b, y si b=0 se retorna a. Es decir, s(0,b)=b y s(a,0)=a.\n- Paso 3 (descomposición): consideramos el subproblema s(a-1,b-1). Garantiza que se reduce el tamaño del problema. s(a-1,b-1)=a+b-2.\n- Paso 4: sumar 1 dos veces. Caso recursivo: s(a,b)=s(a-1,b-1)+1+1.\n```python\ndef suma_lenta4(a,b):\n    if a==0:\n        return b\n    elif b==0:\n        return a\n    else:\n        return suma_lenta4(a-1,b-1) + 1 + 1\n```"
+   },
+   {
+    "title": "Máximo de una lista",
+    "level": 3,
+    "md": "- Dada una lista a, de longitud $n\\ge1$, hallar el máximo de sus elementos: $\\max_{i=0..n-1}\\{a_i\\}$. Ejemplo: m([4,2,7,5]) = 7.\n- Paso 1 (tamaño): n. Paso 2 (casos base): si n=1, $m(a)=a_0$.\n- Paso 3 (descomposición), varias opciones válidas: eliminar el primer elemento (a[1:]) $m(a_{1..n-1})$; eliminar el último (a[:-1]) $m(a_{0..n-2})$; dividir la lista por la mitad (a[:mitad] y a[mitad:]) $m(a_{0..h-1})$ y $m(a_{h..n-1})$, donde $h=n//2=\\lfloor n/2\\rfloor$.\n\n#### Máximo de una lista - I\n- Paso 3: $m(a_{1..n-1})$. Paso 4: será el mayor entre el encontrado en la sublista y el primer elemento de a. Caso recursivo: $m(a)=\\max\\{m(a_{1..n-1}),a_0\\}$.\n```python\ndef maximo1(a):\n    if len(a)==1:\n        return a[0]\n    else:\n        return max(maximo1(a[1:]),a[0])\n```\n#### Máximo de una lista - II\n- Paso 3: $m(a_{0..n-2})$. Caso recursivo: $m(a)=\\max\\{m(a_{0..n-2}),a_{n-1}\\}$.\n```python\ndef maximo2(a):\n    n = len(a)\n    if n==1:\n        return a[0]\n    else:\n        return max(maximo2(a[:-1]),a[n-1])\n```\n#### Máximo de una lista - III\n- Paso 3: $m(a_{0..h-1})$ y $m(a_{h..n-1})$. Será el mayor entre los máximos encontrados en ambas sublistas. Caso recursivo: $m(a)=\\max\\{m(a_{0..h-1}),m(a_{h..n-1})\\}$.\n```python\ndef maximo3(a):\n    n = len(a)\n    if n==1:\n        return a[0]\n    else:\n        mitad = n//2\n        return max(maximo3(a[:mitad]), maximo3(a[mitad:]))\n```"
+   },
+   {
+    "title": "Potencia con exponente no negativo",
+    "level": 3,
+    "md": "- Calcular $b^n$, donde $b\\in\\mathbb{R}$ y $n\\in\\mathbb{N}$ es un entero no negativo. Ejemplo: si $f(b,n)=b^n$, $f(2,5)=2^5=32$.\n- Paso 1 (tamaño): n. Paso 2 (casos base): si n=0: f(b,n)=1 (se asume que $0^0=1$).\n- Paso 3 (descomposición), opciones: considerar f(b,n-1); considerar f(b,n//2).\n\n#### Potencia - I\n- Paso 4: ¿cómo conseguir $b^n$ si conoces $b^{n-1}$? Caso recursivo: $b^n=b\\cdot b^{n-1}$.\n```python\ndef pot1(b,n):\n    if n==0:\n        return 1\n    else:\n        return b*pot1(b,n-1)\n```\n- $T(n)=\\Theta(n)$.\n\n#### Potencia - II\n- Paso 4: ¿cómo conseguir $b^n$ si conoces $b^{n//2}$? Si n es par: $b^n=(b^{n//2})^2$. Si n es impar: $b^n=b\\cdot(b^{n//2})^2$.\n```python\ndef pot2(b,n):\n    if n==0:\n        return 1\n    elif n%2==0:\n        p = pot2(b,n//2)\n        return p*p\n    else:\n        p = pot2(b,n//2)\n        return b*p*p\n```\n- $T(n)=\\Theta(\\log n)$."
+   },
+   {
+    "title": "Escribir secuencia de caracteres - I",
+    "level": 3,
+    "md": "- Dada una cadena de n caracteres s, escribir éstos verticalmente y en orden. Si s es la cadena vacía se escribirá un salto de línea. Ejemplo: f('hola') → h, o, l, a (uno por línea).\n- Paso 1 (tamaño): n. Paso 2 (casos base): si n=0: print(); si n=1: print(s).\n- Paso 3 (descomposición): eliminar el primer elemento de s (s[1:]) $f_1(s_{1..n-1})$; eliminar el último (s[:-1]) $f_2(s_{0..n-2})$; escribir ambas mitades por separado (s[:mitad] y s[mitad:]) $f_3(s_{0..h-1})$ y $f_3(s_{h..n-1})$, donde h=n//2."
+   },
+   {
+    "title": "Escribir secuencia de caracteres - II",
+    "level": 3,
+    "md": "- Igual pero en orden inverso: g('hola') → a, l, o, h (uno por línea). Mismos pasos 1 a 3 con $g_1,g_2,g_3$."
+   },
+   {
+    "title": "Escribir secuencia de caracteres - I y II",
+    "level": 3,
+    "md": "- Pasos 4 y 5 (casos recursivos e implementación):\n```python\ndef f1(s):\n    n = len(s)\n    if n==0:\n        print()\n    elif n==1:\n        print(s)\n    else:\n        print(s[0])\n        f1(s[1:])\n\ndef f2(s):\n    n = len(s)\n    if n==0:\n        print()\n    elif n==1:\n        print(s)\n    else:\n        f2(s[:-1])\n        print(s[-1])\n\ndef f3(s):\n    n = len(s)\n    if n==0:\n        print()\n    elif n==1:\n        print(s)\n    else:\n        m = n//2\n        f3(s[:m])\n        f3(s[m:])\n```\n```python\ndef g1(s):\n    n = len(s)\n    if n==0:\n        print()\n    elif n==1:\n        print(s)\n    else:\n        g1(s[1:])\n        print(s[0])\n\ndef g2(s):\n    n = len(s)\n    if n==0:\n        print()\n    elif n==1:\n        print(s)\n    else:\n        print(s[-1])\n        g2(s[:-1])\n\ndef g3(s):\n    n = len(s)\n    if n==0:\n        print()\n    elif n==1:\n        print(s)\n    else:\n        m = n//2\n        g3(s[m:])\n        g3(s[:m])\n```"
+   },
+   {
+    "title": "Sumatorio general",
+    "level": 3,
+    "md": "- Dada una función general g(x) y unos límites m y n, hallar $f(m,n,g)=\\sum_{i=m}^{n}g(i)$.\n- Paso 1 (tamaño): n-m+1 (número de términos a sumar).\n- Paso 2 (casos base): si m>n (el tamaño es 0 o negativo): f(m,n,g)=0. Si m=n (solo necesario si se divide el sumatorio en dos en la fase de descomposición): f(m,n,g)=g(m).\n- Paso 3 (descomposición): eliminamos el primer elemento de la suma, consideramos f(m+1,n,g): $\\sum_m^n g(i)=g(m)+\\sum_{m+1}^n g(i)$. Eliminamos el último, consideramos f(m,n-1,g): $\\sum_m^n g(i)=\\sum_m^{n-1}g(i)+g(n)$. Dividimos el sumatorio en dos (por la mitad), consideramos f(m,h,g) y f(h+1,n,g), donde h=(n+m)//2: $\\sum_m^n g(i)=\\sum_m^h g(i)+\\sum_{h+1}^n g(i)$.\n- Pasos 4 y 5:\n```python\ndef g(x):\n    return x*x;\n\ndef s1(m,n,g):\n    if m>n:\n        return 0\n    else:\n        return g(m) + s1(m+1,n,g)\n\ndef s2(m,n,g):\n    if m>n:\n        return 0\n    else:\n        return s2(m,n-1,g) + g(n)\n\ndef s3(m,n,g):\n    if m>n:\n        return 0\n    elif m==n:\n        return g(m)\n    else:\n        mitad = (n+m)//2\n        return s3(m,mitad,g) + s3(mitad+1,n,g)\n```"
+   },
+   {
+    "title": "¿Contiene dígito?",
+    "level": 3,
+    "md": "- Dado un entero no negativo n, y un dígito $d\\in\\{0,1,\\dots,9\\}$, determinar si d es una de las cifras de n. Ejemplo: si la función booleana es f(n,d), f(3082,2)=True.\n- Paso 1 (tamaño): el número de dígitos de n.\n- Paso 2 (casos base): si n solo contiene un dígito el resultado es ¿n=d? Si d es el último dígito de n (el menos significativo) el resultado es True (se puede incorporar como caso base o en la regla recursiva).\n- Paso 3 (descomposición): consideramos n//10, que es n sin el último dígito.\n- Paso 4 (casos recursivos): si no estás en un caso base (d no es el último dígito de n) el resultado será f(n//10,d) (si d es una de las cifras restantes de n).\n```python\ndef contiene_digito_cola(n,d):\n    if n<10:\n        return n==d\n    elif n%10==d:\n        return True\n    else:\n        return contiene_digito_cola(n//10,d)\n\ndef contiene_digito_lineal(n,d):\n    if n<10:\n        return n==d\n    else:\n        return (n%10==d) or contiene_digito_lineal(n//10,d)\n```"
+   },
+   {
+    "title": "Problemas adicionales",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Cambio de base",
+    "level": 3,
+    "md": "- Dado un número entero no negativo n, calcular su expresión en base b ($b\\in[2,9]$ es otro entero). Ejemplo: $142_{10}=1032_5$. Por tanto, c(142,5)=1032.\n- Paso 1 (tamaño): el número de dígitos de la salida.\n- Paso 2 (casos base): instancia más pequeña: que la salida solo tenga un dígito, n<b. En ese caso c(n,b)=n.\n- Paso 3 (descomposición): ¿cómo te acercas al caso base? Dividiendo n entre b. c(n//b,b) tendrá un dígito menos que c(n,b).\n- Paso 4 (casos recursivos): ¿si conoces c(n//b,b), cómo construyes c(n,b)? Ejemplo: para n=142, n//5=28. Además, c(142,5)=1032 y c(28,5)=103. Tendríamos que multiplicar 103 por 10, y sumarle 2. La regla recursiva es: $c(n,b)=10\\cdot c(n//b,b)+n\\%b$.\n```python\ndef cambio_base(n,b):\n    if n<b:\n        return n\n    else:\n        return 10*cambio_base(n//b,b) + n%b\n```"
+   },
+   {
+    "title": "Evaluar un polinomio",
+    "level": 3,
+    "md": "- Sea $P(x,d)=d_nx^n+d_{n-1}x^{n-1}+\\cdots+d_1x+d_0$ un polinomio de grado n, determinado por los coeficientes $d_i$, que se especifican en una lista d de longitud n+1. Evaluar el polinomio para un valor concreto de x. Ejemplo: $P(3,[2,-4,5])=5\\cdot(3)^2-4\\cdot(3)^1+2=35$.\n- Paso 1 (tamaño): n. Paso 2 (casos base): n=0. En ese caso $P(x,d)=d_0$.\n- Paso 3 (descomposición): eliminamos el primer elemento de d (algoritmo de Horner). También se puede eliminar el último, o partir el polinomio en dos.\n- Paso 4 (casos recursivos): asumimos que conocemos $P(x,d_{1..n})=d_nx^{n-1}+d_{n-1}x^{n-2}+\\cdots+d_1$. La regla recursiva es: $P(x,d)=d_0+x\\cdot P(x,d_{1..n})$.\n```python\ndef horner(x,d):\n    if len(d)==1:\n        return d[0]\n    else:\n        return d[0] + x*horner(x,d[1:])\n```"
+   },
+   {
+    "title": "Búsqueda lineal",
+    "level": 3,
+    "md": "- Dada una lista a de longitud n, no necesariamente ordenada, y un elemento x, devolver un índice de la lista en el que se encuentre x. Si x no está en la lista el método devolverá -1. El método será una función f(a,x).\n- Paso 1 (tamaño): n.\n- Paso 2 (casos base): n=0. En ese caso el método devolverá -1. Otros casos triviales (no es necesario considerar ambos): si $x=a_{n-1}$ el método devolverá n-1; si $x=a_0$ el método devolverá 0.\n- Paso 3 (descomposición): eliminar el último elemento de la lista (veremos solo este caso); eliminar el primer elemento de la lista.\n- Paso 4 (casos recursivos): si hemos comprobado que $x\\ne a_{n-1}$, entonces el resultado será el resultado de buscar a x en la sublista $a_{0..n-2}$. En ese caso $f(a,x)=f(a_{0..n-2},x)$.\n```python\ndef busqueda_lineal(a, x):\n    n = len(a)\n    if n==0:\n        return -1\n    elif a[n-1]==x:\n        return n-1\n    else:\n        return busqueda_lineal(a[:-1], x)\n```"
+   },
+   {
+    "title": "Búsqueda en lista ordenada",
+    "level": 3,
+    "md": "- Dada una lista a de longitud n, ordenada de manera creciente, y un elemento x, devolver un índice de la lista en el que se encuentre x. Si x no está en la lista el método devolverá -1.\n- Paso 1 (tamaño): n.\n- Paso 2 (casos base): n=0. La lista es vacía; se devuelve -1. Si $x=a_m$ el método devolverá m. En el algoritmo que veremos (búsqueda binaria) m hará referencia a la mitad de la lista.\n- Paso 3 (descomposición): descartar la búsqueda en la mitad superior o inferior de la lista. Esto conducirá a un algoritmo que correrá en tiempo $\\Theta(\\log n)$.\n- Paso 4 (casos recursivos): si $x<a_m$ entonces x solo podrá estar en $a_{0..m-1}$, por lo que la búsqueda debe continuar en esa primera mitad. Si $x>a_m$ entonces x solo podrá estar en $a_{m+1..n-1}$, por lo que la búsqueda debe continuar en la segunda mitad.\n- Paso 5 (implementación): al tener que devolver un índice, es conveniente emplear parámetros que indiquen el principio (inf) y final (sup) de la sublista de a en la que se va a realizar la búsqueda. Se pasa toda la lista a (en realidad, un puntero a ella), pero la función debe trabajar solo con los índices entre inf y sup.\n```python\ndef busqueda_binaria(a, x, inf, sup):\n    if inf>sup:\n        return -1\n    else:\n        mitad = (inf+sup)//2\n\n        if x==a[mitad]:\n            return mitad\n        elif x<a[mitad]:\n            return busqueda_binaria(a, x, inf,mitad-1)\n        else:\n            return busqueda_binaria(a, x, mitad+1, sup)\n```"
+   },
+   {
+    "title": "Formas de subir escaleras",
+    "level": 3,
+    "md": "- Halla el número de maneras en las que se puede subir unas escaleras de n peldaños, dando pasos de uno o dos peldaños.\n- Paso 1 (tamaño): n. Paso 2 (casos base): n=1: solo hay una forma de subir, f(1)=1. n=2: hay dos formas, f(2)=2.\n- Paso 3 (descomposición): suponemos que sabemos subir tanto n-1 como n-2 peldaños. Intentaremos construir f(n) a partir de f(n-1) y f(n-2).\n- Paso 4 (casos recursivos): en problemas combinatorios (de conteo) es recomendable agrupar los elementos a contar en diferentes categorías. En este caso hay dos tipos de formas de subir: las secuencias que comienzan subiendo un peldaño, y las que empiezan subiendo dos. El número de secuencias que empiezan subiendo un peldaño es f(n-1). El número de secuencias que empiezan subiendo dos peldaños en un paso es f(n-2).\n```python\ndef f(n):\n    if n==1:\n        return 1\n    elif n==2:\n        return 2\n    else:\n        return f(n-1) + f(n-2)\n```"
+   },
+   {
+    "title": "Caminos por Manhattan",
+    "level": 3,
+    "md": "- Hallar el número de formas de llegar desde el origen (0,0) hasta el punto (x,y), donde $x,y\\in\\mathbb{N}$, dando x+y pasos, donde en cada uno solo se puede avanzar una unidad hacia arriba o hacia la derecha. Es decir, solo se puede incrementar en una unidad la coordenada x o la coordenada y en cada paso.\n- Paso 1 (tamaño): x+y.\n- Paso 2 (casos base): x=0 e y=0 es un caso base, pero hay otro más general: si x=0 o y=0 solo habrá una forma de alcanzar (x,y) (un camino totalmente horizontal o vertical). Si x=0 e y=0 se considera que hay un camino válido.\n- Paso 3 (descomposición): suponemos que sabemos llegar al punto (x-1,y) y al (x,y-1). Es decir, aprovechamos las soluciones f(x-1,y) y f(x,y-1).\n- Paso 4 (casos recursivos): desde (x-1,y) o (x,y-1) solo hay una manera de llegar a (x,y). Por tanto: $f(x,y)=f(x-1,y)+f(x,y-1)$.\n```python\ndef f(x,y):\n    if (x==0) or (y==0):\n        return 1\n    else:\n        return f(x-1,y) + f(x,y-1)\n```\n$$f(x,y)=\\frac{(x+y)!}{x!\\cdot y!}=\\binom{x+y}{y}=\\binom{x+y}{x}$$"
+   },
+   {
+    "title": "Encontrar un 0 de una función: bisección",
+    "level": 3,
+    "md": "- Sea f(x) una función continua en un intervalo [a,b]. Se sabe que signo(f(a)) ≠ signo(f(b)), por lo que la función tendrá al menos un cero (r). Se pide hallar uno de estos ceros con una precisión de ε (la diferencia con respecto al cero real será ε como mucho). Por tanto, el resultado será una estimación ẑ. La función a implementar será ζ(a,b,f,ε).\n- Paso 1 (tamaño): b-a, que, en función de ε, determinará el número de veces que se reducirá el intervalo de búsqueda por 2.\n- Paso 2 (casos base): si f(ẑ)=0 se podrá parar: se ha encontrado un cero exacto (ẑ=r). Si b-a<2ε, la diferencia entre el cero real (r) y nuestra estimación del cero (ẑ) será menor o igual a ε ($|\\hat z-r|\\le\\epsilon$) y podremos parar.\n- Paso 3 (descomposición): reducimos el ancho del intervalo, dividiéndolo por dos. Tomando ẑ=(a+b)/2, ẑ pasará a ser un extremo de un nuevo intervalo, de manera que los signos de la función en sus extremos sean diferentes.\n- Paso 4 (casos recursivos): inicialmente ẑ=(a+b)/2. Si signo(f(a)) ≠ signo(f(ẑ)) entonces el resultado será ζ(a,ẑ,f,ε). En caso contrario será ζ(ẑ,b,f,ε).\n```python\ndef f(x):\n    return x*x-2\n\ndef biseccion(a, b, f, epsilon):\n    z = (a+b)/2\n\n    if f(z)==0 or b-a<=2*epsilon:\n        return z\n    elif (f(a)>0 and f(z)<0) or (f(a)<0 and f(z)>0):\n        return biseccion(a, z, f, epsilon)\n    else:\n        return biseccion(z, b, f, epsilon)\n```"
+   },
+   {
+    "title": "Torres de Hanoi",
+    "level": 3,
+    "md": "- Se dispone de n discos de diferente tamaño (el i-ésimo disco tiene radio i), insertados en una torre, en orden decreciente de tamaño (estado inicial). El objetivo es determinar la secuencia de movimientos de discos individuales para ubicar a todos los discos en otra torre (estado final), usando una tercera como auxiliar, con las reglas: 1) solo se puede mover un disco a la vez; 2) no puede haber un disco de mayor tamaño encima de otro de menor tamaño.\n- Cada movimiento se imprimirá por pantalla como \"Mover disco i desde t1 a t2\", donde t1 y t2 podrán ser la torre origen (O), auxiliar (A) o destino (D).\n- Para n=4 se puede resolver en 15 movimientos. No suele ser útil analizar todas las operaciones (las etapas 7 y 8 son especialmente interesantes). Debemos centrarnos en subproblemas y sus soluciones.\n- Paso 1 (tamaño): n. Paso 2 (casos base): si n=1: mover el disco 1 desde la torre origen a la destino. También: si n=0: no se realiza ningún movimiento.\n- Paso 3 (descomposición): consideramos subproblemas de tamaño n-1. Implicación clave: suponemos que sabemos mover toda una pirámide de n-1 discos, desde cualquier torre a otra.\n- Paso 4 (casos recursivos): (1) mueve la pirámide de n-1 discos de O a A (llamada recursiva); (2) mueve el disco n de O a D (operación básica); (3) mueve la pirámide de n-1 discos de A a D (llamada recursiva).\n```python\ndef torres_Hanoi(n,o,d,a):\n    if n==1:\n        print('Mueve disco',n,'desde torre',o,'a torre',d)\n    else:\n        torres_Hanoi(n-1,o,a,d)\n        print('Mueve disco',n,'desde torre',o,'a torre',d)\n        torres_Hanoi(n-1,a,d,o)\n\n\n# Código alternativo\ndef torres_Hanoi_alt(n,o,d,a):\n    if n>0:\n        torres_Hanoi_alt(n-1,o,a,d)\n        print('Mueve disco',n,'desde torre',o,'a torre',d)\n        torres_Hanoi_alt(n-1,a,d,o)\n```"
+   },
+   {
+    "title": "Torres de Hanoi cíclicas",
+    "level": 3,
+    "md": "- Idéntico al de las torres de Hanoi original, pero añade una restricción: si las torres se ubican en los vértices de un triángulo (A, B, C), los discos solo podrán pasar de una torre a otra en el sentido de las agujas del reloj.\n- Realmente tenemos dos problemas distintos: PROBLEMA 1: mover n discos en el sentido de las agujas del reloj (O → D con A en medio, en sentido reloj). PROBLEMA 2: mover n discos en el sentido contrario al de las agujas del reloj.\n- Paso 1 (tamaño): n.\n- Paso 2 (casos base): si n=1 (\"reloj\"): mover el disco 1 desde la torre origen a la destino. Si n=1 (\"antireloj\"): mover el disco 1 desde la torre origen a la auxiliar, y luego a la destino. También: si n=0: no se realiza ningún movimiento.\n- Paso 3 (descomposición): consideramos subproblemas de tamaño n-1, para ambos problemas. Implicación clave: suponemos que sabemos mover toda una pirámide de n-1 discos, en cualquiera de los dos sentidos.\n- Paso 4 (casos recursivos): operaciones que podemos realizar: instrucción básica (mover un disco); llamadas recursivas (mover n-1 discos en el sentido de las agujas del reloj; mover n-1 discos en el sentido contrario).\n  - Sentido \"reloj\": inicio (n discos en O); paso 1: n-1 discos de O a A (antireloj); paso 2: disco n de O a D; paso 3: n-1 discos de A a D (antireloj).\n  - Sentido \"antireloj\": inicio; paso 1: n-1 discos de O a D (antireloj); paso 2: disco n de O a A; paso 3: n-1 discos de D a O (reloj); paso 4: disco n de A a D; paso 5: n-1 discos de O a D (antireloj).\n- Paso 5 (implementación):\n```python\ndef reloj(n,o,d,a):\n    if n>0:\n        antireloj(n-1,o,a,d)\n        print('Mueve disco',n,'desde torre',o,'a torre',d)\n        antireloj(n-1,a,d,o)\n\n\ndef antireloj(n,o,d,a):\n    if n>0:\n        antireloj(n-1,o,d,a)\n        print('Mueve disco',n,'desde torre',o,'a torre',d)\n        reloj(n-1,d,o,a)\n        print('Mueve disco',n,'desde torre',o,'a torre',d)\n        antireloj(n-1,o,d,a)\n```"
+   }
+  ]
+ },
+ {
+  "id": "t5_divide_y_venceras",
+  "title": "Tema 5 Divide y vencerás",
+  "sections": [
+   {
+    "title": "Tema 5 Divide y vencerás",
+    "level": 2,
+    "md": "Diseño y Análisis de Algoritmos. Manuel Rubio Sánchez (URJC), 13 de mayo de 2024. Licencia CC BY-SA 4.0.\nContenido: 1 Introducción; 2 Transforma y vencerás; 3 Divide y vencerás (máximo de una lista, ordenación, multiplicación, embaldosado con L-triominós, permutación de inversión de bits)."
+   },
+   {
+    "title": "Introducción",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Divide y vencerás",
+    "level": 3,
+    "md": "- Uno de los más importantes paradigmas de diseño algorítmico.\n- Se basa en la resolución de un problema dividiéndolo en dos o más subproblemas de igual tipo o similar.\n- El proceso continúa hasta que éstos llegan a ser lo suficientemente sencillos como para que se resuelvan directamente.\n- Al final, las soluciones a cada uno de los subproblemas se combinan para dar una solución al problema original.\n- Muchos algoritmos basados en esta estrategia son recursivos; también hay algoritmos iterativos de divide y vencerás."
+   },
+   {
+    "title": "Estrategias de diseño de algoritmos",
+    "level": 3,
+    "md": "- Transforma y vencerás: reducciones (vistas en el Tema 1).\n- Decrementa y vencerás: se reduce el tamaño del problema (p.e., n-1, n//2, n//10, etc.). Una sola llamada recursiva en cada caso recursivo; se requiere la solución de un solo subproblema. Ejemplos vistos en el Tema 4.\n- Divide y vencerás: se reduce el tamaño del problema (p.e., n//2, n//4, etc.). Más de una llamada en algún caso recursivo; se requiere la solución de varios subproblemas."
+   },
+   {
+    "title": "Transforma y vencerás",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Transforma y vencerás",
+    "level": 3,
+    "md": "- Esta estrategia también se denomina reducción.\n- Resolver un problema transformándolo en otro más simple, conocido, o para el que existan algoritmos eficientes.\n- Esquema: Problema A (resolución difícil o ineficiente) → transformación → Problema B (resolución sencilla o eficiente) → solución B → paso sencillo → solución A."
+   },
+   {
+    "title": "Mediana de un array v desordenado",
+    "level": 3,
+    "md": "1. Ordenar el array v → $\\Theta(n\\log n)$.\n2. Devolver: $v[n//2]$ si n es impar; $\\dfrac{v[(n//2)-1]+v[n//2]}{2}$ si n es par.\n- Ejemplo: [4,2,5,5,6,1,0,3,4,5,8,7] ordenado [0,1,2,3,4,4,5,5,5,6,7,8] → mediana 4.5.\n- Hay algoritmos más eficientes (p.e., \"Quickselect\")."
+   },
+   {
+    "title": "Estimación del valor de π",
+    "level": 3,
+    "md": "- Planteamos un problema alternativo: buscamos una aproximación del perímetro p de un círculo de radio R: $p=2\\pi R\\Rightarrow\\pi=\\dfrac{p}{2R}$.\n- Aproximamos un círculo con un polígono regular inscrito o circunscrito al círculo. El perímetro del polígono inscrito $p_i$ nos dará una cota inferior de p; el del circunscrito $p_c$ una cota superior:\n$$\\frac{p_i}{2R}\\le\\pi\\le\\frac{p_c}{2R}$$\n- Comenzamos por un polígono regular inscrito (por ejemplo, un hexágono), cuyo perímetro será 6R. A continuación, doblamos el número de lados, obteniendo una mejor aproximación (hexágono, dodecágono, ...).\n- El perímetro de un polígono con el doble de lados se puede obtener fácilmente a partir del primero. Los perímetros de los polígonos circunscritos se pueden obtener de los perímetros de los polígonos inscritos.\n- Relaciones geométricas (figura: triángulo con lado inscrito L, lado l del polígono con doble de lados, lado circunscrito L', radio R): $R^2=y^2+\\left(\\tfrac{L}{2}\\right)^2$, $R=x+y$, $l^2=x^2+\\left(\\tfrac{L}{2}\\right)^2$, $\\dfrac{L'}{R}=\\dfrac{l}{y}$.\n- Si el lado de un polígono inscrito mide L, se puede hallar la longitud l de un lado del polígono con el doble de lados:\n$$R^2=y^2+\\left(\\tfrac{L}{2}\\right)^2\\Rightarrow y=\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2},\\quad x=R-y=R-\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2}$$\n$$l=\\sqrt{\\left(\\tfrac{L}{2}\\right)^2+R^2+R^2-\\left(\\tfrac{L}{2}\\right)^2-2R\\sqrt{R^2-\\left(\\tfrac{L}{2}\\right)^2}}=R\\sqrt{2-\\sqrt{4-\\left(\\tfrac{L}{R}\\right)^2}}$$\n- El lado L' de un polígono circunscrito se puede hallar a partir del lado L de un inscrito: $\\dfrac{L'}{R}=\\dfrac{L}{y}\\Rightarrow L'=\\dfrac{LR}{y}$.\n- La estimación de π se obtiene a partir de los perímetros hallados:\n$$\\frac{L\\cdot\\text{número de lados}}{2R}\\le\\pi\\le\\frac{L'\\cdot\\text{número de lados}}{2R}$$\n- Otros métodos para estimar π: simulación Monte Carlo; integración numérica; series: $\\arctan x=x-\\frac{x^3}{3}+\\frac{x^5}{5}-\\frac{x^7}{7}+\\cdots$ para x=1 $\\Rightarrow$ $\\frac{\\pi}{4}=1-\\frac13+\\frac15-\\frac17+\\cdots$."
+   },
+   {
+    "title": "Raíz cuadrada",
+    "level": 3,
+    "md": "- Deseamos hallar $\\sqrt a$. Transformamos el problema en el de hallar un cero de una función: $x=\\sqrt a\\to x^2=a\\to x^2-a=0$.\n- Por tanto, querremos hallar un cero de la función $y=x^2-a$. Como x será generalmente un número real, nos podemos conformar con una aproximación.\n- Hay varios métodos para resolver este nuevo problema, por ejemplo: método de Newton-Raphson (a continuación); método de bipartición (de \"decrementa y vencerás\")."
+   },
+   {
+    "title": "Método de Newton-Raphson",
+    "level": 3,
+    "md": "- Método iterativo, que parte de un valor inicial $x_0$, y aplica la siguiente regla para hallar un cero (r) de la función f(x):\n$$x_{n+1}=x_n-\\frac{f(x_n)}{f'(x_n)}$$\n- En cada iteración se busca la recta tangente a f(x) que pasa por el punto $p=(x_n,f(x_n))$. El corte de la recta con el eje de abscisas constituye el nuevo punto $x_{n+1}$.\n- El método surge del desarrollo de f(x) en serie de Taylor, en un entorno del punto $x_n$:\n$$f(x)=f(x_n)+f'(x_n)(x-x_n)+(x-x_n)^2\\frac{f''(x_n)}{2!}+\\dots$$\n- Si se trunca el desarrollo a partir del término de grado 2, se obtiene la recta tangente (que pasa por $(x_n,f(x_n))$). Posteriormente evaluamos en $x_{n+1}$: $f(x_{n+1})=f(x_n)+f'(x_n)(x_{n+1}-x_n)$. Si asumimos que $x_{n+1}$ tiende hacia el cero de la función, podemos sustituir $f(x_{n+1})=0$, obteniéndose el algoritmo.\n- Raíz cuadrada con Newton-Raphson: se aplica la regla para $f(x)=x^2-a$, con $f'(x)=2x$:\n$$x_{n+1}=x_n-\\frac{x_n^2-a}{2x_n}=\\frac{2x_n^2}{2x_n}-\\frac{x_n^2-a}{2x_n}=\\frac{x_n^2+a}{2x_n}$$\n- Ejemplo (a=13, x0=13): x1=7, x2=4,428571..., x3=3,682027..., x4=3,606345..., x5=3,605551..., x6=3,60555127546399..., que converge a $\\sqrt{13}=3{,}60555127546398912486$."
+   },
+   {
+    "title": "Factorización LU",
+    "level": 3,
+    "md": "- Supongamos que queremos resolver un sistema de ecuaciones $Ax=b$, donde A es una matriz cuadrada e invertible de dimensiones $n\\times n$. Una solución: $x=A^{-1}b$. $A^{-1}$ se calcula en $O(n^3)$, pero no suele ser buena idea por: errores de precisión; $A^{-1}$ puede ser densa incluso cuando A es dispersa.\n- Alternativa: factorización LU, que también se calcula en $O(n^3)$. $A=LU$, donde L es triangular inferior, y U triangular superior (del mismo tamaño). Para una matriz de 3×3:\n$$\\begin{bmatrix}a_{11}&a_{12}&a_{13}\\\\a_{21}&a_{22}&a_{23}\\\\a_{31}&a_{32}&a_{33}\\end{bmatrix}=\\begin{bmatrix}l_{11}&0&0\\\\l_{21}&l_{22}&0\\\\l_{31}&l_{32}&l_{33}\\end{bmatrix}\\begin{bmatrix}u_{11}&u_{12}&u_{13}\\\\0&u_{22}&u_{23}\\\\0&0&u_{33}\\end{bmatrix}$$\n- Para resolver $Ax=b$ ahora se van a resolver dos sistemas, pero más sencillos: $Ax=LUx=b\\Rightarrow Ly=b,\\ Ux=y$."
+   },
+   {
+    "title": "Divide y vencerás",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Divide y vencerás",
+    "level": 3,
+    "md": "- La descomposición de un problema genera varios subproblemas. Las soluciones a los subproblemas se combinan para generar la solución al problema original, la cual puede requerir alguna operación adicional.\n- Esquema: Problema → divide → varios subproblemas → combina → solución."
+   },
+   {
+    "title": "Divide y vencerás - Ventajas",
+    "level": 3,
+    "md": "- Base de numerosos algoritmos: Transformada Rápida de Fourier (FFT, posiblemente el algoritmo más importante en la actualidad); problemas geométricos (par de puntos más próximos en el plano, cierre convexo); Skyline (en el libro, apartado 6.7); otros que veremos en este tema.\n- Aumento de eficiencia en términos de coste computacional.\n- Paralelismo (subproblemas tratados en diferentes procesadores).\n- Uso eficiente de jerarquías de memoria (cache)."
+   },
+   {
+    "title": "Máximo de una lista a de n números",
+    "level": 3,
+    "md": "1. Tamaño: n.\n2. Caso base: si n=1 se devuelve $a_0$.\n3. Descomposición: x = máximo de la primera mitad de a; y = máximo de la segunda mitad de a.\n4. Combinación: $\\max\\{x,y\\}$.\n```python\ndef maximo(a): # Ya visto en el Tema 4\n    n = len(a)\n    if n==1:\n        return a[0]\n    else:\n        mitad = n//2\n        return max(maximo(a[:mitad]), maximo(a[mitad:]))\n```\n- ¿Podríamos conseguir un algoritmo más eficiente que una búsqueda lineal, que tarda O(n)? Claramente, no: sea cual sea nuestra estrategia tenemos que procesar todos los elementos de la lista. Este problema tiene una cota inferior $\\Omega(n)$.\n$$T(n)=\\begin{cases}1 & n=1\\\\ 1+2T(n/2) & n>1\\end{cases}\\qquad T(n)=2n-1\\in\\Theta(n)$$\n- Coste lineal a pesar de dividir el problema por dos, ya que tenemos que resolver dos problemas.\n- El árbol de recursión tiene del orden de $2^h$ nodos ($2\\cdot2^h-1$ si es completo), donde h es la altura del árbol, pero en este problema $h=\\log_2 n$. La función exponencial se cancela con la logarítmica: el árbol tiene 2n-1 nodos, y cada uno requiere $\\Theta(1)$ operaciones. $T(n)\\in\\Theta(n)$. (Niveles: 1, 2, 4, 8, ..., $2^{\\log_2 n}=n$ nodos.)"
+   },
+   {
+    "title": "Problema de ordenación",
+    "level": 3,
+    "md": "- Algoritmos: Insert-sort; Select-sort; Merge-sort (divide y vencerás); Quicksort (divide y vencerás); Quickselect (algoritmo de búsqueda, no de ordenación).\n- Entradas: una lista a de n números $[a_0,a_1,\\dots,a_{n-1}]$. Salidas: una permutación (reordenación) $[a'_0,a'_1,\\dots,a'_{n-1}]$ de los elementos de a tal que $a'_1\\le a'_2\\le\\cdots\\le a'_n$.\n- Tamaño del problema: n. Casos base: si n≤1 se devuelve la lista de entrada (n podría ser 0, en cuyo caso se devolvería una lista vacía).\n- La descomposición que escojamos determinará el algoritmo a desarrollar."
+   },
+   {
+    "title": "Insert-sort",
+    "level": 3,
+    "md": "- Descomposición: eliminar el último elemento de la lista de entrada. Ej.: [2,1,9,6,4] → [1,2,4,6,9]; subproblema [2,1,9,6] → [1,2,6,9]; combinación: inserta 4 en lista ordenada.\n```python\ndef insert_sort_rec(a):\n    if len(a) <= 1:\n        return a\n    else:\n        return inserta_en_lista_ordenada(\n            insert_sort_rec(a[:-1]), a[-1])\n```\n- Ejercicio para casa: inserta_en_lista_ordenada()."
+   },
+   {
+    "title": "Select-sort",
+    "level": 3,
+    "md": "- Descomposición: eliminar el menor elemento de la lista de entrada. Ej.: [7,5,3,8,4] → [3,4,5,7,8]; subproblema [5,7,8,4] → [4,5,7,8]; combinación: concatena [3].\n```python\ndef select_sort_rec(a):\n    if len(a) <= 1:\n        return a\n    else:\n        m = min(a)\n        a.remove(m)\n        return [m] + select_sort_rec(a)\n```\n- Alternativas que no modifican la lista de entrada:\n```python\ndef select_sort_rec(a):\n    if len(a) <= 1:\n        return a\n    else:\n        b = list(a)\n        min_index = b.index(min(b))\n        aux = b[min_index]\n        b[min_index] = b[0]\n        b[0] = aux\n        return [aux] + select_sort_rec(b[1:])\n\ndef select_sort_rec(a):\n    if len(a) <= 1:\n        return a\n    else:\n        b = list(a)\n        m = min(b)\n        b.remove(m)\n        return [m] + select_sort_rec(b)\n```"
+   },
+   {
+    "title": "Merge-sort",
+    "level": 3,
+    "md": "- Descomposición: dividir la lista de entrada en dos mitades. Ej.: [7,3,4,8,4,6,4,6] → [3,4,4,4,6,6,7,8]; subproblemas [7,3,4,8] → [3,4,7,8] y [4,6,4,6] → [4,4,6,6]; combinación: mezcla.\n```python\ndef merge_sort(a): # Versión out-of-place\n    n = len(a)\n    if n <= 1:\n        return a\n    else:\n        mitad = n//2\n        a1 = merge_sort(a[:mitad])\n        a2 = merge_sort(a[mitad:])\n        return mezcla(a1, a2)\n\n# Versión recursiva sencilla. Es preferible una versión iterativa\n# Las listas a and b están ordenadas de menor a mayor\ndef mezcla(a, b):\n    if a == []:\n        return b\n    elif b == []:\n        return a\n    else:\n        if a[0] < b[0]:\n            return [a[0]] + mezcla(a[1:], b)\n        else:\n            return [b[0]] + mezcla(a, b[1:])\n```"
+   },
+   {
+    "title": "Merge-sort - Versión in-place más eficiente",
+    "level": 3,
+    "md": "```python\n# Versión in-place, más eficiente\ndef merge_sort_limites(a,ini,fin):\n    if ini<fin:\n        mitad = (ini+fin)//2\n        merge_sort_limites(a,ini,mitad)\n        merge_sort_limites(a,mitad+1,fin)\n        a[ini:fin+1] = mezcla_limites(a,ini,mitad,mitad+1,fin)\n\n\ndef mezcla_limites(a,aI,aF,bI,bF):\n    if aI>aF:\n        return a[bI:bF+1]\n    elif bI>bF:\n        return a[aI:aF+1]\n    else:\n        if a[aI]<a[bI]:\n            return [a[aI]] + mezcla_limites(a,aI+1,aF,bI,bF)\n        else:\n            return [a[bI]] + mezcla_limites(a,aI,aF,bI+1,bF)\n```"
+   },
+   {
+    "title": "Merge-sort - Coste computacional",
+    "level": 3,
+    "md": "- Coste en tiempo:\n$$T(n)=\\begin{cases}1 & n=1\\\\ n+2T(n/2) & n>1\\end{cases}=n\\log_2(n)+n\\in\\Theta(n\\log n)$$\n- $\\Theta(n\\log n)$ en todos los casos: mejor, peor, y medio.\n- ¿Cuál es el tiempo si no se divide el vector por la mitad, sino según un 10% y 90%? También $\\Theta(n\\log n)$.\n- Memoria auxiliar. \"In-place\": la ordenación se realiza en el propio vector. \"Out-of-place\": se requiere un vector auxiliar de tamaño n; es decir, la ordenación no se realiza en el propio vector."
+   },
+   {
+    "title": "Merge-sort paso a paso",
+    "level": 3,
+    "md": "- [38,27,43,3,9,82,10] → se divide en [38,27,43,3] y [9,82,10] → [38,27],[43,3],[9],[82,10]... hasta listas de un elemento → se mezclan: [27,38],[3,43] → [3,27,38,43]; [9],[10,82] → [9,10,82] → resultado [3,9,10,27,38,43,82].\n- Para diseñar el código, es mejor pensar en el esquema: descomponer el problema; obtener soluciones de subproblemas (automáticamente) a través de llamadas recursivas; combinar soluciones."
+   },
+   {
+    "title": "Quicksort",
+    "level": 3,
+    "md": "- Descomposición: se escoge un elemento \"pivote\". Se divide la lista en tres partes: parte izquierda (elementos menores o iguales que el pivote), el propio pivote, parte derecha (elementos mayores que el pivote). Ej.: [6,4,1,7,4,7,3,6,5] con pivote 4 → [4,1,3] 4 [6,7,7,6,5]. Posteriormente se ordenan las partes izquierda y derecha.\n- Combinación: trivial: la lista ya está ordenada, no hay que hacer nada más.\n- El pivote puede ser el primero, el central, uno al azar...\n- Ejemplo alternativo: [26,5,37,1,61,11,59,15,48,19] → descomponer → [11,5,19,1,15] 26 [59,61,48,37] → soluciones de subproblemas (recursivo) → [1,5,11,15,19,26,37,48,59,61] → combinación trivial.\n```python\ndef quick_sort_inplace(a, ini, fin):\n    if ini < fin:\n        indice_pivote = particion_Hoare(a, ini, fin)\n\n        quick_sort_inplace(a, ini, indice_pivote - 1)\n        quick_sort_inplace(a, indice_pivote + 1, fin)\n```\n- Partición de Hoare: algoritmo iterativo para realizar la descomposición. Se usa en otros algoritmos (quickselect). Después de las llamadas recursivas la lista ya queda ordenada."
+   },
+   {
+    "title": "Partición de Hoare",
+    "level": 3,
+    "md": "- Idea: se coloca el pivote (el elemento central) en la posición ini intercambiándolo; izqa avanza desde ini+1 mientras a[izqa] ≤ pivote; dcha retrocede desde fin mientras a[dcha] > pivote; si izqa < dcha se intercambian; se repite hasta que izqa > dcha; finalmente se intercambia el pivote con a[dcha].\n```python\ndef particion_Hoare(a,ini,fin):\n    if fin >=0:\n        mitad = (ini+fin)//2\n        pivote = a[mitad]\n        a[mitad] = a[ini]\n        a[ini] = pivote\n\n        izqa = ini+1\n        dcha = fin\n\n        ha_terminado = False\n        while not ha_terminado:\n\n            while izqa <=fin and a[izqa]<=pivote:\n                izqa = izqa+1\n\n            while a[dcha]>pivote:\n                dcha = dcha-1\n\n            if izqa<dcha:\n                aux = a[izqa];\n                a[izqa] = a[dcha];\n                a[dcha] = aux;\n\n            ha_terminado = izqa>dcha\n\n        a[ini] = a[dcha]\n        a[dcha] = pivote\n\n        return dcha\n```"
+   },
+   {
+    "title": "Quicksort - Coste",
+    "level": 3,
+    "md": "- Caso mejor (el elemento pivote está en la mitad):\n$$T(n)=\\begin{cases}1 & n=1\\\\ 2T(n/2)+\\Theta(n) & n>1\\end{cases}\\Rightarrow\\Theta(n\\log n)$$\n- Caso peor (un subvector queda siempre vacío):\n$$T(n)=\\begin{cases}1 & n=1\\\\ T(1)+T(n-1)+\\Theta(n) & n>1\\end{cases}\\Rightarrow\\Theta(n^2)$$\n- Algoritmo de ordenación rápido en la práctica. Caso peor: $\\Theta(n^2)$. Caso mejor: $\\Theta(n\\log n)$. Caso medio: $\\Theta(n\\log n)$.\n- Suele superar a otros algoritmos $\\Theta(n\\log n)$ al utilizar mejor las jerarquías de memoria.\n- Memoria auxiliar: $O(n)$. Puede ser \"out-of-place\" o \"in-place\" (la ordenación no se realiza en el propio vector)."
+   },
+   {
+    "title": "Búsqueda del k-ésimo elemento más pequeño",
+    "level": 3,
+    "md": "- Dada una lista a de n números, encontrar el k-ésimo elemento más pequeño. Ejemplo: para a=[4,3,7,7,2,5,1,8,9,2,1], y k=5, el algoritmo devuelve 3, ya que es el 5º elemento de la lista ordenada [1,1,2,2,3,4,5,7,7,8,9].\n- Caso general de la búsqueda de la mediana. Veremos el algoritmo Quickselect: basado en la partición de Hoare; solo realiza una llamada recursiva; estrictamente, no es un algoritmo de divide y vencerás.\n- Aplica la partición de Hoare, ubicando el pivote donde quedaría en caso de ordenar la lista (índice ip). Si el pivote está en el índice k-1 se ha encontrado el k-ésimo elemento más pequeño. De lo contrario se sigue buscando, pero solo en la mitad donde se puede encontrar el elemento buscado (si ip > k-1, en la parte izquierda; si ip < k-1, en la derecha).\n```python\ndef quickselect(a,ini,fin,k):\n    if ini==fin:\n        return a[ini]\n    else:\n        indice_pivote = particion_Hoare(a, ini, fin)\n\n        if indice_pivote==k-1:\n            return a[indice_pivote]\n        elif indice_pivote<k-1:\n            return quickselect(a,indice_pivote+1,fin,k)\n        else:\n            return quickselect(a,ini,indice_pivote-1,k)\n```\n- Coste medio: $O(n)$. Coste en el peor caso: $O(n^2)$."
+   },
+   {
+    "title": "Multiplicación",
+    "level": 3,
+    "md": "- Multiplicación de números naturales en binario: algoritmo de Karatsuba.\n- Multiplicación de matrices: descomposiciones recursivas; algoritmo de Strassen."
+   },
+   {
+    "title": "Multiplicación rápida de números en binario",
+    "level": 3,
+    "md": "- Dados dos números enteros no negativos x e y, expresados en binario mediante $b_x$ y $b_y$ bits, respectivamente, hallar el producto xy.\n- Tamaño del problema: mín(x,y). Casos base: si x=0 o y=0 (es decir, si mín(x,y)=0) el resultado es 0; si x=1 el resultado es y; si y=1 el resultado es x.\n- Descomposición: $x=a\\cdot2^m+b$, $y=c\\cdot2^m+d$, con $m=\\min\\left(\\lfloor b_x/2\\rfloor,\\lfloor b_y/2\\rfloor\\right)$.\n- Ejemplo. Para x=594 e y=69: $x=1001010010_2=\\underbrace{1001010}_{a=74}\\underbrace{010}_{b=2}=74\\cdot2^3+2$; $y=1000101_2=\\underbrace{1000}_{c=8}\\underbrace{101}_{d=5}=8\\cdot2^3+5$; $b_x=10$, $b_y=7$, m=3, a=74, b=2, c=8, d=5.\n- Regla recursiva básica (lenta): $xy=(a\\cdot2^m+b)(c\\cdot2^m+d)=ac\\,2^{2m}+(ad+bc)2^m+bd$. 4 llamadas recursivas (4 \"subproductos\"). Si x e y tienen n bits el coste en tiempo es:\n$$T(n)=\\begin{cases}1 & n\\le1\\\\ 4T(n/2)+en+f & n>1\\end{cases}\\qquad T(n)\\in\\Theta(n^2)$$\n- Regla recursiva rápida (algoritmo de Karatsuba): $xy=ac\\,2^{2m}+[(a+b)(c+d)-ac-bd]2^m+bd$. 3 llamadas recursivas (3 \"subproductos\"). Coste:\n$$T(n)=\\begin{cases}1 & n\\le1\\\\ 3T(n/2)+en+f & n>1\\end{cases}\\qquad T(n)\\in\\Theta(n^{\\log_2 3})=\\Theta(n^{1{,}585\\dots})$$\n```python\ndef numero_de_bits(n):\n    if n < 2:\n        return 1\n    else:\n        return 1 + numero_de_bits(n >> 1)\n\ndef multiplicacion_karatsuba(x, y):\n    if x == 0 or y == 0:\n        return 0\n    elif x == 1:\n        return y\n    elif y == 1:\n        return x\n    else:\n        n_bits_x = numero_de_bits(x)\n        n_bits_y = numero_de_bits(y)\n\n        m = min(n_bits_x // 2, n_bits_y // 2)\n\n        a = x >> m             # << y >> son operaciones de desplazamiento de bits\n        b = x - (a << m)       # (z << m) equivale a z*(2**m)\n        c = y >> m             # (z >> m) equivale a z//(2**m)\n        d = y - (c << m)\n\n        ac = multiplicacion_karatsuba(a, c)\n        bd = multiplicacion_karatsuba(b, d)\n        t = multiplicacion_karatsuba(a + b, c + d) - ac - bd\n\n        return (ac << (2 * m)) + (t << m) + bd\n```"
+   },
+   {
+    "title": "Multiplicación de matrices",
+    "level": 3,
+    "md": "- La división de una matriz en bloques tiene varias ventajas: simplifica operaciones algebraicas; se puede aprovechar para construir algoritmos eficientes que hagan buen uso de la memoria caché.\n- Para realizar una multiplicación hay varias formas de dividir la matriz:\n$$A\\cdot B=\\begin{pmatrix}A_1\\\\A_2\\end{pmatrix}\\cdot\\begin{pmatrix}B_1&B_2\\end{pmatrix}=\\begin{pmatrix}A_1B_1&A_1B_2\\\\A_2B_1&A_2B_2\\end{pmatrix}$$\n$$A\\cdot B=\\begin{pmatrix}A_1&A_2\\end{pmatrix}\\cdot\\begin{pmatrix}B_1\\\\B_2\\end{pmatrix}=\\begin{pmatrix}A_1B_1+A_2B_2\\end{pmatrix}$$\n$$A\\cdot B=\\begin{pmatrix}A_{11}&A_{12}\\\\A_{21}&A_{22}\\end{pmatrix}\\begin{pmatrix}B_{11}&B_{12}\\\\B_{21}&B_{22}\\end{pmatrix}=\\begin{pmatrix}A_{11}B_{11}+A_{12}B_{21}&A_{11}B_{12}+A_{12}B_{22}\\\\A_{21}B_{11}+A_{22}B_{21}&A_{21}B_{12}+A_{22}B_{22}\\end{pmatrix}$$"
+   },
+   {
+    "title": "Multiplicación de matrices - complejidad",
+    "level": 3,
+    "md": "- Sea A una matriz de $p\\times q$, y B una matriz de $q\\times r$. El producto C=AB requiere $O(pqr)$ operaciones.\n- Considérese que las matrices son cuadradas de dimensión $n\\times n$, y la descomposición en 4 bloques anterior:\n$$T(n)=\\begin{cases}1 & n=1\\\\ 8T(n/2)+4\\Theta(n^2) & n>1\\end{cases}$$\n- 8 multiplicaciones (de matrices de $n/2\\times n/2$), 4 sumas (de matrices de $n/2\\times n/2$). Por el teorema maestro: $T(n)=\\Theta(n^{\\log_2 8})=\\Theta(n^3)$.\n```python\nimport numpy as np\n\ndef mult_mat(A, B):\n    p = A.shape[0]; q = A.shape[1]; r = B.shape[1]\n\n    if p == 0 or q == 0 or r == 0:\n        return np.zeros((p, r))\n    elif p == 1 and q == 1 and r == 1:\n        return np.matrix([[A[0, 0] * B[0, 0]]])\n    else:\n        A11 = A[0:p // 2, 0:q // 2]; A21 = A[p // 2:p, 0:q // 2]\n        A12 = A[0:p // 2, q // 2:q]; A22 = A[p // 2:p, q // 2:q]\n\n        B11 = B[0:q // 2, 0:r // 2]; B21 = B[q // 2:q, 0:r // 2]\n        B12 = B[0:q // 2, r // 2:r]; B22 = B[q // 2:q, r // 2:r]\n\n        C11 = mult_mat(A11, B11) + mult_mat(A12, B21)\n        C12 = mult_mat(A11, B12) + mult_mat(A12, B22)\n        C21 = mult_mat(A21, B11) + mult_mat(A22, B21)\n        C22 = mult_mat(A21, B12) + mult_mat(A22, B22)\n\n        return np.vstack([np.hstack([C11, C12]),\n                          np.hstack([C21, C22])])\n\nA = np.matrix([[2, 3, 1, -3], [4, -2, 1, 2]])\nB = np.matrix([[2, 3, 1], [4, -1, -5], [0, -6, 3], [1, -1, 1]])\nprint(mult_mat(A, B))\n```"
+   },
+   {
+    "title": "Multiplicación de matrices - algoritmo de Strassen",
+    "level": 3,
+    "md": "- La operación básica más costosa es la multiplicación. El algoritmo de Strassen consigue reducir el número de multiplicaciones. Con la descomposición en bloques $\\begin{pmatrix}A_{11}&A_{12}\\\\A_{21}&A_{22}\\end{pmatrix}\\begin{pmatrix}B_{11}&B_{12}\\\\B_{21}&B_{22}\\end{pmatrix}=\\begin{pmatrix}C_{11}&C_{12}\\\\C_{21}&C_{22}\\end{pmatrix}$:\n$$\\begin{aligned}M_1&=(A_{11}+A_{22})(B_{11}+B_{22})&C_{11}&=M_1+M_4-M_5+M_7\\\\M_2&=(A_{21}+A_{22})B_{11}&C_{12}&=M_3+M_5\\\\M_3&=A_{11}(B_{12}-B_{22})&C_{21}&=M_2+M_4\\\\M_4&=A_{22}(B_{21}-B_{11})&C_{22}&=M_1-M_2+M_3+M_6\\\\M_5&=(A_{11}+A_{12})B_{22}\\\\M_6&=(A_{21}-A_{11})(B_{11}+B_{12})\\\\M_7&=(A_{12}-A_{22})(B_{21}+B_{22})\\end{aligned}$$\n- Con esa factorización el algoritmo requiere 7 multiplicaciones y 18 sumas:\n$$T(n)=\\begin{cases}1 & n=1\\\\ 7T(n/2)+18\\Theta(n^2) & n>1\\end{cases}$$\n- Por el teorema maestro: $T(n)=\\Theta(n^{\\log_2 7})=\\Theta(n^{2{,}807})$.\n- Solo es más eficiente que una multiplicación ordinaria si el tamaño de las matrices es muy elevado. Actualmente hay un algoritmo en $O(n^{2{,}376})$ (Coppersmith-Winograd). En la práctica la mejor estrategia para acelerar el producto de dos matrices consiste en aprovechar la estructura jerárquica de la memoria."
+   },
+   {
+    "title": "Embaldosado con L-triominós",
+    "level": 3,
+    "md": "- Se desea cubrir una cuadrícula de dimensiones $n\\times n$, donde $n=2^k$ con $k\\ge1$ es una potencia de dos, con L-triominós, donde solo un cuadrado no quede cubierto.\n- Casos base: (cuadrícula 2×2 con un cuadrado sin cubrir, cubierto el resto por un triominó).\n- Descomposición y casos recursivos: ubicar un triominó en el centro; realizar 4 llamadas recursivas con cuadrículas de lado n/2. Códigos 6.11, 6.12 y 6.13 en el libro."
+   },
+   {
+    "title": "Permutación de inversión de bits",
+    "level": 3,
+    "md": "- Dada una lista a de $2^p$ números ($p\\in\\mathbb{N}^+$), devuelva otra lista a' que sea una permutación concreta de los elementos de a. En particular, $a'_j=a_i$ (y $a'_i=a_j$) donde j es el número que resulta de invertir los bits de i, asumiendo que i y j son números binarios de p bits.\n- Relación entre i y j, para p=3: i=0→j=0; 1(001)→4(100); 2(010)→2(010); 3(011)→6(110); 4(100)→1(001); 5(101)→5(101); 6(110)→3(011); 7(111)→7(111). Permutación: a[0]=a'[0], a[1]=a'[4], a[2]=a'[2], a[3]=a'[6], a[4]=a'[1], a[5]=a'[5], a[6]=a'[3], a[7]=a'[7].\n- Ejemplo 1: para p=5, $i=(b_4b_3b_2b_1b_0)_2\\Leftrightarrow j=(b_0b_1b_2b_3b_4)_2$; $a'_{26}=a_{11}$ y $a'_{11}=a_{26}$, ya que $26=11010_2$ y $11=01011_2$.\n- Ejemplo 2: para p=3, a=[3,5,7,2,4,8,1,6] ⇔ a'=[3,4,7,1,5,8,2,6], ya que para p=3 se intercambian los elementos de las posiciones 1 y 4, y los de las posiciones 3 y 6.\n- Notas: el problema de inversión de bits es parte de implementaciones de la FFT (transformada rápida de Fourier). Hay algoritmos más eficientes que los que se describen a continuación.\n- Tamaño: p. Caso base: si p=1 se devuelve la propia lista a (p=1 ⇔ n=2, n: longitud de a). Descomposiciones: veremos dos que conducen a diferentes algoritmos, y una tercera versión \"iterativa\". Para p=2 (n=4) se intercambian los dos elementos centrales (posiciones 1 y 2).\n\n#### Solución I\n- Descomposición: dividir la lista de entrada en dos mitades, resolver cada una e intercalar. [3,5,7,2,4,8,1,6] → mitades [3,5,7,2]→[3,7,5,2] y [4,8,1,6]→[4,1,8,6] → intercala → [3,4,7,1,5,8,2,6].\n```python\ndef intercala(a1,a2):\n    if len(a1)==1:\n        return [a1[0],a2[0]]\n    else:\n        return [a1[0]] + [a2[0]] + intercala(a1[1:],a2[1:])\n\n\ndef invbitperm1(a):\n    if len(a)<=2:\n        return a\n    else:\n        mitad = len(a)//2\n        a1 = invbitperm1(a[:mitad])\n        a2 = invbitperm1(a[mitad:])\n        return intercala(a1,a2)\n```\n\n#### Solución II\n- Descomposición: listas de índices pares e impares, resolver cada una y concatenar. [3,5,7,2,4,8,1,6] → pares [3,7,4,1]→[3,4,7,1] e impares [5,2,8,6]→[5,8,2,6] → concatena → [3,4,7,1,5,8,2,6].\n```python\ndef pares_impares(a):\n    if a==[]:\n        return ([],[])\n    else:\n        (a1,a2) = pares_impares(a[2:])\n        return ([a[0]] + a1, [a[1]] + a2)\n\n\ndef invbitperm2(a):\n    if len(a)<=2:\n        return a\n    else:\n        (a1,a2) = pares_impares(a)\n        return invbitperm2(a1) + invbitperm2(a2)\n```\n\n#### Solución III\n- Descomposición: dividir la lista en dos mitades. Caso base: si la lista tiene un elemento, se calcula el índice invertido, y se actualiza una segunda lista que almacene la solución (análogo a un algoritmo iterativo).\n```python\ndef indice_invertido(x,p):\n    if p==1:\n        return x\n    else:\n        return indice_invertido(x//2,p-1) + (x%2)*2**(p-1)\n\n\ndef invbitperm3(a,ini,fin,b,p):\n    if ini==fin:\n        i = indice_invertido(ini,p)\n        b[i] = a[ini]\n    else:\n        mitad = (ini+fin)//2\n        invbitperm3(a,ini,mitad,b,p)\n        invbitperm3(a,mitad+1,fin,b,p)\n```"
+   }
+  ]
+ },
+ {
+  "id": "t6_vuelta_atras_backtracking",
+  "title": "Tema 6 Vuelta atrás - Backtracking",
+  "sections": [
+   {
+    "title": "Tema 6 Vuelta atrás - Backtracking",
+    "level": 2,
+    "md": "Diseño y Análisis de Algoritmos. Manuel Rubio Sánchez (URJC), 13 de mayo de 2024. Licencia CC BY-SA 4.0.\nContenido: 1 Introducción; 2 Subconjuntos y permutaciones; 3 N reinas; 4 Otros problemas (suma de subconjuntos, ruta del caballo de ajedrez, laberinto, sudoku, problema de la mochila 0-1); 5 Ramificación y poda."
+   },
+   {
+    "title": "Introducción",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Backtracking - Vuelta atrás",
+    "level": 3,
+    "md": "- Estrategia para encontrar soluciones a problemas con restricciones definidos sobre espacios discretos (de elevado tamaño).\n- Construye soluciones parciales progresivamente, las cuales deben cumplir las restricciones del problema.\n- El recorrido (en profundidad) tiene éxito si, procediendo de esta forma, se puede definir por completo una solución (en una hoja de un árbol de recursión). Puede detenerse al encontrar una solución o seguir hasta encontrar todas.\n- Si en alguna etapa la solución parcial construida hasta el momento no se puede completar, se vuelve atrás deshaciendo la solución parcial, hasta un punto donde puede seguir explorando posibles soluciones.\n- Es un método de \"fuerza bruta\" pero \"inteligente\".\n- Ejemplos: N reinas, laberinto, sudoku, problema del viajante (TSP)."
+   },
+   {
+    "title": "Subconjuntos y permutaciones",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Subconjuntos de {a,b,c}: solución con árbol binario",
+    "level": 3,
+    "md": "- Árbol recursivo del algoritmo (\"árbol de búsqueda\"). Nivel 1: se decide si se incluye a (0/1); nivel 2: b; nivel 3: c. Las hojas, de izquierda a derecha, son: {}, {c}, {b}, {b,c}, {a}, {a,c}, {a,b}, {a,b,c}.\n- Al descender hacia las hojas se decide si los elementos estarán presentes o no en el subconjunto creado.\n- Solución parcial: lista de valores binarios/booleanos. [1,0,1] = {a,c}.\n- Cada hoja representa un subconjunto de los $2^n$ posibles; n es la cardinalidad del conjunto inicial (en este caso n=3)."
+   },
+   {
+    "title": "Implementación - I (árbol binario)",
+    "level": 3,
+    "md": "```python\ndef genera_subconjuntos_wrapper(elementos):\n    sol = [None] * (len(elementos))\n    genera_subconjuntos(0,sol,elementos)\n\n\ndef imprime_subconjunto(sol,elementos):\n    ha_imprimido_alguno = False\n    print('{',end='')\n    for i in range(0,len(sol)):\n        if sol[i]==1:\n            if ha_imprimido_alguno:\n                print(',',elementos[i],sep='',end='')\n            else:\n                print(elementos[i],sep='',end='')\n                ha_imprimido_alguno = True\n    print('}')\n```"
+   },
+   {
+    "title": "Implementación - II (árbol binario)",
+    "level": 3,
+    "md": "```python\ndef genera_subconjuntos(i,sol,elementos):\n\n    if i==len(elementos):               # Caso base: solución parcial completa\n\n        imprime_subconjunto(sol,elementos)                          # Imprimir solución\n                                                                    # completa\n    else:\n        for k in range(0,2): # Genera candidatos a incluir en\n                             # solución parcial\n\n            sol[i] = k         # Incluye candidato k en solución parcial\n\n            # Expande solución parcial a partir del índice i+1\n            genera_subconjuntos(i+1,sol,elementos)\n```\n- i: índice del elemento a considerar (nivel del árbol). elementos: lista inicial de elementos. len(elementos): número de elementos (profundidad del árbol). sol: solución parcial (valores binarios que definen los elementos presentes en un subconjunto)."
+   },
+   {
+    "title": "Consideraciones (árbol binario)",
+    "level": 3,
+    "md": "- Código \"sencillo\", claro. ¡Hay que aprenderse estos códigos/esquemas generales! Los algoritmos de backtracking que veremos tendrán una estructura similar, aunque también más elementos.\n- Buen esquema si los subconjuntos a generar tienen cardinalidades diferentes.\n- Se reserva memoria para toda la solución parcial en la función wrapper. Importante de cara a la eficiencia: es preferible a usar una estructura de datos que crezca y decrezca dinámicamente."
+   },
+   {
+    "title": "Subconjuntos de {a,b,c}: solución con un subconjunto en cada nodo",
+    "level": 3,
+    "md": "- Árbol: raíz {}; ramas etiquetadas a, b, c (la etiqueta de la rama indica qué elemento insertar): {a}, {b}, {c}; de {a}: b → {a,b}, c → {a,c}; de {b}: c → {b,c}; de {a,b}: c → {a,b,c}. Nivel 0: 0 elementos; nivel 1: 1 elemento; nivel 2: 2 elementos; nivel 3: 3 elementos.\n- El árbol de recursión no es binario. En el nivel i las soluciones tienen i elementos.\n- La solución parcial es una lista con los índices de los elementos que se van incluyendo: [0,2] = {a,c}.\n- Se obtiene un subconjunto en cada nodo (no solo en las hojas). Más eficiente si se buscan subconjuntos de la misma cardinalidad.\n- Ahora es necesario llevar dos índices: i (índice de la solución parcial donde se incluirá un candidato) y j (índice del último candidato incluido). Los candidatos de un nodo son j+1, j+2, ..., n-1 (la raíz tiene j=-1)."
+   },
+   {
+    "title": "Implementación - I (subconjunto en cada nodo)",
+    "level": 3,
+    "md": "```python\ndef genera_subconjuntos_alt_wrapper(elementos):\n\n    # reserva memoria para la solución parcial\n    sol = [None] * (len(elementos))\n\n    # Llamada a función recursiva. j inicializada a -1 indica\n    # que no se ha incluido ningún candidato en la solución\n    # parcial todavía. La siguiente llamada intentará incluir\n    # en los subconjuntos todos los elementos, empezando por\n    # el del índice 0 = j+1\n    genera_subconjuntos_alt(0,-1,sol,elementos)\n\n\ndef imprime_subconjunto_alt(sol,n_elementos,elementos):\n    print('{',end='')\n    for i in range(0,n_elementos-1):\n        print(elementos[sol[i]],',',sep='',end='')\n    if n_elementos>0:\n        print(elementos[sol[n_elementos-1]],sep='',end='')\n    print('}')\n```"
+   },
+   {
+    "title": "Implementación - II (subconjunto en cada nodo)",
+    "level": 3,
+    "md": "```python\ndef genera_subconjuntos_alt(i,j,sol,elementos):\n\n    # Imprimir solución completa\n    imprime_subconjunto_alt(sol,i,elementos)\n\n    for k in range(j+1,len(elementos)):                          # genera candidatos\n\n        sol[i] = k         # Incluye candidato k en solución parcial\n\n        # Expande solución parcial a partir del índice i+1\n        # sabiendo que k es el último candidato incluido en sol\n        genera_subconjuntos_alt(i+1,k,sol,elementos)\n```\n- len(elementos): número de elementos (profundidad máxima del árbol). i: índice en la solución parcial (sol) del candidato a incluir. j: índice del último candidato incluido en sol. sol: solución parcial (índices de la lista elementos). elementos: conjunto (lista) original."
+   },
+   {
+    "title": "Implementación - III (sin parámetro j)",
+    "level": 3,
+    "md": "```python\ndef genera_subconjuntos_alt2(i,sol,elementos):\n\n    imprime_subconjunto_alt(sol,i,elementos)\n\n    if i==0:\n        k_ini = 0\n    else:\n        k_ini = sol[i-1]+1\n\n    for k in range(k_ini,len(elementos)):\n        sol[i] = k\n        genera_subconjuntos_alt2(i+1,sol,elementos)\n```"
+   },
+   {
+    "title": "Permutaciones de {a,b,c}",
+    "level": 3,
+    "md": "- Árbol: primer elemento (3 llamadas): a, b, c; segundo elemento (2 llamadas); tercer elemento (1 llamada). Hojas: (a,b,c), (a,c,b), (b,a,c), (b,c,a), (c,a,b), (c,b,a).\n- ¿Cuántas llamadas recursivas se hacen en cada nivel? 3, 2, 1 (se podrían controlar con bucles). Pero lo más fácil y eficiente es generar siempre 3 posibles llamadas, y usar una lista de valores binarios o booleanos para ver si realmente se debe realizar la llamada recursiva.\n- La lista de booleanos se puede pasar por valor o referencia. Referencia: habrá que deshacer los cambios al retroceder. Valor: no será necesario deshacer cambios.\n- El nivel de la llamada indica la posición del nuevo elemento a añadir. Al llegar al último nivel (a las hojas) tenemos completada la permutación."
+   },
+   {
+    "title": "Permutaciones: implementación",
+    "level": 3,
+    "md": "```python\ndef genera_permutaciones_wrapper(elementos):\n\n    # Reserva memoria para la solución parcial y para lista\n    # que indica si un elemento ya se ha incluido en la\n    # solución parcial (si forma parte de la permutación)\n    sol = [None] * (len(elementos))\n    libres = [True] * (len(elementos))\n\n    # Llamada al método recursivo\n    genera_permutaciones(0,libres,sol,elementos)\n\n\ndef imprime_permutacion(sol):\n    for i in range(0,len(sol)):\n        print(sol[i],' ',end='')\n    print()\n```\n```python\ndef genera_permutaciones(i,libres,sol,elementos):\n    n = len(elementos)\n    if i==n: # Caso base\n        imprime_permutacion(sol) # Imprimir solución completa\n    else:\n        # Genera candidatos\n        for k in range(0,n):\n\n            # Comprueba validez del candidato\n            if libres[k]:\n\n                # Incluye candidato k en solución parcial\n                sol[i] = elementos[k]\n\n                # El candidato k deja de estar libre\n                libres[k] = False\n\n                # Expande solución parcial a partir del índice i+1\n                genera_permutaciones(i+1,libres,sol,elementos)\n\n                # El candidato k vuelve a estar libre\n                libres[k] = True\n```"
+   },
+   {
+    "title": "Consideraciones (permutaciones)",
+    "level": 3,
+    "md": "- Parámetros: i (índice en la solución parcial donde incluir un nuevo elemento); libres (lista booleana que indica si un elemento ya se ha incluido en la solución parcial); sol (solución/permutación parcial construida); elementos (elementos a permutar).\n- ¡Hay que aprenderse estos códigos/esquemas generales! sol también podría contener índices a los elementos.\n- El uso de la lista libres es clave de cara a la eficiencia: se calcula si un elemento está libre en $O(1)$. Si no se usara se necesitaría un bucle para comprobarlo, cuyo coste sería $O(n)$, donde n es el número de elementos a permutar.\n- La reserva de memoria también influye en la eficiencia. Se debe evitar concatenar elementos a sol (o borrarlos)."
+   },
+   {
+    "title": "Permutaciones ineficiente",
+    "level": 3,
+    "md": "```python\ndef es_factible(elemento,sol,i):\n    esta_elemento = False\n    j = 0\n    while (j<i) and not esta_elemento:\n        esta_elemento = (elemento==sol[j])\n        j = j + 1\n\n    return not esta_elemento\n\n\ndef genera_permutaciones(i,sol,elementos):\n    if i==len(elementos):\n        imprime_permutacion(sol)\n    else:\n        for k in range(0,len(elementos)):\n            if es_factible(elementos[k],sol,i):\n                sol[i] = elementos[k]\n                genera_permutaciones(i+1,sol,elementos)\n```"
+   },
+   {
+    "title": "N reinas",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Problema de las N reinas",
+    "level": 3,
+    "md": "- Dado un \"tablero de ajedrez\" de n×n celdas, se pide ubicar n reinas de modo que no se amenacen: no pueden estar en la misma fila, ni en la misma columna, ni en la misma diagonal (principal o secundaria).\n- Ejemplo más famoso de problema que puede resolverse aplicando backtracking.\n- Para n=8 hay 92 soluciones posibles, aunque 12 únicas (las demás pueden obtenerse aplicando simetrías, rotaciones y traslaciones). El problema puede solicitar encontrar una solución o todas."
+   },
+   {
+    "title": "N reinas: reducción del espacio de búsqueda",
+    "level": 3,
+    "md": "- Solución obvia pero absurda: probar las $2^{n^2}$ formas de colocar reinas en el tablero: $1{,}84\\cdot10^{19}$ para n=8; 65536 para n=4.\n- Pero los conjuntos solución solo deben contener n elementos: $\\binom{n^2}{n}$: $4{,}42\\cdot10^{10}$ para n=8; 1820 para n=4.\n- Además solo puede haber una reina por cada columna: $n^n$ posibilidades (n formas de colocar una reina en una columna, y n columnas): 16777216 para n=8; 256 para n=4.\n- Pero además, no puede haber dos reinas en la misma fila: esto convierte nuestro problema en la búsqueda de una permutación con n! posibilidades (lo cual sigue siendo elevado): 40320 para n=8; 24 para n=4.\n- Formato de la solución: (fila de la columna 0, fila de la columna 1, ..., fila de la columna n-1). (1,3,0,2) en la figura. Todas las filas son diferentes y tienen que estar representadas. Tendremos que buscar las permutaciones válidas."
+   },
+   {
+    "title": "Árbol de búsqueda para N=4",
+    "level": 3,
+    "md": "- Árbol de permutaciones de {0,1,2,3} (24 hojas). Podemos emplear un algoritmo para buscar permutaciones. Al llegar a una hoja se \"han colocado\" las cuatro reinas y podemos probar si la solución es válida.\n- Pero podemos comprobar si la solución parcial puede llegar a ser solución final antes de llegar a una hoja. Podaríamos el árbol ahorrando cálculos.\n- Árbol podado: se distinguen solución parcial válida, solución completa válida, solución no válida y nodo no explorado. Hasta encontrar la primera solución válida solo se explora una pequeña parte del árbol."
+   },
+   {
+    "title": "Implementación (N reinas)",
+    "level": 3,
+    "md": "- Para verificar que una solución parcial es válida usamos: filas_libres (filas libres); pdiags_libres (diagonales principales libres, índice columna-fila+n-1, de 0 a 2n-2); sdiags_libres (diagonales secundarias libres, índice columna+fila).\n```python\ndef nreinas_todas_wrapper(n):\n\n    # reserva de memoria para estructuras de datos booleanas\n    filas_libres = [True] * n\n    pdiags_libres = [True] * (2*n-1)\n    sdiags_libres = [True] * (2*n-1)\n\n    # reserva de memoria para la solución parcial\n    sol = [None] * n\n\n    # llamada a función recursiva\n    nreinas_todas(0,filas_libres,pdiags_libres,sdiags_libres,sol)\n```\n```python\ndef nreinas_todas(i,filas_libres,pdiags_libres,sdiags_libres,sol):\n    n = len(sol)\n    if i==n: # Comprueba si la solución parcial es completa\n        print(sol)\n    else:\n        # Genera candidatos\n        for k in range(0,n):\n            # Comprueba restricciones\n            if filas_libres[k] and pdiags_libres[i-k+n-1] and sdiags_libres[i+k]:\n\n                # Introduce candidato k en la solución parcial\n                sol[i] = k\n\n                # Actualiza estructuras booleanas\n                filas_libres[k] = False\n                pdiags_libres[i-k+n-1] = False\n                sdiags_libres[i+k] = False\n\n                # Intenta expandir la solución parcial\n                nreinas_todas(i+1,filas_libres,pdiags_libres,sdiags_libres,sol)\n\n                # Vuelve a marcar la fila y las diagonales como libres\n                filas_libres[k] = True\n                pdiags_libres[i-k+n-1] = True\n                sdiags_libres[i+k] = True\n```\n- Líneas 3 y 4: si se ha llegado a una solución válida se imprime. Línea 7: se generan los candidatos. Línea 9: se comprueba la validez del candidato. Línea 12: se incluye el candidato en la solución parcial. Líneas 15-17: se marcan como ocupadas las correspondientes filas y diagonales. Línea 20: nueva llamada recursiva para extender la solución parcial. Líneas 23-25: se marcan como libres la fila y diagonales del candidato para que puedan usarse en futuros pasos."
+   },
+   {
+    "title": "Otros problemas",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Suma de subconjuntos",
+    "level": 3,
+    "md": "- Dada una lista L de números no negativos (que pueden repetirse) y otro número s, determinar los subconjuntos de L cuyos elementos suman s. Ejemplo: L=[1,2,3,5,6,7,9], s=13: 13=6+7; 13=2+5+6; 13=1+5+7; 13=1+3+9; 13=1+2+3+7.\n- Las soluciones son subconjuntos de tamaño variable. Usaremos el esquema binario para generar subconjuntos.\n- Ejemplo: L=[2,7,3,5], s=8. Se usará un parámetro que almacene la suma parcial (suma de los elementos de la solución parcial). ¡Con este parámetro mejora la eficiencia! Se podrá obtener la suma parcial en $\\Theta(1)$, en lugar de $O(n)$ si no se usa.\n- Restricción adicional: podar el árbol si la suma parcial es mayor que s. (Árbol: en el nivel i se pregunta \"+L[i]?\"; la rama 0 mantiene la suma, la rama 1 la aumenta; se poda cuando la suma pasa de 8; solución 3+5.)"
+   },
+   {
+    "title": "Suma de subconjuntos: implementación",
+    "level": 3,
+    "md": "```python\ndef suma_subconjuntos_wrapper(L,s):\n\n    # Reserva memoria para solución parcial\n    sol = [0] * (len(L))\n\n    suma_subconjuntos(0,sol,0,L,s)\n\n\ndef imprime_subconjunto(sol,elementos,j):\n    ha_imprimido_alguno = False\n    print('{',end='')\n    for i in range(0,j):\n        if sol[i]==1:\n            if ha_imprimido_alguno:\n                print(',',elementos[i],sep='',end='')\n            else:\n                print(elementos[i],sep='',end='')\n                ha_imprimido_alguno = True\n    print('}')\n```\n```python\ndef suma_subconjuntos(i,sol,suma_parcial,L,s):\n    # Caso base\n    if suma_parcial==s:\n        imprime_subconjunto(sol,L,i)\n    elif i<len(L):\n        # Genera candidatos\n        for k in range(0,2): # Esquema binario\n\n            # Comprueba si se puede podar el árbol recursivo\n            if suma_parcial + k*L[i]<=s:\n\n                # Expande la solución parcial\n                sol[i] = k\n\n                # Actualiza la solución parcial\n                suma_parcial = suma_parcial + k*L[i]\n\n                # Intenta expandir la solución parcial\n                suma_subconjuntos(i+1,sol,suma_parcial,L,s)\n```"
+   },
+   {
+    "title": "Ruta del caballo de ajedrez",
+    "level": 3,
+    "md": "- Identificar una ruta de un caballo de ajedrez en un tablero de n×n de manera que salte a todas las casillas sin repetir ninguna. No es requisito que tenga que volver al punto de partida. Variante: ciclo Hamiltoniano (camino cerrado en un grafo). Ejemplo de ruta en 5×5: filas (1,14,9,20,23), (10,19,22,15,8), (5,2,13,24,21), (18,11,4,7,16), (3,6,17,12,25).\n- Árbol de búsqueda: se podría encontrar una permutación de $n^2$ elementos (tablero de n×n), pero las restricciones serían muy complejas. Para tamaños mayores que 6×6 tarda en hallar una solución.\n- Los 8 saltos posibles del caballo se codifican con una lista de incrementos.\n```python\ndef busca_ruta_caballo_ajedrez_wrapper(n,fila_inicial,col_inicial):\n    # lista de incrementos a las coordenadas de una casilla\n    # para especificar un salto de caballo\n    incr = [(1,-2),(2,-1),(2,1),(1,2), \\\n            (-1,2),(-2,1),(-2,-1),(-1,-2)]\n\n    # Inicializar una lista de listas a 0 (solución parcial)\n    B = [None]*n\n    for i in range(0,n):\n        B[i] = [0]*n\n\n    B[fila_inicial][col_inicial] = 1 # ubicamos un primer caballo\n\n    # Si encontramos una solución la imprimimos\n    if busca_ruta_caballo_ajedrez(2,fila_inicial,col_inicial,B,incr):\n        imprime_matriz(B)\n\ndef imprime_matriz(B):\n    n = len(B)\n    for i in range(0,n):\n        for j in range(0,n):\n            print(\" %5d\" % (B[i][j]),end='')\n        print()\n\nbusca_ruta_caballo_ajedrez_wrapper(5,0,0)\n```\n```python\ndef busca_ruta_caballo_ajedrez(i,fila,col,B,incr):\n    if i>len(B)**2: # Comprobar si se ha completado una ruta\n        return True     # Solución encontrada\n    else:\n        sol_encontrada = False\n        k=0\n        while not sol_encontrada and k<8: # Genera candidatos\n            # Nueva casilla candidata\n            nueva_col = col + incr[k][0]\n            nueva_fila = fila + incr[k][1]\n\n            # Comprueba validez de la candidata\n            if nueva_fila>=0 and nueva_fila<len(B) and \\\n               nueva_col>=0 and nueva_col<len(B[0]) and \\\n               B[nueva_fila][nueva_col]==0:\n\n                # Añade casilla a la ruta (a la solución parcial)\n                B[nueva_fila][nueva_col] = i\n\n                # Intenta expandir la ruta empezando desde la nueva casilla\n                sol_encontrada = busca_ruta_caballo_ajedrez(i+1,nueva_fila, \\\n                                                nueva_col,B,incr)\n\n                # Marca la nueva casilla como vacía si no se encuentra solución\n                if not sol_encontrada:\n                      B[nueva_fila][nueva_col] = 0\n\n            k=k+1\n        return sol_encontrada\n```"
+   },
+   {
+    "title": "Laberinto",
+    "level": 3,
+    "md": "- Hay una entrada y una salida; las celdas pueden ser vacías, paredes, celdas exploradas, camino solución o camino explorado. Se exploran las 4 direcciones en un orden fijo.\n- Árbol de búsqueda: desde la celda (c,f) hay cuatro subproblemas: (c,f+1), (c+1,f), (c,f-1), (c-1,f). No se debe hallar una permutación (el camino puede tener duración variable) ni un subconjunto de celdas (el orden importa). Usaremos un esquema diferente.\n```python\ndef lee_laberinto_de_fichero(nombre_fichero):\n    fichero = open(nombre_fichero,'r')\n    M=[]\n    for line in fichero.readlines():\n         M.append( [ x[0] for x in line.split(' ') ] )\n    fichero.close()\n    return M\n\ndef encuentra_camino_wrapper(M,fila_entrada,col_entrada,\n      fila_salida,col_salida):\n    incr = [(0,1),(1,0),(0,-1),(-1,0)]\n\n    M[fila_entrada][col_entrada] = 'P' # Camino (path)\n    return encuentra_camino(fila_entrada,col_entrada,M, \\\n                          incr,fila_salida,col_salida)\n\nM = lee_laberinto_de_fichero('laberinto_01.txt')\n# Entrada esquina arriba-izquierda, salida abajo-derecha\nif encuentra_camino_wrapper(M,0,0,len(M)-1,len(M[0])-1):\n    dibuja_laberinto(M,0,0,len(M)-1,len(M[0])-1)\n```\n- Fichero de entrada (laberinto_01.txt), E=vacía, W=pared:\n```\nE W E E E E E E W E W W\nE E E W W W E W W E E E\nW W E E W E E E W W W E\nW E E W W E W E E E E E\nE E W W E E E E W E W W\nE W W E E W W W W E E E\nE E E E W W E E E E W E\nE W E W W W W W W W W E\nE W E E E E W E E E W W\nE W W E W E E E W E E E\nW W E E W W E W W E W E\nE E E W W E E E W E W E\n```\n```python\ndef encuentra_camino(fila,col,M,incr,fila_salida,col_salida):\n    if fila==fila_salida and col==col_salida:\n        return True # Caso base. Se encontró una solución\n    else:\n        sol_encontrada = False\n        # Genera candidatos\n        k=0\n        while not sol_encontrada and k<4:\n            # Nueva celda candidata\n            nueva_col = col + incr[k][0]\n            nueva_fila = fila + incr[k][1]\n\n            # Comprueba validez de la nueva celda candidata\n            if nueva_fila>=0 and nueva_fila<len(M) and \\\n                nueva_col>=0 and nueva_col<len(M[0]) and \\\n                M[nueva_fila][nueva_col]=='E':\n\n                # Añade al camino (usamos M como solución parcial)\n                M[nueva_fila][nueva_col] = 'P'\n\n                # Intenta expandir el camino empezando en la nueva celda\n                sol_encontrada = encuentra_camino(nueva_fila,nueva_col, \\\n                                                    M,incr,fila_salida,col_salida)\n\n                # Marca la nueva celda como vacía si no se ha encontrado solución\n                if not sol_encontrada:\n                     M[nueva_fila][nueva_col] = 'E'\n\n            k=k+1\n        return sol_encontrada\n```\n- Dibujo del laberinto con matplotlib: dibuja_laberinto(M, fila_entrada, col_entrada, fila_salida, col_salida) pinta paredes en gris, la entrada en turquesa, la salida en amarillo y el camino con círculos negros (código de visualización, no esencial)."
+   },
+   {
+    "title": "Sudoku",
+    "level": 3,
+    "md": "- Rellenar el tablero con números: no puede haber dos mismos números en una fila, columna o caja de 3×3. Se muestra un sudoku inicial y su solución.\n- Solución parcial: el propio tablero. Expandimos la solución parcial (por ejemplo) por filas.\n```python\ndef lee_sudoku(nombre_fichero):\n    fichero = open(nombre_fichero,'r')\n    S=[[None]*9]*9\n    i=0\n    for line in fichero.readlines():\n        S[i] = [int(x) for x in line.split(' ')]\n        i=i+1\n\n    fichero.close()\n    return S\n\ndef imprime_sudoku(S):\n    for s in S:\n        print(*s)\n\n# Función auxiliar para expandir la solución parcial fila a fila\ndef avanza(fila,col):\n    if col==8:\n         return (fila+1,0)\n    else:\n         return (fila,col+1)\n\nS = lee_sudoku('sudoku01_input.txt')\nif(resuelve_sudoku(0,0,S)):\n    imprime_sudoku(S)\n```\n- Fichero de entrada (sudoku01_input.txt): 9 filas de 9 números separados por espacios, 0 = celda vacía:\n```\n0 6 0 1 0 4 0 5 0\n0 0 8 3 0 5 6 0 0\n2 0 0 0 0 0 0 0 1\n8 0 0 4 0 7 0 0 6\n0 0 6 0 0 0 3 0 0\n7 0 0 9 0 1 0 0 4\n5 0 0 0 0 0 0 0 2\n0 0 7 2 0 6 9 0 0\n0 4 0 5 0 8 0 7 0\n```\n```python\ndef resuelve_sudoku(i,j,S):\n    if i==9: # Comprueba si la solución parcial está completa\n        return True # Solución encontrada\n    else:\n        # Comprueba si S[i][j] contiene un número inicial fijo\n        if S[i][j]!=0:\n            (i_nueva,j_nueva) = avanza(i,j)\n            return resuelve_sudoku(i_nueva,j_nueva,S)\n        else:\n            sol_encontrada = False\n            k=1\n            # Genera candidatos\n            while k<10 and not sol_encontrada:\n                # Comprueba validez del candidato\n                if es_candidato_valido(i,j,k,S): # ¡¡INEFICIENTE!!\n                    # Incluye dígito en celda (i,j)\n                    S[i][j] = k\n\n                    (i_nueva,j_nueva) = avanza(i,j)\n                    sol_encontrada = resuelve_sudoku(i_nueva,j_nueva,S)\n\n                k=k+1\n\n            # Si no hay solución se marca la celda (i,j) como vacía\n            if not sol_encontrada:\n                S[i][j] = 0\n\n            # Devolver si se ha encontrado una solución\n            return sol_encontrada\n```\n```python\n# Comprueba si el dígito en la celda (fila,col) es válido\ndef es_candidato_valido(fila,col,digito,S):\n    # Comprueba conflicto en fila\n    for k in range(0,9):\n        if k!=col and digito==S[fila][k]:\n            return False\n\n    # Comprueba conflicto en columna\n    for k in range(0,9):\n        if k!=fila and digito==S[k][col]:\n            return False\n\n    # Comprueba conflicto en caja\n    caja_fila= math.floor(fila/3)\n    caja_col = math.floor(col/3)\n    for k in range(0,3):\n        for m in range(0,3):\n            if fila!=3*caja_fila+k and col!=3*caja_col+m:\n                if digito==S[3*caja_fila+k][3*caja_col+m]:\n                    return False\n\n    return True\n```\n- Sudoku - aceleración: matrices booleanas para detectar conflictos en $\\Theta(1)$: una por fila (índice de fila × dígito), una por columna (índice de columna × dígito) y una por caja (índice de caja 0..8 × dígito). Ejercicio para casa/práctica."
+   },
+   {
+    "title": "Problema de la mochila 0-1",
+    "level": 3,
+    "md": "- Dado un conjunto de n objetos, cada uno con un peso $p_i$ y un valor $v_i$, i=1,...,n, y una mochila con capacidad C. Maximizar la suma de los valores asociados a los objetos que se introducen en la mochila, sin sobrepasar la capacidad C, sabiendo que los objetos NO pueden partirse en fracciones más pequeñas:\n$$\\max_{x}\\sum_{i=1}^{n}x_iv_i\\quad\\text{sujeto a}\\quad x_i\\in\\{0,1\\},\\ i=1,\\dots,n;\\qquad \\sum_{i=1}^{n}x_ip_i\\le C$$\n- Árbol de búsqueda: pesos=(3,6,9,5), beneficios=(7,2,10,4), capacidad=15. Cada nodo es (X,Y)=(capacidad restante, beneficio parcial). Rama 0: se mantiene (X,Y); rama 1: (X-p_i, Y+b_i). Se poda si la capacidad restante es negativa. Hojas (nivel 4), en orden: (15,0), (10,4), (6,10), (1,14), (9,2), (4,6), (0,12), (-5,16), (12,7), (7,11), (3,17), (-2,21), (6,9), (1,13), ... El beneficio óptimo es 17 (objetos 1 y 3: peso 12, capacidad restante 3).\n```python\ndef mochila_01_wrapper(p,v,C):\n    sol = [0] * (len(p))\n    sol_opt = [0] * (len(p))\n\n    v_total = mochila_01(0,C,0,sol,sol_opt,-1,p,v,C)\n\n    return v_total\n\n\np = [3,6,9,5] # pesos\nv = [7,2,10,4] # valores\nC = 15  # capacidad\nprint(mochila_01_wrapper(p,v,C))\n```\n```python\ndef mochila_01(i,C_restante,v_actual,sol,sol_opt,v_opt,p,v,C):\n    if i==len(sol): # Se han analizado todos los objetos\n        if v_actual>v_opt: # Comprueba si se ha encontrado una solución mejor\n            # Actualiza el mejor valor y solución\n            v_opt = v_actual\n            for k in range(0,len(sol)):\n                 sol_opt[k] = sol[k]\n    else:\n        for k in range(0,2): # Genera candidatos\n\n            # Comprueba si se puede podar el árbol de recursión\n            if k*p[i]<=C_restante:\n\n                # Expande la solución parcial\n                sol[i]=k\n\n                # Actualiza la capacidad restante y el valor parcial\n                nueva_C_restante = C_restante - k*p[i]\n                nuevo_v_actual = v_actual + k*v[i]\n\n                # Intenta expandir la solución parcial\n                v_opt = mochila_01(i+1,nueva_C_restante, \\\n                    nuevo_v_actual,sol,sol_opt,v_opt,p,v,C)\n\n    # devuelve el mejor valor encontrado hasta el momento\n    return v_opt\n```"
+   },
+   {
+    "title": "Ramificación y poda",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Introducción a la ramificación y poda",
+    "level": 3,
+    "md": "- Hasta ahora podábamos el árbol de recursión si una solución parcial no cumplía los requisitos del problema para llegar a ser una solución completa.\n- En problemas de optimización se pueden realizar podas adicionales: habiendo conseguido hallar una solución válida con valor óptimo v, podemos descartar soluciones que nunca puedan alcanzar dicho valor óptimo.\n- Es un método exacto de resolución de problemas de optimización. Se aplica a problemas duros (desde un punto de vista computacional), para acelerar la búsqueda del óptimo global."
+   },
+   {
+    "title": "Ramificación y poda: mochila 0-1",
+    "level": 3,
+    "md": "- pesos=(3,6,9,5), beneficios=(7,2,10,4), capacidad=15. Cada nodo se anota X(Y) = beneficio parcial (máximo beneficio posible). Raíz: 0(23) (23 = suma de todos los beneficios). Al no incluir el objeto i el máximo posible baja en $v_i$; al incluirlo se suma $v_i$ al beneficio parcial y el máximo posible no cambia. Se poda cuando el máximo beneficio posible no supera el mejor beneficio hallado (p. ej., 6<14, 11<14, 13<17, 12<14) o hay exceso de peso. Beneficio óptimo: 17.\n```python\ndef mochila_01_bnb_wrapper(p,v,C):\n    sol = [0] * (len(p))\n    sol_opt = [0] * (len(p))\n\n    v_total = mochila_01_bnb(0,C,0,sum(v),sol,sol_opt,-1,p,v,C)\n\n    return v_total\n\n\np = [3,6,9,5] # pesos\nv = [7,2,10,4] # valores\nC = 15  # capacidad\nprint(mochila_01_bnb_wrapper(p,v,C))\n```\n```python\ndef mochila_01_bnb(i,C_restante,v_actual,max_v,sol,sol_opt,v_opt,p,v,C):\n    if i==len(sol): # Se han analizado todos los objetos\n        if v_actual>v_opt: # Comprueba si se ha encontrado una solución mejor\n            # Actualiza el mejor valor y solución\n            v_opt = v_actual\n            for k in range(0,len(sol)):\n                sol_opt[k] = sol[k]\n    else:\n        for k in range(0,2): # Genera candidatos\n\n            # Comprueba si se puede podar el árbol de recursión por capacidad\n            if k*p[i]<=C_restante:\n\n               # Actualiza el máximo valor alcanzable\n                nuevo_max_v = max_v - (1-k)*v[i]\n\n                # Comprueba si se puede podar el árbol de recursión por valor\n                if nuevo_max_v>v_opt:\n\n                     sol[i]=k # Expande la solución parcial\n\n                     # Actualiza la capacidad restante y el valor parcial\n                     nueva_C_restante = C_restante - k*p[i]\n                     nuevo_v_actual = v_actual + k*v[i]\n\n                     # Intenta expandir la solución parcial\n                     v_opt = mochila_01_bnb(i+1,nueva_C_restante, \\\n                         nuevo_v_actual,nuevo_max_v,sol,sol_opt,v_opt,p,v,C)\n\n    return v_opt # devuelve el mejor valor encontrado hasta el momento\n```"
+   },
+   {
+    "title": "Aspectos a considerar al usar backtracking",
+    "level": 3,
+    "md": "- ¿Las soluciones son permutaciones, subconjuntos u otra entidad? Si son permutaciones o subconjuntos: usad los esquemas vistos. Son claros y eficientes. Estructura de la solución parcial.\n- ¿Se pueden acelerar cálculos usando estructuras de datos?\n- ¿Se busca una solución o todas? Si solo se busca una, paramos en cuanto la encontremos (while + variable booleana (solución encontrada)). En problemas de optimización se busca solo una (la mejor), pero se analizan todas.\n- En problemas de optimización: añadimos dos parámetros: mejor solución y mejor valor. ¿Se puede podar el árbol de recursión por valor?"
+   },
+   {
+    "title": "Secuencias de paréntesis válidas - I",
+    "level": 3,
+    "md": "```python\ndef parentesis(i,n_abiertos,sol,n):\n    if i==2*n:\n        return 1\n    else:\n        nsols = 0\n\n        for k in range(0,2):\n            n_abiertos = n_abiertos + (1-k)\n\n            if n_abiertos>=i-n_abiertos+1 and n_abiertos<=n:\n                 sol[i]=k\n                 nsols = nsols + parentesis(i+1,n_abiertos,sol,n)\n\n            n_abiertos = n_abiertos - (1-k)\n\n        return nsols\n\n\ndef parentesis_wrapper(n):\n    sol = [None] * (2*n)\n    return parentesis(0,0,sol,n)\n```"
+   },
+   {
+    "title": "Secuencias de paréntesis válidas - II",
+    "level": 3,
+    "md": "```python\ndef parentesis_alt(i,sol,n):\n    if i==n:\n        # print(sol)\n\n        return 1\n    else:\n        nsols = 0\n\n        if i==0:\n             k_ini = 0\n        else:\n             k_ini = sol[i-1]+1\n\n        for k in range(k_ini,2*i+1):\n             sol[i]=k\n             nsols = nsols + parentesis_alt(i+1,sol,n)\n\n        return nsols\n\n\ndef parentesis_wrapper_alt(n):\n    sol = [None] * n\n    return parentesis_alt(0,sol,n)\n```"
+   }
+  ]
+ },
+ {
+  "id": "t7_algoritmos_voraces",
+  "title": "Tema 7 Algoritmos voraces",
+  "sections": [
+   {
+    "title": "Tema 7 Algoritmos voraces",
+    "level": 2,
+    "md": "Diseño y Análisis de Algoritmos. Manuel Rubio Sánchez (URJC), 13 de mayo de 2024. Licencia CC BY-SA 4.0.\nContenido: 1 Introducción; 2 Ejemplos básicos; 3 Problemas clásicos; 4 Problema de la mochila; 5 Grafos; 6 K-medias."
+   },
+   {
+    "title": "Introducción",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Algoritmos voraces",
+    "level": 3,
+    "md": "- Los algoritmos voraces se suelen aplicar a problemas de optimización (maximizar o minimizar una función objetivo).\n- Suelen ser rápidos y fáciles de implementar. Exploran soluciones \"locales\". No siempre garantizan la solución óptima.\n- Son algoritmos que siguen una heurística mediante la cual toman decisiones óptimas locales en cada paso, de manera muy eficiente, con la esperanza de poder encontrar un óptimo global tras una serie de pasos.\n- Se aplican, sobre todo, a problemas duros, desde un punto de vista computacional. Ejemplo: problema del viajante (NP-completo); heurística: \"escoge la ciudad más próxima no visitada aún\".\n- Para ciertos problemas se puede demostrar que algunas estrategias voraces sí que logran hallar un óptimo global de manera eficiente."
+   },
+   {
+    "title": "Ventajas y desventajas",
+    "level": 3,
+    "md": "- Ventajas: son fáciles de implementar; producen soluciones eficientes; a veces encuentran la solución óptima.\n- Desventajas: no todos los problemas de optimización son resolubles con algoritmos voraces; la búsqueda de un óptimo local no implica encontrar un óptimo global; dificultad de encontrar la función de selección que garantice la elección óptima."
+   },
+   {
+    "title": "Elementos",
+    "level": 3,
+    "md": "- Conjunto de candidatos C: la solución se construirá con un subconjunto de estos candidatos.\n- Función de selección: selecciona el candidato \"local\" más idóneo.\n- Función de factibilidad: comprueba si un candidato es factible.\n- Función objetivo: determina el valor de la solución (función a optimizar).\n- Función solución: determina si el subconjunto de candidatos ha alcanzado una solución."
+   },
+   {
+    "title": "Esquema general",
+    "level": 3,
+    "md": "- La técnica voraz funciona por pasos: partimos de una solución vacía y de un conjunto de candidatos a formar parte de la solución. En cada paso se intenta añadir el mejor de los candidatos restantes a la solución parcial. Una vez tomada la decisión, no se puede deshacer. Si la solución ampliada es válida → candidato incorporado. Si no es válida → candidato desechado.\n- El algoritmo acabará cuando el conjunto de elementos seleccionados constituya una solución o cuando no queden elementos sin considerar."
+   },
+   {
+    "title": "Esquema general en pseudocódigo",
+    "level": 3,
+    "md": "```\nfunción voraz(C)                  // C es el conjunto de candidatos\n    S ← ∅\n    mientras C ≠ ∅ y no solución(S) hacer\n        x ← seleccionar(C)\n        C ← C \\ {x}\n        si factible(S ∪ {x}) entonces\n            S ← S ∪ {x}\n\n    si solución(S) entonces\n        devolver S                // S es una solución\n    si no\n        devolver ∅                // No hay soluciones\n```"
+   },
+   {
+    "title": "Ejemplos básicos",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Camino más corto - 1",
+    "level": 3,
+    "md": "- Encontrar el camino más corto de $v_0$ a $v_n$, donde solo hay caminos entre vértices adyacentes ($v_{i-1}$ y $v_i$, para i=1,...,n). Ejemplo con 4 vértices $v_0,v_1,v_2,v_3$: arcos entre $v_0$ y $v_1$ de longitudes 5, 1, 3; entre $v_1$ y $v_2$ de 10, 9, 2, 6; entre $v_2$ y $v_3$ de 7, 4.\n- ¿Función de selección? Método voraz: en cada paso se coge el arco de menor longitud. Solución óptima: 1+2+4=7.\n- Se demuestra que la estrategia es óptima (por contradicción)."
+   },
+   {
+    "title": "Camino más corto - 2",
+    "level": 3,
+    "md": "- Encontrar el camino más corto de $v_{0,1}$ a $v_{n,1}$, donde solo hay caminos entre vértices de etapas adyacentes ($v_{i-1,j}$ y $v_{i,k}$, para i=1,...,n, y ∀j,k, donde puede haber cualquier número de vértices en las etapas 1,2,...,n-1).\n- Ejemplo (grafo por etapas; arcos con su longitud):\n  - Etapa 0 → 1: $v_{0,1}\\to v_{1,1}$: 3; $v_{0,1}\\to v_{1,2}$: 1; $v_{0,1}\\to v_{1,3}$: 5; $v_{0,1}\\to v_{1,4}$: 7.\n  - Etapa 1 → 2: $v_{1,1}\\to v_{2,1}$: 2; $v_{1,1}\\to v_{2,2}$: 3; $v_{1,2}\\to v_{2,1}$: 9; $v_{1,2}\\to v_{2,2}$: 10; $v_{1,3}\\to v_{2,1}$: 5; $v_{1,3}\\to v_{2,3}$: 7; $v_{1,4}\\to v_{2,1}$: 6; $v_{1,4}\\to v_{2,2}$: 2; $v_{1,4}\\to v_{2,3}$: 4.\n  - Etapa 2 → 3: $v_{2,1}\\to v_{3,1}$: 13; $v_{2,2}\\to v_{3,1}$: 1; $v_{2,3}\\to v_{3,1}$: 2.\n- Método voraz: en cada paso se coge el arco de menor longitud. Longitud de la solución voraz: 1+9+13=23 ($v_{0,1},v_{1,2},v_{2,1},v_{3,1}$).\n- Se demuestra que la estrategia no es óptima (contraejemplo). Longitud de la solución óptima: 3+3+1=7 ($v_{0,1},v_{1,1},v_{2,2},v_{3,1}$)."
+   },
+   {
+    "title": "Problemas clásicos",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Cambio de monedas",
+    "level": 3,
+    "md": "- Se dispone de n monedas de euro con valores de 1, 2, 5, 10, 20 y 50 céntimos de euro, 1 y 2 euros. Dada una cantidad X de euros, devolver dicha cantidad con el menor número posible de monedas. Ejemplo: devolver 2,24€. Solución: 4 (2 + 0,20 + 0,02 + 0,02).\n- Conjunto de candidatos: todos los tipos de monedas.\n- Función solución: conjunto de monedas que suman X.\n- Función de factibilidad: si $\\sum_i v_in_i>X$, el conjunto obtenido no podrá ser solución ($n_i$ = número de monedas de tipo i, $v_i$ = valor de una moneda de tipo i).\n- Función objetivo: minimizar la cardinalidad de las soluciones posibles.\n- Función de selección: moneda de valor más alto posible, que no supere el valor que queda por devolver.\n- ¿Es óptima la función de selección propuesta? No siempre: con monedas de 1, 2, 5, 10, 12, 20 y 50 céntimos, 1 y 2 euros, y devolver 2,24€: solución voraz: 4 (2 + 0,20 + 0,02 + 0,02); solución óptima: 3 (2 + 0,12 + 0,12)."
+   },
+   {
+    "title": "Minimización del tiempo en el sistema",
+    "level": 3,
+    "md": "- Considérese un servidor que tiene que dar servicio a n clientes, donde $t_i$, con i=1,...,n, es el tiempo requerido por el cliente i. Suponiendo que todos los clientes llegan al mismo tiempo al servidor pero solo uno puede usarlo, minimizar el tiempo T en el sistema para los n clientes: $T=\\sum_{i=1}^{n}(\\text{tiempo en el sistema para el cliente }i)$.\n- Ejemplo: 3 clientes con $t_1=5$, $t_2=10$, $t_3=3$. Según el orden:\n\n| Orden | T |\n|---|---|\n| 123 | 5+(5+10)+(5+10+3)=38 |\n| 132 | 5+(5+3)+(5+3+10)=31 |\n| 213 | 10+(10+5)+(10+5+3)=43 (peor planificación) |\n| 231 | 10+(10+3)+(10+3+5)=41 |\n| 312 | 3+(3+5)+(3+5+10)=29 (mejor planificación) |\n| 321 | 3+(3+10)+(3+10+5)=34 |\n\n- Estrategia voraz: dar servicio en orden creciente de tiempo $t_i$. Es una estrategia óptima: sea $P=\\langle p_1,p_2,\\dots,p_n\\rangle$ una permutación de los clientes (de enteros de 1 a n), sea $s_i=t_{p_i}$, entonces\n$$T(P)=s_1+(s_1+s_2)+(s_1+s_2+s_3)+\\dots=ns_1+(n-1)s_2+(n-2)s_3+\\dots=\\sum_{k=1}^{n}(n-k+1)s_k$$\nHaciendo $s_1$ lo menor posible, luego $s_2$, etc. conseguimos minimizar T."
+   },
+   {
+    "title": "Mezcla de listas",
+    "level": 3,
+    "md": "- Sean m listas ordenadas, cada una con $n_i$ elementos (i=1,...,m). ¿Cuál es la sucesión óptima del proceso de mezcla, mezclando listas dos a dos, para mezclar todas las listas de manera ordenada con el menor número de comparaciones?\n- Ejemplo: tres listas $L_1$, $L_2$, $L_3$ con longitudes 10, 20 y 30. Opciones: $L_1+L_2=30$, luego $30+L_3=60$: total 90; $L_1+L_3=40$, luego $40+L_2=60$: total 100; $L_2+L_3=50$, luego $50+L_1=60$: total 110.\n- Solución voraz: escoger en cada momento los dos lotes de menor tamaño. Construye un árbol binario de abajo hacia arriba (árbol de mezclas): (10, $L_1$) y (20, $L_2$) → 30; 30 y ($L_3$=30) → 60."
+   },
+   {
+    "title": "Códigos de Huffman",
+    "level": 3,
+    "md": "- Dado un conjunto de n objetos y sus respectivas frecuencias de aparición $f_i$, i=1,...,n, obtener una codificación binaria para los objetos que minimice el promedio de bits necesarios para representarlos. (Ejemplo con árbol sobre frecuencias 0,30 B; 0,15 A; 0,15 E; 0,20 C; 0,10 G; 0,05 D; 0,05 F.)\n- La codificación Huffman es un método usado para compresión de datos. Se codifica una serie de objetos mediante una secuencia de bits según su frecuencia de aparición. Los objetos con mayor frecuencia se codifican con menos bits. Minimiza el promedio de bits necesarios para representar los objetos.\n- Ejemplo: texto de 100000 caracteres con 6 caracteres: frecuencias absolutas a=45000, b=13000, c=12000, d=16000, e=9000, f=5000.\n  - Solución 1: usar 3 bits por cada carácter → 300000 bits.\n  - Solución 2: usar códigos de longitud variable en el que los más frecuentes tienen el código más corto → 224000 bits.\n  - Objetivo: crear una codificación de longitud variable para minimizar el número de bits, en promedio, necesarios para representar un texto.\n- Estrategia voraz: asignar códigos más largos a los caracteres con menor frecuencia de aparición. Utiliza la tabla de frecuencias de aparición de cada carácter. Construye un árbol binario de longitud variable de abajo hacia arriba. Utiliza una cola Q de árboles con prioridades. Inicialmente Q contiene un árbol por cada carácter. En cada paso, se \"mezclan\" los dos árboles de Q que tienen menos frecuencia dando lugar a un nuevo árbol.\n- Fase 1: orden creciente de frecuencias (en miles): f:5, e:9, c:12, b:13, d:16, a:45.\n- Fase 2 y posteriores: fusionar árboles hasta obtener un solo árbol manteniendo la ordenación creciente:\n  1. f:5 + e:9 → 14 (rama 0: f, rama 1: e). Cola: c:12, b:13, 14, d:16, a:45.\n  2. c:12 + b:13 → 25 (0: c, 1: b). Cola: 14, d:16, 25, a:45.\n  3. 14 + d:16 → 30 (0: 14, 1: d). Cola: 25, 30, a:45.\n  4. 25 + 30 → 55 (0: 25, 1: 30). Cola: a:45, 55.\n  5. 55 + a:45 → 100 (rama 0: 55, rama 1: a).\n- Codificación final: para hallar la codificación de un carácter se usa el camino desde la raíz del árbol hasta la hoja que representa el carácter. La secuencia de bits la determina la rama (izquierda: 0, derecha: 1) por la que se avanza hasta la hoja.\n\n| carácter | código |\n|---|---|\n| a | 1 |\n| d | 011 |\n| e | 0101 |\n| f | 0100 |\n| b | 001 |\n| c | 000 |"
+   },
+   {
+    "title": "Problema de la mochila",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Problema de la mochila - Versión 1",
+    "level": 3,
+    "md": "- Se tiene un conjunto de n objetos, cada uno con un peso $p_i$, y una mochila con capacidad C. Maximizar el número de objetos que se pueden introducir en la mochila sin sobrepasar la capacidad C.\n$$\\max_x\\sum_{i=1}^{n}x_i\\quad\\text{sujeto a}\\quad x_i\\in\\{0,1\\},\\ i=1,\\dots,n;\\quad\\sum_{i=1}^{n}x_ip_i\\le C$$\n- Las variables $x_i$ determinan si se introduce el objeto i en la mochila. Es un problema de programación lineal entera.\n- Ejemplo: C=15, p=(9,6,5): ¿función de selección? Peso decreciente: solución 2 (9+6). Peso creciente: solución 2 (5+6).\n- Ejemplo: C=15, p=(9,5,6,4): peso decreciente: solución 2 (9+6). Peso creciente: solución 3 (4+5+6).\n- La estrategia voraz escogiendo candidatos en orden creciente de peso es mejor (para este problema es óptima)."
+   },
+   {
+    "title": "Problema de la mochila - Versión 2",
+    "level": 3,
+    "md": "- Se tiene un conjunto de n objetos, cada uno con un peso $p_i$, y una mochila con capacidad C. Maximizar el peso de los objetos que se introducen en la mochila sin sobrepasar la capacidad C.\n$$\\max_x\\sum_{i=1}^{n}x_ip_i\\quad\\text{sujeto a}\\quad x_i\\in\\{0,1\\},\\ i=1,\\dots,n;\\quad\\sum_{i=1}^{n}x_ip_i\\le C$$\n- Las variables $x_i$ determinan si se introduce el objeto i en la mochila. Es un problema de programación lineal entera.\n- Ejemplo: C=15, p=(9,6,5): peso decreciente: solución 15 (9+6); peso creciente: solución 11 (5+6).\n- Ejemplo: C=15, p=(10,7,6): peso decreciente: solución 10 (10); peso creciente: solución 13 (6+7).\n- Ninguna de las estrategias de selección es óptima, ni mejor que la otra."
+   },
+   {
+    "title": "Problema de la mochila - Versión 3",
+    "level": 3,
+    "md": "- Se tiene un conjunto de n objetos, cada uno con un peso $p_i$ y un valor $v_i$, y una mochila con capacidad C. Los objetos pueden partirse en fracciones más pequeñas. Maximizar la suma de los valores asociados a los objetos que se introducen en la mochila, sin sobrepasar la capacidad C.\n$$\\max_x\\sum_{i=1}^{n}x_iv_i\\quad\\text{sujeto a}\\quad 0\\le x_i\\le1,\\ i=1,\\dots,n;\\quad\\sum_{i=1}^{n}x_ip_i\\le C$$\n- Las variables $x_i$ determinan la fracción del objeto i que se introduce en la mochila. Es un problema de programación lineal.\n- Conjunto de candidatos: todos los objetos. Función de factibilidad: $\\sum_i x_ip_i\\le C$. Función objetivo: maximizar $\\sum_i x_iv_i$. Función solución: cualquier conjunto de elementos es válido si no se ha sobrepasado C.\n- Funciones de selección posibles: seleccionar el objeto con mayor valor; seleccionar el objeto con menor peso restante; seleccionar el objeto cuyo valor por unidad de peso sea el mayor posible.\n- Ejemplo: C=100, n=5, con:\n\n| i | 1 | 2 | 3 | 4 | 5 |\n|---|---|---|---|---|---|\n| $p_i$ | 10 | 20 | 30 | 40 | 50 |\n| $v_i$ | 20 | 30 | 66 | 40 | 60 |\n| $v_i/p_i$ | 2,0 | 1,5 | 2,2 | 1,0 | 1,2 |\n\n| seleccionar | $x_1$ | $x_2$ | $x_3$ | $x_4$ | $x_5$ | valor total |\n|---|---|---|---|---|---|---|\n| maximizar $v_i$ | 0 | 0 | 1 | 0,5 | 1 | 146 |\n| minimizar $p_i$ | 1 | 1 | 1 | 1 | 0 | 156 |\n| maximizar $v_i/p_i$ | 1 | 1 | 1 | 0 | 0,8 | 164 |\n\n- Función de selección óptima es: maximizar $v_i/p_i$."
+   },
+   {
+    "title": "Problema de la mochila - Versión 4 (mochila 0-1)",
+    "level": 3,
+    "md": "- Dado un conjunto de n objetos, cada uno con un peso $p_i$ y un valor $v_i$, y una mochila con capacidad C. Maximizar la suma de los valores asociados a los objetos que se introducen en la mochila, sin sobrepasar la capacidad C, sabiendo que los objetos NO pueden partirse en fracciones más pequeñas:\n$$\\max_x\\sum_{i=1}^{n}x_iv_i\\quad\\text{sujeto a}\\quad x_i\\in\\{0,1\\},\\ i=1,\\dots,n;\\quad\\sum_{i=1}^{n}x_ip_i\\le C$$\n- Las variables $x_i$ determinan si se introduce el objeto i en la mochila. Es un problema NP-completo (problema de la mochila 0-1)."
+   },
+   {
+    "title": "Grafos",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "Árbol de recubrimiento de coste mínimo",
+    "level": 3,
+    "md": "- Árbol libre: es un grafo no dirigido conexo acíclico. Todo árbol libre con n vértices tiene n-1 aristas. Si se añade una arista se introduce un ciclo. Si se borra una arista quedan vértices no conectados. Cualquier par de vértices está unido por un único camino simple.\n- Árbol de recubrimiento de un grafo no dirigido y ponderado no negativamente: es cualquier subgrafo que contenga todos los vértices y que sea un árbol libre.\n- Árbol de recubrimiento de coste mínimo: es un árbol de recubrimiento y no hay ningún otro árbol de recubrimiento cuya suma de los pesos de las aristas sea menor. Lo denotamos arm(G), donde G es un grafo no dirigido, conexo, y ponderado no negativamente.\n- Problema: dado un grafo $G=\\langle V,E\\rangle$ no dirigido, conexo, y ponderado no negativamente, hallar arm(G). (Figura: grafo ponderado de 10 vértices cuyo árbol de recubrimiento de coste mínimo tiene valor 38. No tiene por qué ser único.)"
+   },
+   {
+    "title": "Propiedad fundamental",
+    "level": 3,
+    "md": "- Sea $G=\\langle V,E\\rangle$ un grafo no dirigido, conexo, y ponderado no negativamente, $G\\in\\{f:V\\times V\\to E\\}$. Sea U un conjunto de vértices $U\\subset V$, $U\\ne\\emptyset$.\n- Si $\\langle u,v\\rangle$ es la arista más pequeña de G tal que $u\\in U$, y $v\\in V\\setminus U$, entonces existe algún árbol de recubrimiento de coste mínimo de G que la contiene. Demostración por reducción al absurdo (contradicción)."
+   },
+   {
+    "title": "Algoritmo de Kruskal",
+    "level": 3,
+    "md": "- Seleccionar la arista más corta en cada etapa y construir el árbol.\n- Se basa en la propiedad de los árboles de recubrimiento de coste mínimo: partiendo del árbol vacío, se selecciona en cada paso la arista de menor peso que no provoque ciclo sin requerir ninguna otra condición sobre sus extremos. Es una estrategia óptima.\n- Ejemplo paso a paso en el grafo con vértices a,b,c,d,e,f y aristas: a-b:3, b-c:1, b-f:4, a-f:5, c-f:4, c-d:6, f-d:5, f-e:2, a-e:6, e-d:8. Orden de selección: b-c (1), f-e (2), a-b (3), b-f (4), f-d (5); las aristas a-f (5), c-f (4) y c-d (6) se descartan por formar ciclo. Coste total del árbol: 15.\n```\nKruskal(G)\n    // Entrada: G = <V,E>, es un grafo no dirigido, conexo,\n    // y ponderado no negativamente\n    // Salida: ET = conjunto de aristas que forman un arm(G)\n\n    ordenar E en orden no decreciente según los pesos asociados a las aristas:\n        w(e_i1) <= ... <= w(e_i|E|)\n    ET <- ∅\n    cont <- 0          // nº de aristas de arm(G)\n    k <- 0             // nº de aristas procesadas\n\n    while cont < |V| - 1\n        k <- k + 1\n        si ET ∪ {e_ik} no contiene ciclos\n            ET <- ET ∪ {e_ik}\n            cont <- cont + 1\n\n    devolver ET\n```"
+   },
+   {
+    "title": "Algoritmo de Prim",
+    "level": 3,
+    "md": "- Seleccionar un nodo y construir el árbol a partir de él.\n- Aplica reiteradamente la propiedad de los árboles de recubrimiento de coste mínimo incorporando a cada paso una arista. Se usa un conjunto U de vértices tratados y se selecciona en cada paso la arista mínima que une un vértice de U con otro de su complementario. Es una estrategia óptima.\n- Ejemplo paso a paso en el mismo grafo que Kruskal [figura: aristas añadidas en cada paso a partir de un vértice inicial].\n```\nPrim(G)\n    // Entrada: G = <V,E>, es un grafo no dirigido, conexo\n    // (puede usar pesos negativos)\n    // Salida: ET = conjunto de aristas que forman un arm(G)\n\n    VT <- {v0}            // v0 puede ser cualquier vértice\n    ET <- ∅\n\n    desde i <- 1 hasta |V| - 1 hacer\n        encontrar una arista e* = (v*, u*) de peso mínimo entre todas\n            las aristas (v, u) tales que v ∈ VT y u ∈ V \\ VT\n        VT <- VT ∪ {u*}\n        ET <- ET ∪ {e*}\n\n    devolver ET\n```"
+   },
+   {
+    "title": "Caminos mínimos desde un nodo",
+    "level": 3,
+    "md": "- Dado un grafo $G=\\langle V,E\\rangle$ conexo y ponderado no negativamente, y un vértice $s\\in V$, hallar la longitud de los caminos mínimos desde s al resto de vértices. (Ejemplo: vértices s,a,b,c,d,e.)\n- Sirve para grafos dirigidos y no dirigidos (si es no dirigido se puede sustituir cada arista por dos con el mismo peso, y en \"direcciones\" contrarias). Veremos el algoritmo de Dijkstra."
+   },
+   {
+    "title": "Algoritmo de Dijkstra",
+    "level": 3,
+    "md": "- Inserta vértices en un árbol T progresivamente, según calcula nuevas longitudes mínimas. El árbol T es conceptual (es una lista de nodos).\n- Para un nuevo vértice tiene en cuenta no sólo la longitud de la nueva arista, sino también todo el camino hasta dicho vértice. Es la diferencia con respecto al algoritmo de Prim.\n- En cada paso inserta en T el vértice con menor longitud desde el origen (estrategia voraz óptima).\n- Tras insertar un nuevo vértice $v_{sig}$, debe recalcular distancias de nodos conectados a $v_{sig}$ y T.\n\n#### Dijkstra en detalle (ejemplo con 5 vértices 0..4, origen 0; \"∞\" = distancia aún desconocida; \"∈ T\" = vértice ya en T)\n- Aristas del grafo (no dirigido): 0-1: 20, 0-2: 10, 1-2: 5, 1-3: 8, 1-4: 15, 2-3: 10, 2-4: 30, 3-4: 20.\n- Paso 1: 0:(camino 0, d=0, ✓); 1:(0,1; 20; ✗); 2:(0,2; 10; ✗); 3:(∞; ✗); 4:(∞; ✗).\n- Paso 2 (se añade 2): 1:(0,2,1; 15; ✗); 2:(0,2; 10; ✓); 3:(0,2,3; 20; ✗); 4:(0,2,4; 40; ✗).\n- Paso 3 (se añade 1): 1:(0,2,1; 15; ✓); 3:(0,2,3; 20; ✗); 4:(0,2,1,4; 30; ✗).\n- Paso 4 (se añade 3): 3:(0,2,3; 20; ✓); 4:(0,2,1,4; 30; ✗).\n- Paso 5 (se añade 4): 4:(0,2,1,4; 30; ✓).\n- Nota: el ejemplo usa un grafo no dirigido.\n\n```\nDijkstra(G, s, t)\n    // Entrada: G = <V,E>, es un grafo no dirigido, conexo,\n    // y ponderado no negativamente con pesos w entre aristas\n    // Salida: Distancias mínima d desde el vértice s hasta el t,\n    // y todas las distancias mínimas a vértices que son menores que d\n\n    T <- {s}\n    desde i <- 1 hasta |V| hacer d_i <- ∞\n    para cada arista (s, v) hacer d_v = w(s, v)\n    ultimo <- s\n    mientras (ultimo ≠ t) hacer\n        seleccionar v_sig ∉ T       // el vértice desconocido que minimiza d\n        para cada arista (v_sig, x) hacer\n            d_x <- mín[d_x, d_vsig + w(v_sig, x)]\n        ultimo <- v_sig\n        T <- T ∪ {v_sig}\n\n    devolver d\n```"
+   },
+   {
+    "title": "K-medias",
+    "level": 2,
+    "md": ""
+   },
+   {
+    "title": "K-medias",
+    "level": 3,
+    "md": "- Clustering: identificar grupos de puntos (datos) y asignar a cada punto uno de esos grupos.\n- El algoritmo K-medias procura encontrar los K mejores representantes (\"centroides\", que también son puntos) de los datos, donde cada centroide representa un grupo. El representante de un dato es el más cercano a éste.\n- K-medias intenta resolver el problema cuyo objetivo es minimizar la suma de distancias euclídeas (al cuadrado) entre cada dato y su centroide.\n- (Se muestra una ejecución en 8 pasos sobre datos en el plano.)"
+   },
+   {
+    "title": "K-medias - pseudocódigo",
+    "level": 3,
+    "md": "- El problema de optimización asociado no es convexo, ni existe una fórmula analítica para la solución. Recurrimos a un algoritmo iterativo.\n```\nK-medias(D, K)\n    Inicializar cada mu_k (valores aleatorios, datos concretos, etc.)\n    repetir:\n        (A) Escoge las mejores asignaciones a_ik para unos centroides mu_k fijos\n        (B) Escoge los mejores centroides mu_k para unas asignaciones a_ik fijas\n    hasta convergencia\n```"
+   },
+   {
+    "title": "K-medias - Dos pasos",
+    "level": 3,
+    "md": "- (A): asignar $x_i$ a su centroide $\\mu_k$ más cercano (el grupo sería $C_k$):\n$$a_{ik}=\\begin{cases}1 & \\text{si }k=\\arg\\min_l\\lVert x_i-\\mu_l\\rVert^2\\\\ 0 & \\text{en caso contrario}\\end{cases}$$\n- (B): asignar a $\\mu_k$ la media de los puntos asignados a él (a $C_k$):\n$$\\mu_k=\\frac{1}{n_k}\\sum_{i:\\,x_i\\text{ se asigna a }C_k}x_i,\\qquad n_k=\\sum_{i=1}^{N}a_{ik}$$\n($n_k$ es el número de puntos $x_i$ asignados a $C_k$.)"
+   },
+   {
+    "title": "K-medias - problema de clustering que resuelve",
+    "level": 3,
+    "md": "- Sea $D=\\{x_1,\\dots,x_N\\}$ un conjunto de \"datos\", donde $x_i\\in\\mathbb{R}^d$, que deseamos agrupar en K grupos $\\{C_1,\\dots,C_K\\}$. Cada grupo está representado por un \"centroide\". Denotamos estos centroides mediante $\\mu_1,\\dots,\\mu_K\\in\\mathbb{R}^d$.\n- El problema (no convexo) consiste en minimizar:\n$$L=\\sum_{k=1}^{K}\\sum_{i:\\,x_i\\text{ se asigna a }C_k}\\lVert x_i-\\mu_k\\rVert^2=\\sum_{k=1}^{K}\\sum_{i=1}^{N}a_{ik}\\lVert x_i-\\mu_k\\rVert^2,\\qquad a_{ik}=\\begin{cases}1&\\text{si }x_i\\text{ está asignado a }C_k\\\\0&\\text{en caso contrario}\\end{cases}$$\n- Se garantiza que converge a un óptimo local. Convergencia: los centroides no varían tras una iteración. También se puede parar tras T pasos.\n- No siempre encuentra el óptimo global: se suele ejecutar varias veces con diferentes inicializaciones.\n- Asume que los clusters son \"esféricos\" (poco realista). Hay alternativas mejores de clustering.\n- El problema es NP-duro. Se puede interpretar como un caso particular del algoritmo EM (expectation-maximization) de teoría de probabilidad."
+   }
+  ]
  }
 ];
 window.SKILLS = [
