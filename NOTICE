@@ -10,13 +10,15 @@ Licensing overview
 3. Lecture notes (content/lectures/*.md): CC BY-SA 4.0
    https://creativecommons.org/licenses/by-sa/4.0/deed.es
 
-   Original: slides of "Diseno y Analisis de Algoritmos" (URJC),
+   Original: slides of temas 1 to 7 of "Diseno y Analisis de Algoritmos" (URJC),
    (c) 2024 Manuel Rubio Sanchez, distributed by the author under
    Creative Commons Atribucion-CompartirIgual 4.0 Internacional.
 
    Changes made: the PDF slides were converted to Markdown. Layout elements
    (page numbers, headers, footers) were dropped, math was transcribed to
-   LaTeX, and figures were replaced by short text descriptions or placeholders.
+   LaTeX, and figures were replaced by short text descriptions or placeholders
+   (in tema 7 the weights of the example graphs were transcribed from the
+   figures; in temas 4 to 7 some figure-only slides are summarised in words).
    The text content was kept. Errors from the conversion may exist.
    The author has not reviewed or endorsed these adaptations.
 
@@ -32,3 +34,8 @@ Licensing overview
    author's permission. The generated app/data-exams.js is excluded too.
 
    The same applies to any text derived from them.
+
+5. Roadmap (tools/roadmap.json): part of the MIT-licensed code. It only names
+   lecture sections and stages. The ordering of exam exercises inside each
+   stage is generated locally by tools/build.py into app/data-exams.js
+   (not versioned, see 4).
