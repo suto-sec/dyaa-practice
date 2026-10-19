@@ -450,6 +450,7 @@ function vSheet(gid) {
   if (!Object.keys(SUMM).length) return h + '<div class="warnbox">No se encontraron los res&uacute;menes en <code>data-lectures.js</code>. Ejecuta <code>python3 tools/build.py</code>.</div>';
   var cur = GROUPS_ALL.find(function (g) { return g.id === gid; }) || groupOfStage[gid] || GROUPS[0] || GROUPS_ALL[0];
   h += '<p class="muted">Lo que hay que recordar de cada ' + unit + ': f&oacute;rmulas, esquemas y errores t&iacute;picos. Es para consultar r&aacute;pido; no cuenta como paso de la ruta.</p>';
+  h += '<button type="button" class="tocbtn" data-act="toc" aria-label="Mostrar u ocultar la lista de etapas"><span>&#9776; ' + (ORG === 'temas' ? 'Temas' : 'Etapas') + '</span><b>' + esc(cur.short) + '</b></button>';
   h += '<div class="theory"><div class="side">' + GROUPS_ALL.map(function (g) {
     return '<a href="#/resumen/' + enc(g.id) + '"' + (g === cur ? ' class="on"' : '') + '>' + esc(g.label) + (GROUPS.indexOf(g) < 0 ? '<br><span class="muted">fuera de tu ruta</span>' : '') + '</a>';
   }).join('') + '</div><div class="sheet">';
