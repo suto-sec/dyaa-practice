@@ -394,14 +394,15 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
 {
   const st = () => JSON.parse(store['dyaa-practice-v1']);
   const change = (target) => (handlers.change || []).forEach(f => f({ target }));
-  go('#/hoy'); ok(/Hoy estudio/.test(app()) && /data-act="cfgtoggle" data-k="nopaper" data-v="1"/.test(app()), 'Hoy lets you say you have no paper today');
-  ok(/Pr&aacute;ctica en pantalla/.test(app()) && /href="#\/practica\/test"/.test(app()), 'and links to the on-screen practice');
+  const navHtml = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
+  ok(/<a href="#\/practica" data-tab="practica">Sin papel<\/a>/.test(navHtml), 'the practice without paper has its own tab in the top bar');
+  go('#/hoy'); ok(!/#\/practica/.test(app()) && !/Pr&aacute;ctica en pantalla/.test(app()) && !/Hoy estudio/.test(app()), 'and nothing about it is added to Hoy');
   openMenu('study'); ok(/data-cfg="nopaper"/.test(popHtml()), 'the gear menu has the paperless setting too'); click({ act: 'settings-close' });
   go('#/ejercicios'); ok(!/Modo sin papel/.test(app()) && !/&#9998; papel/.test(app()), 'with paper nothing changes in the exercises');
   click({ act: 'cfgset', k: 'daily', v: '480' }); go('#/hoy'); ok(!hasExams || /href="#\/ejercicios\//.test(app()), 'with paper and a long day, Hoy does propose exercises');
   click({ act: 'cfgtoggle', k: 'nopaper', v: '1' }); ok(st().cfg.nopaper === true, 'the mode is saved with the settings');
   go('#/hoy'); ok(!/href="#\/ejercicios\//.test(app()), 'without paper Hoy proposes no exercise');
-  ok(/aria-checked="true" data-act="cfgtoggle" data-k="nopaper" data-v="1"/.test(app()), 'and shows the mode on');
+  openMenu('study'); ok(/data-cfg="nopaper" checked/.test(popHtml()), 'the gear menu shows the mode on'); click({ act: 'settings-close' });
   go('#/ejercicios'); ok(/Modo sin papel/.test(app()) && /&#9998; papel/.test(app()), 'the exercise list says they need paper and marks each one');
   if (hasExams) { go('#/examen'); ok(/Modo sin papel/.test(app()), 'and so does the exam list'); }
   const stepsNow = L.nextSteps(PATHX.filter(L.paperFree), st(), win.EXAMS || [], 3);
