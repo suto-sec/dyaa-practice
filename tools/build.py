@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build app/data-lectures.js and app/data-exams.js from content/."""
-import json, re, sys
+import json, random, re, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -85,6 +85,49 @@ def load_summaries(roadmap):
     return out
 
 
+# ---------------- quizzes ----------------
+QUIZ = ROOT / "content" / "quizzes"   # <stage id>.md; see parse_quiz for the format
+
+
+def parse_quiz(text, tiles, source):
+    """"## <reading id>" starts the quick check after a reading; each question is
+         Q: the question (Markdown, $math$ allowed)
+         + the correct option           - a wrong option (as many as needed)
+         ? why it is right, in one or two sentences
+       The options are shuffled here (stably), so the author need not place the right one anywhere in particular."""
+    out, tile, q = {}, None, None
+    def close():
+        nonlocal q
+        if q is None: return
+        bad = len(q["opts"]) < 2 or len(q["opts"]) > 5 or sum(1 for o in q["opts"] if o[1]) != 1 or not q["why"]
+        if bad: warn("%s: malformed question in %s: %s" % (source, tile, q["q"][:60]))
+        else:
+            opts = list(q["opts"])
+            random.Random("%s/%d" % (tile, len(out[tile]))).shuffle(opts)
+            out[tile].append({"q": q["q"], "options": [o[0] for o in opts], "answer": [o[1] for o in opts].index(True), "why": q["why"]})
+        q = None
+    for line in text.split("\n"):
+        if line.startswith("## "):
+            close(); tile = line[3:].strip(); out.setdefault(tile, [])
+            if tile not in tiles: warn("%s: quick check for an unknown reading: %s" % (source, tile))
+        elif line.startswith("Q:"):
+            close(); q = {"q": line[2:].strip(), "opts": [], "why": ""}
+        elif q is not None and line[:2] in ("+ ", "- "): q["opts"].append((line[2:].strip(), line[0] == "+"))
+        elif q is not None and line.startswith("? "): q["why"] = line[2:].strip()
+    close()
+    return out
+
+
+def load_quizzes(roadmap):
+    out, tiles = {}, {t["id"] for st in roadmap["stages"] for t in st["theory"]}
+    for st in roadmap["stages"]:
+        p = QUIZ / (st["id"] + ".md")
+        if p.is_file():
+            for tile, qs in parse_quiz(p.read_text(encoding="utf-8"), tiles, p.name).items():
+                if qs and tile in tiles: out[tile] = qs
+    return out
+
+
 # ---------------- skills ----------------
 def load_skills(lectures):
     skills = json.loads((TOOLS / "skills.json").read_text(encoding="utf-8"))
@@ -127,6 +170,12 @@ def load_roadmap(lectures):
         for t in st["theory"]:
             l = lm.get(t["lecture"])
             idx = None
+            if "from" in t:   # a reading given as a range of sections of the lecture
+                if not l or not (0 <= t["from"] <= t["to"] < len(l["sections"])):
+                    warn("reading outside its lecture:", st["id"], t["id"])
+                    t["from"], t["to"] = 0, 0
+                t["idx"], t["upto"] = t["from"], t["to"]
+                continue
             if l:
                 for i, sec in enumerate(l["sections"]):
                     if sec["title"] == t["section"]:
@@ -348,6 +397,8 @@ def main():
         f.write("window.SCOPES = %s;\n" % json.dumps(roadmap["scopes"], ensure_ascii=False, indent=1))
         f.write("window.STAGES = %s;\n" % json.dumps(roadmap["stages"], ensure_ascii=False, indent=1))
         f.write("window.SUMMARIES = %s;\n" % json.dumps(load_summaries(roadmap), ensure_ascii=False, indent=1))
+        f.write("window.QUIZZES = %s;\n" % json.dumps(load_quizzes(roadmap), ensure_ascii=False, indent=1))
+        f.write("window.LEGACY_THEORY = %s;\n" % json.dumps(roadmap.get("legacy_theory", {}), ensure_ascii=False))
     print("lectures: %d (%d sections)" % (len(lectures), sum(len(l["sections"]) for l in lectures)))
     if not EXA.is_dir():
         print("content/exams missing; skipping data-exams.js")
@@ -383,8 +434,37 @@ def main():
     for g in roadmap["stages"]:
         items = [(x["diff"], e["id"] + "/" + x["id"]) for e in exams for x in e["exercises"] if x["stage"] == g["id"]]
         order[g["id"]] = [k for _, k in sorted(items)]
+    # where in its stage each warm-up goes: after the reading it needs (index of the reading), so the stage alternates reading and practice.
+    # roadmap.json "exercise_tile" says which reading; a warm-up it does not mention is spread over the readings, easiest first.
+    info = {e["id"] + "/" + x["id"]: x for e in exams for x in e["exercises"]}
+    et = roadmap.get("exercise_tile", {})
+    at = {}
+    for g in roadmap["stages"]:
+        pos = {t["id"]: i for i, t in enumerate(g["theory"])}
+        loose = []
+        for k in order[g["id"]]:
+            if info[k]["src"] != "adic": continue
+            t = et.get(k.split("/")[0] + "#" + info[k]["n"])
+            if t is None: loose.append(k)
+            elif t in pos: at[k] = pos[t]
+            else: warn("exercise placed after a reading of another etapa:", k, t); loose.append(k)
+        for r, k in enumerate(loose):
+            warn("warm-up without a reading assigned:", k)
+            at[k] = r * len(g["theory"]) // len(loose) if g["theory"] else 0
+    # an exercise that builds on another one ("la función desarrollada en el ejercicio 4.10") never comes before it
+    adic = {x["n"]: k for k, x in info.items() if x["src"] == "adic"}
+    for keys in order.values():
+        for _ in range(len(keys)):
+            moved = False
+            for k in list(keys):
+                for r in re.findall(r"[Ee]jercicio\s+(\d+\.\d+)", info[k]["statement"]):
+                    d = adic.get(r)
+                    if d in keys and d != k and keys.index(d) > keys.index(k):
+                        keys.remove(k); keys.insert(keys.index(d) + 1, k); moved = True
+            if not moved: break
     with open(APP / "data-exams.js", "a", encoding="utf-8") as f:
         f.write("window.STAGE_EX = %s;\n" % json.dumps(order, ensure_ascii=False, indent=1))
+        f.write("window.STAGE_AT = %s;\n" % json.dumps(at, ensure_ascii=False, indent=1))
     print("stage sizes:", {k: len(v) for k, v in order.items()})
     print("%-42s %5s %5s %6s" % ("exam", "exs", "sols", "min"))
     te = ts = 0

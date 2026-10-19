@@ -20,12 +20,41 @@ const lectures = g('LECTURES'), stages = g('STAGES'), skills = g('SKILLS');
 ok(lectures && lectures.length >= 9, 'lectures loaded (temas 1-7)');
 ok(stages && stages.length, 'stages loaded');
 
-// theory refs resolve
+// readings: every one is a range of sections of a lecture, the ranges of a lecture never overlap, and none is too long to read in one go
 const lm = {}; lectures.forEach(l => lm[l.id] = l);
-stages.forEach(s => (s.theory || []).forEach(t => {
-  ok(lm[t.lecture] && lm[t.lecture].sections[t.idx], 'theory ref resolves: ' + s.id + ' / ' + t.section);
-  if (lm[t.lecture] && lm[t.lecture].sections[t.idx]) ok(lm[t.lecture].sections[t.idx].title.indexOf(t.section.replace(/\s+/g, ' ').slice(0, 12)) >= 0 || lm[t.lecture].sections[t.idx].title === t.section, 'theory title matches: ' + t.section);
-}));
+const tileIds = new Set(), covered = {};
+stages.forEach(s => {
+  ok((s.theory || []).length > 0, 'every etapa has at least one reading: ' + s.id);
+  (s.theory || []).forEach(t => {
+    const lec = lm[t.lecture];
+    ok(t.id && !tileIds.has(t.id), 'reading has a unique id: ' + t.id); tileIds.add(t.id);
+    ok(lec && t.idx >= 0 && t.upto >= t.idx && t.upto < lec.sections.length, 'reading is a valid range of its lecture: ' + t.id);
+    if (!lec) return;
+    for (let i = t.idx; i <= t.upto; i++) { const k = t.lecture + '#' + i; ok(!covered[k], 'section ' + i + ' of ' + t.lecture + ' is in two readings: ' + t.id + ' and ' + covered[k]); covered[k] = t.id; }
+    ok(L.readMinutes(lec.sections, t.idx, t.upto) <= 15, 'a reading takes at most 15 minutes: ' + t.id + ' = ' + L.readMinutes(lec.sections, t.idx, t.upto));
+  });
+});
+// readings follow the order of the lecture across etapas
+{
+  const lastIdx = {};
+  stages.forEach(s => s.theory.forEach(t => { ok(!(t.lecture in lastIdx) || t.idx > lastIdx[t.lecture], 'readings go in lecture order: ' + t.id); lastIdx[t.lecture] = t.upto; }));
+}
+// quick checks: one per reading, each question well formed, and the right answer is not always in the same place
+{
+  const Q = win.QUIZZES || {}, pos = {};
+  Object.keys(Q).forEach(id => {
+    ok(tileIds.has(id), 'a quick check belongs to a reading: ' + id);
+    ok(Q[id].length >= 2 && Q[id].length <= 5, 'a quick check has 2 to 5 questions: ' + id);
+    Q[id].forEach(q => {
+      ok(q.q && q.why && q.options.length >= 2 && q.options.length <= 5 && q.answer >= 0 && q.answer < q.options.length, 'well formed question in ' + id + ': ' + String(q.q).slice(0, 40));
+      ok(new Set(q.options).size === q.options.length, 'no repeated options in ' + id + ': ' + String(q.q).slice(0, 40));
+      pos[q.answer] = (pos[q.answer] || 0) + 1;
+    });
+  });
+  const total = Object.keys(pos).reduce((t, k) => t + pos[k], 0);
+  ok(Object.keys(pos).length >= 3 && Math.max.apply(null, Object.keys(pos).map(k => pos[k])) < total * 0.5, 'right answers are spread over the positions');
+  ok(tileIds.size === Object.keys(Q).length, 'every reading has a quick check (' + Object.keys(Q).length + ' of ' + tileIds.size + ')');
+}
 const order = {}; stages.forEach((s, i) => order[s.id] = i);
 const worldIdx = stages.map(s => s.world);
 ok(worldIdx.indexOf('diseno') > worldIdx.lastIndexOf('analisis'), 'analysis stages precede design stages');
@@ -34,7 +63,7 @@ skills.forEach(s => ok(skillStage[s.id] != null, 'skill belongs to a stage: ' + 
 
 if (hasExams) {
   const exams = g('EXAMS'), stageEx = g('STAGE_EX');
-  const path_ = L.buildPath(stages, stageEx, lectures);
+  const path_ = L.buildPath(stages, stageEx, lectures, g('STAGE_AT') || {}, g('QUIZZES') || {});
   const keys = [];
   exams.forEach(e => e.exercises.forEach(x => keys.push(e.id + '/' + x.id)));
   const inPath = path_.filter(s => s.type === 'ex').map(s => s.key);
@@ -48,14 +77,32 @@ if (hasExams) {
   }));
   // stage order in path follows curriculum order
   let lastO = -1; path_.forEach(s => { ok(order[s.stage] >= lastO, 'path is in stage order at ' + s.id); lastO = order[s.stage]; });
-  // within a stage, theory comes before exercises
+  // within a stage: a warm-up comes after the reading it needs, the exam-level exercises after the last reading, and the stage alternates reading and practice
+  const at = g('STAGE_AT') || {};
   stages.forEach(s => {
     const steps = path_.filter(p => p.stage === s.id && p.type !== 'exam');
-    const firstEx = steps.findIndex(p => p.type === 'ex'), lastTh = steps.map(p => p.type).lastIndexOf('theory');
-    ok(lastTh < firstEx || firstEx < 0, 'theory before exercises in stage ' + s.id);
+    const firstTh = steps.findIndex(p => p.type === 'theory'), lastTh = steps.map(p => p.type).lastIndexOf('theory');
+    steps.forEach((p, i) => { if (p.type === 'ex') ok(i > firstTh, 'an exercise comes after the first reading of ' + s.id + ': ' + p.id); });
+    const info = {}; exams.forEach(e => e.exercises.forEach(x => info[e.id + '/' + x.id] = x));
+    steps.forEach((p, i) => { if (p.type === 'ex' && info[p.key].src !== 'adic') ok(i > lastTh, 'exam-level exercises come after the last reading of ' + s.id); });
+    // the readings of a stage with practice are not all read before the first exercise
+    const nWarm = steps.filter(p => p.type === 'ex' && info[p.key].src === 'adic').length, nTh = steps.filter(p => p.type === 'theory').length;
+    if (nWarm >= 4 && nTh >= 3) ok(steps.findIndex(p => p.type === 'ex') < lastTh, 'practice starts before the last reading of ' + s.id);
+    // no lesson (a reading and what follows it) drags on
+    let run = 0; steps.forEach(p => { if (p.type === 'theory') run = 0; else if (p.type === 'ex' && info[p.key].src === 'adic') { run++; ok(run <= 8, 'a lesson has at most 8 warm-ups: ' + s.id + ' at ' + p.id); } });
   });
+  // an exercise that builds on another one ("el ejercicio 4.10") comes after it
+  {
+    const adic = {}, info = {};
+    exams.forEach(e => e.exercises.forEach(x => { const k = e.id + '/' + x.id; info[k] = x; if (x.src === 'adic') adic[x.n] = k; }));
+    const pos = {}; path_.forEach((p, i) => { if (p.type === 'ex') pos[p.key] = i; });
+    Object.keys(info).filter(k => info[k].src === 'adic').forEach(k => (info[k].statement.match(/[Ee]jercicio\s+\d+\.\d+/g) || []).forEach(m => {
+      const d = adic[m.replace(/\D*(\d+\.\d+)/, '$1')];
+      if (d && d !== k) ok(pos[d] < pos[k], 'exercise ' + info[k].n + ' comes after the exercise it builds on (' + m + ')');
+    }));
+  }
   // simulate: do the path step by step
-  const S = { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {} };
+  const S = { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, quiz: {} };
   let t = '2025-01-10', n = 0;
   const first = L.nextSteps(path_, S, exams, 1)[0];
   ok(first && first.type === 'theory', 'first step is a theory reading');
@@ -64,6 +111,7 @@ if (hasExams) {
     if (!nx) break;
     if (++n > path_.length + 5) { ok(false, 'path did not terminate'); break; }
     if (nx.type === 'theory') S.theory[nx.id] = true;
+    else if (nx.type === 'quiz') S.quiz[nx.id] = { score: nx.n, n: nx.n, t };
     else if (nx.type === 'ex') {
       const r = n % 3;
       S.ex[nx.key] = L.applyRating(S.ex[nx.key], r, 0, 1, t);
@@ -87,7 +135,7 @@ if (hasExams) {
     const cover = {};
     byLec[l].forEach(s => { ok(s.to >= s.idx, 'span is not empty: ' + s.id); for (let i = s.idx; i <= s.to; i++) { ok(!cover[i], 'section ' + i + ' of ' + l + ' is read by two steps: ' + s.id + ' and ' + cover[i]); cover[i] = s.id; } });
   });
-  const bs = stages.find(s => s.id === 'bucles').theory.map((t, i) => path_.find(p => p.id === 't:bucles:' + i));
+  const bs = stages.find(s => s.id === 'bucles').theory.map(t => path_.find(p => p.id === 't:' + t.id));
   ok(bs.length > 1 && bs[0].to < bs[1].idx, 'bucles: the first reading stops before the second one starts');
   const blankS = { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {} };
   let sumStages = 0;
@@ -113,7 +161,7 @@ ok(L.sectionSpan(secs, 0).to === 2 && L.sectionSpan(secs, 1).to === 1 && L.secti
 ok(L.readMinutes(secs, 0, 0) === 3, 'reading has a floor of 3 minutes');
 // theory steps cover their children, so the estimate follows the span
 const buc = lectures.find(l => l.id === (stages.find(s => s.id === 'bucles').theory[0] || {}).lecture);
-if (buc) { const t0 = stages.find(s => s.id === 'bucles').theory[0], sp = L.sectionSpan(buc.sections, t0.idx); ok(sp.to > sp.from, 'bucles step spans its subsections (its own section is empty)'); }
+
 
 // theme colour maths
 const T = require(path.join(APP, 'theme.js'));
@@ -151,7 +199,7 @@ const LG = require(path.join(APP, 'logo.js'));
   ok(te.reduce((n, x) => n + x.stages.length, 0) === stages.length && te.some(x => x.stages.length === 2), 'temas merge the stages that share a tema and lose none');
   const tot = (gs) => gs.reduce((n, x) => n + L.groupSteps(path, x).length, 0);
   ok(tot(et) === path.filter(x => x.type !== 'exam').length + path.filter(x => x.type === 'exam').length && tot(te) === tot(et), 'every step belongs to exactly one group in both organisations');
-  ok(path.filter(x => x.type === 'theory' && x.stage === 'intro').length === 4 && path.find(x => x.stage === 'intro').upto != null, 'tema 1 has its readings, each covering several sections');
+  ok(path.filter(x => x.type === 'theory' && x.stage === 'intro').length >= 6 && path.find(x => x.stage === 'intro').upto != null, 'tema 1 is read in several short readings, each covering several sections');
 }
 
 // figures cut from the slides: every {{fig img/x.png | ...}} points at a file that exists, and no image is left unused

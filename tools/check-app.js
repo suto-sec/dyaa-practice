@@ -64,7 +64,8 @@ ok(/Ruta de estudio|Siguiente en la ruta/.test((go('#/ruta'), app())), 'Ruta sho
 // theory step -> marks read and moves on
 const L = win.DYAA;
 // the continue button comes after the last section the step covers (a step may span subsections) and before the next one
-const PATHX = L.annotateMinutes(L.buildPath(win.STAGES, win.STAGE_EX || {}, win.LECTURES), win.LECTURES, win.EXAMS || []);
+const PATHX = L.annotateMinutes(L.buildPath(win.STAGES, win.STAGE_EX || {}, win.LECTURES, win.STAGE_AT || {}, win.QUIZZES || {}), win.LECTURES, win.EXAMS || []);
+const firstReading = (stage) => PATHX.find(x => x.type === 'theory' && x.stage === stage).id;   // ids of the readings are named, not numbered
 const stepOf = (href) => PATHX.find(x => x.id === decodeURIComponent(href.split('/')[4]));
 function atEndOfSpan(href, idx) {
   const to = stepOf(href).to, a = app(), b = a.indexOf('data-act="theorydone"');
@@ -87,7 +88,7 @@ if (m) {
 }
 
 {
-  const bs = win.STAGES.find(g => g.id === 'bucles'), t0 = bs.theory[0], href = '#/teoria/' + encodeURIComponent(t0.lecture) + '/' + t0.idx + '/' + encodeURIComponent('t:bucles:0');
+  const bs = win.STAGES.find(g => g.id === 'bucles'), t0 = bs.theory[0], href = '#/teoria/' + encodeURIComponent(t0.lecture) + '/' + t0.idx + '/' + encodeURIComponent(t0.id ? 't:' + t0.id : 't:bucles:0');
   go(href); ok(stepOf(href).to > t0.idx && atEndOfSpan(href, t0.idx), 'a reading with subsections puts the continue button after the last of them');
 }
 if (hasExams) {
@@ -113,8 +114,7 @@ if (hasExams) {
   ok(JSON.parse(store['dyaa-practice-v1']).skip['e:' + second] === true, 'skip saved');
   // finishing a stage by skipping its last steps still awards the one-time bonus
   const g0 = win.STAGES[0], xp0 = JSON.parse(store['dyaa-practice-v1']).xp;
-  g0.theory.forEach((t, i) => click({ act: 'theorydone', step: 't:' + g0.id + ':' + i }));
-  stageEx[g0.id].forEach(k => click({ act: 'skip', step: 'e:' + k }));
+  PATHX.filter(x => x.stage === g0.id).forEach(x => click(x.type === 'theory' ? { act: 'theorydone', step: x.id } : { act: 'skip', step: x.id }));
   const S1 = JSON.parse(store['dyaa-practice-v1']);
   ok(S1.bonus[g0.id] === true && S1.xp === Math.round((xp0 + 15) * 10) / 10, 'stage bonus awarded once when the stage completes');
   // any exercise in any stage can be opened directly (nothing locked)
@@ -163,9 +163,37 @@ if (hasExams) {
   e.solution = keep[0]; e.own = keep[1];
 }
 
+// quick checks after the readings: answer, get feedback, earn XP once, move on
+{
+  const qs0 = PATHX.filter(x => x.type === 'quiz'), q = qs0[0], other = qs0[qs0.length - 1];
+  ok(qs0.length === win.STAGES.reduce((n, g) => n + g.theory.length, 0), 'every reading is followed by a quick check in the route');
+  ok(PATHX.findIndex(x => x.id === q.id) === PATHX.findIndex(x => x.id === 't:' + q.tile) + 1, 'a quick check comes right after its reading');
+  const S0 = () => JSON.parse(store['dyaa-practice-v1']);
+  go('#/quiz/' + encodeURIComponent(q.id));
+  ok(/Comprobaci&oacute;n r&aacute;pida/.test(app()) && (app().match(/data-act="qpick"/g) || []).length >= 4 && !/data-act="quizdone"/.test(app()), 'the check lists its questions and waits for every answer');
+  const qs = win.QUIZZES[q.tile], xp0 = S0().xp;
+  click({ act: 'qpick', q: '0', o: String((qs[0].answer + 1) % qs[0].options.length) });
+  ok(/class="why miss"/.test(app()) && /opt ok/.test(app()) && /opt bad/.test(app()), 'a wrong answer shows the right one and why');
+  click({ act: 'qpick', q: '0', o: String(qs[0].answer) });
+  ok(!/class="why good"/.test(app()), 'an answered question cannot be changed');
+  qs.slice(1).forEach((x, i) => click({ act: 'qpick', q: String(i + 1), o: String(x.answer) }));
+  ok(new RegExp((qs.length - 1) + ' de ' + qs.length).test(app()) && /data-act="quizdone"/.test(app()), 'after the last answer the score and a continue button appear');
+  click({ act: 'quizdone', step: q.id });
+  ok(S0().quiz[q.id].score === qs.length - 1 && S0().xp === Math.round((xp0 + qs.length - 1) * 10) / 10, 'finishing records the score and gives 1 XP per right answer');
+  ok(/quiz|teoria|ruta|ejercicios/.test(hash), 'it moves on to the next step');
+  go('#/quiz/' + encodeURIComponent(q.id)); ok(/repetirla no suma XP/.test(app()), 'a repeated check says it gives no XP');
+  qs.forEach((x, i) => click({ act: 'qpick', q: String(i), o: String(x.answer) })); const xp1 = S0().xp; click({ act: 'quizdone', step: q.id });
+  ok(S0().xp === xp1 && S0().quiz[q.id].score === qs.length, 'repeating gives no XP but keeps the best score');
+  go('#/ruta'); ok(/<span class="tag r2">\d+\/\d+<\/span>/.test(app()), 'the route shows the score of a finished check');
+  // a check can be skipped
+  go('#/quiz/' + encodeURIComponent(other.id)); ok(/Saltar esta comprobaci/.test(app()), 'a check offers to be skipped');
+  click({ act: 'skip', step: other.id }); ok(S0().skip[other.id] === true, 'skipping a check counts it as done');
+  go('#/quiz/nada'); ok(/no encontrada/.test(app()), 'an unknown check says so');
+}
+
 // time estimates are shown on the route, in lists, on the exercise page and in the theory sidebar
 go('#/ruta'); ok(/~\d+ min/.test(app()) && /quedan ~/.test(app()) && /estimados/.test(app()), 'Ruta shows estimated times and time left');
-ok(/Tiempo estimado de la etapa: ~/.test(app()) && /class="sub">Teor&iacute;a <span class="t">&middot; ~/.test(app()), 'stages and groups show their total time');
+ok(/Tiempo estimado de la etapa: ~/.test(app()) && /class="sub">Lecci&oacute;n 1\. [^<]*<span class="t">&middot; ~/.test(app()), 'stages and groups show their total time');
 go('#/hoy'); ok(/Estos \d+ pasos: ~/.test(app()) && /en toda la ruta/.test(app()), 'Hoy shows the time of the next steps and of the whole route');
 // figures from the slides: block figures, inline figures and the alt text that stands in if a file is missing
 go('#/teoria/t1_intro_algoritmia'); ok(/<figure class="fig"><img class="fig" src="img\/t1-p\d+\.png" alt="Figura: [^"]+" loading="lazy"><\/figure>/.test(app()) && !/\{\{fig/.test(app()), 'theory renders slide figures with alt text');
@@ -245,25 +273,26 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
   const handle = { name: 'dyaa-progreso.json', queryPermission: async () => file.perm, requestPermission: async () => (file.perm = 'granted'), getFile: async () => ({ text: async () => file.text }), createWritable: async () => { let buf = ''; return { write: async (t) => { buf += t; }, close: async () => { file.text = buf; } }; } };
   win.showSaveFilePicker = async () => handle; win.showOpenFilePicker = async () => [handle];
   const local = () => JSON.parse(store['dyaa-practice-v1']);
-  click({ act: 'theorydone', step: 't:sumatorios:0' }); const xp0 = local().xp;
+  click({ act: 'theorydone', step: firstReading('sumatorios') }); const xp0 = local().xp;
   go('#/ajustes'); ok(/Crear un archivo de progreso/.test(app()) && /solo este perfil/.test(app()), 'with the API the settings offer to create or pick a file');
   click({ act: 'sync-new' }); await wait(60);
-  ok(file.text && JSON.parse(file.text).theory['t:sumatorios:0'] === true && store['dyaa-practice-sync'] === 'file', 'creating the file writes this profile\'s progress into it');
+  ok(file.text && JSON.parse(file.text).theory[firstReading('sumatorios')] === true && store['dyaa-practice-sync'] === 'file', 'creating the file writes this profile\'s progress into it');
   go('#/ajustes'); ok(/dyaa-progreso\.json/.test(app()) && /al d&iacute;a/.test(app()), 'settings show the shared file as up to date');
   // a change is written to the file shortly after
-  click({ act: 'theorydone', step: 't:sumatorios:1' }); await wait(450);
-  ok(JSON.parse(file.text).theory['t:sumatorios:1'] === true, 'every change is written to the shared file');
+  click({ act: 'theorydone', step: firstReading('asintotica') }); await wait(450);
+  ok(JSON.parse(file.text).theory[firstReading('asintotica')] === true, 'every change is written to the shared file');
   // the other profile moves on: this one picks it up when the tab gets the focus
-  const other = JSON.parse(file.text); other.theory['t:sumatorios:2'] = true; other.xp = 77; other.updated = Date.now() + 5000; file.text = JSON.stringify(other);
+  const other = JSON.parse(file.text); other.theory[firstReading('bucles')] = true; other.theory['t:sumatorios:0'] = true; other.ver = 1; other.xp = 77; other.updated = Date.now() + 5000; file.text = JSON.stringify(other);   // progress saved by an older version: numbered readings
   (handlers.focus || []).forEach(f => f()); await wait(60);
-  ok(local().xp === 77 && local().theory['t:sumatorios:2'] === true, 'a newer file is adopted on focus');
+  ok(local().xp === 77 && local().theory[firstReading('bucles')] === true, 'a newer file is adopted on focus');
+  ok(local().theory['t:t21-sumas-basicas'] === true && !('t:sumatorios:0' in local().theory) && local().ver === 2, 'old numbered readings are moved to the named reading that contains their section');
   ok(JSON.parse(store['dyaa-practice-backup']).xp !== 77, 'the profile\'s own progress is kept as a backup before it is replaced');
   // both changed: the user chooses (here: keep this profile, which overwrites the file)
-  click({ act: 'theorydone', step: 't:asintotica:0' });   // changes before the debounce fires
+  click({ act: 'theorydone', step: firstReading('expansion') });   // changes before the debounce fires
   const theirs = JSON.parse(file.text); theirs.xp = 123; theirs.updated = Date.now() + 9000; file.text = JSON.stringify(theirs);
   ctx.confirm = () => false;
   (handlers.focus || []).forEach(f => f()); await wait(80);
-  ok(local().theory['t:asintotica:0'] === true && JSON.parse(file.text).theory['t:asintotica:0'] === true, 'on a conflict, keeping this profile overwrites the file');
+  ok(local().theory[firstReading('expansion')] === true && JSON.parse(file.text).theory[firstReading('expansion')] === true, 'on a conflict, keeping this profile overwrites the file');
   ctx.confirm = () => true;
   // permission that has to be granted again (each new session): a banner, and one click fixes it
   file.perm = 'prompt'; click({ act: 'sync-now' }); await wait(60);

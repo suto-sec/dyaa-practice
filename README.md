@@ -115,7 +115,9 @@ Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-lo
 ## How it works
 
 - **Ruta** (roadmap): 10 stages in curriculum order. Analysis: introducción (tema 1, reading only), sumatorios y cotas, notación asintótica, coste iterativo, recurrencias por expansión, método general y teorema maestro. Design: recursión básica, divide y vencerás, backtracking, voraces.
-  Each stage = theory sections to read → warm-up exercises from the extra exercise sets → past-exam exercises, from easier to harder. Exercises with an official solution are tagged, since self-grading needs one. After the last analysis and the last design stage there is a full mock exam checkpoint.
+  Each stage is a sequence of **lessons**, not one block of theory followed by one block of exercises. A lesson is a short **reading** (4 to 15 minutes, a few sections of the lecture), a **quick check** (3 to 5 multiple-choice questions about what was just read, instant feedback and the reason, 1 XP per right answer the first time), and the **warm-up exercises** that need exactly that reading, easiest first. The exercises taken from past exams close the stage ("Nivel examen"), and after the last analysis and the last design stage there is a full mock exam checkpoint. Exercises with an official solution are tagged, since self-grading needs one. Together the readings cover the whole class material of temas 1 to 7 (except background such as vectors and matrices, which stays in *Teoría*).
+  Which reading each warm-up follows is set by hand in `tools/roadmap.json` (`exercise_tile`); the readings (`theory`, as ranges of sections) are there too. An exercise that builds on another one never comes before it.
+- **Quick checks**: the questions live in `content/quizzes/<stage id>.md`, one `## <reading id>` block per reading. Each question is `Q:` the text, then `+` the right option, `-` the wrong ones and `?` the explanation; the options are shuffled when building. Nothing in them comes from the exams.
 - **Your route** (settings): *Temario completo* (temas 1 to 7) or *Primer examen* (temas 1 to 3: the analysis stages and the analysis checkpoint). Everything outside the chosen route stays reachable, it just is not recommended or counted in the time left. The two routes are defined in `tools/roadmap.json` (`scopes`).
 - **Organise by** (settings): *Etapas* (the stages above) or *Temas* (one block per lecture, as in the slides; tema 3.2 holds two stages). Only the grouping and the names change, not the order or the progress.
 - **Siguiente paso**: after rating an exercise the app offers the next undone step. A *Fallé* does not block you: it enters spaced repetition and comes back in **Hoy**. Any step can be skipped.
@@ -134,12 +136,14 @@ Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-lo
 ```
 content/lectures/   lecture notes (temas 1-7) converted from the slides (CC BY-SA 4.0)
 content/summaries/  one summary sheet per etapa: formulas and things to remember (CC BY-SA 4.0)
+content/quizzes/    the quick checks after each reading (CC BY-SA 4.0)
 content/exams/      past exams and extra exercises, and soluciones/ with proposed solutions (NOT in git, see below)
 tools/build.py      Markdown -> app/data-lectures.js, app/data-exams.js
 tools/skills.json   skills, theory links, tagging patterns
 tools/figures.*     slide figures: figures.json (page and crop of each) and figures.py (cuts them out of the PDFs)
 tools/roadmap.json  stages, theory per stage, manual stage overrides
 tools/check-*.js    node checks: math rendering, roadmap logic, app click-through
+tools/route-table.js  prints the route (readings, checks, exercises) to review how it alternates
 app/                index.html, app.js, logic.js (pure roadmap/SRS/time logic), theme.js (theme and accent, loaded in <head>), logo.js, md.js, style.css, img/ (figures), vendor/katex
 ```
 

@@ -41,19 +41,22 @@ L.dueKeys = function (keys, S, t) {
 /* ---------- roadmap path ----------
    Steps in curriculum order. A step is a theory reading, an exercise, or a mock-exam checkpoint.
    Nothing is ever locked: the path only says what to do next. */
-L.buildPath = function (stages, stageEx, lectures) {
+L.buildPath = function (stages, stageEx, lectures, at, quizzes) {
   var path = [];
   var lastOfWorld = {};
   stages.forEach(function (g) { lastOfWorld[g.world] = g.id; });
   stages.forEach(function (g) {
+    var ex = stageEx[g.id] || [], placed = {};
     (g.theory || []).forEach(function (t, i) {
       var li = (lectures || []).findIndex(function (l) { return l.id === t.lecture; });
       var title = li >= 0 && lectures[li].sections[t.idx] ? lectures[li].sections[t.idx].title : t.section;
-      path.push({ id: 't:' + g.id + ':' + i, type: 'theory', stage: g.id, label: t.label || title, lecture: t.lecture, idx: t.idx, upto: t.upto });
+      var tid = t.id || g.id + ':' + i;
+      path.push({ id: 't:' + tid, type: 'theory', stage: g.id, tile: tid, label: t.label || title, lecture: t.lecture, idx: t.idx, upto: t.upto });
+      var qs = quizzes && quizzes[tid];
+      if (qs && qs.length) path.push({ id: 'q:' + tid, type: 'quiz', stage: g.id, tile: tid, label: t.label || title, n: qs.length });
+      ex.forEach(function (k) { if (at && at[k] === i) { path.push({ id: 'e:' + k, type: 'ex', stage: g.id, key: k }); placed[k] = true; } });   // the warm-ups that go with this reading
     });
-    (stageEx[g.id] || []).forEach(function (k) {
-      path.push({ id: 'e:' + k, type: 'ex', stage: g.id, key: k });
-    });
+    ex.forEach(function (k) { if (!placed[k]) path.push({ id: 'e:' + k, type: 'ex', stage: g.id, key: k }); });   // the rest (exam level) closes the stage
     if (lastOfWorld[g.world] === g.id) {
       path.push({ id: 'x:' + g.world, type: 'exam', stage: g.id, world: g.world,
         label: g.world === 'analisis' ? 'Simulacro: un examen completo de análisis' : 'Simulacro: un examen completo de diseño' });
@@ -64,6 +67,7 @@ L.buildPath = function (stages, stageEx, lectures) {
 L.stepDone = function (step, S, exams) {
   if (S.skip && S.skip[step.id]) return true;
   if (step.type === 'theory') return !!(S.theory && S.theory[step.id]);
+  if (step.type === 'quiz') return !!(S.quiz && S.quiz[step.id]);
   if (step.type === 'ex') return !!(S.ex[step.key] && S.ex[step.key].hist.length);
   var done = S.exams || {};
   return (exams || []).some(function (e) { return (e.kind === step.world || e.kind === 'mixto') && done[e.id]; });
@@ -210,7 +214,8 @@ L.annotateMinutes = function (path, lectures, exams) {
       var secs = lm[s.lecture] ? lm[s.lecture].sections : [], sp = s.upto != null ? { from: s.idx, to: s.upto } : L.sectionSpan(secs, s.idx), to = sp.to;
       (starts[s.lecture] || []).forEach(function (i) { if (i > s.idx && i <= to) to = i - 1; });
       s.to = to; s.min = secs.length ? L.readMinutes(secs, sp.from, to) : 3;
-    } else if (s.type === 'ex') s.min = ex[s.key] ? L.exMinutes(ex[s.key].e, ex[s.key].exam) : 15;
+    } else if (s.type === 'quiz') s.min = L.roundMin(Math.max(2, (s.n || 3) * 0.7));
+    else if (s.type === 'ex') s.min = ex[s.key] ? L.exMinutes(ex[s.key].e, ex[s.key].exam) : 15;
     else s.min = L.roundMin((cnt[s.world] ? sum[s.world] / cnt[s.world] : 90) + 20);   // an exam of that world plus 20 min to mark it
   });
   return path;

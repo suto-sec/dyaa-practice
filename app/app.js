@@ -2,7 +2,7 @@
 'use strict';
 var L = window.DYAA, mdRender = window.mdRender;
 var LECT = window.LECTURES || [], SK = window.SKILLS || [], EXAMS = window.EXAMS || [];
-var STAGES = window.STAGES || [], WORLDS = window.WORLDS || {}, STAGE_EX = window.STAGE_EX || {}, SUMM = window.SUMMARIES || {};
+var STAGES = window.STAGES || [], WORLDS = window.WORLDS || {}, STAGE_EX = window.STAGE_EX || {}, STAGE_AT = window.STAGE_AT || {}, SUMM = window.SUMMARIES || {}, QUIZ = window.QUIZZES || {};
 var KEY = 'dyaa-practice-v1';
 var RN = L.RN, RM = L.RM, BONUS = 15;
 var $ = function (s) { return document.querySelector(s); };
@@ -14,12 +14,12 @@ function fmt(sec) { sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 
 function enc(s) { return encodeURIComponent(s); }
 
 /* ---------- state ---------- */
-function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, updated: 0 }; }
+function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, quiz: {}, ver: 2, updated: 0 }; }
 function norm(o) {
   var s = blank();
   if (o && typeof o === 'object') {
     s.ex = o.ex || {}; s.xp = +o.xp || 0; s.days = o.days || []; s.log = o.log || [];
-    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {}; s.updated = +o.updated || 0;
+    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {}; s.quiz = o.quiz || {}; s.ver = +o.ver || 1; s.updated = +o.updated || 0;
   }
   return s;
 }
@@ -72,7 +72,7 @@ function syncRun(ask) {
       if (plan === 'conflict') plan = confirm('El progreso de este perfil (' + S.xp + ' XP) y el del archivo compartido (' + (+remote.xp || 0) + ' XP) han cambiado por separado.\n\nAceptar: usar el del archivo (se guarda una copia del de este perfil).\nCancelar: usar el de este perfil y sobrescribir el archivo.') ? 'pull' : 'push';
       if (plan === 'pull') {
         lsSet(SYK.bak, JSON.stringify(S));
-        S = norm(remote); store(); lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = '';
+        S = norm(remote); migrate(); store(); lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = '';
         return true;
       }
       if (plan === 'push') return syncWrite().then(function () { return false; });
@@ -105,8 +105,25 @@ var stageById = {}; STAGES.forEach(function (g, i) { g.n = i + 1; stageById[g.id
 var ALL = [];
 EXAMS.forEach(function (ex) { (ex.exercises || []).forEach(function (e) { ALL.push({ key: ex.id + '/' + e.id, exam: ex, e: e }); }); });
 var byKey = {}; ALL.forEach(function (a) { byKey[a.key] = a; });
-var PATH = L.annotateMinutes(L.buildPath(STAGES, STAGE_EX, LECT), LECT, EXAMS);
+var PATH = L.annotateMinutes(L.buildPath(STAGES, STAGE_EX, LECT, STAGE_AT, QUIZ), LECT, EXAMS);
 var stepById = {}; PATH.forEach(function (s, i) { s.i = i; stepById[s.id] = s; });
+/* Readings used to be numbered per etapa ("t:sumatorios:0"); they are now named. Progress saved with the old ids is moved to the reading that
+   contains the section the old step started at (roadmap.json "legacy_theory"). Runs once per saved progress (ver 2). */
+function migrate() {
+  if ((S.ver || 1) >= 2) return;
+  var LEG = window.LEGACY_THEORY || {};
+  ['theory', 'skip'].forEach(function (f) {
+    Object.keys(S[f]).forEach(function (k) {
+      var m = /^t:([a-z0-9]+):(\d+)$/.exec(k);
+      if (!m) return;
+      var t = LEG[m[1]] && LEG[m[1]][+m[2]];
+      if (t && stepById['t:' + t]) S[f]['t:' + t] = true;
+      delete S[f][k];
+    });
+  });
+  S.ver = 2; store();
+}
+migrate();
 /* Study preferences, stored apart from the progress: which part of the course the route covers, and how it is organised. */
 var PK = { org: 'dyaa-practice-org', scope: 'dyaa-practice-path' };
 var SCOPES = window.SCOPES || [{ id: 'todo', title: 'Temario completo', blurb: '', worlds: ['analisis', 'diseno'] }];
@@ -208,22 +225,25 @@ function dueTag(key) { var x = S.ex[key]; return x && x.due && x.due <= today() 
 function stepHref(st) {
   if (st.type === 'ex') return '#/ejercicios/' + enc(st.key);
   if (st.type === 'theory') return '#/teoria/' + enc(st.lecture) + '/' + st.idx + '/' + enc(st.id);
+  if (st.type === 'quiz') return '#/quiz/' + enc(st.id);
   return '#/examen';
 }
 function stepLabel(st) {
   if (st.type === 'ex') return exTitle(byKey[st.key]);
   if (st.type === 'theory') return '&#128214; Leer: ' + esc(st.label);
+  if (st.type === 'quiz') return '&#10067; Comprobaci&oacute;n r&aacute;pida: ' + esc(st.label);
   return '&#127937; ' + esc(st.label);
 }
-function stepRow(st, cur) {
+function stepRow(st, cur, inLesson) {
   var done = L.stepDone(st, S, EXAMS), mark = done ? '<span class="chk">&#10003;</span>' : '<span class="chk o">&#9675;</span>';
   var tags = '';
   if (st.type === 'ex') {
     var a = byKey[st.key];
     tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution ? '<span class="tag">' + (a.e.own ? 'soluci&oacute;n propuesta' : 'con soluci&oacute;n') + '</span>' : '') + '<span class="tag">' + (a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>';
-  } else if (S.skip[st.id]) tags = '<span class="tag">saltado</span>';
+  } else if (st.type === 'quiz' && S.quiz[st.id]) tags = '<span class="tag r' + (S.quiz[st.id].score === st.n ? 2 : S.quiz[st.id].score * 2 >= st.n ? 1 : 0) + '">' + S.quiz[st.id].score + '/' + st.n + '</span>';
+  else if (S.skip[st.id]) tags = '<span class="tag">saltado</span>';
   tags += minTag(st.min);
-  return '<a class="item step' + (done ? ' done' : '') + (cur ? ' cur' : '') + '" href="' + stepHref(st) + '"><span>' + mark + ' ' + stepLabel(st) + '</span><span>' + tags + '</span></a>';
+  return '<a class="item step' + (done ? ' done' : '') + (cur ? ' cur' : '') + '" href="' + stepHref(st) + '"><span>' + mark + ' ' + (inLesson && st.type === 'theory' ? '&#128214; Leer' : inLesson && st.type === 'quiz' ? '&#10067; Comprobaci&oacute;n r&aacute;pida' : stepLabel(st)) + '</span><span>' + tags + '</span></a>';   // inside a lesson the heading already names the reading
 }
 function exRow(a) {
   return '<a class="item" href="#/ejercicios/' + enc(a.key) + '"><span><b>' + exTitle(a) + '</b> <span class="tag">' + esc(XKIND[a.e.kind] || a.e.kind) + '</span> <span class="tag">' + esc((groupOfStage[a.e.stage] || {}).short || '') + '</span></span><span>' + status(a.key) + dueTag(a.key) + minTag((stepById['e:' + a.key] || {}).min || 15) + '</span></a>';
@@ -257,7 +277,7 @@ function vHoy() {
 
 function vRoad() {
   var unit = ORG === 'temas' ? 'tema' : 'etapa';
-  var h = '<h2>Ruta de estudio</h2>' + missingBanner() + '<p class="muted">Un orden recomendado, sin bloqueos: puedes entrar en cualquier paso. Cada ' + unit + ' empieza con la teor&iacute;a, sigue con ejercicios de f&aacute;ciles a dif&iacute;ciles y los de enunciado con soluci&oacute;n est&aacute;n marcados.</p>';
+  var h = '<h2>Ruta de estudio</h2>' + missingBanner() + '<p class="muted">Un orden recomendado, sin bloqueos: puedes entrar en cualquier paso. Cada ' + unit + ' se recorre en lecciones: una lectura corta, una comprobaci&oacute;n r&aacute;pida y los ejercicios que la necesitan, de f&aacute;ciles a dif&iacute;ciles; al final, los ejercicios de ex&aacute;menes. Los de enunciado con soluci&oacute;n est&aacute;n marcados.</p>';
   var n = nextSteps(1)[0], tot = L.pathMinutes(ACTIVE, S, EXAMS);
   h += '<div class="card row pathbar"><span><b>' + esc(SCOPE.title) + '</b> &middot; por ' + (ORG === 'temas' ? 'temas' : 'etapas') + '</span><button type="button" class="btn" data-act="settings">Cambiar ruta u organizaci&oacute;n</button></div>';
   h += '<p class="muted">' + (SCOPE.id === SCOPES[0].id ? 'Ruta completa' : 'Esta ruta') + ': ' + mins(tot.total) + ' estimados &middot; quedan ' + mins(tot.left) + '. Son tiempos orientativos para estudiar y comprobar cada paso.</p>';
@@ -267,17 +287,22 @@ function vRoad() {
     if (g.world !== world) { world = g.world; h += '<h3>' + esc(WORLDS[world] || world) + '</h3>'; }
     var p = gprog(g), pct = p.total ? Math.round(p.done / p.total * 100) : 0, open = n && g.stages.indexOf(n.stage) >= 0;
     h += '<details class="stage"' + (open ? ' open' : '') + '><summary><b>' + esc(g.label) + '</b> <span class="bar sm"><i style="width:' + pct + '%"></i></span> <span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; quedan ' + mins(p.left) : '') + '</span>' + (g.stages.every(function (id) { return S.bonus[id]; }) ? ' ' + flame('sm') : '') + '</summary><p class="muted">' + esc(g.blurb) + ' Tiempo estimado ' + (ORG === 'temas' ? 'del tema' : 'de la etapa') + ': ' + mins(p.min) + '.</p>';
-    var groups = [], cur = null;
+    var groups = [], cur = null, lesson = 0;
+    /* A lesson = a reading, its quick check and the warm-ups that go with it; the exam-level exercises and the checkpoint close the etapa. */
     L.groupSteps(PATH, g).forEach(function (st) {
-      var base = st.type === 'theory' ? 'Teor&iacute;a' : st.type === 'exam' ? 'Checkpoint' : byKey[st.key].e.src === 'adic' ? 'Calentamiento: ejercicios adicionales' : 'Nivel examen: ejercicios de ex&aacute;menes anteriores';
-      var grp = (g.stages.length > 1 ? esc(stageById[st.stage].title) + ' &middot; ' : '') + base;   // a tema made of several etapas says which one
-      if (!cur || cur.name !== grp) { cur = { name: grp, steps: [] }; groups.push(cur); }
+      var multi = g.stages.length > 1 ? esc(stageById[st.stage].title) + ' &middot; ' : '';
+      if (st.type === 'theory') { cur = { name: multi + 'Lecci&oacute;n ' + (++lesson) + '. ' + esc(st.label), steps: [] }; groups.push(cur); }
+      else if (st.type === 'exam') { cur = { name: 'Checkpoint', steps: [] }; groups.push(cur); }
+      else if (st.type === 'ex' && byKey[st.key].e.src !== 'adic') {
+        var nm = multi + 'Nivel examen: ejercicios de ex&aacute;menes anteriores';
+        if (!cur || cur.name !== nm) { cur = { name: nm, steps: [] }; groups.push(cur); }
+      } else if (!cur) { cur = { name: 'Ejercicios', steps: [] }; groups.push(cur); }
       cur.steps.push(st);
     });
     if (sheetStages(g).length) h += '<div class="sub">Resumen</div><a class="item" href="#/resumen/' + enc(g.id) + '"><span>&#128221; Resumen y f&oacute;rmulas: lo que hay que recordar</span><span><span class="tag">consulta</span></span></a>';
     groups.forEach(function (gr) {
       h += '<div class="sub">' + gr.name + ' <span class="t">&middot; ' + mins(minsOf(gr.steps)) + '</span></div>';
-      gr.steps.forEach(function (st) { h += stepRow(st, n && n.id === st.id); });
+      gr.steps.forEach(function (st) { h += stepRow(st, n && n.id === st.id, true); });
     });
     h += '</details>';
   });
@@ -389,6 +414,31 @@ function vExam() {
   var tot = 0, mxs = 0; ex.exercises.forEach(function (e) { tot += X.s[e.id] || 0; mxs += X.p[e.id]; });
   var g = Math.round(tot / mxs * 100) / 10, nx = nextSteps(1)[0];
   return hh + '<div class="card"><h3>Nota: ' + g.toFixed(1) + ' / 10</h3><p>+' + X.xp + ' XP</p><div class="row"><button class="btn" data-act="exquit">Cerrar</button>' + (nx ? '<a class="btn pri" href="' + stepHref(nx) + '" data-act="exquit">Siguiente en la ruta &rarr;</a>' : '') + '</div></div>';
+}
+
+/* ---------- quick checks: a few questions after each reading ---------- */
+var Q = null;   // { id, pick: { question index: option index } } for the check on screen
+function inlineMd(t) { return mdRender(t).replace(/^<div class="md"><p>/, '').replace(/<\/p><\/div>$/, ''); }
+function vQuiz(id) {
+  var st = stepById[id], qs = st && st.type === 'quiz' ? QUIZ[st.tile] : null;
+  if (!qs) return '<p>Comprobaci&oacute;n no encontrada. <a href="#/ruta">Volver</a></p>';
+  if (!Q || Q.id !== id) Q = { id: id, pick: {} };
+  var th = stepById['t:' + st.tile], answered = Object.keys(Q.pick).length, score = 0, prev = S.quiz[id];
+  qs.forEach(function (q, i) { if (Q.pick[i] === q.answer) score++; });
+  var h = '<p><a href="#/ruta">&larr; Ruta</a>' + (th ? ' &middot; <a href="' + stepHref(th) + '">Releer la teor&iacute;a</a>' : '') + '</p>';
+  h += '<div class="card"><h2>Comprobaci&oacute;n r&aacute;pida</h2><div class="muted">' + esc(st.label) + ' &middot; ' + qs.length + ' preguntas &middot; ' + mins(st.min) + '</div><p class="muted">Sin nota ni penalizaci&oacute;n: sirve para fijar lo que acabas de leer. ' + (prev ? 'Ya la hiciste (' + prev.score + '/' + st.n + '); repetirla no suma XP.' : 'Cada acierto suma 1 XP, la primera vez.') + '</p></div>';
+  qs.forEach(function (q, i) {
+    var done = Q.pick[i] != null;
+    h += '<div class="card quiz"><div><b>' + (i + 1) + '.</b> ' + inlineMd(q.q) + '</div><div class="opts">' + q.options.map(function (o, j) {
+      var cls = done ? (j === q.answer ? ' ok' : j === Q.pick[i] ? ' bad' : '') : '';
+      return '<button type="button" class="opt' + cls + '" data-act="qpick" data-q="' + i + '" data-o="' + j + '"' + (done ? ' disabled' : '') + '>' + inlineMd(o) + '</button>';
+    }).join('') + '</div>' + (done ? '<div class="why ' + (Q.pick[i] === q.answer ? 'good' : 'miss') + '"><b>' + (Q.pick[i] === q.answer ? 'Correcto.' : 'No exactamente.') + '</b> ' + inlineMd(q.why) + '</div>' : '') + '</div>';
+  });
+  if (answered === qs.length) {
+    var nx = L.nextAfter(PATH, S, EXAMS, id, keepScope);
+    h += '<div class="card next"><div class="big">' + score + ' de ' + qs.length + (score === qs.length ? ' &middot; &iexcl;perfecto!' : score * 2 >= qs.length ? ' &middot; bien' : ' &middot; repasa la teor&iacute;a o el resumen') + '</div><div class="row"><button class="btn pri" data-act="quizdone" data-step="' + esc(id) + '">' + (nx ? 'Continuar &rarr;' : 'Terminar') + '</button>' + (th ? '<a class="btn" href="' + stepHref(th) + '">Releer la teor&iacute;a</a>' : '') + sheetLink(groupOfStage[st.stage]).replace(' &middot; ', '') + '</div></div>';
+  } else if (!L.stepDone(st, S, EXAMS)) h += '<p><button class="btn" data-act="skip" data-step="' + esc(id) + '">Saltar esta comprobaci&oacute;n</button></p>';
+  return h;
 }
 
 /* Summary sheets: what to remember of each etapa (formulas, schemes, typical mistakes). A tema shows the sheets of its etapas one after another.
@@ -523,11 +573,13 @@ function route() {
   stopTimers();
   var p = (location.hash || '#/hoy').slice(2).split('/').map(decodeURIComponent), tab = p[0] || 'hoy', h;
   if (tab !== 'ejercicios') V = {};
+  if (tab !== 'quiz') Q = null;
   if (tab === 'ejercicios') h = p[1] ? vDetail(p.slice(1).join('/')) : vList();
   else if (tab === 'ruta') h = vRoad();
   else if (tab === 'examen') h = vExam();
   else if (tab === 'teoria') h = vTheory(p[1], p[2], p[3]);
   else if (tab === 'resumen') h = vSheet(p[1]);
+  else if (tab === 'quiz') h = vQuiz(p.slice(1).join('/'));
   else if (tab === 'progreso') h = vProgress();
   else if (tab === 'ajustes') h = vSettings();
   else { tab = 'hoy'; h = vHoy(); }
@@ -559,6 +611,17 @@ document.addEventListener('click', function (ev) {
   else if (act === 'allsteps') { V.hints = 1e3; rerender(); }
   else if (act === 'self') { V.self = true; rerender(); }
   else if (act === 'rate') { V.done = rate(V.key, +b.dataset.r, Math.min(3, V.hints)); rerender(); }
+  else if (act === 'qpick') { if (Q && Q.pick[+b.dataset.q] == null) { Q.pick[+b.dataset.q] = +b.dataset.o; rerender(); } }
+  else if (act === 'quizdone') {
+    var qid = b.dataset.step, qst = stepById[qid], qs2 = QUIZ[qst.tile], sc = 0;
+    qs2.forEach(function (q, i) { if (Q && Q.pick[i] === q.answer) sc++; });
+    var first = !S.quiz[qid];
+    if (first || sc > S.quiz[qid].score) S.quiz[qid] = { score: sc, n: qs2.length, t: today() };
+    if (first) { S.xp = Math.round((S.xp + sc) * 10) / 10; S.log.push({ t: today(), k: qid, label: 'Comprobaci\u00f3n: ' + qst.label, r: sc === qs2.length ? 2 : sc * 2 >= qs2.length ? 1 : 0, xp: sc }); if (S.log.length > 300) S.log.shift(); }
+    touchDay(); awardAll(); save();
+    var nq = L.nextAfter(PATH, S, EXAMS, qid, keepScope);
+    location.hash = nq ? stepHref(nq) : '#/ruta'; route();
+  }
   else if (act === 'skip') {
     var sid = b.dataset.step; S.skip[sid] = true; awardAll(); save();
     var nx = L.nextAfter(PATH, S, EXAMS, sid, keepScope);

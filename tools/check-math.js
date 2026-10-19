@@ -4,6 +4,7 @@ const w = {}; for (const f of ['data-lectures.js','data-exams.js']) vm.runInNewC
 const texts = [];
 (w.LECTURES||[]).forEach(l=>l.sections.forEach(s=>texts.push(['L:'+l.id+'/'+s.title, s.md])));
 Object.entries(w.SUMMARIES||{}).forEach(([id,md])=>texts.push(['S:'+id, md]));
+Object.entries(w.QUIZZES||{}).forEach(([id,qs])=>qs.forEach((q,i)=>texts.push(['Q:'+id+'#'+i, [q.q,q.why].concat(q.options).join('\n')])));
 (w.EXAMS||[]).forEach(e=>e.exercises.forEach(x=>{texts.push(['E:'+x.id+' stmt',x.statement]); if(x.solution) texts.push(['E:'+x.id+' sol',x.solution]);}));
 let n=0, bad=[];
 for (const [id,t0] of texts) {

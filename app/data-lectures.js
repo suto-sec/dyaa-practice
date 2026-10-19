@@ -1932,34 +1932,74 @@ window.STAGES = [
   "skills": [],
   "theory": [
    {
+    "id": "t1-problemas",
     "lecture": "t1_intro_algoritmia",
-    "section": "Problema computacional",
-    "to": "Demostración mcd2",
+    "from": 0,
+    "to": 6,
     "label": "Tema 1 · Problemas computacionales y algoritmos",
-    "idx": 1,
+    "idx": 0,
+    "upto": 6
+   },
+   {
+    "id": "t1-euclides",
+    "lecture": "t1_intro_algoritmia",
+    "from": 7,
+    "to": 9,
+    "label": "Tema 1 · El algoritmo de Euclides",
+    "idx": 7,
     "upto": 9
    },
    {
+    "id": "t1-clases-1",
     "lecture": "t1_intro_algoritmia",
-    "section": "Eficiencia en tiempo y espacio",
-    "to": "Problema de la parada",
-    "label": "Tema 1 · Clases de complejidad computacional",
+    "from": 10,
+    "to": 14,
+    "label": "Tema 1 · Eficiencia y clases P, EXP y NP",
     "idx": 10,
+    "upto": 14
+   },
+   {
+    "id": "t1-clases-2",
+    "lecture": "t1_intro_algoritmia",
+    "from": 15,
+    "to": 21,
+    "label": "Tema 1 · Verificar soluciones y problemas NP-completos",
+    "idx": 15,
+    "upto": 21
+   },
+   {
+    "id": "t1-reducciones",
+    "lecture": "t1_intro_algoritmia",
+    "from": 22,
+    "to": 26,
+    "label": "Tema 1 · Reducciones, P = NP y el problema de la parada",
+    "idx": 22,
     "upto": 26
    },
    {
+    "id": "t1-optimizacion",
     "lecture": "t1_intro_algoritmia",
-    "section": "Problemas matemáticos de optimización",
-    "to": "Pseudocódigo",
-    "label": "Tema 1 · Problemas de optimización",
+    "from": 27,
+    "to": 33,
+    "label": "Tema 1 · Problemas de optimización y programación lineal",
     "idx": 27,
+    "upto": 33
+   },
+   {
+    "id": "t1-convexos",
+    "lecture": "t1_intro_algoritmia",
+    "from": 34,
+    "to": 39,
+    "label": "Tema 1 · Convexidad y descenso de gradiente",
+    "idx": 34,
     "upto": 39
    },
    {
+    "id": "t1-ia",
     "lecture": "t1_intro_algoritmia",
-    "section": "Predicción - Regresión",
-    "to": "@end",
-    "label": "Tema 1 · Problemas de IA y aprendizaje automático",
+    "from": 40,
+    "to": 48,
+    "label": "Tema 1 · Predicción, aprendizaje automático y clustering",
     "idx": 40,
     "upto": 48
    }
@@ -1976,19 +2016,67 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t21-potencias-logs",
     "lecture": "t2.1_prelim_matematicos",
-    "section": "Suma de los primeros n naturales",
-    "idx": 15
+    "from": 0,
+    "to": 3,
+    "label": "Potencias, logaritmos y coeficientes binomiales",
+    "idx": 0,
+    "upto": 3
    },
    {
+    "id": "t21-calculo",
     "lecture": "t2.1_prelim_matematicos",
-    "section": "Sumas parciales de series geométricas",
-    "idx": 26
+    "from": 7,
+    "to": 11,
+    "label": "Derivadas, límites y integrales",
+    "idx": 7,
+    "upto": 11
    },
    {
+    "id": "t21-sumas-basicas",
     "lecture": "t2.1_prelim_matematicos",
-    "section": "Aproximación por integrales",
-    "idx": 31
+    "from": 13,
+    "to": 17,
+    "label": "Sumatorios: notación, naturales, impares y series aritméticas",
+    "idx": 13,
+    "upto": 17
+   },
+   {
+    "id": "t21-cuadrados-cubos",
+    "lecture": "t2.1_prelim_matematicos",
+    "from": 18,
+    "to": 21,
+    "label": "Suma de los primeros n cuadrados y cubos",
+    "idx": 18,
+    "upto": 21
+   },
+   {
+    "id": "t21-telescopicas",
+    "lecture": "t2.1_prelim_matematicos",
+    "from": 22,
+    "to": 25,
+    "label": "Sumas telescópicas y de potencias; la pirámide",
+    "idx": 22,
+    "upto": 25
+   },
+   {
+    "id": "t21-geometricas",
+    "lecture": "t2.1_prelim_matematicos",
+    "from": 26,
+    "to": 30,
+    "label": "Series geométricas y la suma de i·r^i",
+    "idx": 26,
+    "upto": 30
+   },
+   {
+    "id": "t21-integrales",
+    "lecture": "t2.1_prelim_matematicos",
+    "from": 31,
+    "to": 38,
+    "label": "Acotar sumas con integrales",
+    "idx": 31,
+    "upto": 38
    }
   ]
  },
@@ -2002,24 +2090,94 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t22-por-que",
     "lecture": "t2.2_notaciones_asintoticas",
-    "section": "Definición formal de cota superior",
-    "idx": 13
+    "from": 0,
+    "to": 5,
+    "label": "Por qué notación asintótica: los términos dominantes",
+    "idx": 0,
+    "upto": 5
    },
    {
+    "id": "t22-ordenes",
     "lecture": "t2.2_notaciones_asintoticas",
-    "section": "Definición formal de cota inferior",
-    "idx": 21
+    "from": 6,
+    "to": 9,
+    "label": "Órdenes de crecimiento que más aparecen",
+    "idx": 6,
+    "upto": 9
    },
    {
+    "id": "t22-cota-sup",
     "lecture": "t2.2_notaciones_asintoticas",
-    "section": "Definición formal de cota ajustada",
-    "idx": 24
+    "from": 10,
+    "to": 15,
+    "label": "Cota superior O: definición",
+    "idx": 10,
+    "upto": 15
    },
    {
+    "id": "t22-verificar-o",
     "lecture": "t2.2_notaciones_asintoticas",
-    "section": "Simplificación",
-    "idx": 30
+    "from": 16,
+    "to": 18,
+    "label": "Demostrar que f está en O(g) con la definición",
+    "idx": 16,
+    "upto": 18
+   },
+   {
+    "id": "t22-omega",
+    "lecture": "t2.2_notaciones_asintoticas",
+    "from": 19,
+    "to": 23,
+    "label": "Cuándo no se cumple y cota inferior Ω",
+    "idx": 19,
+    "upto": 23
+   },
+   {
+    "id": "t22-theta",
+    "lecture": "t2.2_notaciones_asintoticas",
+    "from": 24,
+    "to": 30,
+    "label": "Cota ajustada Θ, o, ω, dos parámetros y simplificación",
+    "idx": 24,
+    "upto": 30
+   },
+   {
+    "id": "t22-aspectos",
+    "lecture": "t2.2_notaciones_asintoticas",
+    "from": 31,
+    "to": 35,
+    "label": "Aspectos y errores frecuentes de la notación",
+    "idx": 31,
+    "upto": 35
+   },
+   {
+    "id": "t22-lineal",
+    "lecture": "t2.2_notaciones_asintoticas",
+    "from": 36,
+    "to": 39,
+    "label": "Ordenación en tiempo lineal: counting-sort",
+    "idx": 36,
+    "upto": 39
+   },
+   {
+    "id": "t22-comparacion",
+    "lecture": "t2.2_notaciones_asintoticas",
+    "from": 40,
+    "to": 43,
+    "label": "Ordenación por comparaciones y árboles de decisión",
+    "idx": 40,
+    "upto": 43
+   },
+   {
+    "id": "t22-cota-orden",
+    "lecture": "t2.2_notaciones_asintoticas",
+    "from": 44,
+    "to": 49,
+    "label": "La cota inferior Ω(n log n) de la ordenación",
+    "idx": 44,
+    "upto": 49
    }
   ]
  },
@@ -2033,14 +2191,22 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t31-insert",
     "lecture": "t3.1_analisis_alg_iterativos",
-    "section": "Procedimiento general basado en sumatorios",
-    "idx": 7
+    "from": 0,
+    "to": 6,
+    "label": "Eficiencia e insert-sort: mejor y peor caso",
+    "idx": 0,
+    "upto": 6
    },
    {
+    "id": "t31-general",
     "lecture": "t3.1_analisis_alg_iterativos",
-    "section": "Operaciones de un bucle de n iteraciones",
-    "idx": 9
+    "from": 7,
+    "to": 11,
+    "label": "Procedimiento general basado en sumatorios",
+    "idx": 7,
+    "upto": 11
    }
   ]
  },
@@ -2054,19 +2220,13 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t32-expansion",
     "lecture": "t3.2_analisis_alg_recursivos",
-    "section": "Función potencia - versión 1",
-    "idx": 4
-   },
-   {
-    "lecture": "t3.2_analisis_alg_recursivos",
-    "section": "Resolución por expansión de recurrencias",
-    "idx": 5
-   },
-   {
-    "lecture": "t3.2_analisis_alg_recursivos",
-    "section": "Errores frecuentes - Expansión de recurrencias",
-    "idx": 14
+    "from": 0,
+    "to": 8,
+    "label": "Recurrencias y resolución por expansión",
+    "idx": 0,
+    "upto": 8
    }
   ]
  },
@@ -2081,24 +2241,49 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t32-maestro",
     "lecture": "t3.2_analisis_alg_recursivos",
-    "section": "Teorema maestro - versión completa",
-    "idx": 13
+    "from": 9,
+    "to": 14,
+    "label": "Teorema maestro y errores frecuentes de la expansión",
+    "idx": 9,
+    "upto": 14
    },
    {
+    "id": "t32-homogeneas",
     "lecture": "t3.2_analisis_alg_recursivos",
-    "section": "Recurrencias homogéneas",
-    "idx": 16
+    "from": 15,
+    "to": 19,
+    "label": "Método general: recurrencias homogéneas",
+    "idx": 15,
+    "upto": 19
    },
    {
+    "id": "t32-no-homogeneas",
     "lecture": "t3.2_analisis_alg_recursivos",
-    "section": "Recurrencias no homogéneas - caso general",
-    "idx": 22
+    "from": 20,
+    "to": 22,
+    "label": "Método general: recurrencias no homogéneas",
+    "idx": 20,
+    "upto": 22
    },
    {
+    "id": "t32-cambio",
     "lecture": "t3.2_analisis_alg_recursivos",
-    "section": "Método de cambio de variable",
-    "idx": 23
+    "from": 23,
+    "to": 25,
+    "label": "Cambio de variable y errores del método general",
+    "idx": 23,
+    "upto": 25
+   },
+   {
+    "id": "t32-espacio",
+    "lecture": "t3.2_analisis_alg_recursivos",
+    "from": 26,
+    "to": 32,
+    "label": "Eficiencia en espacio: la pila de llamadas",
+    "idx": 26,
+    "upto": 32
    }
   ]
  },
@@ -2112,34 +2297,112 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t4-intro",
     "lecture": "t4_intro_recursividad",
-    "section": "Conceptos clave en la recursividad",
-    "idx": 5
+    "from": 0,
+    "to": 6,
+    "label": "¿Qué es la recursividad? El factorial",
+    "idx": 0,
+    "upto": 6
    },
    {
+    "id": "t4-paradigma",
     "lecture": "t4_intro_recursividad",
-    "section": "Metodología para diseñar algoritmos recursivos",
-    "idx": 12
+    "from": 7,
+    "to": 11,
+    "label": "Pensar en subproblemas: paradigma y tipos de recursividad",
+    "idx": 7,
+    "upto": 11
    },
    {
+    "id": "t4-metodologia",
     "lecture": "t4_intro_recursividad",
-    "section": "Arrays y listas: suma de los elementos de una lista",
-    "idx": 19
+    "from": 12,
+    "to": 17,
+    "label": "Metodología de diseño y dividir el problema por dos",
+    "idx": 12,
+    "upto": 17
    },
    {
+    "id": "t4-listas",
     "lecture": "t4_intro_recursividad",
-    "section": "Suma de los dígitos de un número",
-    "idx": 23
+    "from": 18,
+    "to": 21,
+    "label": "Arrays y listas",
+    "idx": 18,
+    "upto": 21
    },
    {
+    "id": "t4-digitos",
     "lecture": "t4_intro_recursividad",
-    "section": "Búsqueda en lista ordenada",
-    "idx": 36
+    "from": 22,
+    "to": 24,
+    "label": "Suma de los dígitos y suma lenta",
+    "idx": 22,
+    "upto": 24
    },
    {
+    "id": "t4-maximo-potencia",
     "lecture": "t4_intro_recursividad",
-    "section": "Torres de Hanoi",
-    "idx": 40
+    "from": 25,
+    "to": 26,
+    "label": "Máximo de una lista y potencia",
+    "idx": 25,
+    "upto": 26
+   },
+   {
+    "id": "t4-secuencias",
+    "lecture": "t4_intro_recursividad",
+    "from": 27,
+    "to": 31,
+    "label": "Escribir secuencias, sumatorio general y contiene dígito",
+    "idx": 27,
+    "upto": 31
+   },
+   {
+    "id": "t4-cambio-lineal",
+    "lecture": "t4_intro_recursividad",
+    "from": 32,
+    "to": 35,
+    "label": "Cambio de base, evaluar un polinomio y búsqueda lineal",
+    "idx": 32,
+    "upto": 35
+   },
+   {
+    "id": "t4-binaria",
+    "lecture": "t4_intro_recursividad",
+    "from": 36,
+    "to": 37,
+    "label": "Búsqueda en lista ordenada y formas de subir escaleras",
+    "idx": 36,
+    "upto": 37
+   },
+   {
+    "id": "t4-manhattan",
+    "lecture": "t4_intro_recursividad",
+    "from": 38,
+    "to": 39,
+    "label": "Caminos por Manhattan y bisección",
+    "idx": 38,
+    "upto": 39
+   },
+   {
+    "id": "t4-hanoi",
+    "lecture": "t4_intro_recursividad",
+    "from": 40,
+    "to": 40,
+    "label": "Torres de Hanoi",
+    "idx": 40,
+    "upto": 40
+   },
+   {
+    "id": "t4-hanoi-ciclico",
+    "lecture": "t4_intro_recursividad",
+    "from": 41,
+    "to": 41,
+    "label": "Torres de Hanoi cíclicas",
+    "idx": 41,
+    "upto": 41
    }
   ]
  },
@@ -2153,24 +2416,76 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t5-intro",
     "lecture": "t5_divide_y_venceras",
-    "section": "Máximo de una lista a de n números",
-    "idx": 14
+    "from": 0,
+    "to": 3,
+    "label": "Divide, decrementa y transforma y vencerás",
+    "idx": 0,
+    "upto": 3
    },
    {
+    "id": "t5-transforma",
     "lecture": "t5_divide_y_venceras",
-    "section": "Merge-sort",
-    "idx": 18
+    "from": 4,
+    "to": 8,
+    "label": "Transforma y vencerás: mediana, π y raíz cuadrada",
+    "idx": 4,
+    "upto": 8
    },
    {
+    "id": "t5-newton",
     "lecture": "t5_divide_y_venceras",
-    "section": "Quicksort",
-    "idx": 22
+    "from": 9,
+    "to": 10,
+    "label": "Newton-Raphson y factorización LU",
+    "idx": 9,
+    "upto": 10
    },
    {
+    "id": "t5-dyv",
     "lecture": "t5_divide_y_venceras",
-    "section": "Multiplicación rápida de números en binario",
-    "idx": 27
+    "from": 11,
+    "to": 14,
+    "label": "Divide y vencerás: esquema y máximo de una lista",
+    "idx": 11,
+    "upto": 14
+   },
+   {
+    "id": "t5-ordenacion",
+    "lecture": "t5_divide_y_venceras",
+    "from": 15,
+    "to": 21,
+    "label": "Ordenación: insert-sort, select-sort y merge-sort",
+    "idx": 15,
+    "upto": 21
+   },
+   {
+    "id": "t5-quick",
+    "lecture": "t5_divide_y_venceras",
+    "from": 22,
+    "to": 25,
+    "label": "Quicksort, partición de Hoare y quickselect",
+    "idx": 22,
+    "upto": 25
+   },
+   {
+    "id": "t5-multiplicacion",
+    "lecture": "t5_divide_y_venceras",
+    "from": 26,
+    "to": 30,
+    "label": "Multiplicación rápida: Karatsuba, matrices y Strassen",
+    "idx": 26,
+    "upto": 30
+   },
+   {
+    "id": "t5-otros",
+    "lecture": "t5_divide_y_venceras",
+    "from": 31,
+    "to": 32,
+    "label": "Embaldosado con L-triominós e inversión de bits",
+    "idx": 31,
+    "upto": 32
    }
   ]
  },
@@ -2184,29 +2499,67 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t6-binario",
     "lecture": "t6_vuelta_atras_backtracking",
-    "section": "Subconjuntos de {a,b,c}: solución con árbol binario",
-    "idx": 4
+    "from": 0,
+    "to": 7,
+    "label": "Backtracking y subconjuntos con árbol binario",
+    "idx": 0,
+    "upto": 7
    },
    {
+    "id": "t6-subconjuntos",
     "lecture": "t6_vuelta_atras_backtracking",
-    "section": "Permutaciones: implementación",
-    "idx": 13
+    "from": 8,
+    "to": 11,
+    "label": "Subconjuntos: un subconjunto en cada nodo",
+    "idx": 8,
+    "upto": 11
    },
    {
+    "id": "t6-permutaciones",
     "lecture": "t6_vuelta_atras_backtracking",
-    "section": "Implementación (N reinas)",
-    "idx": 20
+    "from": 12,
+    "to": 15,
+    "label": "Permutaciones",
+    "idx": 12,
+    "upto": 15
    },
    {
+    "id": "t6-reinas",
     "lecture": "t6_vuelta_atras_backtracking",
-    "section": "Suma de subconjuntos",
-    "idx": 22
+    "from": 16,
+    "to": 20,
+    "label": "El problema de las N reinas",
+    "idx": 16,
+    "upto": 20
    },
    {
+    "id": "t6-suma-caballo",
     "lecture": "t6_vuelta_atras_backtracking",
-    "section": "Ramificación y poda: mochila 0-1",
-    "idx": 30
+    "from": 21,
+    "to": 24,
+    "label": "Suma de subconjuntos y ruta del caballo",
+    "idx": 21,
+    "upto": 24
+   },
+   {
+    "id": "t6-otros",
+    "lecture": "t6_vuelta_atras_backtracking",
+    "from": 25,
+    "to": 27,
+    "label": "Laberinto, sudoku y mochila 0-1",
+    "idx": 25,
+    "upto": 27
+   },
+   {
+    "id": "t6-poda",
+    "lecture": "t6_vuelta_atras_backtracking",
+    "from": 28,
+    "to": 33,
+    "label": "Ramificación y poda y aspectos a considerar",
+    "idx": 28,
+    "upto": 33
    }
   ]
  },
@@ -2220,34 +2573,94 @@ window.STAGES = [
   ],
   "theory": [
    {
+    "id": "t7-esquema",
     "lecture": "t7_algoritmos_voraces",
-    "section": "Esquema general",
-    "idx": 5
+    "from": 0,
+    "to": 6,
+    "label": "Algoritmos voraces: elementos y esquema general",
+    "idx": 0,
+    "upto": 6
    },
    {
+    "id": "t7-camino",
     "lecture": "t7_algoritmos_voraces",
-    "section": "Cambio de monedas",
-    "idx": 11
+    "from": 7,
+    "to": 9,
+    "label": "Camino más corto: un ejemplo óptimo y otro que no",
+    "idx": 7,
+    "upto": 9
    },
    {
+    "id": "t7-monedas",
     "lecture": "t7_algoritmos_voraces",
-    "section": "Códigos de Huffman",
-    "idx": 14
+    "from": 10,
+    "to": 11,
+    "label": "Cambio de monedas",
+    "idx": 10,
+    "upto": 11
    },
    {
+    "id": "t7-tiempo-mezcla",
     "lecture": "t7_algoritmos_voraces",
-    "section": "Problema de la mochila - Versión 3",
-    "idx": 18
+    "from": 12,
+    "to": 13,
+    "label": "Minimización del tiempo en el sistema y mezcla de listas",
+    "idx": 12,
+    "upto": 13
    },
    {
+    "id": "t7-huffman",
     "lecture": "t7_algoritmos_voraces",
-    "section": "Algoritmo de Kruskal",
-    "idx": 23
+    "from": 14,
+    "to": 14,
+    "label": "Códigos de Huffman",
+    "idx": 14,
+    "upto": 14
    },
    {
+    "id": "t7-mochila-1",
     "lecture": "t7_algoritmos_voraces",
-    "section": "Algoritmo de Dijkstra",
-    "idx": 26
+    "from": 15,
+    "to": 17,
+    "label": "La mochila: versiones 1 y 2",
+    "idx": 15,
+    "upto": 17
+   },
+   {
+    "id": "t7-mochila-3",
+    "lecture": "t7_algoritmos_voraces",
+    "from": 18,
+    "to": 19,
+    "label": "La mochila con fracciones y la mochila 0-1",
+    "idx": 18,
+    "upto": 19
+   },
+   {
+    "id": "t7-arm",
+    "lecture": "t7_algoritmos_voraces",
+    "from": 20,
+    "to": 24,
+    "label": "Árbol de recubrimiento mínimo: Kruskal y Prim",
+    "idx": 20,
+    "upto": 24
+   },
+   {
+    "id": "t7-dijkstra",
+    "lecture": "t7_algoritmos_voraces",
+    "from": 25,
+    "to": 26,
+    "label": "Caminos mínimos desde un nodo: Dijkstra",
+    "idx": 25,
+    "upto": 26
+   },
+   {
+    "id": "t7-kmedias",
+    "lecture": "t7_algoritmos_voraces",
+    "from": 27,
+    "to": 31,
+    "label": "K-medias",
+    "idx": 27,
+    "upto": 31
    }
   ]
  }
@@ -2264,3 +2677,2973 @@ window.SUMMARIES = {
  "backtracking": "## Idea\n- Construir la solución **poco a poco** (solución parcial), recorriendo el árbol de recursión en profundidad.\n- Si la solución parcial no puede completarse, se **poda** y se **vuelve atrás** deshaciendo lo último que se hizo.\n- Es fuerza bruta \"inteligente\": el árbol es enorme, pero la poda evita explorarlo todo.\n- Estructura general de cualquier backtracking:\n  1. caso base: solución completa, se usa o se imprime;\n  2. **generar candidatos** (un bucle);\n  3. **comprobar** que el candidato es válido (poda);\n  4. **incluirlo** en la solución parcial y actualizar las estructuras auxiliares;\n  5. **llamada recursiva** con $i+1$;\n  6. **deshacer** los cambios de las estructuras auxiliares (si se pasaron por referencia).\n\n## Los tres esquemas que hay que saberse\n**Subconjuntos, árbol binario** ($2^n$ hojas, subconjuntos de tamaño variable). `sol[i]` vale 0 o 1:\n```python\ndef subconjuntos(i, sol, elementos):\n    if i == len(elementos):\n        imprime(sol, elementos)\n    else:\n        for k in range(0, 2):\n            sol[i] = k\n            subconjuntos(i + 1, sol, elementos)\n```\n**Subconjuntos, uno en cada nodo** (más eficiente si buscas subconjuntos de igual tamaño). `sol` guarda **índices**; $j$ es el último índice incluido:\n```python\ndef subconjuntos_alt(i, j, sol, elementos):\n    imprime(sol, i, elementos)              # cada nodo es un subconjunto\n    for k in range(j + 1, len(elementos)):\n        sol[i] = k\n        subconjuntos_alt(i + 1, k, sol, elementos)    # llamada inicial: (0, -1, ...)\n```\n**Permutaciones** ($n!$ hojas). La lista `libres` comprueba en $O(1)$ si un elemento ya está usado:\n```python\ndef permutaciones(i, libres, sol, elementos):\n    n = len(elementos)\n    if i == n:\n        imprime(sol)\n    else:\n        for k in range(0, n):\n            if libres[k]:\n                sol[i] = elementos[k]\n                libres[k] = False\n                permutaciones(i + 1, libres, sol, elementos)\n                libres[k] = True            # deshacer al volver\n```\n- Reserva la solución parcial **una vez** en la función *wrapper*; no concatenes ni borres elementos en cada llamada.\n- Sin la lista `libres`, comprobar la factibilidad cuesta $O(n)$ en vez de $O(1)$.\n\n## N reinas\n- Colocar $n$ reinas sin que se amenacen (fila, columna ni diagonal). Para $n=8$ hay 92 soluciones (12 distintas por simetría).\n- Reduce el espacio de búsqueda: $2^{n^2}\\to\\binom{n^2}{n}\\to n^n$ (una por columna) $\\to n!$ (una por fila y columna: una **permutación**).\n- Solución: `sol[i]` = fila de la reina de la columna $i$ (por ejemplo $(1,3,0,2)$).\n- Estructuras booleanas para comprobar en $O(1)$:\n  - `filas_libres[k]`;\n  - diagonal principal: índice `i - k + n - 1`, con `2n - 1` posiciones;\n  - diagonal secundaria: índice `i + k`.\n- Candidato válido: `filas_libres[k] and pdiags_libres[i-k+n-1] and sdiags_libres[i+k]`. Se marcan como ocupadas, se llama a `i+1` y se vuelven a marcar libres.\n\n## Otros problemas\n- **Suma de subconjuntos:** esquema binario con un parámetro de **suma parcial** ($\\Theta(1)$ en vez de $O(n)$) y poda si la suma parcial supera $s$.\n- **Mochila 0-1:** $\\max\\sum x_iv_i$ con $x_i\\in\\{0,1\\}$ y $\\sum x_ip_i\\le C$. Esquema binario; poda si `k*p[i] > C_restante`. Es de optimización: se recorren todas las soluciones guardando la mejor (`v_opt`, `sol_opt`).\n- **Laberinto, ruta del caballo, sudoku:** se expande la solución casilla a casilla y se comprueba la validez antes de seguir.\n- **Paréntesis válidos:** se podan los prefijos donde hay más cerrados que abiertos o más de $n$ abiertos.\n\n## Ramificación y poda (optimización)\n- Añade una **poda por valor**: si el máximo valor alcanzable en esa rama no supera el mejor valor ya encontrado, se descarta.\n- En la mochila 0-1: `max_v` empieza en `sum(v)`; no incluir el objeto $i$ lo baja en $v_i$; incluirlo no lo cambia.\n```python\nnuevo_max_v = max_v - (1 - k) * v[i]\nif k * p[i] <= C_restante and nuevo_max_v > v_opt:   # poda por capacidad y por valor\n    ...\n```\n- Pesos $(3,6,9,5)$, valores $(7,2,10,4)$, $C=15$: óptimo 17 (objetos 1 y 3).\n- Es un método **exacto**; sólo acelera la búsqueda del óptimo.\n\n## Qué recordar\n- ¿La solución es una **permutación**, un **subconjunto** u otra cosa? Si lo es, usa el esquema.\n- ¿Una solución o todas? Si una, para al encontrarla (una variable booleana). En optimización se buscan todas para quedarse con la mejor.\n- En optimización añade dos parámetros: mejor valor y mejor solución. Y piensa si hay poda por valor.\n- Guarda en estructuras auxiliares lo que necesites comprobar a menudo (`libres`, diagonales, suma parcial).\n- Si pasas una estructura por referencia, **deshaz** los cambios al volver; por valor no hace falta.\n- El coste en el peor caso sigue siendo del orden del tamaño del árbol ($2^n$, $n!$...): la poda mejora la práctica, no el peor caso.",
  "voraz": "## Idea\n- Para **optimización**. En cada paso se toma la mejor decisión *local* y **no se deshace nunca**. Es rápido y fácil de implementar, pero **no siempre es óptimo**: un óptimo local no implica un óptimo global.\n- Para ciertos problemas se puede **demostrar** que una estrategia voraz concreta sí es óptima. Lo difícil es encontrar la función de selección correcta.\n\n## Elementos de un algoritmo voraz\n| Elemento | Qué es |\n|---|---|\n| Candidatos $C$ | el conjunto del que se construye la solución |\n| Función de **selección** | elige el candidato local más idóneo |\n| Función de **factibilidad** | comprueba si añadir el candidato sigue siendo válido |\n| Función **objetivo** | el valor que se optimiza |\n| Función **solución** | indica si lo construido ya es una solución |\n\n```\nvoraz(C):\n    S <- vacío\n    mientras C no vacío y no solución(S):\n        x <- seleccionar(C);  C <- C \\ {x}\n        si factible(S ∪ {x}): S <- S ∪ {x}\n    si solución(S): devolver S, si no: no hay solución\n```\n\n## Problemas clásicos: selección y si es óptima\n| Problema | Selección voraz | ¿Óptima? |\n|---|---|---|\n| Camino más corto, un arco por etapa | el arco más corto | sí (por contradicción) |\n| Camino más corto en grafo por etapas | el arco más corto | **no** (contraejemplo: 23 frente a 7) |\n| Cambio de monedas | la moneda más alta sin pasarse | sólo con ciertos sistemas (con 12 céntimos falla: devolver 2,24 € da 4 monedas voraz, 3 óptimo) |\n| Tiempo en el sistema | clientes en **orden creciente** de $t_i$ | sí |\n| Mezcla de listas | mezclar las dos **más cortas** | sí |\n| Huffman | fusionar los dos árboles de menor frecuencia | sí |\n| Mochila v.1 (máx. nº de objetos) | por **peso creciente** | sí |\n| Mochila v.2 (máx. peso) | peso creciente o decreciente | **ninguna** es óptima |\n| Mochila v.3 (fracciones) | mayor **valor/peso** $v_i/p_i$ | sí |\n| Mochila v.4 (0-1) | | NP-completo: voraz no basta |\n| Árbol de recubrimiento mínimo: Kruskal, Prim | arista de menor peso | sí |\n| Dijkstra | vértice con menor distancia al origen | sí (pesos no negativos) |\n\n## Tiempo en el sistema\n$T(P)=\\sum_{k=1}^{n}(n-k+1)s_k$ con $s_k=t_{p_k}$: el primero cuenta $n$ veces, el segundo $n-1$... Por eso hay que poner **primero los más cortos**. Con $t=(5,10,3)$, el mejor orden es $3,1,2$: $T=29$.\n\n## Huffman\n- Una cola de árboles ordenada por frecuencia. Mientras haya más de un árbol: fusiona los **dos de menor frecuencia** (suman sus frecuencias) y reinsértalo.\n- Código de un carácter: camino desde la raíz (izquierda $=0$, derecha $=1$). Los más frecuentes tienen código más corto.\n- Ejemplo (miles): $f{:}5,\\ e{:}9,\\ c{:}12,\\ b{:}13,\\ d{:}16,\\ a{:}45$ da $a=1,\\ d=011,\\ e=0101,\\ f=0100,\\ b=001,\\ c=000$. Son 224 000 bits frente a 300 000 con 3 bits por carácter.\n\n## Mochila\n- 0-1: $\\max\\sum x_iv_i$ con $x_i\\in\\{0,1\\}$ y $\\sum x_ip_i\\le C$.\n- Con fracciones ($0\\le x_i\\le1$): ordena por $v_i/p_i$ decreciente y llena; el último objeto entra **parcialmente**.\n- Ejemplo: $C=100$, $p=(10,20,30,40,50)$, $v=(20,30,66,40,60)$: $v/p=(2;1{,}5;2{,}2;1;1{,}2)$. La selección por $v/p$ da **164**; por mayor valor, 146; por menor peso, 156.\n\n## Árbol de recubrimiento de coste mínimo\n- Árbol libre: conexo y acíclico; con $n$ vértices tiene $n-1$ aristas.\n- **Propiedad fundamental:** dado $U\\subset V$ no vacío, la arista más pequeña con un extremo en $U$ y otro fuera está en algún árbol mínimo.\n- **Kruskal:** ordena las aristas por peso y añade la menor que **no forme ciclo**; para al llegar a $|V|-1$ aristas.\n- **Prim:** parte de un vértice y añade siempre la arista mínima entre el conjunto $U$ de tratados y el resto.\n- El árbol mínimo **no tiene por qué ser único**.\n\n## Dijkstra\n- Caminos mínimos desde un origen $s$, con pesos **no negativos**.\n- Mantén $d_v$ (distancia conocida); en cada paso mete en $T$ el vértice **no tratado de menor $d$**, y relaja los vecinos: $d_x\\leftarrow\\min\\left(d_x,\\ d_{v_{sig}}+w(v_{sig},x)\\right)$.\n- Diferencia con Prim: Dijkstra tiene en cuenta **todo el camino** desde el origen, no sólo la arista.\n- Ejemplo (origen 0): distancias $0,15,10,20,30$.\n\n## K-medias (clustering)\n- Minimiza $L=\\sum_k\\sum_i a_{ik}\\lVert x_i-\\mu_k\\rVert^2$. Es iterativo, converge a un **óptimo local**, no al global.\n- (A) asigna cada punto al centroide más cercano; (B) cada centroide pasa a ser la media de sus puntos. Repite hasta que los centroides no cambien.\n- Se ejecuta varias veces con distintas inicializaciones.\n\n## Qué recordar\n- Para mostrar que una estrategia **no** es óptima basta un **contraejemplo**; para mostrar que lo es hace falta una demostración (a menudo por contradicción).\n- Antes de implementar, decide la función de selección y comprueba si es óptima."
 };
+window.QUIZZES = {
+ "t1-problemas": [
+  {
+   "q": "En un problema computacional, ¿qué es una **instancia**?",
+   "options": [
+    "El conjunto de todas las salidas válidas.",
+    "El caso en el que el algoritmo falla.",
+    "El algoritmo que se usa para resolver el problema.",
+    "Unas entradas concretas para las que hay que calcular la solución, como $\\langle 3,14,7,1,8,12\\rangle$ en el problema de ordenación."
+   ],
+   "answer": 3,
+   "why": "El problema describe la relación entre entradas y salidas; una instancia fija las entradas concretas y su solución es lo que se calcula."
+  },
+  {
+   "q": "Un algoritmo es **correcto** cuando...",
+   "options": [
+    "devuelve el resultado correcto para la mayoría de las instancias.",
+    "no usa recursión ni bucles anidados.",
+    "para cada instancia de entrada termina con el resultado correcto.",
+    "es rápido para entradas pequeñas."
+   ],
+   "answer": 2,
+   "why": "La definición exige terminar con el resultado correcto en todas las instancias; que un algoritmo incorrecto pueda ser útil si su error está controlado es otra cuestión."
+  },
+  {
+   "q": "¿Cuál de estas afirmaciones sobre algoritmos iterativos y recursivos es cierta?",
+   "options": [
+    "Todo algoritmo iterativo se puede expresar de forma recursiva y viceversa.",
+    "Hay problemas que sólo se pueden resolver con recursión.",
+    "Un algoritmo recursivo siempre es más eficiente que uno iterativo.",
+    "Un algoritmo iterativo no puede calcular lo mismo que uno recursivo."
+   ],
+   "answer": 0,
+   "why": "Son dos formas equivalentes de expresar el cálculo; elegir una u otra es cuestión de claridad y de eficiencia, no de poder expresivo."
+  },
+  {
+   "q": "¿Qué es un algoritmo **aproximado**?",
+   "options": [
+    "Uno que a veces devuelve una solución incorrecta sin que importe.",
+    "Uno que busca una solución cercana a la verdadera; es útil en problemas duros o intratables.",
+    "Uno que no termina siempre.",
+    "Uno que usa números reales en vez de enteros."
+   ],
+   "answer": 1,
+   "why": "Frente a los exactos, que alcanzan la solución exacta, los aproximados renuncian a ella cuando obtenerla es demasiado costoso."
+  }
+ ],
+ "t1-euclides": [
+  {
+   "q": "Según la definición de $mcd2(m,n)$ del tema, ¿cuánto vale $mcd2(6,15)$?",
+   "options": [
+    "1",
+    "3",
+    "6",
+    "15"
+   ],
+   "answer": 1,
+   "why": "$mcd2(6,15)=mcd2(15\\,\\%\\,6,\\,6)=mcd2(3,6)=mcd2(6\\,\\%\\,3,\\,3)=mcd2(0,3)=3$."
+  },
+  {
+   "q": "En la demostración de que $mcd2(m,n)=mcd2(n\\%m,m)$ se escribe $m=az$ y $n=bz$. ¿Qué representa $z$ y qué se supone de $a$ y $b$?",
+   "options": [
+    "$z$ es el menor de los dos números y $a=b$.",
+    "$z=1$ y $a$ y $b$ son cualesquiera.",
+    "$z$ es el resto de dividir $n$ entre $m$ y $a$ y $b$ son primos.",
+    "$z$ es el factor común máximo y $a$ y $b$ no comparten factores primos."
+   ],
+   "answer": 3,
+   "why": "Se factoriza lo que tienen en común ($z$); lo que queda en cada número ($a$ y $b$) no comparte factores primos, y de ahí se deduce que el resto $d$ tampoco comparte factores con $a$."
+  },
+  {
+   "q": "En la versión por restas, $mcd1(m,n)$ con $m>n$ hace...",
+   "options": [
+    "$mcd1(m-1,n-1)$.",
+    "$mcd1(m,n-m)$ aunque $n-m$ sea negativo.",
+    "$n$.",
+    "$mcd1(n,m)$: intercambia los parámetros."
+   ],
+   "answer": 3,
+   "why": "La definición tiene tres casos: $m=0$ devuelve $n$; $m>n$ intercambia los parámetros; si $m\\le n$ y $m\\neq0$ llama con $(m,n-m)$."
+  }
+ ],
+ "t1-clases-1": [
+  {
+   "q": "¿Cuál de estos costes se considera **polinómico** en el tema?",
+   "options": [
+    "$n!$",
+    "$n^n$",
+    "$2^n$",
+    "$n\\log n$"
+   ],
+   "answer": 3,
+   "why": "Constante, $\\log n$, $n$, $n\\log n$, $n^2$... son polinómicos (o menores); $2^n$, $n!$ y $n^n$ crecen más que cualquier polinomio."
+  },
+  {
+   "q": "¿Qué significa la **N** de NP?",
+   "options": [
+    "Numérico: son los problemas con números enteros.",
+    "No determinista: NP es \"tiempo polinómico no determinista\", no \"tiempo no polinómico\".",
+    "Normal: son los problemas de dificultad media.",
+    "No resoluble: son los problemas que ningún algoritmo resuelve."
+   ],
+   "answer": 1,
+   "why": "Confundirlo con \"no polinómico\" es el error más común. Los problemas de NP son decisión que un algoritmo no determinista \"con suerte\" resuelve en tiempo polinómico."
+  },
+  {
+   "q": "¿Cuál es la relación de inclusión de las clases del tema?",
+   "options": [
+    "$P\\subseteq EXP\\subseteq NP\\subseteq R$",
+    "$P\\subseteq NP\\subseteq EXP\\subseteq R$",
+    "$R\\subseteq EXP\\subseteq NP\\subseteq P$",
+    "$NP\\subseteq P\\subseteq EXP\\subseteq R$"
+   ],
+   "answer": 1,
+   "why": "Cada clase está contenida en la siguiente: polinómico, polinómico no determinista, exponencial y finito."
+  }
+ ],
+ "t1-clases-2": [
+  {
+   "q": "Una definición equivalente de **NP** es...",
+   "options": [
+    "los problemas cuyo algoritmo hace muchas comparaciones.",
+    "los problemas que requieren tiempo exponencial para ser resueltos.",
+    "los problemas de decisión en los que se puede verificar en tiempo polinómico que una solución lleva a un SÍ.",
+    "los problemas que no se pueden resolver con un ordenador."
+   ],
+   "answer": 2,
+   "why": "Verificar una solución es fácil en NP aunque encontrarla pueda ser difícil: en el laberinto, comprobar que una secuencia de pasos es un camino es polinómico."
+  },
+  {
+   "q": "¿Qué se dice del problema de encontrar un camino por un laberinto de $n\\times n$?",
+   "options": [
+    "Está en NP, pero también en P (por ejemplo con Dijkstra); recuerda que $P\\subseteq NP$.",
+    "Está en NP y no en P.",
+    "Es NP-completo.",
+    "Es indecidible."
+   ],
+   "answer": 0,
+   "why": "Un problema en P también está en NP porque un algoritmo determinista polinómico es un caso particular de uno no determinista."
+  },
+  {
+   "q": "¿Qué problema fue el primero demostrado NP-completo?",
+   "options": [
+    "La mochila 0/1.",
+    "El problema del viajante.",
+    "La satisfacibilidad booleana (SAT), por Cook en 1971.",
+    "La suma de subconjuntos."
+   ],
+   "answer": 2,
+   "why": "Después Karp (1972) presentó 21 problemas NP-completos más."
+  },
+  {
+   "q": "Si demuestras que tu problema es NP-completo, ¿qué te conviene hacer?",
+   "options": [
+    "Resolverlo por fuerza bruta siempre.",
+    "Cambiar de lenguaje de programación.",
+    "Recurrir a soluciones aproximadas en vez de perder tiempo buscando un algoritmo eficiente exacto.",
+    "Escribir un algoritmo polinómico exacto, que existe seguro."
+   ],
+   "answer": 2,
+   "why": "Un algoritmo polinómico exacto para un NP-completo resolvería $P=NP$; nadie lo ha encontrado."
+  }
+ ],
+ "t1-reducciones": [
+  {
+   "q": "Para demostrar que un problema $A$ es NP-completo hay que probar que está en NP y que es NP-duro. Lo más habitual para lo segundo es...",
+   "options": [
+    "reducir $A$ a un problema de P.",
+    "comprobar $A$ con muchas instancias.",
+    "encontrar un algoritmo exponencial para $A$.",
+    "reducir a $A$ un problema NP-completo conocido $Q$: $A$ es al menos tan difícil como $Q$."
+   ],
+   "answer": 3,
+   "why": "Una reducción transforma cada instancia de $Q$ en una de $A$ con la misma respuesta; así un algoritmo para $A$ resolvería $Q$."
+  },
+  {
+   "q": "Tienes un algoritmo para el camino más corto con pesos y necesitas el camino **más largo**. Siguiendo el tema, ¿qué transformación aplicas?",
+   "options": [
+    "Sumar $1$ a los pesos.",
+    "Aplicar logaritmos a los pesos.",
+    "Multiplicar los pesos por $-1$.",
+    "Dar el mismo peso a todas las aristas."
+   ],
+   "answer": 2,
+   "why": "Es un ejemplo de reducción como técnica de diseño (\"transforma y vencerás\"); aplicar logaritmos sirve para el caso de caminos con producto de pesos."
+  },
+  {
+   "q": "Si se encontrara un algoritmo polinómico para un problema NP-completo...",
+   "options": [
+    "dejaría de haber problemas indecidibles.",
+    "sólo ese problema estaría en P.",
+    "se tendría $P\\neq NP$.",
+    "se tendría $P=NP$."
+   ],
+   "answer": 3,
+   "why": "Todo problema de NP se reduce a un NP-completo, así que un algoritmo polinómico para uno resuelve todos."
+  },
+  {
+   "q": "¿Qué se prueba con el problema de la parada?",
+   "options": [
+    "Que todos los programas terminan en tiempo exponencial.",
+    "Que no existe un algoritmo que decida, para cualquier programa y entrada, si termina: es indecidible.",
+    "Que los programas recursivos no terminan.",
+    "Que $P=NP$."
+   ],
+   "answer": 1,
+   "why": "Se supone `Termina(p, x)` y se define `d(w)`; entonces `d(d)` termina si y sólo si `d(d)` no termina: contradicción."
+  }
+ ],
+ "t1-optimizacion": [
+  {
+   "q": "Tienes un problema de **maximizar** $f_0(x)$. ¿Cómo lo conviertes en uno de minimización?",
+   "options": [
+    "Invirtiendo las restricciones.",
+    "Imposible: son problemas distintos.",
+    "Sustituyendo $f_0$ por $1/f_0$ siempre.",
+    "Cambiando el signo de la función objetivo: minimizar $-f_0(x)$."
+   ],
+   "answer": 3,
+   "why": "Maximizar $f_0$ y minimizar $-f_0$ tienen las mismas soluciones óptimas."
+  },
+  {
+   "q": "En la mochila 0/1, las variables $x_i\\in\\{0,1\\}$ indican...",
+   "options": [
+    "si se introduce o no el objeto $i$ en la mochila; el problema es NP-completo.",
+    "el valor del objeto $i$.",
+    "la fracción del objeto $i$ que se introduce.",
+    "el peso del objeto $i$."
+   ],
+   "answer": 0,
+   "why": "Los pesos $p_i$, los valores $v_i$ y la capacidad $C$ son datos de la instancia; $x$ es lo que se decide."
+  },
+  {
+   "q": "En un problema **lineal**, ¿dónde está el óptimo y cómo avanza Simplex?",
+   "options": [
+    "En un vértice de la región factible (un poliedro convexo); Simplex parte de un vértice y avanza por aristas hasta otro mejor.",
+    "En cualquier punto interior; Simplex elige uno al azar.",
+    "En el centro de la región factible; Simplex lo calcula por promedios.",
+    "Fuera de la región factible."
+   ],
+   "answer": 0,
+   "why": "La función objetivo y las restricciones son hiperplanos y la región factible es un poliedro convexo."
+  }
+ ],
+ "t1-convexos": [
+  {
+   "q": "¿Cuál de estas afirmaciones es correcta?",
+   "options": [
+    "Los problemas lineales son convexos, y los convexos se pueden resolver en tiempo polinómico.",
+    "Los problemas lineales no son convexos.",
+    "Los problemas no convexos siempre tienen un único óptimo.",
+    "Los problemas convexos son siempre NP-completos."
+   ],
+   "answer": 0,
+   "why": "La convexidad es la propiedad que permite una solución eficiente; los lineales son un caso particular."
+  },
+  {
+   "q": "¿Cuándo es convexo un conjunto?",
+   "options": [
+    "Cuando todos sus puntos están sobre una recta.",
+    "Cuando es finito.",
+    "Cuando no tiene agujeros en ninguna dimensión.",
+    "Cuando cualquier segmento entre dos de sus puntos queda completamente dentro del conjunto."
+   ],
+   "answer": 3,
+   "why": "Un conjunto en forma de media luna no es convexo: hay segmentos entre dos de sus puntos que salen de él."
+  },
+  {
+   "q": "En el descenso de gradiente, ¿cuándo se detiene el algoritmo?",
+   "options": [
+    "Cuando la función vale 0.",
+    "Cuando el módulo del gradiente es menor que un $\\varepsilon$ pequeño.",
+    "Cuando el gradiente apunta hacia arriba.",
+    "Después de exactamente $n$ iteraciones."
+   ],
+   "answer": 1,
+   "why": "En cada paso se actualiza $x\\leftarrow x-\\alpha g$; puede no converger o ser muy lento."
+  },
+  {
+   "q": "En un problema **no convexo**...",
+   "options": [
+    "el descenso de gradiente garantiza el óptimo global.",
+    "siempre se resuelve en tiempo polinómico.",
+    "puede haber varios óptimos locales, y las heurísticas no garantizan llegar al óptimo global.",
+    "no tiene sentido buscar un óptimo."
+   ],
+   "answer": 2,
+   "why": "Se usan heurísticas como la búsqueda aleatoria o los algoritmos genéticos; el teorema \"no hay comida gratis\" dice que ninguna es la mejor en general."
+  }
+ ],
+ "t1-ia": [
+  {
+   "q": "¿En qué se diferencian la regresión y la clasificación?",
+   "options": [
+    "No se diferencian.",
+    "La regresión predice un valor real; la clasificación predice una clase (categoría).",
+    "La regresión usa datos de test y la clasificación no.",
+    "La regresión agrupa los datos y la clasificación los ordena."
+   ],
+   "answer": 1,
+   "why": "En ambas se crea un modelo matemático ajustado a los datos de entrenamiento."
+  },
+  {
+   "q": "¿Por qué estas tareas no son un \"problema computacional\" en el sentido del tema?",
+   "options": [
+    "Porque no se conoce completamente la relación entre entradas y salidas ni hay una solución \"correcta\", así que no se puede especificar un algoritmo.",
+    "Porque no pueden ejecutarse en un ordenador.",
+    "Porque no usan datos.",
+    "Porque son siempre NP-completas."
+   ],
+   "answer": 0,
+   "why": "Los modelos se crean con datos de entrenamiento y su rendimiento depende de datos nuevos (test)."
+  },
+  {
+   "q": "En el **clustering**...",
+   "options": [
+    "sólo se conoce la posición de los puntos, no hay información de clases, y se busca una agrupación razonable.",
+    "se predice un valor real.",
+    "hay una única agrupación correcta que se puede calcular.",
+    "cada dato viene con su clase correcta."
+   ],
+   "answer": 0,
+   "why": "La tarea no está claramente definida: existen medidas de bondad para evaluar la calidad de una agrupación, pero no una agrupación \"correcta\"."
+  },
+  {
+   "q": "En la jerarquía tarea, problema y algoritmo, ¿qué son K-NN y SVM para la tarea de clasificación?",
+   "options": [
+    "Reducciones de problemas NP-completos.",
+    "Algoritmos de ordenación.",
+    "Tareas generales de la ciencia.",
+    "Problemas computacionales concretos que se plantean para abordarla; cada uno se resuelve con varios algoritmos."
+   ],
+   "answer": 3,
+   "why": "Las tareas generales no son problemas computacionales; se plantean problemas concretos y estos se resuelven mediante algoritmos."
+  }
+ ],
+ "t21-potencias-logs": [
+  {
+   "q": "¿Cuánto vale $\\log_b(x^y)$?",
+   "options": [
+    "$(\\log_b x)^y$",
+    "$y\\cdot\\log_b x$",
+    "$\\log_b x+y$",
+    "$x\\cdot\\log_b y$"
+   ],
+   "answer": 1,
+   "why": "El exponente sale multiplicando: $\\log_b(x^y)=y\\log_b x$."
+  },
+  {
+   "q": "Para cambiar de base se usa $\\log_b x=\\dots$",
+   "options": [
+    "$\\dfrac{\\log_a x}{\\log_a b}$",
+    "$\\dfrac{\\log_a b}{\\log_a x}$",
+    "$\\log_a x-\\log_a b$",
+    "$\\log_a x\\cdot\\log_a b$"
+   ],
+   "answer": 0,
+   "why": "Por eso la base de un logaritmo no importa en notación asintótica: sólo cambia una constante."
+  },
+  {
+   "q": "¿Cuál de estas identidades es cierta?",
+   "options": [
+    "$(ab)^x=a^x+b^x$",
+    "$x^{\\log_b y}=\\log_b(xy)$",
+    "$x^{\\log_b y}=y^{\\log_b x}$",
+    "$b^{\\log_b a}=\\log_b a$"
+   ],
+   "answer": 2,
+   "why": "Se prueba tomando $\\log_b$ en los dos lados: ambos dan $\\log_b x\\cdot\\log_b y$. Y $b^{\\log_b a}=a$."
+  },
+  {
+   "q": "¿De cuántas formas se pueden escoger $m$ elementos de entre $n$ sin importar el orden?",
+   "options": [
+    "$\\binom{n}{m}=\\dfrac{n!}{m!\\,(n-m)!}$",
+    "$n!/m!$",
+    "$n^m$",
+    "$\\dfrac{n!}{(n-m)!}$"
+   ],
+   "answer": 0,
+   "why": "El coeficiente binomial cuenta combinaciones; también cumple $\\binom nm=\\binom{n-1}{m-1}+\\binom{n-1}{m}$."
+  }
+ ],
+ "t21-calculo": [
+  {
+   "q": "¿Cuál es la derivada de $f(x)=a^{g(x)}$?",
+   "options": [
+    "$a^{g'(x)}$",
+    "$g'(x)\\cdot a^{g(x)}$",
+    "$g(x)\\cdot a^{g(x)-1}$",
+    "$g'(x)\\cdot a^{g(x)}\\cdot\\ln a$"
+   ],
+   "answer": 3,
+   "why": "Se aplica la regla de la cadena a la exponencial, que añade el factor $\\ln a$."
+  },
+  {
+   "q": "¿Cuándo se aplica la regla de L'Hôpital a $\\lim\\frac{f(n)}{g(n)}$?",
+   "options": [
+    "Cuando sale una indeterminación como $\\frac00$ o $\\frac\\infty\\infty$; entonces $\\lim\\frac fg=\\lim\\frac{f'}{g'}$ (si este existe).",
+    "Siempre, aunque el límite sea $5/2$.",
+    "Cuando el límite es $\\infty$.",
+    "Sólo cuando $g$ es un polinomio."
+   ],
+   "answer": 0,
+   "why": "Hay que comprobar que es una indeterminación y que existe el segundo límite."
+  },
+  {
+   "q": "¿Cuánto vale $\\int\\frac1x\\,dx$?",
+   "options": [
+    "$\\frac{1}{x^2}$",
+    "$x\\ln x$",
+    "$\\ln x$ (más una constante)",
+    "$\\frac{x^0}{0}$"
+   ],
+   "answer": 2,
+   "why": "La fórmula $\\int x^n\\,dx=\\frac{x^{n+1}}{n+1}$ no sirve para $n=-1$."
+  },
+  {
+   "q": "Con $a>0$, ¿cuánto vale $\\lim_{n\\to\\infty} n^a$ y cuánto $\\lim_{n\\to\\infty}\\log_b n$ si $b>1$?",
+   "options": [
+    "Ambos tienden a $\\infty$.",
+    "Los dos tienden a 0.",
+    "$n^a$ tiende a 1 y $\\log_b n$ a $\\infty$.",
+    "$n^a$ tiende a $\\infty$ y $\\log_b n$ a 0."
+   ],
+   "answer": 0,
+   "why": "Son límites básicos que se usan al comparar órdenes de crecimiento."
+  }
+ ],
+ "t21-sumas-basicas": [
+  {
+   "q": "¿Cuánto vale $\\sum_{i=3}^{7}1$?",
+   "options": [
+    "4",
+    "5",
+    "7",
+    "3"
+   ],
+   "answer": 1,
+   "why": "Hay $n-m+1=7-3+1=5$ términos. Es el error clásico contar $n-m$ en lugar de $n-m+1$."
+  },
+  {
+   "q": "¿Cuánto vale $\\sum_{i=m}^{n}f(i)$ si $m>n$?",
+   "options": [
+    "Es indefinida.",
+    "$f(m)$",
+    "$-f(n)$",
+    "0, por convención."
+   ],
+   "answer": 3,
+   "why": "Un sumatorio vacío vale 0."
+  },
+  {
+   "q": "La suma de los $n$ primeros números impares, $\\sum_{i=1}^{n}(2i-1)$, vale...",
+   "options": [
+    "$n^2+n$",
+    "$n(n+1)/2$",
+    "$n^2$",
+    "$2n-1$"
+   ],
+   "answer": 2,
+   "why": "Se separa en $2\\sum i-\\sum 1=n(n+1)-n=n^2$. Para $n=4$: $1+3+5+7=16$."
+  },
+  {
+   "q": "Sea una progresión aritmética $a_i=a_{i-1}+d$. La suma $\\sum_{i=m}^{n}a_i$ vale...",
+   "options": [
+    "$\\frac12(a_m+a_n)(n-m+1)$",
+    "$(a_n-a_m)(n-m+1)$",
+    "$\\frac12(a_m+a_n)\\,n$",
+    "$a_m\\cdot(n-m)$"
+   ],
+   "answer": 0,
+   "why": "Escribiendo la suma al derecho y al revés, cada columna suma $a_m+a_n$ y hay $n-m+1$ columnas."
+  }
+ ],
+ "t21-cuadrados-cubos": [
+  {
+   "q": "¿Cuánto vale $\\sum_{i=1}^{4}i^2$ según la fórmula del tema?",
+   "options": [
+    "20",
+    "10",
+    "30",
+    "100"
+   ],
+   "answer": 2,
+   "why": "$\\frac{n(n+1)(2n+1)}{6}=\\frac{4\\cdot5\\cdot9}{6}=30$."
+  },
+  {
+   "q": "¿Cuánto vale $\\sum_{i=1}^{n}i^3$?",
+   "options": [
+    "$\\dfrac{n(n+1)(2n+1)}{6}$",
+    "$\\left(\\dfrac{n(n+1)}{2}\\right)^2$",
+    "$\\dfrac{n^4}{4}$",
+    "$\\dfrac{n^3(n+1)}{2}$"
+   ],
+   "answer": 1,
+   "why": "Es el cuadrado de la suma de los $n$ primeros naturales: $1^3+2^3+3^3+4^3=100=10^2$."
+  },
+  {
+   "q": "¿Es $\\sum_{i=1}^{n}i^2$ la suma parcial de una progresión aritmética o geométrica?",
+   "options": [
+    "Sí, aritmética con diferencia 1.",
+    "Sí, aritmética, con diferencia 2.",
+    "Sí, geométrica, con razón 2.",
+    "No: no es ni aritmética ni geométrica, por eso hace falta otra técnica para hallar su fórmula."
+   ],
+   "answer": 3,
+   "why": "Los términos $1,4,9,16,\\dots$ no tienen diferencia ni cociente constante."
+  }
+ ],
+ "t21-telescopicas": [
+  {
+   "q": "¿Cuánto vale la suma telescópica $\\sum_{i=1}^{n}(a_i-a_{i-1})$?",
+   "options": [
+    "$a_n+a_0$",
+    "$0$",
+    "$a_n-a_0$",
+    "$n(a_n-a_0)$"
+   ],
+   "answer": 2,
+   "why": "Los términos intermedios se cancelan por parejas."
+  },
+  {
+   "q": "¿Cuánto vale $\\sum_{i=1}^{n-1}\\frac1{i(i+1)}$?",
+   "options": [
+    "$\\dfrac1n$",
+    "$1-\\dfrac1n$",
+    "$\\ln n$",
+    "$1+\\dfrac1n$"
+   ],
+   "answer": 1,
+   "why": "Como $\\frac1{i(i+1)}=\\frac1i-\\frac1{i+1}$, la suma es telescópica y queda $1-\\frac1n$."
+  },
+  {
+   "q": "Para calcular $\\sum i^3$ el tema parte de la suma telescópica $\\sum\\big((i+1)^4-i^4\\big)$. ¿Para qué sirve?",
+   "options": [
+    "Para demostrar que la suma es geométrica.",
+    "Para derivar la suma respecto a $n$.",
+    "Su valor es $(n+1)^4-1$; desarrollándola aparecen $\\sum i^3,\\sum i^2,\\sum i,\\sum1$, y se despeja $\\sum i^3$ conocidas las otras.",
+    "Para acotar la suma con una integral."
+   ],
+   "answer": 2,
+   "why": "Es el método general para $S_p$: hacen falta antes las sumas de potencias menores."
+  },
+  {
+   "q": "El número de cajas de una pirámide escalonada de altura $n$ (capas de $1,3,6,10,\\dots$) es...",
+   "options": [
+    "$n^3$",
+    "$\\dfrac{n(n+1)(2n+1)}{6}$",
+    "$\\dfrac{n(n+1)}{2}$",
+    "$\\dfrac{n(n+1)(n+2)}{6}$"
+   ],
+   "answer": 3,
+   "why": "Es $\\sum_{i=1}^{n}\\frac{i(i+1)}{2}$; para $n=3$ salen $1+3+6=10$."
+  }
+ ],
+ "t21-geometricas": [
+  {
+   "q": "¿Cuánto vale $\\sum_{i=0}^{n-1}2^i$?",
+   "options": [
+    "$2^n-1$",
+    "$2^n$",
+    "$2^{n-1}$",
+    "$2^{n+1}-1$"
+   ],
+   "answer": 0,
+   "why": "Es la serie geométrica de razón 2: $\\frac{2^n-1}{2-1}$."
+  },
+  {
+   "q": "¿Qué truco se usa para sumar $r^m+r^{m+1}+\\cdots+r^n$?",
+   "options": [
+    "Restar $S$ y $rS$: casi todos los términos se cancelan y queda $(r-1)S=r^{n+1}-r^m$.",
+    "Dividirla entre $r$.",
+    "Acotarla por una integral.",
+    "Derivarla respecto de $n$."
+   ],
+   "answer": 0,
+   "why": "Resulta $S=\\frac{r^{n+1}-r^m}{r-1}$, válida si $r\\neq1$."
+  },
+  {
+   "q": "La suma $\\sum_{i=1}^{n}i\\,r^i$...",
+   "options": [
+    "vale $n\\cdot r^n$.",
+    "no tiene fórmula cerrada.",
+    "no es ni aritmética ni geométrica, y se resuelve restando $S-rS$, derivando la geométrica o descomponiéndola en sumas geométricas.",
+    "es una suma geométrica de razón $r$."
+   ],
+   "answer": 2,
+   "why": "Los tres métodos dan $\\frac{r+r^{n+1}(nr-n-1)}{(r-1)^2}$."
+  },
+  {
+   "q": "¿Qué ocurre con $\\sum_{i=0}^{n-1}\\left(\\frac12\\right)^i$ cuando $n$ crece?",
+   "options": [
+    "Se acerca a 2.",
+    "Se acerca a 1.",
+    "Se acerca a 0.",
+    "Crece sin límite."
+   ],
+   "answer": 0,
+   "why": "Vale $2\\frac{2^n-1}{2^n}=2-2^{1-n}$."
+  }
+ ],
+ "t21-integrales": [
+  {
+   "q": "Si $f$ es **creciente**, ¿entre qué integrales se acota $\\sum_{i=m}^{n}f(i)$?",
+   "options": [
+    "$\\int_{m-1}^{n}f(x)\\,dx\\le\\sum\\le\\int_{m}^{n+1}f(x)\\,dx$",
+    "$\\int_{m}^{n}f\\le\\sum\\le\\int_{m}^{n}f$",
+    "$\\int_{0}^{n}f\\le\\sum\\le\\int_{0}^{n+1}f$",
+    "$\\int_{m}^{n+1}f\\le\\sum\\le\\int_{m-1}^{n}f$"
+   ],
+   "answer": 0,
+   "why": "Dibujando rectángulos de ancho 1: los de altura $f(i)$ sobre $[i,i+1]$ quedan por encima de la curva y los de $[i-1,i]$ por debajo."
+  },
+  {
+   "q": "¿Qué hay que comprobar antes de acotar una suma con integrales?",
+   "options": [
+    "Que $m=1$.",
+    "Si la función es creciente o decreciente en el intervalo, porque de eso dependen los límites.",
+    "Que la suma sea finita y par.",
+    "Que la función sea un polinomio."
+   ],
+   "answer": 1,
+   "why": "Con $f$ decreciente las cotas se intercambian."
+  },
+  {
+   "q": "Para la serie armónica $\\sum_{i=1}^{n}\\frac1i$ se obtiene...",
+   "options": [
+    "$\\frac1n\\le\\sum\\le1$",
+    "$\\sum=\\ln n$ exactamente",
+    "$\\ln n\\le\\sum\\le n$",
+    "$\\ln(n+1)\\le\\sum\\le\\ln n+1$"
+   ],
+   "answer": 3,
+   "why": "La función $1/x$ es decreciente; el término $i=1$ se saca para poder usar $\\int_1^n$. La serie diverge y $\\sum\\approx\\ln n+0{,}577$."
+  }
+ ],
+ "t22-por-que": [
+  {
+   "q": "En $T(n)=\\frac12n^2+2000n+50000$, ¿qué término determina el orden de crecimiento?",
+   "options": [
+    "El de $50000$, porque es el mayor.",
+    "El cuadrático, porque domina al resto cuando $n\\to\\infty$ (aunque para $n$ pequeña los demás pesen más).",
+    "El lineal, porque tiene el coeficiente mayor que el cuadrático.",
+    "Todos por igual."
+   ],
+   "answer": 1,
+   "why": "Para $n$ pequeña todos los términos influyen, pero la notación asintótica aísla el de mayor orden."
+  },
+  {
+   "q": "¿Qué quiere decir \"$f(n)$ es asintóticamente menor que $g(n)$\" en la noción informal del tema?",
+   "options": [
+    "$\\lim_{n\\to\\infty}\\frac{f(n)}{g(n)}=0$",
+    "$f(n)<g(n)$ para $n=1$.",
+    "$\\lim_{n\\to\\infty}\\frac{f(n)}{g(n)}=\\infty$",
+    "$f(n)<g(n)$ para todo $n$."
+   ],
+   "answer": 0,
+   "why": "Lo que importa es el comportamiento para valores grandes."
+  },
+  {
+   "q": "Una función con varios parámetros, como $T(n,m)$, ¿puede tener varios términos de mayor orden?",
+   "options": [
+    "No: siempre domina uno.",
+    "Sí, pero sólo si $n=m$.",
+    "Sí: si depende de más de un parámetro, puede haber varios términos que ninguno domine al resto.",
+    "No: sólo se estudian funciones de un parámetro."
+   ],
+   "answer": 2,
+   "why": "Por ejemplo $m^2n+m^3+n^2$: ninguno es superior a los otros según los parámetros crecen."
+  }
+ ],
+ "t22-ordenes": [
+  {
+   "q": "¿Cuál es el orden correcto de menor a mayor?",
+   "options": [
+    "$1<\\log n<n<n\\log n<n^2<n^3<2^n<n!$",
+    "$1<\\log n<n<n^2<n\\log n<2^n<n^3$",
+    "$1<n<\\log n<n^2<n\\log n<2^n<n!$",
+    "$\\log n<1<n<n^2<n\\log n<n!<2^n$"
+   ],
+   "answer": 0,
+   "why": "$n^2$ es el límite entre \"tratable\" e \"intratable\"; los exponenciales superan a cualquier polinomio y el factorial al exponencial."
+  },
+  {
+   "q": "¿Cuál de estas relaciones es cierta?",
+   "options": [
+    "$n^p\\log n<n^p$",
+    "$n^{p+1}<n^p\\log n$",
+    "$n^p<n^p\\log n<n^{p+1}$",
+    "$2^n<n^p$ para $p$ grande"
+   ],
+   "answer": 2,
+   "why": "Multiplicar por $\\log n$ da algo mayor, pero menor que multiplicar por $n$."
+  },
+  {
+   "q": "En la tabla de valores, para $n=32$, ¿qué función es la más grande?",
+   "options": [
+    "$n!$, con unos $2{,}63\\cdot10^{35}$",
+    "$n^3$",
+    "$2^n$",
+    "$n\\log_2n$"
+   ],
+   "answer": 0,
+   "why": "Un orden factorial es incluso más costoso que uno exponencial, que ya lo es mucho más que los polinómicos."
+  }
+ ],
+ "t22-cota-sup": [
+  {
+   "q": "La definición de $f(n)\\in O(g(n))$ dice que existen constantes $c>0$ y $n_0>0$ tales que...",
+   "options": [
+    "$f(n)=c\\cdot g(n)$ para algún $n\\ge n_0$.",
+    "$f(n)\\le g(n)$ para todo $n$.",
+    "$f(n)\\ge c\\cdot g(n)$ para todo $n\\ge n_0$.",
+    "$0\\le f(n)\\le c\\cdot g(n)$ para todo $n\\ge n_0$."
+   ],
+   "answer": 3,
+   "why": "A partir de $n_0$, $c\\cdot g(n)$ siempre supera o iguala a $f(n)$."
+  },
+  {
+   "q": "Si $f(n)\\in O(g(n))$, ¿qué se puede afirmar?",
+   "options": [
+    "Que $f$ es asintóticamente menor o igual que $g$: $g$ es una cota superior; $\\lim f/g$ es una constante finita.",
+    "Que $f$ tarda al menos $g(n)$.",
+    "Que $\\lim f/g=\\infty$.",
+    "Que $f(n)=g(n)$ para $n$ grande."
+   ],
+   "answer": 0,
+   "why": "Decir que tarda \"al menos\" $g$ es un error típico: $O$ da una cota superior."
+  },
+  {
+   "q": "¿Cuál de estas cotas superiores de $2n+5$ es la que querremos dar?",
+   "options": [
+    "Todas valen lo mismo.",
+    "$O(n)$: la cota superior más baja.",
+    "$O(n^2)$, porque es la más segura.",
+    "$O(n!)$, que también es correcta."
+   ],
+   "answer": 1,
+   "why": "$2n+5\\in O(n)$, $O(n^2)$ y $O(n!)$ son ciertas, pero la más informativa es la más ajustada."
+  },
+  {
+   "q": "¿Cuántas parejas $(c,n_0)$ válidas hay si $f\\in O(g)$?",
+   "options": [
+    "Ninguna: dependen de $n$.",
+    "Exactamente una.",
+    "Infinitas: basta con que exista una pareja, y si existe una hay muchas.",
+    "Sólo hay una por cada $c$."
+   ],
+   "answer": 2,
+   "why": "Si funciona un par, funcionan también valores mayores de $c$ y de $n_0$."
+  }
+ ],
+ "t22-verificar-o": [
+  {
+   "q": "Para demostrar $5n+2\\in O(n)$ con la definición, el tema plantea $5n+2\\le c\\,n$. Con $c=6$, ¿a partir de qué $n_0$ se cumple?",
+   "options": [
+    "$n_0=2$: $5n+2\\le6n\\iff2\\le n$.",
+    "$n_0=1$.",
+    "$n_0=6$, el valor de $c$.",
+    "Nunca se cumple."
+   ],
+   "answer": 0,
+   "why": "Despejando $n$ queda $2\\le n$, así que sirve $n_0=2$ (o cualquier valor mayor)."
+  },
+  {
+   "q": "¿Cuál es el procedimiento para **demostrar** $f(n)\\in O(g(n))$ con la definición?",
+   "options": [
+    "Derivar $f$ y $g$.",
+    "Elegir un $n_0$ y comprobar que $f(n_0)\\le g(n_0)$.",
+    "Calcular $f(1000)$ y $g(1000)$.",
+    "Elegir una $c>0$ adecuada, plantear $f(n)\\le c\\,g(n)$ y encontrar un intervalo $[n_0,\\infty)$ donde se cumpla."
+   ],
+   "answer": 3,
+   "why": "Esa pareja $(c,n_0)$ es la prueba."
+  },
+  {
+   "q": "Para $5n+2\\in O(n^2)$ el tema plantea $n^2-5n-2\\ge0$. ¿Por qué se cumple para $n\\ge6$ con $c=1$?",
+   "options": [
+    "Porque $n^2$ siempre es mayor que $5n$.",
+    "Porque la derivada es positiva.",
+    "Porque $c=1$ siempre sirve.",
+    "Es una parábola convexa con raíces en $-0{,}37$ y $5{,}37$: positiva a partir de la raíz mayor."
+   ],
+   "answer": 3,
+   "why": "Con otras constantes (por ejemplo $c=5$) basta incluso $n_0=2$; lo importante es que exista alguna."
+  }
+ ],
+ "t22-omega": [
+  {
+   "q": "¿Por qué $3n^2+2n-2\\notin O(n)$ según el tema?",
+   "options": [
+    "Porque $2n-2$ es mayor que $n$.",
+    "Porque el coeficiente de $n^2$ es 3.",
+    "Porque, sea cual sea $c$, $3n^2+(2-c)n-2\\le0$ no se cumple en ningún intervalo $[n_0,\\infty)$: es una parábola convexa que crece hasta $\\infty$.",
+    "Porque $c$ tendría que ser negativa."
+   ],
+   "answer": 2,
+   "why": "Para negar $f\\in O(g)$ hay que probar que ninguna pareja $(c,n_0)$ sirve."
+  },
+  {
+   "q": "La definición de $f(n)\\in\\Omega(g(n))$ es...",
+   "options": [
+    "existen $c$ y $n_0$ tales que $f(n)\\le c\\cdot g(n)$.",
+    "existen $c>0$ y $n_0$ tales que $0\\le c\\cdot g(n)\\le f(n)$ para todo $n\\ge n_0$.",
+    "$f(n)\\le g(n)$ para todo $n$.",
+    "$f(n)=g(n)$ a partir de $n_0$."
+   ],
+   "answer": 1,
+   "why": "$\\Omega$ es la cota inferior: $f$ queda por encima de $c\\cdot g$."
+  },
+  {
+   "q": "Si $f\\in\\Omega(g)$, ¿qué dice el límite $\\lim\\frac{f(n)}{g(n)}$?",
+   "options": [
+    "Que es 0.",
+    "Que es exactamente 1.",
+    "Que es mayor que 0 (una constante positiva o $\\infty$).",
+    "Que es una constante finita."
+   ],
+   "answer": 2,
+   "why": "Para $O$ el límite es una constante finita; para $\\Omega$, mayor que 0; para $\\Theta$, una constante mayor que 0."
+  },
+  {
+   "q": "¿Cuál es la cota inferior $\\Omega$ que querremos dar para $2n+5$?",
+   "options": [
+    "$\\Omega(n^2)$",
+    "$\\Omega(1)$",
+    "$\\Omega(\\log n)$",
+    "$\\Omega(n)$: la más alta posible."
+   ],
+   "answer": 3,
+   "why": "$2n+5\\in\\Omega(1)$ y $\\Omega(\\log n)$ son ciertas, pero la más ajustada es $\\Omega(n)$; $\\Omega(n^2)$ es falsa."
+  }
+ ],
+ "t22-theta": [
+  {
+   "q": "$f(n)\\in\\Theta(g(n))$ equivale a...",
+   "options": [
+    "$f(n)=g(n)$ para todo $n$.",
+    "$f\\in O(g)$ o $f\\in\\Omega(g)$.",
+    "$f\\in O(g)$ y $f\\in\\Omega(g)$ a la vez.",
+    "$\\lim\\frac fg=\\infty$."
+   ],
+   "answer": 2,
+   "why": "$\\Theta$ es la cota ajustada: a partir de $n_0$, $f$ queda entre $c_1g$ y $c_2g$."
+  },
+  {
+   "q": "¿Qué significan $o$ y $\\omega$?",
+   "options": [
+    "Cotas para funciones de dos parámetros.",
+    "Cotas **estrictas**: $f\\in o(g)$ si $g$ es estrictamente mayor; $f\\in\\omega(g)$ si $g$ es estrictamente menor.",
+    "Cotas para el mejor caso.",
+    "Lo mismo que $O$ y $\\Omega$."
+   ],
+   "answer": 1,
+   "why": "$o$ equivale a $f<g$ asintóticamente, mientras $O$ es $f\\le g$."
+  },
+  {
+   "q": "Simplifica $\\Theta(3m^2n+m^3+10mn+2n^2)$.",
+   "options": [
+    "$\\Theta(m^3)$",
+    "$\\Theta(m^2n+m^3+n^2)$",
+    "$\\Theta(3m^2n+m^3)$",
+    "$\\Theta(m^2n)$"
+   ],
+   "answer": 1,
+   "why": "Se quitan las constantes y los términos contenidos en otros: $mn\\le m^2n$. Entre los tres que quedan ninguno es superior a otro."
+  },
+  {
+   "q": "Para $T(n,m)\\in\\Theta(n+m)$ (mezclar dos listas ordenadas de longitudes $n$ y $m$), ¿por qué no se puede quedar sólo con $n$?",
+   "options": [
+    "Porque $m$ es siempre mayor que $n$.",
+    "Porque la suma siempre es $\\Theta(n\\cdot m)$.",
+    "Porque no sabemos cuál de los dos parámetros domina: si $m$ crece más que $n$, el término $m$ es el que manda.",
+    "Porque $n+m$ no es un polinomio."
+   ],
+   "answer": 2,
+   "why": "Con dos parámetros hay que comparar con límites en cada variable."
+  }
+ ],
+ "t22-aspectos": [
+  {
+   "q": "¿Qué ocurre con la base del logaritmo en notación asintótica?",
+   "options": [
+    "No importa: $\\Theta(\\log_x n)=\\Theta(\\log_yn)$, porque cambiar de base sólo multiplica por una constante.",
+    "Importa sólo si la base es mayor que 2.",
+    "Importa: $\\log_2n$ y $\\log_{10}n$ son órdenes distintos.",
+    "Sólo importa en el peor caso."
+   ],
+   "answer": 0,
+   "why": "$\\log_xg=\\frac{\\log_yg}{\\log_yx}$: el factor $\\frac1{\\log_yx}$ es una constante."
+  },
+  {
+   "q": "¿Qué es incorrecto?",
+   "options": [
+    "Dar la cota superior para el peor caso.",
+    "Escribir $f(n)\\in O(g(n))$ en vez de $f(n)=O(g(n))$.",
+    "Decir que si $f\\in O(g)$, entonces $f$ tarda al menos $g(n)$.",
+    "Suponer que las funciones del análisis son positivas."
+   ],
+   "answer": 2,
+   "why": "$O(g)$ garantiza que no se supera $g$; escribir $=$ en vez de $\\in$ es un abuso de notación habitual."
+  },
+  {
+   "q": "¿A qué hay que asociar siempre una cota?",
+   "options": [
+    "A una máquina concreta.",
+    "A un valor concreto de $n$.",
+    "A un tipo de entrada: mejor caso, peor caso o caso medio.",
+    "A un lenguaje de programación."
+   ],
+   "answer": 2,
+   "why": "Que un algoritmo tarde $\\Theta(n^2)$ para algunas entradas no quiere decir que lo haga para todas."
+  },
+  {
+   "q": "Procesar los $n$ bits de los $m=2^n$ números de $n$ bits cuesta...",
+   "options": [
+    "$\\Theta(m^2)$",
+    "$\\Theta(2^n)$",
+    "$\\Theta(n\\,2^n)$ en función de $n$, que es lo mismo que $\\Theta(m\\log m)$ en función de $m$.",
+    "$\\Theta(n)$"
+   ],
+   "answer": 2,
+   "why": "Las dos expresiones son idénticas: lo que cambia es qué se toma como tamaño de la entrada, y por eso un coste puede parecer intratable o tratable."
+  }
+ ],
+ "t22-lineal": [
+  {
+   "q": "El **counting-sort** ordena en $\\Theta(n)$ si...",
+   "options": [
+    "la lista ya está casi ordenada.",
+    "se pueden comparar los elementos.",
+    "los elementos son reales.",
+    "los elementos son enteros en $[0,k]$ con $k\\in O(n)$."
+   ],
+   "answer": 3,
+   "why": "Su coste es $\\Theta(n+k)$ y no es general: sólo sirve para ese tipo de datos."
+  },
+  {
+   "q": "¿Cuántos vectores usa el counting-sort y para qué?",
+   "options": [
+    "Dos: la entrada y una cola.",
+    "Uno: ordena en el propio vector.",
+    "Tres: entrada $A$, salida $B$ y un vector auxiliar $C[0..k]$ con las apariciones de cada entero.",
+    "Uno por cada elemento distinto."
+   ],
+   "answer": 2,
+   "why": "Se cuentan las apariciones, se acumulan sumas en $C$ y se coloca cada elemento en $B$."
+  },
+  {
+   "q": "¿Por qué el counting-sort puede ser lineal sin contradecir lo que se verá sobre la ordenación?",
+   "options": [
+    "Porque compara de forma más rápida.",
+    "Porque no ordena por comparaciones: no es un algoritmo general y usa que los valores son enteros pequeños.",
+    "Porque usa recursión.",
+    "Porque trabaja sólo con listas ordenadas."
+   ],
+   "answer": 1,
+   "why": "Radix-sort y bucket-sort también son lineales con hipótesis sobre los datos."
+  }
+ ],
+ "t22-comparacion": [
+  {
+   "q": "Un algoritmo de ordenación **por comparación**...",
+   "options": [
+    "sólo ordena enteros.",
+    "no puede ordenar cadenas.",
+    "sólo usa comparaciones ($<,\\le,=,\\ge,>$) y puede ordenar cualquier tipo de datos que se pueda comparar.",
+    "necesita conocer la distribución de los valores."
+   ],
+   "answer": 2,
+   "why": "Sus valores y distribución son irrelevantes: sólo interesa el puesto en la ordenación."
+  },
+  {
+   "q": "Para un vector de $n$ elementos, ¿cuántas permutaciones distintas debe poder generar un algoritmo de ordenación por comparación?",
+   "options": [
+    "$2^n$",
+    "$n$",
+    "$n!$",
+    "$n^2$"
+   ],
+   "answer": 2,
+   "why": "Debe poder llevar cualquier permutación de la entrada a la salida ordenada."
+  },
+  {
+   "q": "En el árbol de decisión de un algoritmo de ordenación, ¿qué representa cada nodo interno $X{:}Y$?",
+   "options": [
+    "Un elemento ya ordenado.",
+    "Una permutación de la lista.",
+    "Una comparación entre los elementos $X$º e $Y$º de la secuencia original.",
+    "Una llamada recursiva."
+   ],
+   "answer": 2,
+   "why": "Las hojas son las secuencias finales $\\langle X,Y,Z\\rangle$."
+  }
+ ],
+ "t22-cota-orden": [
+  {
+   "q": "¿Qué dice el teorema sobre la ordenación por comparaciones?",
+   "options": [
+    "Necesita exactamente $n^2$ comparaciones.",
+    "Cualquier algoritmo necesita $\\Omega(n\\log n)$ comparaciones en el peor caso.",
+    "Necesita $\\Theta(n!)$ comparaciones.",
+    "Existe uno que ordena en $O(n)$."
+   ],
+   "answer": 1,
+   "why": "Por eso no puede existir un algoritmo general de ordenación por comparaciones asintóticamente más rápido que $n\\log n$."
+  },
+  {
+   "q": "¿De dónde sale la desigualdad $h\\ge\\log_2(n!)$ en la demostración?",
+   "options": [
+    "De que $n!\\le n^2$.",
+    "El árbol necesita al menos $n!$ hojas y un árbol binario de altura $h$ tiene como mucho $2^h$.",
+    "De que cada comparación ordena un elemento.",
+    "De que hay $n$ niveles."
+   ],
+   "answer": 1,
+   "why": "$n!\\le l\\le2^h$; tomando $\\log_2$ queda $h\\ge\\log_2 n!$."
+  },
+  {
+   "q": "Para probar que $\\log(n!)\\in\\Omega(n\\log n)$ se acota $\\sum_{i=2}^{n}\\log i$ por una integral. ¿Por qué se usa $\\int_1^n\\log x\\,dx$ como cota **inferior**?",
+   "options": [
+    "Porque $\\log x$ es creciente y la suma de las áreas de los rectángulos supera a la integral.",
+    "Porque la integral vale $n$.",
+    "Porque empieza en $x=0$.",
+    "Porque $\\log x$ es decreciente."
+   ],
+   "answer": 0,
+   "why": "$\\int_1^n\\log x\\,dx=n\\log n-n+1$, y se comprueba que es mayor que $\\frac12n\\log n$ para $n\\ge e^2$."
+  }
+ ],
+ "t31-insert": [
+  {
+   "q": "En el análisis de insert-sort, $t_j$ es...",
+   "options": [
+    "el número de elementos del vector.",
+    "el número de veces que se cumple la condición del `while` (se ejecuta su cuerpo) para un valor concreto de $j$; depende de la entrada.",
+    "el tiempo total del algoritmo.",
+    "una constante que no depende de la entrada."
+   ],
+   "answer": 1,
+   "why": "Por eso hay que distinguir mejor y peor caso: $t_j$ cambia según el vector."
+  },
+  {
+   "q": "¿Cuándo se da el mejor caso de insert-sort y qué orden tiene?",
+   "options": [
+    "Con el vector ordenado de menor a mayor: $\\Theta(n^2)$.",
+    "Con el vector ya ordenado de menor a mayor ($t_j=0$): $\\Theta(n)$.",
+    "Con el vector ordenado de mayor a menor: $\\Theta(n)$.",
+    "Cuando $n$ es par: $\\Theta(n\\log n)$."
+   ],
+   "answer": 1,
+   "why": "Cada elemento se compara una vez y no se desplaza nada."
+  },
+  {
+   "q": "¿Y el peor caso?",
+   "options": [
+    "No tiene peor caso.",
+    "Con el vector ordenado de menor a mayor: $\\Theta(n^2)$.",
+    "Con todos los elementos iguales: $\\Theta(n^3)$.",
+    "Con el vector ordenado de mayor a menor ($t_j=j$): aparece $\\sum j=\\frac{n(n-1)}2$ y el coste es $\\Theta(n^2)$."
+   ],
+   "answer": 3,
+   "why": "Cada elemento debe recorrer toda la parte ya ordenada."
+  },
+  {
+   "q": "¿Por qué se suele estudiar el caso peor?",
+   "options": [
+    "Porque el mejor caso no existe.",
+    "Porque el caso medio siempre es menor.",
+    "Porque es el más fácil de calcular siempre.",
+    "Es una cota superior que garantiza que el algoritmo nunca tardará más, y suele ocurrir con frecuencia (por ejemplo, en una búsqueda cuando el elemento no está)."
+   ],
+   "answer": 3,
+   "why": "Además el caso medio suele ser asintóticamente tan malo como el peor."
+  }
+ ],
+ "t31-general": [
+  {
+   "q": "En un bucle de $n$ iteraciones, ¿cuántas comparaciones se hacen?",
+   "options": [
+    "$n-1$.",
+    "Una sola.",
+    "Exactamente $n$.",
+    "$n$ más una última para salir del bucle."
+   ],
+   "answer": 3,
+   "why": "$T_{bucle}=1_{inic.}+\\sum_{i=1}^{n}(1_{comp.}+T_{cuerpo}+1_{incr.})+1_{última\\ comp.}$."
+  },
+  {
+   "q": "¿Cómo se plantea el coste de bucles anidados?",
+   "options": [
+    "Se multiplican los números de iteraciones de cada bucle, siempre.",
+    "Se escribe el coste del bucle interno y se sustituye en el sumatorio del externo; los límites del interno pueden depender del contador del externo.",
+    "Se suman los números de iteraciones de cada bucle.",
+    "Sólo se cuenta el bucle más externo."
+   ],
+   "answer": 1,
+   "why": "Por eso aparecen sumas como $\\sum_{j=i+1}^{n}c=c(n-i)$ y hay que resolverlas con las fórmulas de sumatorios."
+  },
+  {
+   "q": "En el ejemplo de los tres bucles, el `for k in range(0,j)` dentro de un `if`, ¿cuántas vueltas da el bucle más interno?",
+   "options": [
+    "$j+1$ vueltas.",
+    "Una vuelta.",
+    "$j$ vueltas (de $k=0$ a $j-1$), y sólo se ejecuta si se cumple la condición del `if`.",
+    "$n$ vueltas siempre."
+   ],
+   "answer": 2,
+   "why": "El peor caso es que la condición se cumpla siempre: $T_{If}=3+4j$; el mejor, que no se cumpla nunca: $T_{If}=1$."
+  },
+  {
+   "q": "En el ejemplo de tres bucles el mejor caso sale $\\Theta(n^2)$ y el peor...",
+   "options": [
+    "$\\Theta(n^3)$, porque la condición siempre se cumple y el bucle interior añade un factor lineal.",
+    "$\\Theta(n^2)$ también.",
+    "$\\Theta(n^4)$.",
+    "$\\Theta(n)$."
+   ],
+   "answer": 0,
+   "why": "Mejor y peor caso pueden tener órdenes distintos: hay que calcularlos por separado."
+  }
+ ],
+ "t32-expansion": [
+  {
+   "q": "¿Qué significa **resolver** una recurrencia?",
+   "options": [
+    "Escribirla en forma de bucle.",
+    "Calcular $T(n)$ para un valor de $n$.",
+    "Dar una fórmula no recursiva equivalente; por ejemplo $T(n)=5+T(n-1)$, $T(0)=3$ se resuelve con $T(n)=5n+3$.",
+    "Programar la función recursiva."
+   ],
+   "answer": 2,
+   "why": "Tras resolverla se puede dar su orden de crecimiento."
+  },
+  {
+   "q": "En la expansión de $T(n)=5+T(n-1)$ se llega a $T(n)=5i+T(n-i)$. ¿Cuánto vale $i$ en el caso base $T(0)$?",
+   "options": [
+    "$i=n$, y se obtiene $T(n)=5n+T(0)$.",
+    "$i=5$.",
+    "$i=\\log_2n$.",
+    "$i=0$."
+   ],
+   "answer": 0,
+   "why": "Se llega al caso base cuando el argumento llega a 0: $n-i=0$."
+  },
+  {
+   "q": "¿Por qué se supone $n=2^x$ al analizar `pot2` (la que hace `pot2(b*b, e//2)`)?",
+   "options": [
+    "Porque así el coste es siempre constante.",
+    "Porque la función sólo funciona con potencias de 2.",
+    "Porque así $n$ siempre es par y se puede dividir exactamente; el orden obtenido es el mismo.",
+    "Porque $n$ impar no tiene coste."
+   ],
+   "answer": 2,
+   "why": "Si el argumento se divide por 2, se llega a $T(1)$ con $i=\\log_2n$ y sale $\\Theta(\\log n)$."
+  },
+  {
+   "q": "¿Cuál es la solución de $T(n)=b+T(n/2)$ con $T(1)=a$?",
+   "options": [
+    "$T(n)=bn+a$",
+    "$T(n)=a+b$",
+    "$T(n)=b\\log_2n+a\\in\\Theta(\\log n)$",
+    "$T(n)=b\\,n\\log_2n$"
+   ],
+   "answer": 2,
+   "why": "Se divide $n$ por 2 en cada llamada y se hace trabajo constante: $\\log_2n$ veces."
+  },
+  {
+   "q": "¿Cuál es el orden de $T(n)=bn+c+2T(n/2)$?",
+   "options": [
+    "$\\Theta(n\\log n)$: se hacen $n$ operaciones $1+\\log_2n$ veces.",
+    "$\\Theta(n^2)$",
+    "$\\Theta(\\log n)$",
+    "$\\Theta(n)$"
+   ],
+   "answer": 0,
+   "why": "El árbol de recursión suma, en cada uno de sus $1+\\log_2n$ niveles, un trabajo del orden de $n$."
+  }
+ ],
+ "t32-maestro": [
+  {
+   "q": "Para $T(n)=aT(n/b)+c\\,n^k$, ¿qué resultado da el teorema maestro simple si $a<b^k$?",
+   "options": [
+    "$\\Theta(n^k)$",
+    "$\\Theta(n^{\\log_ba})$",
+    "$\\Theta(a^n)$",
+    "$\\Theta(n^k\\log n)$"
+   ],
+   "answer": 0,
+   "why": "Domina el trabajo de la raíz; si $a=b^k$ sale $\\Theta(n^k\\log n)$ y si $a>b^k$ sale $\\Theta(n^{\\log_ba})$."
+  },
+  {
+   "q": "Aplica el teorema maestro a $T(n)=3T(n/2)+n$.",
+   "options": [
+    "$\\Theta(n^{\\log_23})$, porque $a=3>b^k=2$.",
+    "$\\Theta(n^2)$.",
+    "$\\Theta(n)$, porque $a<b^k$.",
+    "$\\Theta(n\\log n)$, porque $a=b^k$."
+   ],
+   "answer": 0,
+   "why": "Aquí $a=3$, $b=2$, $k=1$: gana el término de las hojas."
+  },
+  {
+   "q": "En el caso 3 del teorema maestro completo, además de $f(n)=\\Omega(n^{\\log_ba+\\epsilon})$, ¿qué se exige?",
+   "options": [
+    "Que $f$ sea derivable.",
+    "Que $a=b$.",
+    "La condición de regularidad: $a\\,f(n/b)\\le c\\,f(n)$ para alguna $c<1$ y $n$ suficientemente grande.",
+    "Que $f(n)=n^k$."
+   ],
+   "answer": 2,
+   "why": "Sin esa condición el caso 3 no puede aplicarse."
+  },
+  {
+   "q": "¿Cuál es el error frecuente que el tema señala al expandir recurrencias?",
+   "options": [
+    "Usar demasiadas expansiones.",
+    "Elegir un caso base distinto.",
+    "No comprobar que la fórmula final es análoga a la recurrencia inicial, hacer mal la primera expansión y no simplificar.",
+    "Aplicar el teorema maestro antes que la expansión."
+   ],
+   "answer": 2,
+   "why": "Conviene verificar el resultado con valores pequeños."
+  }
+ ],
+ "t32-homogeneas": [
+  {
+   "q": "¿Cuál es la ecuación característica de $T(n)=T(n-1)+T(n-2)$?",
+   "options": [
+    "$x^2-2x=0$",
+    "$x-2=0$",
+    "$x^2-x-1=0$",
+    "$x^2+x+1=0$"
+   ],
+   "answer": 2,
+   "why": "Se pasa todo a la izquierda, $T(n)-T(n-1)-T(n-2)=0$, y se sustituye $T(n-j)$ por $x^{k-j}$."
+  },
+  {
+   "q": "Si todas las raíces $r_1,\\dots,r_k$ de la ecuación característica son distintas, la solución es...",
+   "options": [
+    "$T(n)=C_1r_1^n+\\cdots+C_kr_k^n$, y las $C_i$ salen de las condiciones iniciales.",
+    "$T(n)=r_1+\\cdots+r_k$.",
+    "$T(n)=C\\cdot n^k$.",
+    "$T(n)=r_1^{C_1}\\cdots r_k^{C_k}$."
+   ],
+   "answer": 0,
+   "why": "Cada raíz aporta una exponencial $r_i^n$."
+  },
+  {
+   "q": "El polinomio $x^3-5x^2+8x-4=(x-2)^2(x-1)$ tiene la raíz 2 doble. ¿Qué forma tiene $T(n)$?",
+   "options": [
+    "$C_12^n+C_2n^2+C_3$",
+    "$C_12^n+C_2\\,n\\,2^n+C_31^n$",
+    "$C_12^n+C_22^n+C_31^n$",
+    "$(C_1+C_2+C_3)\\,2^n$"
+   ],
+   "answer": 1,
+   "why": "Una raíz de multiplicidad $m$ aporta $C_1r^n+C_2n\\,r^n+\\cdots+C_mn^{m-1}r^n$."
+  },
+  {
+   "q": "¿Qué orden de crecimiento tiene Fibonacci y por qué es menor que $2^n$?",
+   "options": [
+    "$\\Theta\\left(\\left(\\frac{1+\\sqrt5}{2}\\right)^n\\right)$: exponencial con base $\\approx1{,}618<2$, porque el árbol de recursión está podado.",
+    "$\\Theta(2^n)$ exactamente.",
+    "$\\Theta(n\\log n)$.",
+    "$\\Theta(n^2)$, porque tiene dos llamadas."
+   ],
+   "answer": 0,
+   "why": "El segundo sumando $\\left(\\frac{1-\\sqrt5}2\\right)^n$ tiende a 0."
+  }
+ ],
+ "t32-no-homogeneas": [
+  {
+   "q": "Para $T(n)-2T(n-1)=n$ (con $b=1$, polinomio de grado $d=1$), ¿cuál es la ecuación característica?",
+   "options": [
+    "$(x-2)(x-1)=0$",
+    "$(x-2)(x-1)^3=0$",
+    "$(x-2)\\,x=0$",
+    "$(x-2)(x-1)^2=0$"
+   ],
+   "answer": 3,
+   "why": "Cada término $b^nP(n)$ añade el factor $(x-b)^{d+1}$."
+  },
+  {
+   "q": "¿Qué ecuación característica tiene $T(n)=2T(n-1)+n+2^n$?",
+   "options": [
+    "$(x-2)(x-1)^3=0$",
+    "$(x-2)^2(x-1)^2=0$, porque $2^n$ añade $(x-2)$, que se suma a la raíz $2$ de la parte homogénea.",
+    "$(x-2)(x-1)(x-2)=0$ con tres raíces distintas.",
+    "$x^2-3x=0$"
+   ],
+   "answer": 1,
+   "why": "Las multiplicidades se suman; por eso aparecen $n2^n$ y $n$ en la solución."
+  },
+  {
+   "q": "En $t(k)-t(k-1)=2+k^3+2^k+k2^k$ hay que sacar factor común de las potencias. ¿Cuál es la agrupación correcta?",
+   "options": [
+    "$2+k^3+(1+k)2^k$ sin más",
+    "$(2+k^3+k)\\,1^k+2^k$",
+    "$2^k\\,(2+k^3+1+k)$",
+    "$(2+k^3)\\,1^k+(1+k)\\,2^k$"
+   ],
+   "answer": 3,
+   "why": "Eso da $(x-1)(x-1)^4(x-2)^2=(x-1)^5(x-2)^2$."
+  },
+  {
+   "q": "¿Cuántas constantes $C_i$ hay que hallar, y cómo?",
+   "options": [
+    "Tantas como términos tiene la derecha.",
+    "Una sola, con el caso base.",
+    "No hacen falta para el orden ni para la solución exacta.",
+    "Tantas como el grado de la ecuación característica; se calculan valores $T(0),T(1),\\dots$ y se plantea un sistema."
+   ],
+   "answer": 3,
+   "why": "Para el orden de crecimiento basta saber qué término domina (por ejemplo $n2^n$ sobre $2^n$)."
+  }
+ ],
+ "t32-cambio": [
+  {
+   "q": "En $T(n)=4T(n/2)+n$ se hace $n=2^k$ y $t(k)=T(2^k)$. ¿Cuál es la nueva recurrencia?",
+   "options": [
+    "$t(k)=4t(k-1)+k$",
+    "$t(k)=4t(k/2)+2^k$",
+    "$t(k)=2t(k-1)+k$",
+    "$t(k)=4t(k-1)+2^k$"
+   ],
+   "answer": 3,
+   "why": "Error frecuente: escribir $+k$ en vez de $+2^k$; $n$ se sustituye por $2^k$."
+  },
+  {
+   "q": "Resuelta $t(k)$, ¿cómo se deshace el cambio de variable para dar $T(n)$?",
+   "options": [
+    "No hace falta deshacerlo.",
+    "Con $2^k=n$: por ejemplo $4^k=(2^k)^2=n^2$.",
+    "Sustituyendo $k=n$.",
+    "Derivando respecto a $k$."
+   ],
+   "answer": 1,
+   "why": "Así $T(n)=C_1n^2+C_2n$ y con los casos base $T(n)=2n^2-n$."
+  },
+  {
+   "q": "En $t(k)-t(k-1)=3^{2k}$ no hay una potencia del tipo $b^k$. ¿Qué hay que hacer?",
+   "options": [
+    "Ignorar el término.",
+    "Transformar $3^{2k}=(3^2)^k=9^k$.",
+    "Sustituir $k$ por $\\log 3$.",
+    "Derivar ambos lados."
+   ],
+   "answer": 1,
+   "why": "Hay que escribir la derecha con la forma $b^kP(k)$ para poder obtener el polinomio característico."
+  }
+ ],
+ "t32-espacio": [
+  {
+   "q": "En un algoritmo recursivo, ¿qué determina su coste en **espacio**?",
+   "options": [
+    "Nada: la recursión no usa memoria.",
+    "Sólo el número total de llamadas.",
+    "Sólo el tamaño del código.",
+    "La profundidad del árbol de llamadas (lo que crece la pila) y los recursos de cada llamada: parámetros, variables locales y memoria dinámica."
+   ],
+   "answer": 3,
+   "why": "Cada llamada activa ocupa un registro en la pila."
+  },
+  {
+   "q": "El estado de la pila durante $F_5$ (Fibonacci) tiene como altura máxima...",
+   "options": [
+    "$2^5$ niveles.",
+    "$F_5$ niveles.",
+    "Un solo nivel.",
+    "4 niveles ($F_5,F_4,F_3,F_2$), es decir, $\\Theta(n)$."
+   ],
+   "answer": 3,
+   "why": "La pila sólo contiene una rama del árbol, aunque el árbol completo tenga muchos más nodos; el espacio es $\\Theta(n)$."
+  },
+  {
+   "q": "¿Qué ocurre con la pila cuando una función retorna?",
+   "options": [
+    "Se conserva hasta el final del programa.",
+    "Se duplica.",
+    "Se elimina su registro: la pila crece en cada llamada y decrece al retornar.",
+    "Se copia al montículo."
+   ],
+   "answer": 2,
+   "why": "El recorrido del árbol de llamadas es en profundidad."
+  }
+ ],
+ "t4-intro": [
+  {
+   "q": "¿Qué dos ideas clave describe el tema para diseñar con recursividad?",
+   "options": [
+    "Dividir en tres partes iguales y mezclar.",
+    "Memoria dinámica y punteros.",
+    "Iteración y acumuladores.",
+    "Descomposición (resolver un problema con soluciones de subproblemas idénticos pero más sencillos) e inducción (suponer ya conocida la solución de los subproblemas)."
+   ],
+   "answer": 3,
+   "why": "No hay que calcular las \"subsoluciones\" desde cero: se obtienen con llamadas recursivas."
+  },
+  {
+   "q": "¿Cuándo es especialmente útil la recursividad?",
+   "options": [
+    "Siempre, porque es más rápida que un bucle.",
+    "Cuando la estructura del problema o de los datos no es lineal (grafos, árboles), cuando hay dos o más llamadas a sí mismo o cuando la versión recursiva es más fácil de entender.",
+    "Sólo cuando no se conoce el caso base.",
+    "Sólo con números enteros."
+   ],
+   "answer": 1,
+   "why": "Frente a listas y arrays, donde basta un bucle."
+  },
+  {
+   "q": "El factorial se define como $n!=\\begin{cases}1&n=0\\\\n\\times(n-1)!&n>0\\end{cases}$. ¿Cuál es el subproblema?",
+   "options": [
+    "$0!$",
+    "$n!$",
+    "$(n-1)!$",
+    "$2n!$"
+   ],
+   "answer": 2,
+   "why": "El problema $n!$ se resuelve conociendo la solución de un subproblema de menor tamaño y multiplicando por $n$."
+  }
+ ],
+ "t4-paradigma": [
+  {
+   "q": "¿Qué es el \"salto de fe recursivo\"?",
+   "options": [
+    "Saltar el caso base cuando es difícil.",
+    "Probar la función con muchos casos.",
+    "Convertir la recursión en un bucle.",
+    "Usar la función que estás programando asumiendo que funciona, aunque no la hayas terminado."
+   ],
+   "answer": 3,
+   "why": "Suponemos que sabemos *qué* resuelve el subproblema, sin pensar en *cómo*."
+  },
+  {
+   "q": "`fact2(n, p)`, que acumula el producto en un parámetro y hace `fact2(n-1, p*n)`, ¿es un buen diseño recursivo según el tema?",
+   "options": [
+    "No, porque no termina nunca.",
+    "No: es equivalente al factorial iterativo; surge de pensar en cómo cambian las variables, no de pensar en subproblemas.",
+    "Sí: es la forma recomendada.",
+    "Sí, porque es recursión por cola."
+   ],
+   "answer": 1,
+   "why": "El tema pide pensar de forma declarativa, en subproblemas, en vez de imperativa."
+  },
+  {
+   "q": "¿Cuál de estos tipos de recursividad se describe como \"la llamada recursiva es lo último que se hace y el resultado se acumula en parámetros\"?",
+   "options": [
+    "Múltiple",
+    "Mutua",
+    "Lineal final (por cola)",
+    "Anidada"
+   ],
+   "answer": 2,
+   "why": "La recursión mutua son dos funciones que se llaman entre sí; la anidada llama a la función dentro de sus propios argumentos; la múltiple hace varias llamadas."
+  },
+  {
+   "q": "¿Cuál de estas definiciones es de recursividad **anidada**?",
+   "options": [
+    "$f(n)=n\\cdot f(n-1)$",
+    "$f(n,y)=f(n-1,\\,y+f(n-2,0))$",
+    "$B(i)=A(i-1)$ y $A(i)=A(i-1)+B(i-1)$",
+    "$f(n)=f(n-1)+f(n-2)$"
+   ],
+   "answer": 1,
+   "why": "Una llamada recursiva aparece dentro de los argumentos de otra. Las otras son lineal, múltiple y mutua."
+  },
+  {
+   "q": "¿Conviene diseñar un algoritmo recursivo pensando en el árbol de recursión?",
+   "options": [
+    "Generalmente no: lo importante es definir la regla recursiva que relaciona padre e hijos y aplicarla en todo el árbol.",
+    "Sí, para decidir el caso base.",
+    "Sí, siempre hay que dibujarlo entero.",
+    "Sólo si el algoritmo es iterativo."
+   ],
+   "answer": 0,
+   "why": "No hay que perder tiempo pensando cómo se resolverán los subproblemas."
+  }
+ ],
+ "t4-metodologia": [
+  {
+   "q": "¿Cuáles son los pasos de la metodología recursiva, en orden?",
+   "options": [
+    "Implementar, probar, definir casos base, reducir el tamaño.",
+    "Tamaño del problema, casos base, descomposición, inducción (casos recursivos) e implementar y probar.",
+    "Dividir, vencer y combinar.",
+    "Casos base, tamaño, inducción, descomposición."
+   ],
+   "answer": 1,
+   "why": "Primero se identifica lo que determina el número de operaciones; los casos base son las instancias más sencillas."
+  },
+  {
+   "q": "Para $S(n)=\\sum_{i=1}^{n}i$, con la descomposición $S(n-1)$, ¿cuál es el caso recursivo?",
+   "options": [
+    "$S(n)=n$.",
+    "$S(n)=S(n/2)+n$.",
+    "$S(n)=n+S(n-1)$ si $n>0$, con $S(0)=0$.",
+    "$S(n)=S(n-1)\\cdot n$."
+   ],
+   "answer": 2,
+   "why": "Si conocemos la suma de los $n-1$ primeros, sólo hay que añadir $n$."
+  },
+  {
+   "q": "En \"dividir el tamaño por dos\" con $n$ par e impar, ¿qué hay que cuidar?",
+   "options": [
+    "Eliminar el caso base.",
+    "Sólo considerar $n$ par.",
+    "Usar siempre $n/2$ con decimales.",
+    "Distinguir los dos casos y usar división entera: $n//2$, $n//2-1$ o $n//2+1$ según corresponda."
+   ],
+   "answer": 3,
+   "why": "Por ejemplo $S(n)=3S(n/2)+S(n/2-1)$ si $n$ es par y $3S(\\frac{n-1}2)+S(\\frac{n+1}2)$ si es impar."
+  },
+  {
+   "q": "¿Para qué sirven los diagramas en el paso de descomposición?",
+   "options": [
+    "Para identificar el problema original y los subproblemas que se van a considerar, como la pirámide de altura $n$ y la de altura $n-1$.",
+    "Para sustituir el código.",
+    "Para calcular el coste.",
+    "Para ordenar los casos base."
+   ],
+   "answer": 0,
+   "why": "Es una forma de ver cómo se recupera la solución del problema a partir de la del subproblema."
+  }
+ ],
+ "t4-listas": [
+  {
+   "q": "¿Cuáles son las dos formas de implementar funciones sobre listas que presenta el tema?",
+   "options": [
+    "Pasar la lista como cadena o como número.",
+    "Pasar la lista completa y usar su longitud, o pasar la lista y los límites `inf` y `sup` de la sublista con la que se trabaja.",
+    "Pasar un puntero al primer elemento y otro al último, solamente.",
+    "Pasar siempre una copia."
+   ],
+   "answer": 1,
+   "why": "La segunda suele ser más eficiente, aunque más compleja."
+  },
+  {
+   "q": "¿Cuál es el caso base de `suma_lista_limites(a, inf, sup)`?",
+   "options": [
+    "`inf == sup` devuelve 0.",
+    "`sup == len(a)`.",
+    "`inf == 0`.",
+    "`inf > sup` (sublista vacía): devuelve 0."
+   ],
+   "answer": 3,
+   "why": "Si también se divide en dos mitades, hace falta el caso `inf == sup`, que devuelve `a[inf]`."
+  },
+  {
+   "q": "¿Qué descomposiciones se pueden usar para sumar los elementos de una lista?",
+   "options": [
+    "Quitar el primer elemento, quitar el último o partir la lista por la mitad y sumar los resultados.",
+    "Ordenar antes la lista.",
+    "Sólo partir por la mitad.",
+    "Sólo quitar el primero."
+   ],
+   "answer": 0,
+   "why": "Las tres son válidas: $s(a)=a_0+s(a_{1..n-1})$, $s(a)=s(a_{0..n-2})+a_{n-1}$ y $s(a)=s(a_{0..m})+s(a_{m+1..n-1})$."
+  }
+ ],
+ "t4-digitos": [
+  {
+   "q": "En la suma de los dígitos de un número, ¿cuál es el caso recursivo?",
+   "options": [
+    "$s(n)=s(n//2)+n\\%2$.",
+    "$s(n)=n+s(n-1)$.",
+    "$s(n)=s(n\\%10)+n//10$.",
+    "$s(n)=s(n//10)+(n\\%10)$, con $s(n)=n$ si $n<10$."
+   ],
+   "answer": 3,
+   "why": "`n // 10` es el número sin su último dígito y `n % 10` es ese dígito: $s(3652)=s(365)+2$."
+  },
+  {
+   "q": "En la **suma lenta** sólo se puede sumar o restar una unidad. Con la descomposición $s(a-1,b+1)$, ¿cuál es el caso recursivo?",
+   "options": [
+    "$s(a,b)=s(a-1,b-1)+1$.",
+    "$s(a,b)=s(a-1,b+1)$: no hace falta hacer nada más, porque $a-1+b+1=a+b$.",
+    "$s(a,b)=s(a,b-1)+a$.",
+    "$s(a,b)=s(a-1,b)+2$."
+   ],
+   "answer": 1,
+   "why": "El caso base es $a=0$, con $s(0,b)=b$."
+  },
+  {
+   "q": "Si el tamaño del problema de la suma lenta es $\\min(a,b)$, ¿cuáles son los casos base?",
+   "options": [
+    "$a=1$ y $b=1$.",
+    "Sólo $a=0$.",
+    "$a=0$ (devuelve $b$) y $b=0$ (devuelve $a$).",
+    "$a=b$."
+   ],
+   "answer": 2,
+   "why": "Con $s(a-1,b-1)$ se reduce el tamaño, y en el caso recursivo se suma 1 dos veces."
+  },
+  {
+   "q": "Al diseñar con un tamaño distinto, ¿hay una sola elección correcta del tamaño del problema?",
+   "options": [
+    "No: hay varias opciones válidas (como $a$, $b$ o $\\min(a,b)$); cambian los casos base y la descomposición.",
+    "No: el tamaño no se define.",
+    "Sí, el número de llamadas.",
+    "Sí, siempre el mayor de los parámetros."
+   ],
+   "answer": 0,
+   "why": "Lo importante es que la descomposición lo reduzca."
+  }
+ ],
+ "t4-maximo-potencia": [
+  {
+   "q": "Para el máximo de una lista, ¿cuál es el caso base y por qué?",
+   "options": [
+    "$n=0$: el máximo es 0.",
+    "$n=1$: el máximo es $a_0$. No tiene sentido hablar del máximo de una lista vacía.",
+    "No hace falta caso base.",
+    "$n=2$."
+   ],
+   "answer": 1,
+   "why": "La lista tiene longitud $n\\ge1$."
+  },
+  {
+   "q": "Con la descomposición \"partir por la mitad\" el máximo es...",
+   "options": [
+    "$m(a_{0..h-1})+m(a_{h..n-1})$.",
+    "$m(a_{0..n-1})$.",
+    "$\\min\\{m(a_{0..h-1}),m(a_{h..n-1})\\}$.",
+    "$\\max\\{m(a_{0..h-1}),\\,m(a_{h..n-1})\\}$, con $h=n//2$."
+   ],
+   "answer": 3,
+   "why": "El mayor de los máximos de las dos sublistas."
+  },
+  {
+   "q": "¿Qué coste tiene calcular $b^n$ con $b^n=b\\cdot b^{n-1}$ y cuál con $b^n=(b^{n//2})^2$ (con un factor $b$ si $n$ es impar)?",
+   "options": [
+    "$\\Theta(n)$ y $\\Theta(\\log n)$.",
+    "$\\Theta(n)$ en ambos.",
+    "$\\Theta(\\log n)$ y $\\Theta(n)$.",
+    "$\\Theta(n^2)$ y $\\Theta(n)$."
+   ],
+   "answer": 0,
+   "why": "La segunda reduce el exponente a la mitad en cada llamada."
+  },
+  {
+   "q": "En la segunda versión de la potencia, ¿por qué se guarda `p = pot2(b, n//2)` antes de devolver `p*p`?",
+   "options": [
+    "Para ahorrar una variable.",
+    "Para hacer una sola llamada recursiva; si se llamase dos veces, el coste dejaría de ser logarítmico.",
+    "Para evitar el caso base.",
+    "Porque Python no permite llamar a la función dos veces."
+   ],
+   "answer": 1,
+   "why": "Con dos llamadas de tamaño $n/2$ el coste sería $\\Theta(n)$."
+  }
+ ],
+ "t4-secuencias": [
+  {
+   "q": "En las funciones que escriben una cadena en vertical (hola → h, o, l, a), ¿qué cambia entre el orden normal y el inverso con la descomposición \"quitar el primero\"?",
+   "options": [
+    "No cambia nada.",
+    "Se cambia el caso base.",
+    "Se imprime `s[0]` antes de la llamada recursiva para el orden normal, y después para el inverso.",
+    "Se usa otra descomposición forzosamente."
+   ],
+   "answer": 2,
+   "why": "`f1`: `print(s[0]); f1(s[1:])`; `g1`: `g1(s[1:]); print(s[0])`."
+  },
+  {
+   "q": "En `f3` (dividir la cadena por la mitad), ¿en qué orden hay que hacer las llamadas para escribir en orden normal?",
+   "options": [
+    "Imprimir en cada llamada.",
+    "Da igual.",
+    "Primero la mitad derecha.",
+    "Primero `f3(s[:m])` y luego `f3(s[m:])`."
+   ],
+   "answer": 3,
+   "why": "Para el orden inverso `g3` llama primero a `g3(s[m:])`."
+  },
+  {
+   "q": "En el sumatorio general $f(m,n,g)=\\sum_{i=m}^{n}g(i)$, ¿cuál es el tamaño del problema y el caso base?",
+   "options": [
+    "No tiene caso base.",
+    "El tamaño es $m$ y el caso base $n=0$.",
+    "El tamaño es $n-m+1$ (el número de términos) y el caso base es $m>n$: vale 0.",
+    "El tamaño es $n$ y el caso base $m=0$."
+   ],
+   "answer": 2,
+   "why": "Si se divide en dos hace falta además $m=n$, que devuelve $g(m)$."
+  },
+  {
+   "q": "¿Cómo se implementa `contiene_digito_cola(n, d)` frente a la versión lineal?",
+   "options": [
+    "Son la misma función.",
+    "En la de cola la llamada recursiva es lo último; en la lineal hay una operación pendiente tras la llamada (`(n%10==d) or contiene_digito_lineal(n//10, d)`).",
+    "La lineal no usa `n//10`.",
+    "La de cola no necesita caso base."
+   ],
+   "answer": 1,
+   "why": "Ambas descomponen con `n // 10`; $f(3082,2)=$ `True`."
+  }
+ ],
+ "t4-cambio-lineal": [
+  {
+   "q": "Para el cambio de base $c(n,b)$ el tema usa la regla $c(n,b)=10\\cdot c(n//b,b)+n\\%b$. ¿Qué ejemplo lo ilustra?",
+   "options": [
+    "$c(142,5)=c(28,5)+2$.",
+    "$c(142,5)=10\\cdot c(28,5)+2=10\\cdot103+2=1032$.",
+    "$c(142,5)=5\\cdot c(28,5)+2$.",
+    "$c(142,5)=c(142,10)\\cdot5$."
+   ],
+   "answer": 1,
+   "why": "$142=28\\cdot5+2$ y $28$ en base 5 es 103: añadir el dígito $2$ a la derecha equivale a multiplicar por 10 y sumar 2."
+  },
+  {
+   "q": "¿Cuál es el caso base del cambio de base?",
+   "options": [
+    "$n=b$.",
+    "$n=0$ devuelve $b$.",
+    "$n<b$: la salida tiene un solo dígito, $c(n,b)=n$.",
+    "$b=1$."
+   ],
+   "answer": 2,
+   "why": "El tamaño del problema es el número de dígitos de la salida."
+  },
+  {
+   "q": "En el algoritmo de Horner, ¿cuál es la regla recursiva para evaluar el polinomio?",
+   "options": [
+    "$P(x,d)=x^n\\cdot P(x,d_{1..n})$",
+    "$P(x,d)=P(x,d_{0..n-1})\\cdot x$",
+    "$P(x,d)=d_0+x\\cdot P(x,d_{1..n})$",
+    "$P(x,d)=d_n+P(x,d_{0..n-1})$"
+   ],
+   "answer": 2,
+   "why": "Se elimina el primer coeficiente; el caso base es el polinomio constante $d_0$."
+  },
+  {
+   "q": "En la búsqueda lineal recursiva, ¿cuál es el caso recursivo tras comprobar que $x\\neq a_{n-1}$?",
+   "options": [
+    "Buscar $x$ en la mitad derecha.",
+    "Buscar $x$ en $a_{0..n-2}$: $f(a,x)=f(a_{0..n-2},x)$.",
+    "Devolver $-1$.",
+    "Devolver $n$."
+   ],
+   "answer": 1,
+   "why": "El caso base es la lista vacía, que devuelve $-1$."
+  }
+ ],
+ "t4-binaria": [
+  {
+   "q": "En la búsqueda binaria recursiva, si $x<a_m$ (con $m$ la mitad), ¿dónde se continúa?",
+   "options": [
+    "Se devuelve $-1$.",
+    "En toda la lista.",
+    "En $a_{m+1..n-1}$.",
+    "En $a_{0..m-1}$, porque $x$ sólo puede estar ahí; el coste es $\\Theta(\\log n)$."
+   ],
+   "answer": 3,
+   "why": "Se descarta la mitad superior de la lista, y el caso base es la lista vacía."
+  },
+  {
+   "q": "¿Por qué conviene pasar los índices `inf` y `sup` en la búsqueda binaria en vez de sublistas?",
+   "options": [
+    "Para que la búsqueda sea lineal.",
+    "Para evitar el caso base.",
+    "Para devolver el índice en la lista original: se pasa toda la lista y la función trabaja con los índices entre `inf` y `sup`.",
+    "Porque Python no permite sublistas."
+   ],
+   "answer": 2,
+   "why": "Con sublistas habría que sumar desplazamientos a cada resultado."
+  },
+  {
+   "q": "En el problema de las **escaleras** (subir de uno o dos peldaños), ¿cuál es el caso recursivo?",
+   "options": [
+    "$f(n)=f(n-1)\\cdot f(n-2)$.",
+    "$f(n)=f(n/2)+1$.",
+    "$f(n)=f(n-1)+f(n-2)$, con $f(1)=1$ y $f(2)=2$.",
+    "$f(n)=2f(n-1)$."
+   ],
+   "answer": 2,
+   "why": "Se agrupan las formas según el primer paso: las que empiezan con un peldaño son $f(n-1)$ y las que empiezan con dos son $f(n-2)$."
+  },
+  {
+   "q": "En problemas combinatorios (de conteo), ¿qué recomienda el tema?",
+   "options": [
+    "Agrupar los elementos a contar en categorías diferentes y sumar los de cada una.",
+    "Usar siempre la fórmula con factoriales.",
+    "Contarlos uno a uno con un bucle.",
+    "Ordenarlos antes."
+   ],
+   "answer": 0,
+   "why": "Es la idea que da la regla recursiva de las escaleras."
+  }
+ ],
+ "t4-manhattan": [
+  {
+   "q": "¿Cuántos caminos hay de $(0,0)$ a $(x,y)$ avanzando una unidad hacia arriba o hacia la derecha en cada paso?",
+   "options": [
+    "$f(x,y)=f(x-1,y)+f(x,y-1)$, con $f=1$ si $x=0$ o $y=0$; vale $\\binom{x+y}{x}$.",
+    "$x+y$",
+    "$2^{x+y}$",
+    "$x\\cdot y$"
+   ],
+   "answer": 0,
+   "why": "Sólo se puede llegar a $(x,y)$ desde $(x-1,y)$ o desde $(x,y-1)$."
+  },
+  {
+   "q": "¿Cuál es el caso base general en los caminos por Manhattan?",
+   "options": [
+    "Sólo $x=0$ e $y=0$.",
+    "$x=y$.",
+    "Si $x=0$ o $y=0$ hay un único camino (totalmente vertical u horizontal).",
+    "Si $x=0$ o $y=0$ no hay caminos."
+   ],
+   "answer": 2,
+   "why": "El caso $x=y=0$ se considera un camino válido."
+  },
+  {
+   "q": "Método de bisección, para $f$ continua con $f(a)$ y $f(b)$ de signo distinto, ¿cuándo se puede parar?",
+   "options": [
+    "Siempre después de 10 pasos.",
+    "Cuando $a=b$.",
+    "Si $f(\\hat z)=0$ o si $b-a<2\\varepsilon$ (entonces $|\\hat z-r|\\le\\varepsilon$).",
+    "Cuando $f(a)=f(b)$."
+   ],
+   "answer": 2,
+   "why": "Con $\\hat z=(a+b)/2$, el nuevo intervalo conserva el cambio de signo y su ancho se divide por 2."
+  },
+  {
+   "q": "En la bisección, ¿cómo se decide el siguiente intervalo?",
+   "options": [
+    "El que contiene $f(x)=0$ por tanteo.",
+    "El de mayor longitud.",
+    "Se queda $[a,\\hat z]$ si el signo de $f(a)$ difiere del de $f(\\hat z)$; si no, $[\\hat z,b]$.",
+    "Siempre el de la izquierda."
+   ],
+   "answer": 2,
+   "why": "El tamaño del problema es $b-a$ y se divide por 2 en cada paso."
+  }
+ ],
+ "t4-hanoi": [
+  {
+   "q": "¿Cuál es la descomposición de las Torres de Hanoi con $n$ discos?",
+   "options": [
+    "Mover $n/2$ discos y luego los otros $n/2$.",
+    "Mover $n-1$ discos de origen a auxiliar, mover el disco $n$ de origen a destino y mover los $n-1$ de auxiliar a destino.",
+    "Mover los discos de mayor a menor siempre.",
+    "Mover el disco 1 hasta el destino $n$ veces."
+   ],
+   "answer": 1,
+   "why": "Hay dos llamadas recursivas con $n-1$ discos y una operación básica."
+  },
+  {
+   "q": "¿Cuántos movimientos hacen falta para $n=4$?",
+   "options": [
+    "8",
+    "4",
+    "15",
+    "16"
+   ],
+   "answer": 2,
+   "why": "Con $T(n)=2T(n-1)+1$ y $T(1)=1$: $2^n-1=15$."
+  },
+  {
+   "q": "¿Cuál es el caso base de Hanoi?",
+   "options": [
+    "Cuando las tres torres están vacías.",
+    "$n=2$.",
+    "$n=1$: mover el disco 1 de origen a destino (o $n=0$: no se mueve nada).",
+    "Hanoi no tiene caso base."
+   ],
+   "answer": 2,
+   "why": "El código alternativo `if n > 0:` usa $n=0$ como único caso base."
+  },
+  {
+   "q": "¿Conviene analizar todos los movimientos a mano para diseñar Hanoi?",
+   "options": [
+    "No, hay que memorizar la secuencia.",
+    "Sí: así se descubre la regla.",
+    "Sí, pero sólo con $n=2$.",
+    "No: hay que centrarse en subproblemas y sus soluciones, suponiendo que sabemos mover una pirámide de $n-1$ discos de cualquier torre a otra."
+   ],
+   "answer": 3,
+   "why": "Es el salto de fe recursivo aplicado a las pirámides."
+  }
+ ],
+ "t4-hanoi-ciclico": [
+  {
+   "q": "En las Torres de Hanoi cíclicas, ¿por qué hay dos funciones, `reloj` y `antireloj`?",
+   "options": [
+    "Porque se usan dos pilas.",
+    "Para repartir los discos pares e impares.",
+    "Porque Python lo exige.",
+    "Porque son dos problemas distintos (mover en el sentido de las agujas del reloj y en el contrario) y se llaman entre sí: recursividad mutua."
+   ],
+   "answer": 3,
+   "why": "Cada uno se descompone usando problemas de tamaño $n-1$ de ambos sentidos."
+  },
+  {
+   "q": "¿Cómo se mueve un disco en sentido \"reloj\" para $n=1$ y en sentido \"antireloj\"?",
+   "options": [
+    "En antireloj no se puede.",
+    "Los dos directamente.",
+    "Los dos pasando por la auxiliar.",
+    "En reloj, directamente de origen a destino; en antireloj, pasando por la torre auxiliar (origen→auxiliar→destino)."
+   ],
+   "answer": 3,
+   "why": "Los discos sólo pueden pasar de una torre a otra en el sentido de las agujas del reloj."
+  },
+  {
+   "q": "En el caso recursivo de `reloj`, ¿qué se hace?",
+   "options": [
+    "Se mueven los discos a la torre D uno a uno.",
+    "Se mueven $n-1$ discos de O a A en sentido antireloj, el disco $n$ de O a D y los $n-1$ de A a D en antireloj.",
+    "Se mueven $n-1$ discos en reloj dos veces.",
+    "Se usa la solución de Hanoi normal."
+   ],
+   "answer": 1,
+   "why": "`antireloj` necesita cinco pasos: dos veces el disco $n$ y tres movimientos de pirámides."
+  }
+ ],
+ "t5-intro": [
+  {
+   "q": "¿En qué se diferencian \"decrementa y vencerás\" y \"divide y vencerás\"?",
+   "options": [
+    "No hay diferencia: son sinónimos.",
+    "El primero es más rápido siempre.",
+    "El primero hace una sola llamada recursiva en cada caso recursivo (el problema reduce su tamaño); el segundo divide en varios subproblemas y combina sus soluciones.",
+    "El primero usa bucles y el segundo recursión."
+   ],
+   "answer": 2,
+   "why": "Ejemplos del tema 4 (una llamada) frente a mergesort o quicksort (varias)."
+  },
+  {
+   "q": "¿Qué esquema sigue divide y vencerás?",
+   "options": [
+    "Resolver el problema entero y luego dividirlo.",
+    "Transformar el problema en otro y no combinar nada.",
+    "Probar todas las soluciones.",
+    "Dividir el problema en subproblemas del mismo tipo, resolverlos y combinar sus soluciones en la solución del original."
+   ],
+   "answer": 3,
+   "why": "Puede requerir una operación adicional al combinar."
+  },
+  {
+   "q": "¿Cuál es una ventaja de divide y vencerás citada en el tema?",
+   "options": [
+    "Evita las llamadas recursivas.",
+    "Garantiza coste constante.",
+    "Siempre usa menos memoria.",
+    "Puede aumentar la eficiencia, permite paralelismo (subproblemas en distintos procesadores) y hace un uso eficiente de la caché."
+   ],
+   "answer": 3,
+   "why": "Muchos algoritmos importantes se basan en él, como la FFT."
+  }
+ ],
+ "t5-transforma": [
+  {
+   "q": "¿Qué es \"transforma y vencerás\"?",
+   "options": [
+    "Dividir el problema en dos mitades.",
+    "Resolver un problema convirtiéndolo en otro más simple, conocido o con algoritmos eficientes (una reducción).",
+    "Resolver con fuerza bruta.",
+    "Quitar un elemento del problema."
+   ],
+   "answer": 1,
+   "why": "Esquema: problema A $\\to$ transformación $\\to$ problema B $\\to$ solución de B $\\to$ paso sencillo $\\to$ solución de A."
+  },
+  {
+   "q": "Para hallar la **mediana** de un array desordenado con esta estrategia, ¿qué se hace y cuánto cuesta?",
+   "options": [
+    "Se calcula en $\\Theta(1)$.",
+    "Se ordena el array ($\\Theta(n\\log n)$) y se toma el elemento central, o la media de los dos centrales si $n$ es par.",
+    "Se suman todos los elementos y se divide entre $n$.",
+    "Se busca el máximo $n/2$ veces."
+   ],
+   "answer": 1,
+   "why": "Existen algoritmos más eficientes, como Quickselect."
+  },
+  {
+   "q": "¿En qué problema se transforma el cálculo de $\\sqrt a$?",
+   "options": [
+    "En buscar el máximo de $a$.",
+    "En hallar un cero de la función $x^2-a$.",
+    "En multiplicar matrices.",
+    "En ordenar una lista."
+   ],
+   "answer": 1,
+   "why": "Se resuelve con Newton-Raphson o con bipartición."
+  },
+  {
+   "q": "En la estimación de $\\pi$, ¿qué se hace?",
+   "options": [
+    "Se mide un círculo físico.",
+    "Se aproxima el círculo con polígonos regulares cuyo número de lados se duplica; los perímetros dan $\\frac{p_i}{2R}\\le\\pi\\le\\frac{p_c}{2R}$.",
+    "Se resuelve con una integral exacta.",
+    "Se usa el algoritmo de Euclides."
+   ],
+   "answer": 1,
+   "why": "El perímetro de un polígono con el doble de lados se obtiene fácilmente a partir del anterior."
+  }
+ ],
+ "t5-newton": [
+  {
+   "q": "¿Cuál es la regla del método de Newton-Raphson?",
+   "options": [
+    "$x_{n+1}=\\dfrac{f(x_n)}{f'(x_n)}$",
+    "$x_{n+1}=x_n+f(x_n)\\,f'(x_n)$",
+    "$x_{n+1}=x_n-f'(x_n)$",
+    "$x_{n+1}=x_n-\\dfrac{f(x_n)}{f'(x_n)}$"
+   ],
+   "answer": 3,
+   "why": "Es el corte con el eje de abscisas de la recta tangente en $(x_n,f(x_n))$."
+  },
+  {
+   "q": "Para $\\sqrt a$, con $f(x)=x^2-a$, la regla queda...",
+   "options": [
+    "$x_{n+1}=\\dfrac{x_n+a}{2}$",
+    "$x_{n+1}=\\dfrac{a}{x_n}$",
+    "$x_{n+1}=\\dfrac{x_n^2+a}{2x_n}$",
+    "$x_{n+1}=x_n^2-a$"
+   ],
+   "answer": 2,
+   "why": "Es $x_n-\\frac{x_n^2-a}{2x_n}$; para $a=13$ y $x_0=13$ se llega a $3{,}6055\\ldots$ en pocos pasos."
+  },
+  {
+   "q": "En la factorización LU, ¿por qué se prefiere a calcular $A^{-1}$ para resolver $Ax=b$?",
+   "options": [
+    "Porque $A^{-1}$ no existe nunca.",
+    "Porque $A^{-1}$ da errores de precisión y puede ser densa aunque $A$ no lo sea; con $A=LU$ se resuelven dos sistemas triangulares, $Ly=b$ y $Ux=y$.",
+    "Porque LU es de coste $O(n)$.",
+    "Porque LU sólo sirve para matrices diagonales."
+   ],
+   "answer": 1,
+   "why": "Ambas se calculan en $O(n^3)$; la ventaja es numérica y de estructura."
+  }
+ ],
+ "t5-dyv": [
+  {
+   "q": "Para el máximo de una lista con divide y vencerás, ¿cuál es la recurrencia y su solución?",
+   "options": [
+    "$T(n)=1+T(n/2)$, que da $\\Theta(\\log n)$.",
+    "$T(n)=2T(n-1)$, que da $\\Theta(2^n)$.",
+    "$T(n)=1+2T(n/2)$ con $T(1)=1$, que da $T(n)=2n-1\\in\\Theta(n)$.",
+    "$T(n)=n+2T(n/2)$, que da $\\Theta(n\\log n)$."
+   ],
+   "answer": 2,
+   "why": "Se divide por la mitad pero hay que resolver dos problemas, y la exponencial y el logaritmo se cancelan: el árbol tiene $2n-1$ nodos."
+  },
+  {
+   "q": "¿Podría haber un algoritmo para el máximo más eficiente que una búsqueda lineal?",
+   "options": [
+    "No: el problema tiene una cota inferior $\\Omega(n)$, porque hay que procesar todos los elementos.",
+    "Sí, con tiempo constante.",
+    "Sí, uno de coste $\\Theta(\\log n)$ dividiendo siempre por la mitad.",
+    "Sí, con divide y vencerás en tiempo $O(\\log n)$."
+   ],
+   "answer": 0,
+   "why": "El tamaño de la entrada ya es $n$: no se puede mirar menos."
+  },
+  {
+   "q": "¿Cuál es la combinación en el máximo por mitades?",
+   "options": [
+    "$x+y$",
+    "$\\max\\{x,y\\}$, siendo $x$ e $y$ los máximos de las dos mitades.",
+    "No hay combinación.",
+    "$x\\cdot y$"
+   ],
+   "answer": 1,
+   "why": "Caso base: $n=1$ devuelve $a_0$."
+  }
+ ],
+ "t5-ordenacion": [
+  {
+   "q": "¿Qué descomposición usa cada algoritmo de ordenación recursivo del tema?",
+   "options": [
+    "Insert-sort quita el último, select-sort quita el menor y merge-sort divide en dos mitades.",
+    "Los tres quitan el primer elemento.",
+    "Insert-sort divide en dos mitades, select-sort quita el último y merge-sort quita el menor.",
+    "Los tres dividen en dos mitades."
+   ],
+   "answer": 0,
+   "why": "La descomposición que escojamos determina el algoritmo."
+  },
+  {
+   "q": "¿Cuál es el coste de merge-sort?",
+   "options": [
+    "$\\Theta(\\log n)$.",
+    "$\\Theta(n)$ en el mejor caso.",
+    "$T(n)=n+2T(n/2)$, que da $\\Theta(n\\log n)$ en todos los casos (mejor, peor y medio).",
+    "$\\Theta(n^2)$ en el peor caso."
+   ],
+   "answer": 2,
+   "why": "Incluso con división en 10% y 90% el orden sigue siendo $\\Theta(n\\log n)$."
+  },
+  {
+   "q": "¿Dónde está el trabajo de merge-sort?",
+   "options": [
+    "En ordenar cada mitad por separado, sin mezclar.",
+    "En el caso base.",
+    "En la combinación: mezclar dos listas ordenadas.",
+    "En la descomposición: elegir un pivote."
+   ],
+   "answer": 2,
+   "why": "La mezcla toma el menor de las cabezas de las dos listas, repetidamente."
+  },
+  {
+   "q": "¿Qué es la memoria auxiliar \"out-of-place\" en la ordenación?",
+   "options": [
+    "Que se ordena en el propio vector.",
+    "Que no necesita memoria.",
+    "Que se necesita un vector auxiliar de tamaño $n$: la ordenación no se realiza en el propio vector.",
+    "Que la lista se guarda en disco."
+   ],
+   "answer": 2,
+   "why": "\"In-place\" es la ordenación realizada en el propio vector."
+  }
+ ],
+ "t5-quick": [
+  {
+   "q": "En quicksort, ¿cómo se divide la lista?",
+   "options": [
+    "Se escoge un pivote y se coloca la parte con elementos menores o iguales a la izquierda, el pivote, y los mayores a la derecha; luego se ordenan ambas partes recursivamente.",
+    "Se quita el menor.",
+    "Se cuentan las apariciones de cada valor.",
+    "Se parte por la mitad y se mezcla."
+   ],
+   "answer": 0,
+   "why": "La combinación es trivial: tras las llamadas recursivas la lista ya está ordenada."
+  },
+  {
+   "q": "¿Cuál es el coste de quicksort en el mejor y el peor caso?",
+   "options": [
+    "Mejor $\\Theta(n\\log n)$ (pivote en la mitad); peor $\\Theta(n^2)$ (un subvector siempre vacío).",
+    "$\\Theta(n\\log n)$ en ambos.",
+    "$\\Theta(n^2)$ en ambos.",
+    "Mejor $\\Theta(n)$ y peor $\\Theta(n\\log n)$."
+   ],
+   "answer": 0,
+   "why": "El caso medio es $\\Theta(n\\log n)$; en la práctica suele superar a otros algoritmos por usar mejor la jerarquía de memoria."
+  },
+  {
+   "q": "¿Qué hace la partición de Hoare?",
+   "options": [
+    "Ordena la lista entera.",
+    "Coloca el pivote en su posición final recorriendo la lista desde los dos extremos e intercambiando elementos, y devuelve ese índice; es iterativa.",
+    "Divide la lista en dos mitades iguales.",
+    "Elimina el pivote de la lista."
+   ],
+   "answer": 1,
+   "why": "También se usa en quickselect."
+  },
+  {
+   "q": "¿Por qué **quickselect** no es estrictamente divide y vencerás?",
+   "options": [
+    "Porque no usa recursión.",
+    "Porque ordena toda la lista.",
+    "Porque no usa un pivote.",
+    "Porque sólo hace una llamada recursiva: continúa únicamente en la parte donde puede estar el elemento buscado."
+   ],
+   "answer": 3,
+   "why": "Su coste medio es $O(n)$ y el peor caso $O(n^2)$."
+  }
+ ],
+ "t5-multiplicacion": [
+  {
+   "q": "En la multiplicación de números en binario, $x=a\\cdot2^m+b$ e $y=c\\cdot2^m+d$. ¿Cuántos productos recursivos hace la regla básica y cuántos la de Karatsuba?",
+   "options": [
+    "La básica 4 ($ac,ad,bc,bd$), $\\Theta(n^2)$; Karatsuba 3, $\\Theta(n^{\\log_23})$.",
+    "Las dos 4.",
+    "La básica 2 y Karatsuba 1.",
+    "La básica 3 y Karatsuba 4."
+   ],
+   "answer": 0,
+   "why": "Karatsuba obtiene $ad+bc$ como $(a+b)(c+d)-ac-bd$."
+  },
+  {
+   "q": "¿Cuál es el orden de Karatsuba?",
+   "options": [
+    "$\\Theta(n^{\\log_23})=\\Theta(n^{1{,}585\\ldots})$",
+    "$\\Theta(n\\log n)$",
+    "$\\Theta(n^2)$",
+    "$\\Theta(n^3)$"
+   ],
+   "answer": 0,
+   "why": "Mejor que el $\\Theta(n^2)$ de la multiplicación \"lenta\"."
+  },
+  {
+   "q": "La multiplicación de matrices por bloques (8 productos de $n/2\\times n/2$ y 4 sumas) tiene un coste...",
+   "options": [
+    "$\\Theta(n^2)$",
+    "$\\Theta(n^3)$, por el teorema maestro ($a=8$, $b=2$, $n^{\\log_28}=n^3$).",
+    "$\\Theta(n\\log n)$",
+    "$\\Theta(n^{2{,}8})$"
+   ],
+   "answer": 1,
+   "why": "Strassen reduce los productos a 7 y llega a $\\Theta(n^{\\log_27})\\approx n^{2{,}807}$."
+  },
+  {
+   "q": "¿Cuántos productos de submatrices usa el algoritmo de Strassen?",
+   "options": [
+    "4",
+    "6",
+    "7 multiplicaciones (y 18 sumas), frente a 8 de la descomposición normal.",
+    "8"
+   ],
+   "answer": 2,
+   "why": "Sólo es más eficiente que la multiplicación ordinaria si las matrices son muy grandes."
+  }
+ ],
+ "t5-otros": [
+  {
+   "q": "En el embaldosado con L-triominós de una cuadrícula $2^k\\times2^k$ con un cuadrado sin cubrir, ¿cómo se descompone?",
+   "options": [
+    "Se rellenan las filas una a una.",
+    "Se divide en dos mitades de $n\\times n/2$.",
+    "Se coloca un triominó en el centro y se hacen 4 llamadas recursivas con cuadrículas de lado $n/2$.",
+    "Se ordenan las casillas."
+   ],
+   "answer": 2,
+   "why": "Los casos base son cuadrículas $2\\times2$ con un cuadrado sin cubrir, que cubre un triominó."
+  },
+  {
+   "q": "En la permutación de inversión de bits ($p$ bits, $2^p$ elementos), ¿qué se intercambia?",
+   "options": [
+    "El primer elemento con el último.",
+    "Los elementos pares con los impares.",
+    "Las dos mitades de la lista.",
+    "$a_i$ con $a_j$, donde $j$ es $i$ con los bits invertidos (por ejemplo, con $p=3$: la posición 1 con la 4 y la 3 con la 6)."
+   ],
+   "answer": 3,
+   "why": "Es parte de la FFT."
+  },
+  {
+   "q": "¿Cuál de estas es una descomposición válida para la inversión de bits?",
+   "options": [
+    "Sumar los bits.",
+    "Dividir en dos mitades, resolver cada una e **intercalar** los resultados; o separar posiciones pares e impares y **concatenar**.",
+    "Quitar el primer elemento.",
+    "Ordenar la lista y recorrerla."
+   ],
+   "answer": 1,
+   "why": "El tema muestra dos descomposiciones recursivas y una tercera \"iterativa\"."
+  }
+ ],
+ "t6-binario": [
+  {
+   "q": "¿Qué es el backtracking?",
+   "options": [
+    "Una forma de dividir el problema en mitades.",
+    "Una estrategia que siempre elige la mejor opción local y no deshace decisiones.",
+    "Un algoritmo de ordenación.",
+    "Una estrategia que construye soluciones parciales que cumplen las restricciones, recorriendo el árbol en profundidad, y vuelve atrás si una solución parcial no se puede completar."
+   ],
+   "answer": 3,
+   "why": "Es fuerza bruta \"inteligente\": la poda evita explorar todo el árbol."
+  },
+  {
+   "q": "En el esquema binario de subconjuntos de $n$ elementos, ¿cuántas hojas tiene el árbol y qué representa cada una?",
+   "options": [
+    "$n^2$ hojas.",
+    "$n!$ hojas, cada una una permutación.",
+    "$2^n$ hojas, cada una un subconjunto; en cada nivel se decide si se incluye (1) o no (0) un elemento.",
+    "$n$ hojas, una por elemento."
+   ],
+   "answer": 2,
+   "why": "Por ejemplo, con la solución parcial `[1,0,1]` y los elementos $\\{a,b,c\\}$ se obtiene $\\{a,c\\}$."
+  },
+  {
+   "q": "¿Cuál es el caso base del esquema binario?",
+   "options": [
+    "`sol[i] == 1`.",
+    "No tiene caso base.",
+    "`i == 0`.",
+    "`i == len(elementos)`: la solución parcial está completa y se imprime."
+   ],
+   "answer": 3,
+   "why": "Si no, se generan los candidatos $k\\in\\{0,1\\}$, se incluye en `sol[i]` y se llama con `i+1`."
+  },
+  {
+   "q": "¿Por qué se reserva la memoria de la solución parcial en la función *wrapper*?",
+   "options": [
+    "Para poder devolver varias soluciones.",
+    "Porque Python lo exige.",
+    "Es más eficiente que usar una estructura que crece y decrece dinámicamente en cada llamada.",
+    "Para que el árbol sea binario."
+   ],
+   "answer": 2,
+   "why": "Ese esquema es bueno si los subconjuntos tienen cardinalidades diferentes."
+  }
+ ],
+ "t6-subconjuntos": [
+  {
+   "q": "En el esquema \"un subconjunto en cada nodo\", ¿qué contiene la solución parcial?",
+   "options": [
+    "Los índices de los elementos que se van incluyendo: `[0,2]` es $\\{a,c\\}$.",
+    "Sólo el último elemento.",
+    "Los elementos ordenados.",
+    "Valores 0 o 1 para cada elemento."
+   ],
+   "answer": 0,
+   "why": "Por eso las soluciones parciales son también completas."
+  },
+  {
+   "q": "¿Cuántos parámetros de posición hacen falta y cuáles son los candidatos?",
+   "options": [
+    "Ninguno.",
+    "Uno: `i`; los candidatos son todos los elementos.",
+    "Dos: `i` (posición de `sol` donde incluir) y `j` (índice del último candidato incluido); los candidatos son `j+1, ..., n-1`.",
+    "Tres: `i`, `j` y `k`."
+   ],
+   "answer": 2,
+   "why": "La raíz tiene $j=-1$. Se puede evitar `j` usando `sol[i-1]+1`."
+  },
+  {
+   "q": "¿Cuándo es más eficiente este esquema que el binario?",
+   "options": [
+    "Si se buscan subconjuntos de la misma cardinalidad (en el nivel $i$ las soluciones tienen $i$ elementos).",
+    "Si sólo hay un elemento.",
+    "Nunca.",
+    "Si se buscan subconjuntos de cualquier tamaño."
+   ],
+   "answer": 0,
+   "why": "El árbol deja de ser binario y tiene exactamente $2^n$ nodos."
+  }
+ ],
+ "t6-permutaciones": [
+  {
+   "q": "En las permutaciones, ¿para qué sirve la lista `libres`?",
+   "options": [
+    "Para guardar las permutaciones.",
+    "Para ordenar los candidatos.",
+    "Para comprobar en $O(1)$ si un elemento ya está en la solución parcial; sin ella habría que usar un bucle de $O(n)$.",
+    "Para contar los elementos."
+   ],
+   "answer": 2,
+   "why": "Es clave de cara a la eficiencia."
+  },
+  {
+   "q": "Tras la llamada recursiva en `genera_permutaciones`, ¿qué hay que hacer con `libres[k]`?",
+   "options": [
+    "Volver a marcarlo como `True`, deshaciendo el cambio, porque la lista se pasa por referencia.",
+    "Marcarlo como `False` definitivamente.",
+    "Eliminarlo de la lista.",
+    "Nada."
+   ],
+   "answer": 0,
+   "why": "Si se pasara por valor no haría falta deshacer los cambios."
+  },
+  {
+   "q": "¿Cuántas hojas tiene el árbol de permutaciones de $n$ elementos?",
+   "options": [
+    "$2^n$",
+    "$n^2$",
+    "$n$",
+    "$n!$"
+   ],
+   "answer": 3,
+   "why": "El primer nivel tiene $n$ candidatos, el segundo $n-1$, etc."
+  },
+  {
+   "q": "¿Qué hace inefectiva la versión \"permutaciones ineficiente\"?",
+   "options": [
+    "No tiene caso base.",
+    "Usa recursión.",
+    "No genera todas las permutaciones.",
+    "Comprueba la factibilidad de un candidato con un bucle sobre `sol` ($O(n)$) en vez de usar una lista booleana ($O(1)$)."
+   ],
+   "answer": 3,
+   "why": "Las dos versiones generan lo mismo; cambia el coste de cada comprobación."
+  }
+ ],
+ "t6-reinas": [
+  {
+   "q": "Para el problema de las $n$ reinas, ¿cómo se reduce el espacio de búsqueda?",
+   "options": [
+    "Se elimina la restricción de filas.",
+    "Se coloca la primera reina al azar.",
+    "Sólo se prueba la diagonal.",
+    "De $2^{n^2}$ a $\\binom{n^2}{n}$, luego a $n^n$ (una por columna) y por último a $n!$ (también una por fila): hay que buscar permutaciones válidas."
+   ],
+   "answer": 3,
+   "why": "Para $n=8$ se pasa de $1{,}84\\cdot10^{19}$ a $40320$."
+  },
+  {
+   "q": "¿Cómo se indexan las diagonales para comprobarlas en $O(1)$ al colocar una reina en la fila `k` de la columna `i`?",
+   "options": [
+    "Con un bucle sobre las reinas ya colocadas.",
+    "`i*k` y `i/k`.",
+    "Diagonal principal `i-k+n-1` (de 0 a $2n-2$) y secundaria `i+k`.",
+    "`i` y `k` solamente."
+   ],
+   "answer": 2,
+   "why": "Se mantienen listas booleanas `pdiags_libres` y `sdiags_libres` de longitud $2n-1$."
+  },
+  {
+   "q": "¿Qué se hace tras la llamada recursiva en `nreinas_todas`?",
+   "options": [
+    "Se vuelven a marcar libres la fila y las dos diagonales del candidato.",
+    "Se imprime el tablero.",
+    "Se elimina la reina de la solución parcial y se detiene la búsqueda.",
+    "Nada."
+   ],
+   "answer": 0,
+   "why": "Así el siguiente candidato del bucle encuentra el estado correcto."
+  },
+  {
+   "q": "¿Para qué sirve podar el árbol de búsqueda en las $n$ reinas?",
+   "options": [
+    "Para ordenar las soluciones.",
+    "Para encontrar soluciones que no existen.",
+    "Para que el árbol sea binario.",
+    "Para no explorar soluciones parciales que ya no pueden llegar a una solución válida, evitando llegar a las hojas."
+   ],
+   "answer": 3,
+   "why": "Hasta encontrar la primera solución sólo se explora una pequeña parte del árbol."
+  }
+ ],
+ "t6-suma-caballo": [
+  {
+   "q": "En la suma de subconjuntos, ¿qué mejora introduce el parámetro `suma_parcial`?",
+   "options": [
+    "Permite encontrar un solo subconjunto.",
+    "Permite ordenar los elementos.",
+    "Evita recalcular la suma en $O(n)$: se obtiene en $\\Theta(1)$.",
+    "Evita la recursión."
+   ],
+   "answer": 2,
+   "why": "Y permite podar: si `suma_parcial + k*L[i] > s`, no se expande esa rama."
+  },
+  {
+   "q": "¿Qué esquema se usa para la suma de subconjuntos?",
+   "options": [
+    "Fuerza bruta sin poda.",
+    "El binario, porque las soluciones son subconjuntos de tamaño variable.",
+    "Permutaciones.",
+    "Un subconjunto en cada nodo."
+   ],
+   "answer": 1,
+   "why": "Se imprime la solución cuando `suma_parcial == s`."
+  },
+  {
+   "q": "En la ruta del caballo, ¿cómo se representan los 8 saltos posibles?",
+   "options": [
+    "Con una permutación.",
+    "Con ocho funciones distintas.",
+    "Con una lista de casillas visitadas.",
+    "Con una lista de incrementos a las coordenadas: `(1,-2), (2,-1), (2,1), (1,2), (-1,2), (-2,1), (-2,-1), (-1,-2)`."
+   ],
+   "answer": 3,
+   "why": "Se recorre la lista probando cada salto que caiga dentro del tablero y en una casilla no visitada."
+  },
+  {
+   "q": "¿Por qué la ruta del caballo es difícil de resolver con backtracking en tableros grandes?",
+   "options": [
+    "Porque no existe solución en ningún tablero.",
+    "Hay que encontrar una permutación de $n^2$ casillas con restricciones muy complejas; para tableros mayores de $6\\times6$ tarda en hallar una solución.",
+    "Porque el caballo no puede saltar.",
+    "Porque hay que volver a la casilla inicial."
+   ],
+   "answer": 1,
+   "why": "No se exige una ruta cerrada, pero el espacio de búsqueda sigue siendo enorme."
+  }
+ ],
+ "t6-otros": [
+  {
+   "q": "En el laberinto, ¿por qué no sirven el esquema de permutaciones ni el de subconjuntos?",
+   "options": [
+    "Porque no hay caso base.",
+    "Porque no hay restricciones.",
+    "Porque el laberinto es binario.",
+    "Porque el camino puede tener longitud variable y el orden de las celdas importa; se exploran las 4 direcciones desde cada celda en un orden fijo."
+   ],
+   "answer": 3,
+   "why": "Se usa un esquema distinto: desde $(c,f)$ hay cuatro subproblemas."
+  },
+  {
+   "q": "En el sudoku, ¿cuál es la solución parcial y cómo se expande?",
+   "options": [
+    "Un conjunto de filas.",
+    "Un árbol binario.",
+    "El propio tablero; se expande, por ejemplo, fila a fila, probando dígitos que no repitan fila, columna ni caja $3\\times3$.",
+    "Una lista de 81 dígitos aleatorios."
+   ],
+   "answer": 2,
+   "why": "Con una función `avanza(fila, col)` se pasa a la siguiente casilla."
+  },
+  {
+   "q": "En la mochila 0-1 con backtracking, ¿cuándo se poda?",
+   "options": [
+    "Cuando el valor es 0.",
+    "Nunca se poda.",
+    "Cuando se han considerado todos los objetos.",
+    "Cuando la capacidad restante sería negativa: `k*p[i] > C_restante`."
+   ],
+   "answer": 3,
+   "why": "En cada nodo $(X,Y)$ guarda capacidad restante y beneficio parcial; la rama 1 resta $p_i$ y suma $v_i$."
+  },
+  {
+   "q": "Como la mochila es un problema de **optimización**, ¿cuántas soluciones se analizan?",
+   "options": [
+    "Todas las factibles, quedándose con la mejor (`v_opt` y `sol_opt`).",
+    "Ninguna: se calcula directamente.",
+    "Sólo las de mayor peso.",
+    "Sólo la primera."
+   ],
+   "answer": 0,
+   "why": "Se buscan todas porque no se sabe cuál será la óptima hasta explorar el árbol."
+  }
+ ],
+ "t6-poda": [
+  {
+   "q": "¿Qué añade la **ramificación y poda** al backtracking?",
+   "options": [
+    "Una poda adicional por valor: si el máximo valor que puede alcanzar una rama no supera el mejor valor ya encontrado, se descarta.",
+    "El uso de listas booleanas.",
+    "Una poda por capacidad.",
+    "Una búsqueda en anchura."
+   ],
+   "answer": 0,
+   "why": "Es un método exacto para problemas de optimización duros."
+  },
+  {
+   "q": "En la mochila 0-1 con ramificación y poda, ¿cómo se actualiza el máximo valor alcanzable `max_v` al decidir sobre el objeto $i$?",
+   "options": [
+    "Si no se incluye, baja en $v_i$; si se incluye, no cambia.",
+    "Sube en $v_i$.",
+    "Se pone a 0.",
+    "Siempre baja en $v_i$."
+   ],
+   "answer": 0,
+   "why": "En la raíz `max_v` es la suma de todos los beneficios (23 en el ejemplo)."
+  },
+  {
+   "q": "¿Qué hay que añadir a un backtracking de optimización?",
+   "options": [
+    "Dos parámetros: la mejor solución y el mejor valor hallados hasta el momento; y pensar si se puede podar por valor.",
+    "Una lista de permutaciones.",
+    "Un parámetro con el número de soluciones.",
+    "Nada."
+   ],
+   "answer": 0,
+   "why": "Si sólo se busca una solución, basta una variable booleana de \"solución encontrada\" para detener la búsqueda."
+  },
+  {
+   "q": "Antes de programar un backtracking, ¿qué pregunta conviene hacerse primero?",
+   "options": [
+    "Cuántas líneas tendrá el código.",
+    "Si las soluciones son permutaciones, subconjuntos u otra cosa: si lo son, se usan los esquemas vistos, que son claros y eficientes.",
+    "Si la solución es única.",
+    "Si el lenguaje soporta recursión."
+   ],
+   "answer": 1,
+   "why": "También: ¿se pueden acelerar cálculos usando estructuras de datos? ¿se busca una solución o todas?"
+  }
+ ],
+ "t7-esquema": [
+  {
+   "q": "¿En qué consiste un algoritmo voraz?",
+   "options": [
+    "En tomar en cada paso la decisión localmente óptima, sin poder deshacerla después, con la esperanza de llegar a un óptimo global.",
+    "En probar todas las soluciones y quedarse con la mejor.",
+    "En dividir el problema en subproblemas y combinar.",
+    "En volver atrás cuando una decisión falla."
+   ],
+   "answer": 0,
+   "why": "Son rápidos y fáciles de implementar, pero no siempre dan la solución óptima."
+  },
+  {
+   "q": "¿Cuál de estas NO es una de las funciones de un algoritmo voraz?",
+   "options": [
+    "Función de ordenación de las soluciones.",
+    "Función de selección.",
+    "Función objetivo.",
+    "Función de factibilidad."
+   ],
+   "answer": 0,
+   "why": "Los elementos son: conjunto de candidatos, selección, factibilidad, objetivo y solución."
+  },
+  {
+   "q": "¿Qué hace la función de **factibilidad**?",
+   "options": [
+    "Elige el mejor candidato.",
+    "Decide el valor de la solución.",
+    "Comprueba si añadir un candidato a la solución parcial sigue siendo válido.",
+    "Indica si se ha terminado."
+   ],
+   "answer": 2,
+   "why": "Si el candidato no es factible, se desecha."
+  },
+  {
+   "q": "¿Cuál es una desventaja de los algoritmos voraces?",
+   "options": [
+    "Un óptimo local no implica un óptimo global; y es difícil encontrar la función de selección que garantice la elección óptima.",
+    "Son muy lentos.",
+    "Son difíciles de implementar.",
+    "No sirven para problemas de optimización."
+   ],
+   "answer": 0,
+   "why": "Para ciertos problemas se puede demostrar que una estrategia voraz concreta sí es óptima."
+  }
+ ],
+ "t7-camino": [
+  {
+   "q": "En el camino más corto entre $v_0$ y $v_n$ (sólo hay caminos entre vértices adyacentes), ¿qué ocurre con la estrategia \"coger el arco más corto en cada paso\"?",
+   "options": [
+    "Da siempre el camino más largo.",
+    "Sólo es óptima con tres vértices.",
+    "Es óptima: se demuestra por contradicción.",
+    "No es óptima: hay un contraejemplo."
+   ],
+   "answer": 2,
+   "why": "Como entre vértices consecutivos las elecciones son independientes, la suma de los mínimos es el mínimo."
+  },
+  {
+   "q": "Y en el grafo por etapas donde cada vértice se conecta con cualquiera de la etapa siguiente, la misma estrategia...",
+   "options": [
+    "No se puede aplicar.",
+    "Es óptima también.",
+    "No es óptima: la voraz da una longitud de 23 y la óptima es 7.",
+    "Da 7 y la óptima es 23."
+   ],
+   "answer": 2,
+   "why": "Elegir el arco más corto ahora puede obligar a coger después arcos muy largos."
+  },
+  {
+   "q": "¿Cómo se demuestra que una estrategia voraz **no** es óptima?",
+   "options": [
+    "Por contradicción siempre.",
+    "Con una gráfica.",
+    "Con un contraejemplo.",
+    "Con una simulación."
+   ],
+   "answer": 2,
+   "why": "Para demostrar que lo es hace falta una prueba (a menudo por contradicción)."
+  }
+ ],
+ "t7-monedas": [
+  {
+   "q": "En el cambio de monedas, ¿cuál es la función de selección voraz?",
+   "options": [
+    "Una moneda al azar.",
+    "La moneda más frecuente.",
+    "La moneda de valor más alto que no supere lo que queda por devolver.",
+    "La moneda de menor valor."
+   ],
+   "answer": 2,
+   "why": "Para 2,24 € con monedas de 2, 1, 0,5, 0,2, 0,1, 0,05, 0,02 y 0,01 se obtienen 4 monedas."
+  },
+  {
+   "q": "¿Es óptima siempre esa estrategia?",
+   "options": [
+    "Sí, siempre.",
+    "Nunca es óptima.",
+    "No: depende del sistema monetario; con una moneda de 0,12 € para devolver 2,24 € da 4 monedas y la óptima es 3 (2 + 0,12 + 0,12).",
+    "Sólo con monedas de 1 céntimo."
+   ],
+   "answer": 2,
+   "why": "Con las monedas del euro sí lo es."
+  },
+  {
+   "q": "¿Cuál es la función de **factibilidad** en el cambio de monedas?",
+   "options": [
+    "Que se use el mínimo de monedas.",
+    "Que la suma de las monedas elegidas no supere la cantidad $X$ a devolver.",
+    "Que la suma sea cero.",
+    "Que todas las monedas sean distintas."
+   ],
+   "answer": 1,
+   "why": "La función objetivo es minimizar el número de monedas."
+  }
+ ],
+ "t7-tiempo-mezcla": [
+  {
+   "q": "Para minimizar el tiempo total en el sistema de $n$ clientes con tiempos $t_i$, ¿qué estrategia es óptima?",
+   "options": [
+    "Atender al azar.",
+    "Atender por orden decreciente de $t_i$.",
+    "Atender por orden creciente de $t_i$.",
+    "Atender primero al que tarde más."
+   ],
+   "answer": 2,
+   "why": "Con $t=(5,10,3)$, el orden $3,1,2$ da 29, el mejor de todos."
+  },
+  {
+   "q": "En $T(P)=\\sum_{k=1}^{n}(n-k+1)s_k$, ¿qué indica el coeficiente $n-k+1$?",
+   "options": [
+    "El tiempo de cada cliente.",
+    "El número de clientes ya atendidos.",
+    "La posición del cliente en la cola de espera.",
+    "El primer cliente atendido cuenta $n$ veces (todos esperan por él), el segundo $n-1$, etc.; por eso el menor tiempo debe ir primero."
+   ],
+   "answer": 3,
+   "why": "Haciendo $s_1$ lo menor posible, luego $s_2$, etc., se minimiza $T$."
+  },
+  {
+   "q": "Para mezclar $m$ listas ordenadas por parejas con el menor número de operaciones, ¿qué estrategia voraz se usa?",
+   "options": [
+    "Mezclar en cada momento las dos listas de menor tamaño.",
+    "Mezclar siempre la primera con la segunda.",
+    "Mezclar las dos más grandes.",
+    "Mezclar al azar."
+   ],
+   "answer": 0,
+   "why": "Con tamaños 10, 20 y 30: $10+20=30$ y luego $30+30=60$, total 90, mejor que 100 o 110."
+  }
+ ],
+ "t7-huffman": [
+  {
+   "q": "En los códigos de Huffman, ¿qué estrategia voraz se sigue?",
+   "options": [
+    "Asignar a cada carácter un código de longitud fija.",
+    "Fusionar los dos árboles de mayor frecuencia.",
+    "Fusionar repetidamente los dos árboles de menor frecuencia, hasta obtener un único árbol.",
+    "Ordenar por orden alfabético."
+   ],
+   "answer": 2,
+   "why": "Se usa una cola de árboles con prioridades; los caracteres de menor frecuencia terminan con códigos más largos."
+  },
+  {
+   "q": "¿Cómo se obtiene el código de un carácter?",
+   "options": [
+    "Con su posición en la cola.",
+    "Con su código ASCII.",
+    "Con su frecuencia en binario.",
+    "Con el camino desde la raíz hasta su hoja: 0 si se va por la izquierda y 1 si se va por la derecha."
+   ],
+   "answer": 3,
+   "why": "Los caracteres más frecuentes quedan más cerca de la raíz y tienen códigos más cortos."
+  },
+  {
+   "q": "En el ejemplo de 100000 caracteres con 6 símbolos, 3 bits por carácter son 300000 bits. ¿Y con Huffman?",
+   "options": [
+    "100000 bits.",
+    "600000 bits.",
+    "300000 bits también.",
+    "224000 bits."
+   ],
+   "answer": 3,
+   "why": "Los códigos de longitud variable asignan 1 bit a `a` (la más frecuente) y 3 o 4 bits a las demás."
+  },
+  {
+   "q": "¿Qué minimiza un código de Huffman?",
+   "options": [
+    "La longitud del código más largo.",
+    "El tamaño del árbol.",
+    "El número de caracteres distintos.",
+    "El promedio de bits necesarios para representar los objetos, según sus frecuencias."
+   ],
+   "answer": 3,
+   "why": "Es un método de compresión de datos."
+  }
+ ],
+ "t7-mochila-1": [
+  {
+   "q": "En la mochila de la versión 1 (maximizar el **número** de objetos que caben), ¿qué estrategia voraz es óptima?",
+   "options": [
+    "Al azar.",
+    "Por orden decreciente de peso.",
+    "Por mayor valor.",
+    "Escoger los objetos por orden creciente de peso."
+   ],
+   "answer": 3,
+   "why": "Con $C=15$ y $p=(9,5,6,4)$: creciente da 3 objetos (4+5+6) y decreciente sólo 2 (9+6)."
+  },
+  {
+   "q": "En la versión 2 (maximizar el **peso** que cabe), ¿qué ocurre con las estrategias por peso creciente o decreciente?",
+   "options": [
+    "La decreciente siempre es óptima.",
+    "Las dos son óptimas.",
+    "Ninguna es óptima ni mejor que la otra.",
+    "La creciente siempre es óptima."
+   ],
+   "answer": 2,
+   "why": "Con $C=15$ y $p=(9,6,5)$ la decreciente da 15 y la creciente 11; con $p=(10,7,6)$ la decreciente da 10 y la creciente 13."
+  },
+  {
+   "q": "Las versiones 1 y 2 de la mochila son problemas de...",
+   "options": [
+    "programación lineal entera ($x_i\\in\\{0,1\\}$).",
+    "ordenación.",
+    "programación lineal continua.",
+    "programación convexa."
+   ],
+   "answer": 0,
+   "why": "Las variables sólo pueden valer 0 o 1."
+  }
+ ],
+ "t7-mochila-3": [
+  {
+   "q": "En la mochila con **fracciones** ($0\\le x_i\\le1$), ¿qué función de selección es óptima?",
+   "options": [
+    "El de mayor valor.",
+    "El de menor peso.",
+    "El de mayor peso.",
+    "Escoger el objeto con mayor valor por unidad de peso $v_i/p_i$."
+   ],
+   "answer": 3,
+   "why": "Con $C=100$ y los datos del ejemplo, por $v_i/p_i$ se obtiene 164, frente a 146 por valor y 156 por peso."
+  },
+  {
+   "q": "En el ejemplo $p=(10,20,30,40,50)$, $v=(20,30,66,40,60)$, ¿qué objeto tiene el mejor cociente $v_i/p_i$?",
+   "options": [
+    "El 1, con 2,0.",
+    "El 5, con 1,2.",
+    "El 4, con 1,0.",
+    "El 3, con $66/30=2{,}2$."
+   ],
+   "answer": 3,
+   "why": "Luego van el 1 (2,0) y el 2 (1,5), y el último objeto entra de forma parcial (0,8 del objeto 5)."
+  },
+  {
+   "q": "¿Por qué la mochila 0-1 (sin fracciones) no se resuelve con la estrategia por $v_i/p_i$?",
+   "options": [
+    "Porque $v_i/p_i$ no está definido.",
+    "Es un problema NP-completo; la estrategia óptima para fracciones puede no serlo si los objetos no se pueden partir.",
+    "Porque siempre es óptima.",
+    "Porque no tiene función objetivo."
+   ],
+   "answer": 1,
+   "why": "Para la mochila 0-1 se usa, por ejemplo, backtracking."
+  }
+ ],
+ "t7-arm": [
+  {
+   "q": "Un árbol libre con $n$ vértices tiene...",
+   "options": [
+    "$n$ aristas.",
+    "$n^2$ aristas.",
+    "$n-1$ aristas, y es un grafo conexo y acíclico.",
+    "tantas aristas como se quiera."
+   ],
+   "answer": 2,
+   "why": "Si se añade una arista se crea un ciclo y si se quita una, quedan vértices sin conectar."
+  },
+  {
+   "q": "¿Cuál es la **propiedad fundamental** de los árboles de recubrimiento de coste mínimo?",
+   "options": [
+    "Todos los árboles de coste mínimo son iguales.",
+    "Dado un conjunto $U\\subset V$ no vacío, la arista más pequeña entre un vértice de $U$ y otro fuera de $U$ está en algún árbol de coste mínimo.",
+    "La arista más larga siempre está.",
+    "La arista más pequeña del grafo nunca está."
+   ],
+   "answer": 1,
+   "why": "Se demuestra por reducción al absurdo; Prim y Kruskal la aplican."
+  },
+  {
+   "q": "¿Qué hace Kruskal en cada paso?",
+   "options": [
+    "Selecciona la arista de mayor peso.",
+    "Selecciona la arista de menor peso que no forme un ciclo con las ya elegidas; para al llegar a $|V|-1$ aristas.",
+    "Selecciona la arista de menor peso que salga de un vértice.",
+    "Añade un vértice nuevo."
+   ],
+   "answer": 1,
+   "why": "Parte del árbol vacío y no requiere ninguna condición sobre los extremos más allá de no crear ciclos."
+  },
+  {
+   "q": "¿Y Prim?",
+   "options": [
+    "Parte de un vértice y añade la arista mínima que une un vértice ya tratado con uno que no lo está.",
+    "Ordena todas las aristas y toma las menores.",
+    "Elige aristas al azar.",
+    "Quita aristas hasta que no queden ciclos."
+   ],
+   "answer": 0,
+   "why": "Mantiene un conjunto $U$ de vértices tratados."
+  },
+  {
+   "q": "El árbol de recubrimiento de coste mínimo de un grafo...",
+   "options": [
+    "No tiene por qué ser único.",
+    "No existe en grafos conexos.",
+    "Es siempre único.",
+    "Es siempre el camino más corto."
+   ],
+   "answer": 0,
+   "why": "Puede haber varios con la misma suma de pesos."
+  }
+ ],
+ "t7-dijkstra": [
+  {
+   "q": "¿Qué calcula el algoritmo de Dijkstra?",
+   "options": [
+    "El árbol de recubrimiento mínimo.",
+    "El ciclo hamiltoniano.",
+    "El camino más largo.",
+    "Los caminos mínimos desde un vértice origen al resto, en un grafo ponderado no negativamente."
+   ],
+   "answer": 3,
+   "why": "Sirve en grafos dirigidos y no dirigidos (en estos, cada arista se sustituye por dos con el mismo peso)."
+  },
+  {
+   "q": "¿Qué diferencia a Dijkstra de Prim?",
+   "options": [
+    "Que Dijkstra no usa aristas.",
+    "No hay diferencia.",
+    "Dijkstra tiene en cuenta todo el camino desde el origen hasta el nuevo vértice, no sólo la longitud de la nueva arista.",
+    "Que Prim usa pesos negativos y Dijkstra no."
+   ],
+   "answer": 2,
+   "why": "En cada paso inserta el vértice con menor longitud desde el origen."
+  },
+  {
+   "q": "Tras insertar un vértice $v_{sig}$ en $T$, ¿qué hace Dijkstra?",
+   "options": [
+    "Ordena todas las aristas.",
+    "Borra $v_{sig}$.",
+    "Vuelve a empezar desde el origen.",
+    "Recalcula las distancias de los nodos conectados a $v_{sig}$: $d_x\\leftarrow\\min[d_x,\\,d_{v_{sig}}+w(v_{sig},x)]$."
+   ],
+   "answer": 3,
+   "why": "Es una estrategia voraz óptima porque siempre se inserta el vértice con menor $d$."
+  },
+  {
+   "q": "En el ejemplo de 5 vértices con origen 0, ¿cuál es la distancia final al vértice 4?",
+   "options": [
+    "15",
+    "40",
+    "20",
+    "30, por el camino $0,2,1,4$."
+   ],
+   "answer": 3,
+   "why": "Primero entra el 2 ($d=10$), luego el 1 ($d=15$) y el 4 se alcanza por el 1: $15+15=30$, mejor que $10+30=40$ por el 2."
+  }
+ ],
+ "t7-kmedias": [
+  {
+   "q": "¿Qué minimiza el algoritmo K-medias?",
+   "options": [
+    "La suma de las distancias euclídeas al cuadrado entre cada dato y su centroide.",
+    "La distancia entre los centroides.",
+    "El número de grupos.",
+    "El número de datos."
+   ],
+   "answer": 0,
+   "why": "Es un problema no convexo y no hay fórmula analítica, así que se recurre a un algoritmo iterativo."
+  },
+  {
+   "q": "¿Cuáles son los dos pasos que se repiten?",
+   "options": [
+    "(A) Elegir $K$; (B) contar los puntos.",
+    "(A) Ordenar los datos; (B) dividirlos en mitades.",
+    "(A) Calcular el gradiente; (B) detener.",
+    "(A) Asignar cada punto al centroide más cercano; (B) mover cada centroide a la media de los puntos asignados."
+   ],
+   "answer": 3,
+   "why": "Se repite hasta que los centroides no varían."
+  },
+  {
+   "q": "¿Garantiza K-medias el óptimo global?",
+   "options": [
+    "Sí, siempre.",
+    "Sólo con datos ordenados.",
+    "No: converge a un óptimo local, por eso se ejecuta varias veces con distintas inicializaciones.",
+    "Sólo si $K=1$."
+   ],
+   "answer": 2,
+   "why": "Además asume clusters \"esféricos\", lo que es poco realista."
+  },
+  {
+   "q": "¿Qué se necesita decidir antes de ejecutar K-medias?",
+   "options": [
+    "Las clases de cada dato.",
+    "El orden de los puntos.",
+    "El número $K$ de grupos y los centroides iniciales (aleatorios o datos concretos).",
+    "El número de dimensiones."
+   ],
+   "answer": 2,
+   "why": "En clustering no hay información de clases."
+  }
+ ]
+};
+window.LEGACY_THEORY = {"intro": ["t1-problemas", "t1-clases-1", "t1-optimizacion", "t1-ia"], "sumatorios": ["t21-sumas-basicas", "t21-geometricas", "t21-integrales"], "asintotica": ["t22-cota-sup", "t22-omega", "t22-theta", "t22-theta"], "bucles": ["t31-general", "t31-general"], "expansion": ["t32-expansion", "t32-expansion", "t32-maestro"], "general": ["t32-maestro", "t32-homogeneas", "t32-no-homogeneas", "t32-cambio"], "recursion": ["t4-intro", "t4-metodologia", "t4-listas", "t4-digitos", "t4-binaria", "t4-hanoi"], "dyv": ["t5-dyv", "t5-ordenacion", "t5-quick", "t5-multiplicacion"], "backtracking": ["t6-binario", "t6-permutaciones", "t6-reinas", "t6-suma-caballo", "t6-poda"], "voraz": ["t7-esquema", "t7-monedas", "t7-huffman", "t7-mochila-3", "t7-arm", "t7-dijkstra"]};
