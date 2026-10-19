@@ -198,7 +198,11 @@ go('#/hoy'); ok(/Estos \d+ pasos: ~/.test(app()) && /en toda la ruta/.test(app()
 // figures from the slides: block figures, inline figures and the alt text that stands in if a file is missing
 go('#/teoria/t1_intro_algoritmia'); ok(/<figure class="fig"><img class="fig" src="img\/t1-p\d+\.png" alt="Figura: [^"]+" loading="lazy"><\/figure>/.test(app()) && !/\{\{fig/.test(app()), 'theory renders slide figures with alt text');
 go('#/teoria/t7_algoritmos_voraces'); ok(/hallar arm[^<]*(<[^>]+>)*\s*<img class="fig" src="img\/t7-p48\.png"/.test(app()) || /<img class="fig" src="img\/t7-p48\.png"/.test(app()), 'an inline figure renders inside its bullet');
-go('#/teoria'); ok(/de lectura<\/span><\/a>/.test(app()), 'theory sidebar shows the reading time of each tema');
+go('#/teoria'); ok(/id="lsel"/.test(app()) && /de lectura &middot; \d+ secciones/.test(app()), 'theory page shows the reading time of the tema and a switch of tema');
+go('#/teoria/t4_intro_recursividad'); ok((app().match(/class="o l\d/g) || []).length >= 30 && /class="rd/.test(app()) && /data-sec="0"/.test(app()), 'the outline lists the sections of the tema and marks where each reading of the route starts');
+ok(/id="tocq"/.test(app()) && /class="tocbtn"/.test(app()) && /id="totop"/.test(app()), 'filter, mobile index button and back-to-top are there');
+ok(/href="#\/teoria\/t3\.2_analisis_alg_recursivos"/.test(app()) && /href="#\/teoria\/t5_divide_y_venceras"/.test(app()), 'previous and next tema links');
+go('#/teoria/t1_intro_algoritmia'); ok(!/&larr; Tema/.test(app().split('class="thead foot"')[0].split('class="thead"')[1] || ''), 'the first tema has no previous link');
 if (hasExams) {
   go('#/ejercicios'); ok(/~[\d ]+(h|min)[^<]*<\/span>/.test(app()) && /en total\./.test(app()), 'exercise list shows times and the total');
   go('#/ejercicios/' + encodeURIComponent(win.STAGE_EX.recursion[0])); ok(/estimados<\/div>/.test(app()) && !/\d+ pts &middot; ~\d+ min<\/div>/.test(app()), 'exercise page shows the estimate, once');

@@ -465,22 +465,88 @@ function vSheet(gid) {
 }
 
 function vTheory(lid, idx, stepId) {
-  var h = '<h2>Teor&iacute;a</h2>';
+  var h = '<h2 class="ttitle">Teor&iacute;a</h2>';
   if (!LECT.length) return h + '<div class="warnbox">No se encontr&oacute; <code>data-lectures.js</code>.</div>';
   var cur = LECT.find(function (l) { return l.id === lid; }) || LECT[0], st = stepId && stepById[stepId];
-  h += '<div class="theory"><div class="side">' + LECT.map(function (l) { return '<a href="#/teoria/' + enc(l.id) + '"' + (l === cur ? ' class="on"' : '') + '>' + esc(l.title) + '<br><span class="muted">~' + L.fmtMin(LECMIN[l.id]) + ' de lectura</span></a>'; }).join('') + '</div><div>';
-  h += '<h2>' + esc(cur.title) + '</h2>';
+  var li = LECT.indexOf(cur), prev = LECT[li - 1], next = LECT[li + 1];
+  var steps = PATH.filter(function (x) { return x.type === 'theory' && x.lecture === cur.id; }), startAt = {};
+  steps.forEach(function (x) { startAt[x.idx] = x; });
+  var nDone = steps.filter(function (x) { return L.stepDone(x, S, EXAMS); }).length;
+  /* sidebar: switch of tema, filter, and the outline of the tema on screen (it follows the reading, see startSpy) */
+  var side = '<aside class="side" id="toc"><label class="lsel"><span class="muted">Tema</span><select id="lsel" aria-label="Cambiar de tema">' + LECT.map(function (l) {
+    var ss = PATH.filter(function (x) { return x.type === 'theory' && x.lecture === l.id; }), d = ss.filter(function (x) { return L.stepDone(x, S, EXAMS); }).length;
+    return '<option value="' + esc(l.id) + '"' + (l === cur ? ' selected' : '') + '>' + esc(l.title) + (ss.length ? ' (' + d + '/' + ss.length + ')' : '') + '</option>';
+  }).join('') + '</select></label><input type="search" id="tocq" class="tocq" placeholder="Filtrar secciones&hellip;" aria-label="Filtrar las secciones del tema" autocomplete="off"><nav class="outline" aria-label="Secciones del tema">';
+  cur.sections.forEach(function (sec, i) {
+    var r = startAt[i];
+    if (r) side += '<a class="rd' + (L.stepDone(r, S, EXAMS) ? ' done' : '') + '" href="#/teoria/' + enc(cur.id) + '/' + i + '" data-sec="' + i + '" title="Una lectura de la ruta">' + (L.stepDone(r, S, EXAMS) ? '&#10003;' : '&#128214;') + ' ' + esc(r.label.replace(/^Tema [\d.]+ &middot; |^Tema [\d.]+ \u00b7 /, '')) + ' <span class="muted">' + mins(r.min) + '</span></a>';
+    var empty = !String(sec.md || '').trim();
+    side += '<a class="o l' + (sec.level || 2) + (empty ? ' grp' : '') + '" href="#/teoria/' + enc(cur.id) + '/' + i + '" data-sec="' + i + '" data-t="' + esc(String(sec.title).toLowerCase()) + '">' + inlineMd(sec.title) + '</a>';
+  });
+  side += '</nav></aside>';
+  h += '<button type="button" class="tocbtn" data-act="toc" aria-label="Mostrar u ocultar el &iacute;ndice"><span>&#9776; &Iacute;ndice</span><b id="tocnow"></b></button>';
+  h += '<div class="theory">' + side + '<div class="tbody">';
+  h += '<div class="thead"><h2>' + esc(cur.title) + '</h2><div class="muted">~' + L.fmtMin(LECMIN[cur.id]) + ' de lectura &middot; ' + cur.sections.length + ' secciones' + (steps.length ? ' &middot; lecturas de la ruta: ' + nDone + '/' + steps.length : '') + '</div>' + lectNav(prev, next) + '</div>';
   var here = st && st.lecture === cur.id && String(st.idx) === String(idx), cardAt = here ? (st.to != null ? st.to : +idx) : -1;
-  cur.sections.forEach(function (s, i) {
-    var lv = Math.min(6, 3 + Math.max(0, (s.level || 1) - 1));
+  cur.sections.forEach(function (sec, i) {
+    var lv = Math.min(6, 3 + Math.max(0, (sec.level || 1) - 1));
     var card = '';
     if (i === cardAt) {   // after the last section the step covers, so it is not confirmed before reading it
       var done = L.stepDone(st, S, EXAMS);
       card = '<div class="card next row"><span>&#128214; Paso de la ruta (' + esc(groupOfStage[st.stage].label) + ') &middot; ' + mins(st.min) + ' de lectura: &iquest;lo has le&iacute;do?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
     }
-    h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && s.title === cur.title ? '' : '<h' + lv + '>' + esc(s.title) + '</h' + lv + '>') + mdRender(s.md) + card + '</section>';
+    h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && sec.title === cur.title ? '' : '<h' + lv + '>' + esc(sec.title) + '</h' + lv + '>') + mdRender(sec.md) + card + '</section>';
   });
-  return h + '</div></div>';
+  h += '<div class="thead foot">' + lectNav(prev, next) + '</div></div></div><button type="button" class="totop" id="totop" data-act="totop" aria-label="Volver arriba" title="Volver arriba">&uarr;</button>';
+  return h;
+}
+function lectNav(prev, next) {
+  return '<div class="lnav">' + (prev ? '<a class="btn" href="#/teoria/' + enc(prev.id) + '">&larr; ' + esc(prev.title.replace(/^(Tema [\d.]+)\.?\s.*$/, '$1')) + '</a>' : '') + (next ? '<a class="btn" href="#/teoria/' + enc(next.id) + '">' + esc(next.title.replace(/^(Tema [\d.]+)\.?\s.*$/, '$1')) + ' &rarr;</a>' : '') + '</div>';
+}
+
+/* While reading a tema: highlights the section on screen in the outline (and keeps it in view inside the sidebar), draws the reading progress
+   under the top bar and shows the "back to top" button. Returns a function that removes it. */
+var SPY = null;
+function startSpy() {
+  var secs = Array.prototype.slice.call(document.querySelectorAll('.sec')), items = {}, cur = -1, queued = false;
+  Array.prototype.forEach.call(document.querySelectorAll('.outline [data-sec]'), function (a) { if (a.classList.contains('o')) items[a.dataset.sec] = a; });
+  var raf = window.requestAnimationFrame ? window.requestAnimationFrame.bind(window) : function (f) { return setTimeout(f, 16); };
+  function update() {
+    queued = false;
+    var top = (document.getElementById('top') || {}).offsetHeight || 56, k = 0, y = top + 40;
+    for (var i = 0; i < secs.length; i++) { if (secs[i].getBoundingClientRect().top <= y) k = i; else break; }
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    document.documentElement.style.setProperty('--read', String(max > 0 ? Math.min(1, window.scrollY / max) : 0));
+    var tt = document.getElementById('totop'); if (tt) tt.classList.toggle('show', window.scrollY > 700);
+    if (k === cur) return;
+    if (items[cur]) items[cur].classList.remove('on');
+    cur = k;
+    var a = items[k], toc = document.getElementById('toc'), now = document.getElementById('tocnow');
+    if (a) {
+      a.classList.add('on');
+      if (toc && a.getBoundingClientRect) { var r = a.getBoundingClientRect(), t = toc.getBoundingClientRect(); if (r.top < t.top + 70 || r.bottom > t.bottom - 20) toc.scrollTop += r.top - t.top - t.height / 3; }
+      if (now) now.textContent = a.textContent;
+    }
+  }
+  function ask() { if (!queued) { queued = true; raf(update); } }
+  window.addEventListener('scroll', ask); window.addEventListener('resize', ask);
+  update();
+  return function () { if (window.removeEventListener) { window.removeEventListener('scroll', ask); window.removeEventListener('resize', ask); } document.documentElement.style.removeProperty('--read'); };
+}
+/* Scrolls to a section of the tema on screen without re-rendering the page (and keeps the address in step, unless a route step is being read). */
+function goSec(i) {
+  var el = document.getElementById('sec-' + i); if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1600);
+  var p = (location.hash || '').slice(2).split('/');
+  if (p[0] === 'teoria' && p[1] && !p[3] && window.history && history.replaceState) history.replaceState(null, '', '#/teoria/' + p[1] + '/' + i);
+  var t = document.querySelector('.theory'); if (t) t.classList.remove('tocopen');
+}
+function filterToc(q) {
+  q = String(q || '').trim().toLowerCase();
+  Array.prototype.forEach.call(document.querySelectorAll('.outline a'), function (a) {
+    var hit = !q || (a.classList.contains('o') ? a.dataset.t.indexOf(q) >= 0 : false);
+    a.hidden = !hit && !(a.classList.contains('rd') && !q);
+  });
 }
 
 function vProgress() {
@@ -571,6 +637,7 @@ function colorInput(ev) {
 function stats() { $('#stats').innerHTML = streakHtml() + '<span>XP <b>' + S.xp + '</b> &middot; Nv <b>' + level() + '</b></span>'; }
 function route() {
   stopTimers();
+  if (SPY) { SPY(); SPY = null; }
   var p = (location.hash || '#/hoy').slice(2).split('/').map(decodeURIComponent), tab = p[0] || 'hoy', h;
   if (tab !== 'ejercicios') V = {};
   if (tab !== 'quiz') Q = null;
@@ -589,6 +656,7 @@ function route() {
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) { a.classList.toggle('on', a.dataset.tab === tab); });
   if (tab === 'teoria' && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
   else window.scrollTo(0, 0);
+  if (tab === 'teoria') SPY = startSpy();
   if (tab === 'examen' && X && X.phase === 'run') startTimer(function () { var t = $('#tm'); if (!t) return; var left = (X.end - Date.now()) / 1000; t.textContent = fmt(left); if (left <= 0) t.style.color = 'var(--bad)'; });
 }
 function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
@@ -596,12 +664,16 @@ function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
 /* ---------- events ---------- */
 document.addEventListener('click', function (ev) {
   if (popOpen() && ev.target && ev.target.closest && !ev.target.closest('#settings-pop') && !ev.target.closest('#settings')) setPop(false);
+  var sl = ev.target.closest && ev.target.closest('a[data-sec]');
+  if (sl && sl.dataset && sl.dataset.sec != null && sl.getAttribute) { if (ev.preventDefault) ev.preventDefault(); goSec(+sl.dataset.sec); return; }
   var lk = ev.target.closest('a[href^="#/"]');
   if (lk && lk.getAttribute && lk.getAttribute('href') === location.hash) setTimeout(route, 0);
   var b = ev.target.closest('[data-act]'); if (!b || b.tagName === 'INPUT') return;
   var act = b.dataset.act;
   if (act === 'settings') { setPop(!popOpen()); return; }
   if (act === 'settings-close') { setPop(false); return; }
+  if (act === 'toc') { var th = document.querySelector('.theory'); if (th) th.classList.toggle('tocopen'); return; }
+  if (act === 'totop') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
   if (act === 'theme') { if (TH) TH.setMode(b.dataset.m); renderPop(); return; }
   if (act === 'scope') { prefSet('scope', b.dataset.v); refreshPrefs(); renderPop(); rerender(); return; }
   if (act === 'org') { prefSet('org', b.dataset.v); F.stage = ''; refreshPrefs(); renderPop(); rerender(); return; }
@@ -665,11 +737,12 @@ document.addEventListener('click', function (ev) {
   else if (act === 'sync-now') { syncRun(true).then(route); }
   else if (act === 'sync-off') { syncOff().then(route); }
 });
-document.addEventListener('input', function (ev) { colorInput(ev); });
+document.addEventListener('input', function (ev) { if (ev.target && ev.target.id === 'tocq') { filterToc(ev.target.value); return; } colorInput(ev); });
 document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && popOpen()) { setPop(false); var b = $('#settings'); if (b && b.focus) b.focus(); } });
 document.addEventListener('change', function (ev) {
   var t = ev.target;
   if (t.dataset && t.dataset.f) { F[t.dataset.f] = t.value; route(); }
+  else if (t.id === 'lsel') { location.hash = '#/teoria/' + enc(t.value); }
   else if (t.id === 'imp' && t.files[0]) {
     var r = new FileReader();
     r.onload = function () {
@@ -683,7 +756,11 @@ window.addEventListener('hashchange', route);
 function syncRefresh() { if (SYNC.handle && SYNC.state === 'ok') syncRun(false).then(function (changed) { if (changed) route(); }); }
 document.addEventListener('visibilitychange', function () { if (!document.hidden) syncRefresh(); });
 window.addEventListener('focus', syncRefresh);
+function setTopH() { var t = document.getElementById('top'); if (t && t.offsetHeight) document.documentElement.style.setProperty('--topH', t.offsetHeight + 'px'); }
+window.addEventListener('resize', setTopH);
 drawLogo();
+setTopH();
 route();
+setTopH();
 syncStart();
 })();

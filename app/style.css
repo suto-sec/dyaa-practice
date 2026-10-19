@@ -39,11 +39,42 @@ select,input[type=number]{font:inherit;padding:6px;border-radius:8px;border:1px 
 .bar>i{display:block;height:100%;background:var(--ac)}
 .timer{font-variant-numeric:tabular-nums;font-weight:700}
 .warnbox{border:1px dashed var(--warn);padding:10px;border-radius:10px;margin-bottom:12px}
-.theory{display:grid;grid-template-columns:230px 1fr;gap:16px}
+.theory{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;align-items:start}
+.theory .side{position:sticky;top:calc(var(--topH,56px) + 12px);max-height:calc(100vh - var(--topH,56px) - 24px);overflow-y:auto;overscroll-behavior:contain;padding-right:4px;scrollbar-width:thin}
 .theory .side a{display:block;padding:6px 10px;border-radius:8px;text-decoration:none;color:var(--fg)}
 .theory .side a.on{background:var(--code);font-weight:600}
-@media (max-width:700px){.theory{grid-template-columns:1fr}}
-.sec{scroll-margin-top:70px}
+.sec{scroll-margin-top:calc(var(--topH,56px) + 16px)}
+#top::after{content:'';position:absolute;left:0;bottom:-1px;height:3px;width:calc(var(--read,0)*100%);background:var(--ac);pointer-events:none}
+/* the reading page: outline that follows you, reading markers, prev/next */
+.lsel{display:grid;gap:3px;margin-bottom:8px}
+.lsel select{width:100%}
+.tocq{width:100%;font:inherit;font-size:.9rem;padding:6px 9px;margin-bottom:8px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--fg)}
+.outline{display:flex;flex-direction:column;gap:1px;padding-bottom:12px}
+.theory .side a.o{font-size:.88rem;line-height:1.3;padding:4px 8px 4px 10px;border-radius:0 8px 8px 0;border-left:2px solid transparent;color:var(--mut)}
+.theory .side a.o:hover{background:var(--code);color:var(--fg)}
+.theory .side a.o.l3{padding-left:22px}
+.theory .side a.o.grp{margin-top:8px;color:var(--fg);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em}
+.theory .side a.o.on{border-left-color:var(--ac);background:var(--code);color:var(--fg);font-weight:600}
+.theory .side a.rd{margin-top:10px;font-size:.82rem;line-height:1.3;border:1px solid var(--bd);border-radius:8px;background:var(--card)}
+.theory .side a.rd.done{opacity:.7}
+.theory .side a[hidden]{display:none}
+.thead{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.thead h2{flex:1 0 100%;margin:0}
+.thead.foot{margin:24px 0 0;padding-top:14px;border-top:1px solid var(--bd);justify-content:flex-end}
+.lnav{display:flex;gap:8px;flex-wrap:wrap}
+.tbody{min-width:0}
+.totop{position:fixed;right:18px;bottom:18px;z-index:20;width:42px;height:42px;border-radius:50%;border:1px solid var(--bd);background:var(--card);color:var(--fg);font-size:1.2rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .15s}
+.totop.show{opacity:1;pointer-events:auto}
+.totop:hover{border-color:var(--ac)}
+.tocbtn{display:none}
+.ttitle{margin-bottom:.3em}
+@media (max-width:860px){
+  .theory{grid-template-columns:1fr}
+  .theory .side{display:none}
+  .theory.tocopen .side{display:block;position:fixed;z-index:30;left:8px;right:8px;top:calc(var(--topH,56px) + 52px);bottom:8px;max-height:none;padding:12px;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.3)}
+  .tocbtn{display:flex;gap:10px;align-items:center;position:sticky;top:calc(var(--topH,56px) + 4px);z-index:6;width:100%;margin:0 0 10px;padding:9px 12px;font:inherit;text-align:left;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  .tocbtn b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:var(--mut);font-size:.88rem}
+}
 .flash{outline:2px solid var(--ac);border-radius:8px}
 
 .card.next{border-color:var(--ac);border-width:2px}
