@@ -201,7 +201,7 @@ function tmPause() { if (TM && TM.since) { TM.ms += Date.now() - TM.since; TM.si
 function tmResume() { if (TM && !TM.since && !TM.stopped) TM.since = Date.now(); }
 function tmStop() { tmPause(); if (TM) TM.stopped = true; }
 function tmSec(id) { return S.cfg.timer && TM && TM.id === id ? Math.round(tmMs() / 1000) : null; }
-function tmBox() { return S.cfg.timer ? ' <span class="swatch" title="Tiempo en este ejercicio (Ajustes: cron&oacute;metro)">&#9201; <span class="timer" id="sw">' + fmt(tmMs() / 1000) + '</span></span>' : ''; }
+function tmBox() { return S.cfg.timer ? ' <span class="swatch" title="Tiempo en este ejercicio (engranaje: cron&oacute;metro)">&#9201; <span class="timer" id="sw">' + fmt(tmMs() / 1000) + '</span></span>' : ''; }
 
 var NOTE = '';
 /* Awards the one-time stage bonus for every stage that is now fully done. Call after any change of progress. */
@@ -293,7 +293,7 @@ function vHoy() {
   var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t);
   var plan = L.dailyPlan({ goal: C.daily, today: t, log: S.log, due: due.map(function (k) { return { id: k, min: (stepById['e:' + k] || {}).min || 15 }; }), steps: EXAMS.length || LECT.length ? nextSteps(80) : [] });
   var gp = Math.min(100, Math.round(plan.done / plan.goal * 100));
-  h += '<div class="card"><div class="row"><b>Tu meta de hoy: ' + plan.goal + ' min</b><span class="grow"></span><a href="#/ajustes">Cambiar</a></div><div class="row"><div class="bar"><i style="width:' + gp + '%"></i></div><span class="muted">' + plan.done + ' de ' + plan.goal + ' min' + (plan.n ? ' &middot; ' + plan.n + (plan.n === 1 ? ' tarea hecha' : ' tareas hechas') : '') + '</span></div>' +
+  h += '<div class="card"><div class="row"><b>Tu meta de hoy: ' + plan.goal + ' min</b><span class="grow"></span><button type="button" class="linkbtn" data-act="settings" data-open="study">Cambiar</button></div><div class="row"><div class="bar"><i style="width:' + gp + '%"></i></div><span class="muted">' + plan.done + ' de ' + plan.goal + ' min' + (plan.n ? ' &middot; ' + plan.n + (plan.n === 1 ? ' tarea hecha' : ' tareas hechas') : '') + '</span></div>' +
     (plan.met ? '<p>' + flame('sm') + ' <b>&iexcl;Meta cumplida!</b> Todo lo que hagas ahora es de propina.</p>' : '<p class="muted">Quedan ' + plan.left + ' min. Abajo tienes lo que te propongo para llenarlos' + (plan.min ? ' (' + mins(plan.min) + ')' : '') + '.</p>') + '</div>';
   if (plan.reviews.length) {
     h += '<h3>Repaso pendiente (' + due.length + ')</h3>';
@@ -312,7 +312,7 @@ function vRoad() {
   var unit = ORG === 'temas' ? 'tema' : 'etapa';
   var h = '<h2>Ruta de estudio</h2>' + missingBanner() + '<p class="muted">Un orden recomendado, sin bloqueos: puedes entrar en cualquier paso. Cada ' + unit + ' se recorre en lecciones: una lectura corta, una comprobaci&oacute;n r&aacute;pida y los ejercicios que la necesitan, de f&aacute;ciles a dif&iacute;ciles; al final, los ejercicios de ex&aacute;menes. Los de enunciado con soluci&oacute;n est&aacute;n marcados.</p>';
   var n = nextSteps(1)[0], tot = L.pathMinutes(ACTIVE, S, EXAMS);
-  h += '<div class="card row pathbar"><span><b>' + esc(SCOPE.title) + '</b> &middot; por ' + (ORG === 'temas' ? 'temas' : 'etapas') + '</span><button type="button" class="btn" data-act="settings">Cambiar ruta u organizaci&oacute;n</button></div>';
+  h += '<div class="card row pathbar"><span><b>' + esc(SCOPE.title) + '</b> &middot; por ' + (ORG === 'temas' ? 'temas' : 'etapas') + '</span><button type="button" class="btn" data-act="settings" data-open="route">Cambiar ruta u organizaci&oacute;n</button></div>';
   h += '<p class="muted">' + (SCOPE.id === SCOPES[0].id ? 'Ruta completa' : 'Esta ruta') + ': ' + mins(tot.total) + ' estimados &middot; quedan ' + mins(tot.left) + '. Son tiempos orientativos para estudiar y comprobar cada paso.</p>';
   h += nextCard();
   var world = null;
@@ -444,7 +444,7 @@ function vExam() {
   var C = S.cfg;
   if (!X) {
     var h = '<h2>Ex&aacute;menes</h2><p class="muted">Cualquier examen est&aacute; disponible, entero (como en el aula) o ejercicio a ejercicio. Los que tienen soluci&oacute;n oficial se auto-corrigen mejor; el recomendado es el siguiente sin hacer.</p>';
-    h += '<div class="card row exset"><span class="grow"><b>Realismo</b> <span class="muted">' + (C.extimer ? (C.exauto ? 'con l&iacute;mite de tiempo' : 'con cuenta atr&aacute;s') : 'sin reloj') + ' &middot; pistas: ' + (C.exhints ? 's&iacute;' : 'no') + ' &middot; soluciones: ' + (C.exans ? 's&iacute;' : 'no') + '</span></span><a class="btn" href="#/ajustes">Cambiar en Ajustes</a></div>';
+    h += '<div class="card row exset"><span class="grow"><b>Realismo</b> <span class="muted">' + (C.extimer ? (C.exauto ? 'con l&iacute;mite de tiempo' : 'con cuenta atr&aacute;s') : 'sin reloj') + ' &middot; pistas: ' + (C.exhints ? 's&iacute;' : 'no') + ' &middot; soluciones: ' + (C.exans ? 's&iacute;' : 'no') + '</span></span><button type="button" class="btn" data-act="settings" data-open="exam">Cambiar</button></div>';
     ['analisis', 'diseno', 'mixto'].forEach(function (kind) {
       var list = EXAMS.filter(function (e) { return e.kind === kind && (e.exercises || []).length; });
       list.sort(function (a, b) { return (!!S.exams[a.id] - !!S.exams[b.id]) || (examSols(b) / b.exercises.length - examSols(a) / a.exercises.length) || (a.id < b.id ? -1 : 1); });
@@ -665,7 +665,7 @@ function logRow(l) {
   return '<div class="item logrow"><span><span class="when">' + (l.at ? clock(l.at) : '&ndash;') + '</span> <span class="lty" title="' + ty + '">' + (LOGICON[ty] || '') + '</span> ' + esc(l.label) + '</span><span>' + tags + '</span></div>';
 }
 function vLog() {
-  var h = '<h2>Registro</h2><p class="muted">Lo que has hecho, cu&aacute;ndo y cu&aacute;nto te llev&oacute;. El tiempo exacto solo se anota con el cron&oacute;metro activado en <a href="#/ajustes">Ajustes</a>; sin &eacute;l, cada tarea cuenta con su estimaci&oacute;n.</p>';
+  var h = '<h2>Registro</h2><p class="muted">Lo que has hecho, cu&aacute;ndo y cu&aacute;nto te llev&oacute;. El tiempo exacto solo se anota con el cron&oacute;metro activado en <button type="button" class="linkbtn" data-act="settings" data-open="study">Ajustes</button>; sin &eacute;l, cada tarea cuenta con su estimaci&oacute;n.</p>';
   var all = S.log.slice().reverse(), shown = R.ty ? all.filter(function (l) { return L.logKind(l) === R.ty; }) : all;
   h += '<div class="chips" role="group" aria-label="Tipo de tarea">' + LOGTY.map(function (c) { return '<button type="button" class="chip' + (R.ty === c[0] ? ' on' : '') + '" data-act="logty" data-v="' + c[0] + '">' + c[1] + '</button>'; }).join('') + '</div>';
   if (!shown.length) return h + '<p class="muted">' + (all.length ? 'Nada de este tipo todav&iacute;a.' : 'A&uacute;n no hay nada. Cuando completes una lectura, una comprobaci&oacute;n, un ejercicio o un examen aparecer&aacute; aqu&iacute;.') + '</p>';
@@ -697,9 +697,9 @@ function vProgress() {
 }
 
 /* Where the progress lives: only this browser profile, or a file shared between profiles. */
-function syncCard() {
-  var h = '<h3>D&oacute;nde se guarda el progreso</h3><div class="card" id="sync">';
-  h += '<p>Cada perfil de Chrome (y cada navegador) guarda su propio progreso: lo que haces en uno no aparece en los dem&aacute;s. Para compartirlo, elige un archivo (por ejemplo en una carpeta que ya sincronices) y usa <b>el mismo archivo en cada perfil</b>.</p>';
+function syncBlock() {
+  var h = '<div id="sync"><div class="pop-sub">D&oacute;nde se guarda el progreso</div>';
+  h += '<p class="muted">Cada perfil de Chrome (y cada navegador) guarda su propio progreso. Para compartirlo, elige un archivo (por ejemplo en una carpeta que ya sincronices) y usa <b>el mismo archivo en cada perfil</b>.</p>';
   if (!syncCan()) return h + '<p class="muted">Este navegador no permite elegir un archivo compartido (hace falta Chrome o Edge, abriendo la p&aacute;gina desde un archivo local o un servidor). Usa Exportar e Importar para llevar el progreso de un sitio a otro.</p></div>';
   if (SYNC.handle) {
     var st = SYNC.state === 'ok' ? '<span class="tag r2">al d&iacute;a</span>' : SYNC.state === 'needs' ? '<span class="tag r1">falta permiso</span>' : '<span class="tag r0">error</span>';
@@ -718,58 +718,63 @@ function syncBanner() {
     return '<div class="card next"><b>Guarda tu progreso en un archivo</b><p>Ahora mismo solo existe en este perfil del navegador. Elige un archivo una vez (si lo dejas en una carpeta que ya sincronizas, mejor) y tus otros perfiles y ordenadores lo usar&aacute;n sin exportar ni importar nada.</p><div class="row"><button class="btn pri" data-act="sync-new">Crear el archivo</button><button class="btn" data-act="sync-open">Ya tengo uno</button><button class="btn" data-act="sync-later">Ahora no</button></div></div>';
   }
   if (SYNC.state === 'ok') return '';
-  return '<div class="warnbox">' + (SYNC.state === 'needs' ? 'Haz clic en cualquier parte de la p&aacute;gina para dar permiso al archivo de progreso (<b>' + esc(SYNC.name) + '</b>); el navegador lo pide una vez por sesi&oacute;n. <button class="btn pri" data-act="sync-now">Dar permiso</button>' : 'No se pudo sincronizar el progreso con <b>' + esc(SYNC.name) + '</b>: ' + esc(SYNC.msg) + ' <a href="#/ajustes">Ver ajustes</a>') + '</div>';
+  return '<div class="warnbox">' + (SYNC.state === 'needs' ? 'Haz clic en cualquier parte de la p&aacute;gina para dar permiso al archivo de progreso (<b>' + esc(SYNC.name) + '</b>); el navegador lo pide una vez por sesi&oacute;n. <button class="btn pri" data-act="sync-now">Dar permiso</button>' : 'No se pudo sincronizar el progreso con <b>' + esc(SYNC.name) + '</b>: ' + esc(SYNC.msg) + ' <button type="button" class="linkbtn" data-act="settings" data-open="data">Ver ajustes</button>') + '</div>';
 }
 
-/* The Ajustes page: how you study (stopwatch, daily goal), how the exam simulator behaves, and the data. Theme, accent and route are in the gear menu. */
+/* Everything adjustable lives in the gear menu, in sections: look, route, study, exam simulator, data. */
 function cfgSwitch(k, label, hint, disabled) {
   return '<label class="swrow' + (disabled ? ' dis' : '') + '"><input type="checkbox" data-cfg="' + k + '"' + (S.cfg[k] ? ' checked' : '') + (disabled ? ' disabled' : '') + '><span><b>' + label + '</b>' + (hint ? '<span class="muted">' + hint + '</span>' : '') + '</span></label>';
 }
-var EXPRESETS = { real: { label: 'Examen real', blurb: 'Con cuenta atr&aacute;s, termina solo, sin pistas ni soluciones.', cfg: { extimer: true, exauto: true, exhints: false, exans: false } },
-  relax: { label: 'Relajado', blurb: 'Con cuenta atr&aacute;s, pero puedes pedir pistas y ver soluciones (cuesta XP).', cfg: { extimer: true, exauto: false, exhints: true, exans: true } } };
+var EXPRESETS = { real: { label: 'Examen real', blurb: 'Cuenta atr&aacute;s, termina solo, sin pistas ni soluciones.', cfg: { extimer: true, exauto: true, exhints: false, exans: false } },
+  relax: { label: 'Relajado', blurb: 'Cuenta atr&aacute;s, pero con pistas y soluciones (cuestan XP).', cfg: { extimer: true, exauto: false, exhints: true, exans: true } } };
 function activePreset() {
   return Object.keys(EXPRESETS).find(function (id) { return Object.keys(EXPRESETS[id].cfg).every(function (k) { return S.cfg[k] === EXPRESETS[id].cfg[k]; }); }) || '';
 }
-function vSettings() {
-  var C = S.cfg, h = '<h2>Ajustes</h2>';
-  h += '<h3>Estudio</h3><div class="card">';
-  h += '<div class="setrow"><div><b>Meta diaria</b><span class="muted">Cu&aacute;nto quieres estudiar al d&iacute;a. La p&aacute;gina <a href="#/hoy">Hoy</a> propone repasos y pasos de la ruta hasta llenar ese tiempo, contando lo que ya hiciste hoy.</span></div><div class="ctl"><div class="segs" role="radiogroup" aria-label="Meta diaria">' +
-    L.DAILY.map(function (m) { return '<button type="button" class="seg' + (C.daily === m ? ' on' : '') + '" role="radio" aria-checked="' + (C.daily === m) + '" data-act="cfgset" data-k="daily" data-v="' + m + '">' + (m >= 60 && m % 60 === 0 ? m / 60 + ' h' : m + ' min') + '</button>'; }).join('') + '</div>' +
-    '<label class="muted">otra: <input type="number" min="5" max="480" step="5" data-cfg="daily" value="' + C.daily + '" aria-label="Meta diaria en minutos"> min</label></div></div>';
-  h += cfgSwitch('timer', 'Cron&oacute;metro en ejercicios y comprobaciones', 'Muestra cu&aacute;nto tardas y lo guarda en el <a href="#/registro">Registro</a>. Solo cuenta mientras la pesta&ntilde;a est&aacute; a la vista.') + '</div>';
-  h += '<h3>Simulador de examen</h3><div class="card"><p class="muted">Se aplica al hacer un examen entero. Los ejercicios sueltos, desde Ejercicios o desde la lista de ex&aacute;menes, siempre tienen pistas y soluci&oacute;n.</p><div class="presets">' +
-    Object.keys(EXPRESETS).map(function (id) { var p = EXPRESETS[id]; return '<button type="button" class="choice' + (activePreset() === id ? ' on' : '') + '" data-act="expreset" data-v="' + id + '"><b>' + p.label + '</b><span class="muted">' + p.blurb + '</span></button>'; }).join('') + '</div>';
-  h += cfgSwitch('extimer', 'Reloj con el tiempo del examen', 'Cuenta atr&aacute;s con los minutos que da el examen. Sin &eacute;l, ni l&iacute;mite ni cron&oacute;metro.');
-  h += cfgSwitch('exauto', 'Terminar cuando se acabe el tiempo', 'Como en el aula: pasa solo a la correcci&oacute;n.', !C.extimer);
-  h += cfgSwitch('exhints', 'Permitir pistas durante el examen', 'Cada pista quita el 25 % de la XP de ese ejercicio. La nota que te pones no cambia.');
-  h += cfgSwitch('exans', 'Permitir ver la soluci&oacute;n durante el examen', 'Ver la soluci&oacute;n quita el 75 % de la XP de ese ejercicio. La nota que te pones no cambia.') + '</div>';
-  h += '<h3>Apariencia y ruta</h3><div class="card"><p>El tema (claro u oscuro), el color de acento, la ruta de estudio (temario completo o primer examen) y la organizaci&oacute;n por etapas o por temas se cambian con el engranaje <b>&#9881;</b> de la barra superior.</p></div>';
-  h += '<h3>Datos</h3><div class="card"><p>' + (SYNC.handle ? 'Tu progreso se guarda en este perfil y en el archivo compartido (abajo).' : 'Tu progreso se guarda en este perfil del navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.') + ' Los ajustes de esta p&aacute;gina viajan con &eacute;l.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>' + syncCard();
-  return h;
-}
 
-/* ---------- settings popover (top bar, right): theme and accent colour ---------- */
+/* ---------- settings menu (gear, top right) ---------- */
 var TH = window.DYAA_THEME, LOGO = window.DYAA_LOGO;
 var MODE_LABEL = { system: 'Sistema', light: 'Claro', dark: 'Oscuro' };
+var POPSEC = {};   // which sections of the menu are open
+function popSec(id, title, body) { return '<details class="pop-sec" data-id="' + id + '"' + (POPSEC[id] ? ' open' : '') + '><summary>' + title + '</summary><div class="pop-body">' + body + '</div></details>'; }
 function popEl() { return $('#settings-pop'); }
 function renderPop() {
   var pop = popEl(); if (!pop || !TH) return;
-  var mode = TH.mode(), acc = TH.accent(), cur = TH.hex(TH.current()), keep = document.activeElement;
-  pop.innerHTML = '<div class="pop-title">Ajustes</div>' +
-    '<div class="pop-row"><span class="muted">Tema</span><div class="segs" role="radiogroup" aria-label="Tema">' +
+  var mode = TH.mode(), acc = TH.accent(), cur = TH.hex(TH.current()), keep = document.activeElement, C = S.cfg;
+  var look = '<div class="pop-row"><span class="muted">Tema</span><div class="segs" role="radiogroup" aria-label="Tema">' +
     TH.MODES.map(function (m) { return '<button type="button" class="seg' + (m === mode ? ' on' : '') + '" role="radio" aria-checked="' + (m === mode) + '" data-act="theme" data-m="' + m + '">' + MODE_LABEL[m] + '</button>'; }).join('') + '</div></div>' +
-    '<div class="pop-block"><div class="pop-row"><span class="muted">Ruta de estudio</span></div><div class="choices" role="radiogroup" aria-label="Ruta de estudio">' +
-    SCOPES.map(function (sc) { var on = sc.id === SCOPE.id; return '<button type="button" class="choice' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" data-act="scope" data-v="' + esc(sc.id) + '"><b>' + esc(sc.title) + '</b><span class="muted">' + esc(sc.blurb) + '</span></button>'; }).join('') + '</div>' +
-    '<div class="pop-row"><span class="muted">Organizar por</span><div class="segs" role="radiogroup" aria-label="Organizaci&oacute;n de la ruta">' +
-    ORGS.map(function (o) { var on = o[0] === ORG; return '<button type="button" class="seg' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" title="' + esc(o[2]) + '" data-act="org" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div></div></div>' +
     '<div class="pop-block"><div class="pop-row"><span class="muted">Color de acento</span><button type="button" class="linkbtn" data-act="accent-reset">Autom&aacute;tico</button></div>' +
     '<div class="swatches"><button type="button" class="sw auto' + (!acc ? ' on' : '') + '" data-act="accent-reset" title="Autom&aacute;tico (seg&uacute;n el tema)" aria-label="Autom&aacute;tico"></button>' +
     TH.PRESETS.map(function (p) { return '<button type="button" class="sw' + (acc && acc.toLowerCase() === p[1] ? ' on' : '') + '" style="background:' + p[1] + '" data-act="accent-set" data-c="' + p[1] + '" title="' + p[0] + '" aria-label="' + p[0] + '"></button>'; }).join('') + '</div>' +
     '<div class="accentrow"><input type="color" class="accentpick" id="acc-pick" value="' + cur + '" aria-label="Elegir el color de acento"><input type="text" class="accenttext" id="acc-text" value="' + (acc ? esc(acc) : '') + '" placeholder="#c2410c, rgb(194 65 12), tomato&hellip;" spellcheck="false" autocomplete="off" aria-label="Color de acento como texto" title="Cualquier color CSS: #hex, rgb(), hsl() o un nombre"></div>' +
     '<div class="pop-note bad" id="acc-msg" hidden>Eso no es un color que CSS entienda.</div></div>' +
-    '<div class="pop-note">El acento colorea botones, barras, la llama, el logo y el icono de la pesta&ntilde;a.</div>' +
-    '<div class="pop-block"><a href="#/ajustes" data-act="settings-close">M&aacute;s ajustes: meta diaria, cron&oacute;metro, examen y datos &rarr;</a></div>';
-  if (keep && keep.dataset && keep.dataset.act) { var again = pop.querySelector('[data-act="' + keep.dataset.act + '"]' + (keep.dataset.m ? '[data-m="' + keep.dataset.m + '"]' : '') + (keep.dataset.v ? '[data-v="' + keep.dataset.v + '"]' : '') + (keep.dataset.c ? '[data-c="' + keep.dataset.c + '"]' : '')); if (again && again.focus) again.focus(); }
+    '<div class="pop-note">El acento colorea botones, barras, la llama, el logo y el icono de la pesta&ntilde;a.</div>';
+  var route = '<div class="choices" role="radiogroup" aria-label="Ruta de estudio">' +
+    SCOPES.map(function (sc) { var on = sc.id === SCOPE.id; return '<button type="button" class="choice' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" data-act="scope" data-v="' + esc(sc.id) + '"><b>' + esc(sc.title) + '</b><span class="muted">' + esc(sc.blurb) + '</span></button>'; }).join('') + '</div>' +
+    '<div class="pop-row"><span class="muted">Organizar por</span><div class="segs" role="radiogroup" aria-label="Organizaci&oacute;n de la ruta">' +
+    ORGS.map(function (o) { var on = o[0] === ORG; return '<button type="button" class="seg' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" title="' + esc(o[2]) + '" data-act="org" data-v="' + o[0] + '">' + o[1] + '</button>'; }).join('') + '</div></div>';
+  var study = '<div class="setrow"><div><b>Meta diaria</b><span class="muted">Hoy propone repasos y pasos de la ruta hasta llenar ese tiempo, contando lo que ya hiciste.</span></div><div class="ctl"><div class="segs" role="radiogroup" aria-label="Meta diaria">' +
+    L.DAILY.map(function (m) { return '<button type="button" class="seg' + (C.daily === m ? ' on' : '') + '" role="radio" aria-checked="' + (C.daily === m) + '" data-act="cfgset" data-k="daily" data-v="' + m + '">' + (m >= 60 && m % 60 === 0 ? m / 60 + ' h' : m) + '</button>'; }).join('') + '</div>' +
+    '<label class="muted">minutos, u otra cifra: <input type="number" min="5" max="480" step="5" data-cfg="daily" value="' + C.daily + '" aria-label="Meta diaria en minutos"></label></div></div>' +
+    cfgSwitch('timer', 'Cron&oacute;metro en ejercicios y comprobaciones', 'Muestra cu&aacute;nto tardas y lo guarda en el Registro. Solo cuenta con la pesta&ntilde;a a la vista.');
+  var exam = '<p class="muted">Se aplica al hacer un examen entero. Los ejercicios sueltos siempre tienen pistas y soluci&oacute;n.</p><div class="presets">' +
+    Object.keys(EXPRESETS).map(function (id) { var p = EXPRESETS[id]; return '<button type="button" class="choice' + (activePreset() === id ? ' on' : '') + '" data-act="expreset" data-v="' + id + '"><b>' + p.label + '</b><span class="muted">' + p.blurb + '</span></button>'; }).join('') + '</div>' +
+    cfgSwitch('extimer', 'Reloj con el tiempo del examen', 'Cuenta atr&aacute;s con los minutos que da el examen. Sin &eacute;l, ni l&iacute;mite ni cron&oacute;metro.') +
+    cfgSwitch('exauto', 'Terminar cuando se acabe el tiempo', 'Pasa solo a la correcci&oacute;n.', !C.extimer) +
+    cfgSwitch('exhints', 'Permitir pistas durante el examen', 'Cada una quita el 25 % de la XP de ese ejercicio.') +
+    cfgSwitch('exans', 'Permitir ver la soluci&oacute;n durante el examen', 'Quita el 75 % de la XP de ese ejercicio. La nota que te pones nunca cambia.');
+  var data = '<p class="muted">' + (SYNC.handle ? 'Tu progreso se guarda en este perfil y en el archivo compartido.' : 'Tu progreso se guarda en este perfil del navegador.') + ' Los ajustes de este men&uacute; viajan con &eacute;l.</p><div class="row"><button type="button" class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button type="button" class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io" class="muted"></div>' + syncBlock();
+  pop.innerHTML = '<div class="pop-title">Ajustes</div>' + popSec('look', 'Apariencia', look) + popSec('route', 'Ruta de estudio', route) + popSec('study', 'Estudio', study) + popSec('exam', 'Simulador de examen', exam) + popSec('data', 'Datos y progreso compartido', data);
+  if (keep && keep.dataset && (keep.dataset.act || keep.dataset.cfg)) {
+    var sel = keep.dataset.cfg ? '[data-cfg="' + keep.dataset.cfg + '"]' : '[data-act="' + keep.dataset.act + '"]' + (keep.dataset.m ? '[data-m="' + keep.dataset.m + '"]' : '') + (keep.dataset.v ? '[data-v="' + keep.dataset.v + '"]' : '') + (keep.dataset.c ? '[data-c="' + keep.dataset.c + '"]' : '') + (keep.dataset.k ? '[data-k="' + keep.dataset.k + '"]' : '');
+    var again = pop.querySelector(sel); if (again && again.focus) again.focus();
+  }
+}
+/* Opens the menu, with the given section open (and in view). */
+function openSettings(sec) {
+  if (sec) POPSEC[sec] = true;
+  setPop(true);
+  var pop = popEl(), d = pop && pop.querySelector ? pop.querySelector('[data-id="' + sec + '"]') : null;
+  if (d && d.scrollIntoView) d.scrollIntoView({ block: 'nearest' });
 }
 function setPop(open) {
   var pop = popEl(), btn = $('#settings'); if (!pop || !btn) return;
@@ -798,6 +803,7 @@ function route() {
   stopTimers();
   if (SPY) { SPY(); SPY = null; }
   var p = (location.hash || '#/hoy').slice(2).split('/').map(decodeURIComponent), tab = p[0] || 'hoy', h;
+  if (tab === 'ajustes') { if (window.history && history.replaceState) history.replaceState(null, '', '#/hoy'); openSettings(p[1] || 'data'); tab = 'hoy'; }   // old address of the settings page: now the menu
   if (tab !== 'ejercicios') V = {};
   if (tab !== 'quiz') Q = null;
   if (tab !== 'quiz' && !(tab === 'ejercicios' && p[1])) TM = null;
@@ -809,12 +815,12 @@ function route() {
   else if (tab === 'quiz') h = vQuiz(p.slice(1).join('/'));
   else if (tab === 'progreso') h = vProgress();
   else if (tab === 'registro') h = vLog();
-  else if (tab === 'ajustes') h = vSettings();
   else { tab = 'hoy'; h = vHoy(); }
   if (NOTE && tab !== 'ejercicios') { h = '<div class="card next">' + NOTE + '</div>' + h; NOTE = ''; }
   h = syncBanner() + h;
   $('#app').innerHTML = h; $('#app').className = tab === 'teoria' || tab === 'resumen' ? 'wide' : ''; stats();
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) { a.classList.toggle('on', a.dataset.tab === tab); });
+  if (popOpen()) renderPop();
   if ((tab === 'teoria' || tab === 'resumen') && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
   else window.scrollTo(0, 0);
   if (tab === 'teoria' || tab === 'resumen') SPY = startSpy();
@@ -836,7 +842,7 @@ document.addEventListener('click', function (ev) {
   if (lk && lk.getAttribute && lk.getAttribute('href') === location.hash) setTimeout(route, 0);
   var b = ev.target.closest('[data-act]'); if (!b || b.tagName === 'INPUT') return;
   var act = b.dataset.act;
-  if (act === 'settings') { setPop(!popOpen()); return; }
+  if (act === 'settings') { if (b.dataset.open) openSettings(b.dataset.open); else setPop(!popOpen()); return; }
   if (act === 'settings-close') { setPop(false); return; }
   if (act === 'toc') { var th = document.querySelector('.theory'); if (th) th.classList.toggle('tocopen'); return; }
   if (act === 'totop') { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
@@ -914,6 +920,7 @@ document.addEventListener('click', function (ev) {
   else if (act === 'sync-later') { lsSet(SYK.ask, 'no'); route(); }
 });
 document.addEventListener('input', function (ev) { if (ev.target && ev.target.id === 'tocq') { filterToc(ev.target.value); return; } colorInput(ev); });
+document.addEventListener('toggle', function (ev) { var d = ev.target; if (d && d.classList && d.classList.contains('pop-sec') && d.dataset) POPSEC[d.dataset.id] = !!d.open; }, true);
 document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && popOpen()) { setPop(false); var b = $('#settings'); if (b && b.focus) b.focus(); } });
 document.addEventListener('change', function (ev) {
   var t = ev.target;

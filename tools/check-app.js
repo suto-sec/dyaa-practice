@@ -49,13 +49,15 @@ run('md.js'); run('logic.js'); run('logo.js'); run('theme.js');
 run('app.js');
 
 const app = () => els['#app'].innerHTML;
+const popHtml = () => els['#settings-pop'].innerHTML;
+const openMenu = (sec) => { click({ act: 'settings', open: sec }); return popHtml(); };
 function go(h) { location.hash = h; if (hash === h) (handlers.hashchange || []).forEach(f => f()); }
 function click(attrs, tag) {
   const b = { dataset: attrs, tagName: tag || 'BUTTON' };
   (handlers.click || []).forEach(f => f({ target: { closest: () => b } }));
 }
 
-for (const r of ['#/hoy', '#/ruta', '#/ejercicios', '#/examen', '#/teoria', '#/resumen', '#/registro', '#/progreso', '#/ajustes']) {
+for (const r of ['#/hoy', '#/ruta', '#/ejercicios', '#/examen', '#/teoria', '#/resumen', '#/registro', '#/progreso']) {
   go(r); ok(app().length > 100, 'view renders: ' + r);
   ok(!/locked|bloquead|&#128274;/i.test(app()), 'no lock text in ' + r);
 }
@@ -291,13 +293,27 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   click({ act: 'logty', v: '' });
   ok(/nav|href="#\/registro"/.test(fs.readFileSync(path.join(APP, 'index.html'), 'utf8')) && /data-tab="registro"/.test(fs.readFileSync(path.join(APP, 'index.html'), 'utf8')), 'Registro has its tab');
   // settings page
-  go('#/ajustes'); ok(/<h2>Ajustes<\/h2>/.test(app()) && /Meta diaria/.test(app()) && /Simulador de examen/.test(app()) && /Cron&oacute;metro en ejercicios/.test(app()), 'the Ajustes page has study, exam and data settings');
+  openMenu('study'); ok(/Ajustes<\/div>/.test(popHtml()) && /Meta diaria/.test(popHtml()) && /Simulador de examen/.test(popHtml()) && /Cron&oacute;metro en ejercicios/.test(popHtml()), 'the gear menu has the study, exam and data settings');
+  ok(['look', 'route', 'study', 'exam', 'data'].every(id => popHtml().indexOf('<details class="pop-sec" data-id="' + id + '"') >= 0), 'the menu is split in sections: look, route, study, exam, data');
+  ok(!/\bajustes\b.*<h2>|<h2>Ajustes/i.test(app()), 'there is no Ajustes page any more');
+  for (const r of ['#/hoy', '#/ruta', '#/ejercicios', '#/examen', '#/teoria', '#/resumen', '#/registro', '#/progreso']) { go(r); ok(!/href="#\/ajustes"/.test(app()), 'no link to a settings page in ' + r); }
+  click({ act: 'settings', open: 'x' }); click({ act: 'settings-close' });
+  go('#/ajustes'); ok(els['#settings-pop'].hidden === false && /data-id="data" open/.test(popHtml()), 'the old settings address opens the menu at the data section');
+  ok(/<h2>Misi&oacute;n de hoy/.test(app()), 'and shows Hoy behind it');
+  click({ act: 'settings-close' });
+  go('#/examen'); if (hasExams) { click({ act: 'settings', open: 'exam' }); ok(els['#settings-pop'].hidden === false && /data-id="exam" open/.test(popHtml()), 'the exam page opens the exam section of the menu'); }
+  click({ act: 'settings-close' });
+  (handlers.toggle || []).forEach(f => f({ target: { classList: { contains: () => true }, dataset: { id: 'look' }, open: true } })); openMenu('study');
+  ok(/data-id="look" open/.test(popHtml()) && /data-id="study" open/.test(popHtml()), 'sections the user opened stay open');
+  (handlers.toggle || []).forEach(f => f({ target: { classList: { contains: () => true }, dataset: { id: 'look' }, open: false } }));
+  click({ act: 'settings-close' });
   ok(st().cfg.timer === false && st().cfg.extimer === true && st().cfg.daily === 30, 'defaults: no stopwatch on exercises, clock in exams, 30 minutes');
-  cfgChange('timer', true); ok(st().cfg.timer === true && /data-cfg="timer" checked/.test(app()), 'the stopwatch can be turned on');
+  openMenu('study');
+  cfgChange('timer', true); ok(st().cfg.timer === true && /data-cfg="timer" checked/.test(popHtml()), 'the stopwatch can be turned on');
   cfgChange('daily', 45); ok(st().cfg.daily === 45, 'the daily goal can be typed');
   click({ act: 'cfgset', k: 'daily', v: '60' }); ok(st().cfg.daily === 60, 'or picked');
   cfgChange('daily', 2); ok(st().cfg.daily === 30, 'an absurd goal falls back to the default');
-  cfgChange('extimer', false); ok(/data-cfg="exauto" disabled/.test(app()), 'the automatic end needs the clock'); cfgChange('extimer', true);
+  cfgChange('extimer', false); ok(/data-cfg="exauto" disabled/.test(popHtml()), 'the automatic end needs the clock'); cfgChange('extimer', true);
   // stopwatch on an exercise: shown only when on, and the time goes to the log
   const unrated = win.EXAMS.length ? Object.keys(win.STAGE_EX).map(k => win.STAGE_EX[k]).reduce((a, b) => a.concat(b), []).find(k => !(st().ex[k] && st().ex[k].hist.length)) : null;
   if (unrated) {
@@ -340,7 +356,7 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
     click({ act: 'exquit' });
     // relaxed: help costs XP
     click({ act: 'expreset', v: 'relax' }); ok(st().cfg.exhints && st().cfg.exans && !st().cfg.exauto, 'the relaxed preset turns the help on');
-    go('#/ajustes'); ok(/choice on" data-act="expreset" data-v="relax"/.test(app()), 'and shows which preset is active');
+    openMenu('exam'); ok(/choice on" data-act="expreset" data-v="relax"/.test(popHtml()), 'and shows which preset is active');
     click({ act: 'exstart', id: ex.id }); go('#/examen');
     ok((app().match(/data-act="exhint"/g) || []).length === ex.exercises.length && (app().match(/data-act="exsol"/g) || []).length === ex.exercises.length, 'every exercise has its own hint and solution buttons');
     const first = ex.exercises[0].id;
@@ -383,7 +399,7 @@ ok(JSON.parse(store['dyaa-practice-v1']).cfg.timer === true && JSON.parse(store[
 // progress shared through a file, with a fake File System Access API and a tiny in-memory IndexedDB
 const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
 (async () => {
-  go('#/ajustes'); ok(/D&oacute;nde se guarda el progreso/.test(app()) && /no permite elegir un archivo/.test(app()), 'without the File System Access API the settings explain it and point to export/import');
+  openMenu('data'); ok(/D&oacute;nde se guarda el progreso/.test(popHtml()) && /no permite elegir un archivo/.test(popHtml()), 'without the File System Access API the settings explain it and point to export/import');
   const idbData = {}, req = (v) => { const q = { result: v }; setTimeout(() => q.onsuccess && q.onsuccess()); return q; };
   win.indexedDB = { open() { const r = {}; setTimeout(() => { r.result = { createObjectStore() {}, transaction: () => ({ objectStore: () => ({ put: (v, k) => { idbData[k] = v; return req(); }, get: (k) => req(idbData[k]), delete: (k) => { delete idbData[k]; return req(); } }) }) }; r.onupgradeneeded && r.onupgradeneeded(); r.onsuccess && r.onsuccess(); }); return r; } };
   const file = { text: '', perm: 'granted' };
@@ -394,10 +410,10 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
   go('#/hoy'); ok(/Guarda tu progreso en un archivo/.test(app()) && /Ya tengo uno/.test(app()), 'on the first page the offer to keep the progress in a file is shown');
   go('#/ruta'); ok(!/Guarda tu progreso en un archivo/.test(app()), 'and only there');
   click({ act: 'sync-later' }); await wait(20); go('#/hoy'); ok(!/Guarda tu progreso en un archivo/.test(app()), '"Ahora no" is remembered');
-  go('#/ajustes'); ok(/Crear un archivo de progreso/.test(app()) && /solo este perfil/.test(app()), 'with the API the settings offer to create or pick a file');
+  openMenu('data'); ok(/Crear un archivo de progreso/.test(popHtml()) && /solo este perfil/.test(popHtml()), 'with the API the settings offer to create or pick a file');
   click({ act: 'sync-new' }); await wait(60);
   ok(file.text && JSON.parse(file.text).theory[firstReading('sumatorios')] === true && store['dyaa-practice-sync'] === 'file', 'creating the file writes this profile\'s progress into it');
-  go('#/ajustes'); ok(/dyaa-progreso\.json/.test(app()) && /al d&iacute;a/.test(app()), 'settings show the shared file as up to date');
+  openMenu('data'); ok(/dyaa-progreso\.json/.test(popHtml()) && /al d&iacute;a/.test(popHtml()), 'settings show the shared file as up to date');
   // a change is written to the file shortly after
   click({ act: 'theorydone', step: firstReading('asintotica') }); await wait(450);
   ok(JSON.parse(file.text).theory[firstReading('asintotica')] === true, 'every change is written to the shared file');
@@ -433,7 +449,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
   // stop sharing
   click({ act: 'sync-off' }); await wait(40);
   ok(store['dyaa-practice-sync'] == null, 'stopping the sharing forgets the file');
-  go('#/ajustes'); ok(/solo este perfil/.test(app()), 'back to this profile only');
+  openMenu('data'); ok(/solo este perfil/.test(popHtml()), 'back to this profile only');
   console.log(fails ? fails + ' FAILURES' : 'app checks passed');
   process.exit(fails ? 1 : 0);
 })();

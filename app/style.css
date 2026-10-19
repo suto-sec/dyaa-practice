@@ -117,7 +117,7 @@ details.stage[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:8px}
 /* settings button and popover */
 .icon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border-radius:8px;border:1px solid var(--bd);background:none;color:var(--mut);cursor:pointer}
 .icon:hover,.icon[aria-expanded=true]{color:var(--fg);background:var(--code)}
-.popover{position:absolute;right:12px;top:calc(100% + 6px);z-index:40;width:320px;max-height:calc(100vh - 80px);overflow-y:auto;max-width:calc(100vw - 24px);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+.popover{position:absolute;right:12px;top:calc(100% + 6px);z-index:40;width:390px;max-height:calc(100vh - 80px);overflow-y:auto;max-width:calc(100vw - 24px);background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
 .popover[hidden]{display:none}
 .pop-title{font-weight:700;margin-bottom:10px}
 .pop-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -215,3 +215,18 @@ details.stage[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:8px}
   .seg{white-space:nowrap}
   .setrow .seg{padding:4px 7px;font-size:.8rem}
 }
+
+/* the gear menu: sections that open and close */
+.pop-sec{border-top:1px solid var(--bd)}
+.pop-sec>summary{cursor:pointer;padding:10px 2px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.pop-sec>summary::-webkit-details-marker{display:none}
+.pop-sec>summary::after{content:'+';color:var(--mut);font-weight:400;font-size:1.1rem}
+.pop-sec[open]>summary::after{content:'\2212'}
+.pop-body{padding:0 2px 12px}
+.pop-body>.pop-row,.pop-body>.row{margin-bottom:8px}
+.pop-sub{font-weight:600;margin:14px 0 4px}
+.pop-body .setrow{padding-bottom:10px;margin-bottom:10px}
+.pop-body .setrow .ctl{justify-items:start}
+.pop-body .presets{grid-template-columns:1fr}
+.pop-body .swrow{padding:7px 0}
+.pop-body p{margin:.3em 0 .6em}
