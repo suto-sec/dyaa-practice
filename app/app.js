@@ -16,12 +16,12 @@ function dur(sec) { sec = Math.max(0, Math.round(sec)); if (sec < 3600) return f
 function enc(s) { return encodeURIComponent(s); }
 
 /* ---------- state ---------- */
-function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, quiz: {}, cards: {}, ver: 2, updated: 0, cfg: L.defaultCfg() }; }
+function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, quiz: {}, ver: 2, updated: 0, cfg: L.defaultCfg() }; }
 function norm(o) {
   var s = blank();
   if (o && typeof o === 'object') {
     s.ex = o.ex || {}; s.xp = +o.xp || 0; s.days = o.days || []; s.log = o.log || [];
-    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {}; s.quiz = o.quiz || {}; s.cards = o.cards || {}; s.ver = +o.ver || 1; s.updated = +o.updated || 0; s.cfg = L.normCfg(o.cfg);
+    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {}; s.quiz = o.quiz || {}; s.ver = +o.ver || 1; s.updated = +o.updated || 0; s.cfg = L.normCfg(o.cfg);
   }
   return s;
 }
@@ -113,14 +113,6 @@ EXAMS.forEach(function (ex) { (ex.exercises || []).forEach(function (e) { ALL.pu
 var byKey = {}; ALL.forEach(function (a) { byKey[a.key] = a; });
 var PATH = L.annotateMinutes(L.buildPath(STAGES, STAGE_EX, LECT, STAGE_AT, QUIZ), LECT, EXAMS);
 var stepById = {}; PATH.forEach(function (s, i) { s.i = i; stepById[s.id] = s; });
-/* Review cards: one per section of each summary. */
-var CARDS = [], cardById = {};
-STAGES.forEach(function (g) {
-  if (SUMM[g.id]) String(SUMM[g.id]).split(/^(?=## )/m).forEach(function (chunk) {
-    var m = /^## (.*)\n?([\s\S]*)$/.exec(chunk);
-    if (m) { var c = { id: L.cardId(g.id, m[1].trim()), stage: g.id, title: m[1].trim(), md: m[2] }; CARDS.push(c); cardById[c.id] = c; }
-  });
-});
 /* Readings used to be numbered per etapa ("t:sumatorios:0"); they are now named. Progress saved with the old ids is moved to the reading that
    contains the section the old step started at (roadmap.json "legacy_theory"). Runs once per saved progress (ver 2). */
 function migrate() {
@@ -300,19 +292,16 @@ function vHoy() {
   var t = today(), C = S.cfg, h = '<h2>Misi&oacute;n de hoy</h2>' + missingBanner();
   var lv = level(), lo = (lv - 1) * (lv - 1) * 10, hi = lv * lv * 10, pct = Math.round((S.xp - lo) / (hi - lo) * 100);
   h += '<div class="card row"><span>Nivel <b>' + lv + '</b></span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + S.xp + ' / ' + hi + ' XP</span><span class="streakline">' + streakHtml() + '<span class="muted">d&iacute;as de racha</span></span></div>';
-  var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t), cardsDue = L.cardsDue(CARDS, S.cards, t), nop = C.nopaper;
-  var dueItems = nop ? (cardsDue ? [{ id: 'cards', min: Math.min(8, cardsDue) }] : []) : due.map(function (k) { return { id: k, min: (stepById['e:' + k] || {}).min || 15 }; });
+  var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t), nop = C.nopaper;
+  var dueItems = nop ? [] : due.map(function (k) { return { id: k, min: (stepById['e:' + k] || {}).min || 15 }; });
   var plan = L.dailyPlan({ goal: C.daily, today: t, log: S.log, due: dueItems, steps: EXAMS.length || LECT.length ? nextSteps(80) : [] });
   var gp = Math.min(100, Math.round(plan.done / plan.goal * 100));
   h += '<div class="card"><div class="row"><b>Tu meta de hoy: ' + plan.goal + ' min</b><span class="grow"></span><button type="button" class="linkbtn" data-act="settings" data-open="study">Cambiar</button></div><div class="row"><div class="bar"><i style="width:' + gp + '%"></i></div><span class="muted">' + plan.done + ' de ' + plan.goal + ' min' + (plan.n ? ' &middot; ' + plan.n + (plan.n === 1 ? ' tarea hecha' : ' tareas hechas') : '') + '</span></div>' +
     (plan.met ? '<p>' + flame('sm') + ' <b>&iexcl;Meta cumplida!</b> Todo lo que hagas ahora es de propina.</p>' : '<p class="muted">Quedan ' + plan.left + ' min. Abajo tienes lo que te propongo para llenarlos' + (plan.min ? ' (' + mins(plan.min) + ')' : '') + '.</p>') + '</div>';
   if (plan.reviews.length) {
-    var nDue = nop ? cardsDue : due.length;
-    h += '<h3>Repaso pendiente (' + nDue + ')</h3>';
-    plan.reviews.forEach(function (r) {
-      h += r.id === 'cards' && nop ? '<a class="item" href="#/practica/tarjetas"><span><b>&#128196; Tarjetas de resumen</b> <span class="tag due">' + cardsDue + ' pendientes</span></span><span>' + minTag(r.min) + '</span></a>' : exRow(byKey[r.id]);
-    });
-    if (!nop && due.length > plan.reviews.length) h += '<p class="muted">Y ' + (due.length - plan.reviews.length) + ' m&aacute;s que caben otro d&iacute;a (<a href="#/ejercicios">Ejercicios</a>, estado &laquo;repasar hoy&raquo;).</p>';
+    h += '<h3>Repaso pendiente (' + due.length + ')</h3>';
+    plan.reviews.forEach(function (r) { h += exRow(byKey[r.id]); });
+    if (due.length > plan.reviews.length) h += '<p class="muted">Y ' + (due.length - plan.reviews.length) + ' m&aacute;s que caben otro d&iacute;a (<a href="#/ejercicios">Ejercicios</a>, estado &laquo;repasar hoy&raquo;).</p>';
   }
   if (EXAMS.length || LECT.length) {
     h += '<h3>' + (plan.met ? 'Si quieres seguir' : 'Ruta') + '</h3>' + nextCard();
@@ -533,18 +522,13 @@ function vQuiz(id) {
 function sheetStages(g) { return g ? g.stages.filter(function (id) { return SUMM[id]; }) : []; }
 function sheetLink(g) { return sheetStages(g).length ? ' &middot; <a href="#/resumen/' + enc(g.id) + '">Resumen y f&oacute;rmulas</a>' : ''; }
 /* ---------- practice without paper ----------
-   What a laptop alone can do besides the readings and quick checks of the route: a mixed test, review cards, putting the steps of a solution in order.
+   What a laptop alone can do besides the readings and quick checks of the route: a mixed test, putting the steps of a solution in order.
    PR holds the session on screen. */
 var PR = null;
 function qstate() { return PR && PR.kind === 'test' ? PR : Q; }
-var PAPERLESS = { mix: 1, card: 1, order: 1 };
-function stageRead(id) { return PATH.some(function (x) { return x.type === 'theory' && x.stage === id && (S.theory[x.id] || S.skip[x.id]); }); }
+var PAPERLESS = { mix: 1, order: 1 };
 function stageInRoute(id) { return GROUPS.some(function (g) { return g.stages.indexOf(id) >= 0; }); }
 function orderable() { return ALL.filter(function (a) { return a.e.own && L.orderPieces(a.e.solution); }); }
-function cardsFor() {
-  var t = today(), q = L.cardQueue(CARDS, S.cards, t, 8, stageRead);
-  return q.length < 8 ? L.cardQueue(CARDS, S.cards, t, 8, stageInRoute) : q;
-}
 function paperNote() {
   return S.cfg.nopaper ? '<div class="note">&#128187; <b>Modo sin papel.</b> Los ejercicios y ex&aacute;menes se hacen mejor con papel. Para practicar en pantalla: <a href="#/practica">pr&aacute;ctica sin papel</a>. <button type="button" class="linkbtn" data-act="cfgtoggle" data-k="nopaper" data-v="0">Ya tengo papel</button></div>' : '';
 }
@@ -554,8 +538,6 @@ function practiceStart(kind) {
     var read = PATH.filter(function (x) { return x.type === 'quiz' && (S.theory['t:' + x.tile] || S.skip['t:' + x.tile] || S.quiz[x.id]); }).map(function (x) { return x.tile; });
     var pool = read.length >= 4 ? read : PATH.filter(function (x) { return x.type === 'quiz' && keepScope(x); }).map(function (x) { return x.tile; });
     PR = { kind: 'test', id: Date.now(), pick: {}, qs: L.mixQuestions(QUIZ, pool, 8, Math.random), fromRead: read.length >= 4, logged: null };
-  } else if (kind === 'cards') {
-    PR = { kind: 'cards', id: Date.now(), queue: cardsFor().map(function (c) { return c.id; }), i: 0, shown: false, got: [], logged: null };
   } else if (kind === 'pasos') {
     var cands = orderable(), seen = PR && PR.kind === 'pasos' ? PR.seen : [], fresh = cands.filter(function (a) { return seen.indexOf(a.key) < 0 && stageInRoute(a.e.stage); });
     if (!fresh.length) fresh = cands.filter(function (a) { return seen.indexOf(a.key) < 0; });
@@ -569,9 +551,8 @@ function practiceNote() { return '<p><a href="#/practica">&larr; Pr&aacute;ctica
 
 function vPractice() {
   var h = '<h2>Pr&aacute;ctica sin papel</h2><p class="muted">Lo que se puede hacer con solo el port&aacute;til: nada de calcular a mano, todo se responde con clics. Sirve para fijar lo le&iacute;do y para los ratos sin papel; los ejercicios de la ruta siguen necesitando papel.</p>';
-  var due = L.cardsDue(CARDS, S.cards, today()), fresh = CARDS.filter(function (c) { return !S.cards[c.id]; }).length, ord = orderable().length;
+  var ord = orderable().length;
   h += '<div class="card"><div class="row"><b>Test mixto</b><span class="grow"></span><a class="btn pri" href="#/practica/test">Empezar</a></div><p class="muted">8 preguntas, cada una de una lectura distinta, de lo que ya has le&iacute;do (si a&uacute;n no has le&iacute;do casi nada, de toda tu ruta). Cada acierto suma 0,5 XP.</p></div>';
-  h += '<div class="card"><div class="row"><b>Tarjetas de resumen</b>' + (due ? '<span class="tag due">' + due + ' pendientes hoy</span>' : '') + '<span class="grow"></span><a class="btn pri" href="#/practica/tarjetas">Empezar</a></div><p class="muted">Cada secci&oacute;n de los res&uacute;menes es una tarjeta: intenta recordarla sin mirar, m&iacute;rala y di si te acordabas. Las que fallas vuelven pronto; las que dominas, cada vez m&aacute;s tarde. ' + fresh + ' tarjetas nuevas de ' + CARDS.length + '.</p></div>';
   h += '<div class="card"><div class="row"><b>Ordenar los pasos</b><span class="grow"></span>' + (ord ? '<a class="btn pri" href="#/practica/pasos">Empezar</a>' : '<span class="muted">no disponible</span>') + '</div><p class="muted">' + (ord ? 'Un ejercicio con su soluci&oacute;n cortada en pasos, desordenados: t&oacute;calos en el orden en que los har&iacute;as. Hay ' + ord + ' ejercicios con soluci&oacute;n en pasos.' : 'Hace falta alg&uacute;n ejercicio con soluci&oacute;n propuesta en pasos (<code>content/exams/soluciones/</code>); no hay ninguno en esta copia.') + '</p></div>';
   var n = L.nextSteps(ACTIVE.filter(L.paperFree), S, EXAMS, 1)[0];
   h += '<div class="card row"><span class="grow">' + (n ? 'Tambi&eacute;n valen las lecturas y comprobaciones de la ruta: siguiente, ' + stepLabel(n) : 'Ya has hecho todas las lecturas y comprobaciones de tu ruta.') + '</span>' + (n ? '<a class="btn" href="' + stepHref(n) + '">Ir</a>' : '') + '</div>';
@@ -591,22 +572,6 @@ function vTest() {
     h += '<div class="card next"><div class="big">' + score + ' de ' + qs.length + (score === qs.length ? ' &middot; &iexcl;perfecto!' : score * 2 >= qs.length ? ' &middot; bien' : ' &middot; repasa las lecturas o los res&uacute;menes') + '</div>' + (PR.logged ? '<p>Registrado: <b>+' + PR.logged.xp + ' XP</b>.</p><div class="row"><button class="btn pri" data-act="pnew" data-k="test">Otro test</button><a class="btn" href="#/practica">Volver</a></div>' : '<div class="row"><button class="btn pri" data-act="testdone">Registrar el resultado</button></div>') + '</div>';
   }
   return h;
-}
-
-function vCards() {
-  if (!PR || PR.kind !== 'cards') practiceStart('cards');
-  if (S.cfg.timer) tmStart('p:' + PR.id);
-  var h = practiceNote(), n = PR.queue.length;
-  if (!n) return h + '<div class="card"><h2>Tarjetas de resumen</h2><p>No hay tarjetas pendientes ni nuevas.</p></div>';
-  if (PR.i >= n) {
-    var cnt = [0, 0, 0]; PR.got.forEach(function (g) { cnt[g.r]++; });
-    return h + '<div class="card next"><div class="big">Tarjetas repasadas: ' + n + '</div><p>Lo sab&iacute;as: ' + cnt[2] + ' &middot; a medias: ' + cnt[1] + ' &middot; no te acordabas: ' + cnt[0] + '.' + (PR.logged ? ' Registrado: <b>+' + PR.logged.xp + ' XP</b>.' : '') + '</p><p class="muted">Las que no sab&iacute;as vuelven ma&ntilde;ana; las dem&aacute;s, m&aacute;s adelante.</p><div class="row"><button class="btn pri" data-act="pnew" data-k="cards">Otra tanda</button><a class="btn" href="#/practica">Volver</a></div></div>';
-  }
-  var c = cardById[PR.queue[PR.i]], g = stageById[c.stage];
-  h += '<div class="card"><div class="muted">Tarjeta ' + (PR.i + 1) + ' de ' + n + ' &middot; ' + esc(g ? g.title : c.stage) + tmBox() + '</div><div class="bar"><i style="width:' + Math.round(PR.i / n * 100) + '%"></i></div>';
-  h += '<h2>Recuerda: ' + inlineMd(c.title) + '</h2>';
-  if (!PR.shown) return h + '<p class="muted">Intenta recordarlo de memoria, sin mirar; luego m&iacute;ralo.</p><div class="row"><button class="btn pri" data-act="cardshow">Mostrar</button></div></div>';
-  return h + '<div class="sheet">' + mdRender(c.md) + '</div></div><div class="card row">&iquest;Te acordabas? ' + [['No', 0, 'bad'], ['A medias', 1, 'warn'], ['S&iacute;', 2, 'ok']].map(function (o) { return '<button class="btn ' + o[2] + '" data-act="cardrate" data-r="' + o[1] + '">' + o[0] + '</button>'; }).join('') + '</div>';
 }
 
 function vSteps() {
@@ -767,7 +732,7 @@ function filterToc(q) {
 /* ---------- activity log page ---------- */
 var R = { ty: '', days: 10 };
 var LOGTY = [['', 'Todo'], ['ex', 'Ejercicios'], ['quiz', 'Comprobaciones'], ['theory', 'Lecturas'], ['exam', 'Ex&aacute;menes'], ['paperless', 'Sin papel'], ['skip', 'Saltados']];
-var LOGICON = { ex: '&#9998;', quiz: '&#10067;', exam: '&#127937;', theory: '&#128214;', skip: '&#8631;', mix: '&#128187;', card: '&#128187;', order: '&#128187;' };
+var LOGICON = { ex: '&#9998;', quiz: '&#10067;', exam: '&#127937;', theory: '&#128214;', skip: '&#8631;', mix: '&#128187;', order: '&#128187;' };
 function dayLabel(d) {
   try { var p = d.split('-'), s = new Date(+p[0], p[1] - 1, +p[2]).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }); return (d === today() ? 'Hoy' : d === L.addDays(today(), -1) ? 'Ayer' : s.charAt(0).toUpperCase() + s.slice(1)); } catch (e) { return d; }
 }
@@ -933,7 +898,7 @@ function route() {
   else if (tab === 'quiz') h = vQuiz(p.slice(1).join('/'));
   else if (tab === 'progreso') h = vProgress();
   else if (tab === 'registro') h = vLog();
-  else if (tab === 'practica') h = p[1] === 'test' ? vTest() : p[1] === 'tarjetas' ? vCards() : p[1] === 'pasos' ? vSteps() : vPractice();
+  else if (tab === 'practica') h = p[1] === 'test' ? vTest() : p[1] === 'pasos' ? vSteps() : vPractice();
   else { tab = 'hoy'; h = vHoy(); }
   if (NOTE && tab !== 'ejercicios') { h = '<div class="card next">' + NOTE + '</div>' + h; NOTE = ''; }
   h = syncBanner() + h;
@@ -1023,18 +988,6 @@ document.addEventListener('click', function (ev) {
     var txp = Math.round(tsc * 0.5 * 10) / 10; S.xp = Math.round((S.xp + txp) * 10) / 10;
     logAdd('mix', 'mix:' + PR.id, 'Test mixto (' + tsc + '/' + PR.qs.length + ')', tsc === PR.qs.length ? 2 : tsc * 2 >= PR.qs.length ? 1 : 0, txp, { m: 6, sec: tmSec('p:' + PR.id) });
     PR.logged = { xp: txp }; touchDay(); awardAll(); save(); rerender();
-  }
-  else if (act === 'cardshow' && PR && PR.kind === 'cards') { PR.shown = true; rerender(); }
-  else if (act === 'cardrate' && PR && PR.kind === 'cards' && PR.shown && PR.i < PR.queue.length) {
-    var cr = +b.dataset.r, cid = PR.queue[PR.i], cxp = [0, 0.2, 0.5][cr];
-    S.cards[cid] = L.applyRating(S.cards[cid], cr, 0, cxp, today()); S.xp = Math.round((S.xp + cxp) * 10) / 10;
-    PR.got.push({ id: cid, r: cr, xp: cxp }); PR.i++; PR.shown = false;
-    if (PR.i >= PR.queue.length) {
-      var csum = PR.got.reduce(function (t, g) { return t + g.xp; }, 0), good = PR.got.filter(function (g) { return g.r === 2; }).length / PR.got.length;
-      logAdd('card', 'cards:' + PR.id, 'Tarjetas de resumen (' + PR.got.length + ')', good > 0.7 ? 2 : good > 0.4 ? 1 : 0, Math.round(csum * 10) / 10, { m: Math.max(3, Math.round(PR.got.length * 0.7)), sec: tmSec('p:' + PR.id) });
-      PR.logged = { xp: Math.round(csum * 10) / 10 }; tmStop();
-    }
-    touchDay(); awardAll(); save(); rerender();
   }
   else if (act === 'opick' && PR && PR.kind === 'pasos' && !PR.checked && PR.placed.indexOf(+b.dataset.i) < 0) {
     PR.placed.push(+b.dataset.i);

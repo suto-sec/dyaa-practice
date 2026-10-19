@@ -408,7 +408,7 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   const stepsNow = L.nextSteps(PATHX.filter(L.paperFree), st(), win.EXAMS || [], 3);
   go('#/ruta'); ok(stepsNow.length === 0 || (/Siguiente en la ruta/.test(app()) && !/class="big">[^<]*Ejercicios adicionales/.test(app())), 'the route proposes a reading or a check next');
   // practice menu
-  go('#/practica'); ok(/Pr&aacute;ctica sin papel/.test(app()) && /href="#\/practica\/test"/.test(app()) && /href="#\/practica\/tarjetas"/.test(app()) && /Ordenar los pasos/.test(app()), 'the practice page offers the three activities');
+  go('#/practica'); ok(/Pr&aacute;ctica sin papel/.test(app()) && /href="#\/practica\/test"/.test(app()) && /Ordenar los pasos/.test(app()) && !/arjeta/.test(app()), 'the practice page offers the mixed test and the ordering');
   // mixed test
   const before = st().xp;
   go('#/practica/test'); const nq = (app().match(/class="card quiz"/g) || []).length;
@@ -421,20 +421,6 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   click({ act: 'testdone' }); ok(st().log.length === logN, 'registering twice does not count twice');
   ok(/data-act="pnew" data-k="test"/.test(app()), 'and another test can be started');
   click({ act: 'pnew', k: 'test' }); ok((app().match(/class="card quiz"/g) || []).length === 8 && !/Registrado/.test(app()), 'a new test starts clean');
-  // review cards
-  go('#/practica/tarjetas'); ok(/Recuerda: /.test(app()) && /data-act="cardshow"/.test(app()) && !/data-act="cardrate"/.test(app()), 'a card first asks you to remember it');
-  click({ act: 'cardshow' }); ok(/data-act="cardrate" data-r="0"/.test(app()) && /data-act="cardrate" data-r="2"/.test(app()), 'then shows it and asks if you remembered');
-  const cx0 = st().xp; let cards = 0;
-  for (let i = 0; i < 8; i++) { if (!/data-act="cardshow"/.test(app()) && !/data-act="cardrate"/.test(app())) break; if (/data-act="cardshow"/.test(app())) click({ act: 'cardshow' }); click({ act: 'cardrate', r: String([2, 1, 0][i % 3]) }); cards++; }
-  ok(cards === 8 && /Tarjetas repasadas: 8/.test(app()), 'a session is eight cards and ends with a summary');
-  ok(Object.keys(st().cards).length === 8 && Object.values(st().cards).every(c => c.due && c.hist.length === 1), 'each card is scheduled like an exercise');
-  ok(st().log[st().log.length - 1].ty === 'card' && st().xp > cx0, 'the session is logged once and gives XP');
-  const cardsLogged = st().log.filter(l => l.ty === 'card').length; ok(cardsLogged === 1, 'one log entry per session, not per card');
-  // the cards that were missed or doubted come back, and Hoy says so
-  { const RealDate = ctx.Date; let now = Date.now() + 5 * 864e5; ctx.Date = class extends RealDate { constructor(...a) { super(...(a.length ? a : [now])); } static now() { return now; } };
-    go('#/hoy'); ok(/Tarjetas de resumen/.test(app()) && /\d+ pendientes/.test(app()) && /href="#\/practica\/tarjetas"/.test(app()), 'later, Hoy lists the cards due as the review of the day');
-    go('#/practica/tarjetas'); ok(/Tarjeta 1 de 8/.test(app()), 'and they are the first ones of the next session');
-    ctx.Date = RealDate; }
   // putting the steps in order (needs a proposed solution written in steps)
   if (hasExams) {
     const ex0 = win.EXAMS.find(e => e.kind === 'analisis') || win.EXAMS[0], e0 = ex0.exercises[0], keep = [e0.solution, e0.own];
@@ -454,7 +440,7 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
     e0.solution = keep[0]; e0.own = keep[1];
   }
   // the log can show only this kind of practice
-  go('#/registro'); click({ act: 'logty', v: 'paperless' }); ok(/title="mix"|title="card"|title="order"/.test(app()) && !/title="ex"|title="theory"/.test(app()), 'the log can be filtered to practice without paper');
+  go('#/registro'); click({ act: 'logty', v: 'paperless' }); ok(/title="mix"|title="order"/.test(app()) && !/title="ex"|title="theory"/.test(app()), 'the log can be filtered to practice without paper');
   click({ act: 'logty', v: '' });
   // nothing left to read: say so instead of claiming the route is done
   click({ act: 'cfgtoggle', k: 'nopaper', v: '0' }); ok(st().cfg.nopaper === false, 'and back to paper');

@@ -302,17 +302,6 @@ const LG = require(path.join(APP, 'logo.js'));
   const small = L.mixQuestions(quizzes, [ids[0], ids[1]], 8, rnd);
   ok(small.length === quizzes[ids[0]].length + quizzes[ids[1]].length && small.length < 8, 'with few readings it gives what there is, never repeating a question');
   ok(L.mixQuestions(quizzes, [], 8, rnd).length === 0 && L.mixQuestions(quizzes, ['nope'], 8, rnd).length === 0, 'no readings, no questions');
-  // cards
-  const cards = [{ id: 'a:x', stage: 'a' }, { id: 'a:y', stage: 'a' }, { id: 'b:z', stage: 'b' }, { id: 'c:w', stage: 'c' }];
-  const state = { 'a:x': { due: '2026-01-01' }, 'c:w': { due: '2026-01-05' } };
-  ok(L.cardQueue(cards, state, '2026-01-03', 5, s => s !== 'b').map(c => c.id).join() === 'a:x,a:y', 'cards: the due ones first, then new ones of the allowed stages only');
-  ok(L.cardQueue(cards, state, '2026-01-06', 5).map(c => c.id).join() === 'a:x,c:w,a:y,b:z', 'with no stage filter all new cards come after the due ones, oldest due first');
-  ok(L.cardQueue(cards, state, '2026-01-06', 2).length === 2 && L.cardsDue(cards, state, '2026-01-03') === 1, 'a session has a size, and due cards are counted');
-  ok(L.cardId('sumatorios', 'Potencias y logaritmos') === 'sumatorios:potencias-y-logaritmos' && L.cardId('x', 'Límites: derivadas') === 'x:límites-derivadas', 'a card id is a readable slug');
-  // every summary section can be a card, ids are unique
-  const ids2 = new Set(); let n2 = 0;
-  Object.keys(win.SUMMARIES).forEach(st => String(win.SUMMARIES[st]).split(/^(?=## )/m).forEach(ch => { const mm = /^## (.*)/.exec(ch); if (mm) { n2++; ids2.add(L.cardId(st, mm[1])); } }));
-  ok(n2 >= 40 && ids2.size === n2, 'the summaries give ' + n2 + ' cards with unique ids');
   // ordering the steps of a solution
   const sol = '**Paso 1.** primero\n\n**Paso 2.** segundo\n\n**Paso 3.** tercero';
   ok(L.orderPieces(sol).join('|') === 'primero|segundo|tercero', 'the steps of a stepped solution, without their numbers');

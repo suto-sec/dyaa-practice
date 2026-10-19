@@ -301,8 +301,8 @@ L.examXp = function (ids, scores, points, help) {
 };
 
 /* ---------- study without paper ----------
-   Everything a laptop alone can do: the route's readings and quick checks, a mixed test drawn from the quick-check questions, review cards
-   made from the summary sections, and putting the steps of a worked solution back in order. Exercises need paper. */
+   Everything a laptop alone can do: the route's readings and quick checks, a mixed test drawn from the quick-check questions, and putting the
+   steps of a worked solution back in order. Exercises need paper. */
 L.paperFree = function (step) { return step.type === 'theory' || step.type === 'quiz'; };
 L.shuffle = function (arr, rnd) {
   var a = arr.slice();
@@ -333,15 +333,6 @@ L.mixQuestions = function (quizzes, readings, n, rnd) {
   }
   return out;
 };
-/* Review cards: one per section of a summary. State per card like an exercise (L.applyRating). Due cards first, then new ones from the stages allowed. */
-L.cardId = function (stage, title) { return stage + ':' + String(title).toLowerCase().replace(/[^a-z0-9\u00e0-\u00ff]+/g, '-').replace(/^-|-$/g, ''); };
-L.cardQueue = function (cards, state, today, n, stageOk) {
-  var due = cards.filter(function (c) { var x = state[c.id]; return x && x.due && x.due <= today; })
-    .sort(function (a, b) { return state[a.id].due < state[b.id].due ? -1 : state[a.id].due > state[b.id].due ? 1 : 0; });
-  var fresh = cards.filter(function (c) { return !state[c.id] && (!stageOk || stageOk(c.stage)); });
-  return due.concat(fresh).slice(0, n);
-};
-L.cardsDue = function (cards, state, today) { return cards.filter(function (c) { var x = state[c.id]; return x && x.due && x.due <= today; }).length; };
 /* Steps of a proposed solution written as "**Paso k.** text" or "**Paso k. Title.** text", without the number. null when there are fewer than 3 (nothing to order). */
 L.orderPieces = function (sol) {
   var parts = String(sol || '').split(/\n(?=\*\*Paso \d+)/);
