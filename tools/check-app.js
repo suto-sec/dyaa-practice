@@ -133,13 +133,23 @@ if (hasExams) {
   go('#/progreso'); ok(/Ruta por etapas/.test(app()), 'progress lists stages');
 }
 
+const change0 = (target) => (handlers.change || []).forEach(f => f({ target }));
 // summary sheets: a tab, a row in every etapa of the route, a link from the exercises, and one sheet per etapa (a tema joins its etapas')
 {
   go('#/resumen');
   const sh = app(), nStages = win.STAGES.length;
-  ok(/<h2>Resumen<\/h2>/.test(sh) && (sh.match(/href="#\/resumen\//g) || []).length >= nStages, 'Resumen lists every etapa');
+  ok(/<h2 class="ttitle">Resumen<\/h2>/.test(sh) && (sh.match(/<option value=/g) || []).length === nStages, 'Resumen has a picker with every etapa');
+  // Teoría and Resumen are browsed the same way: picker, filter, outline of sections, prev/next, index button on phones
+  const parts = (h) => ({ picker: /<select id="lsel" data-kind="(teoria|resumen)"/.test(h), filter: /id="tocq"/.test(h), outline: /<nav class="outline"/.test(h), btn: /class="tocbtn"/.test(h), top: /id="totop"/.test(h), head: /class="thead"/.test(h), foot: /class="thead foot"/.test(h) });
+  go('#/teoria'); const pt = parts(app()); go('#/resumen/sumatorios'); const pr = parts(app());
+  ok(Object.keys(pt).every(k => pt[k] && pr[k]), 'both pages have the same browsing parts: ' + JSON.stringify([pt, pr]));
+  ok((app().match(/data-sec="/g) || []).length === (app().match(/<section class="sec" id="sec-/g) || []).length && /class="o l1" href="#\/resumen\/sumatorios\/0"/.test(app()), 'the outline of a summary lists its sections, like a lecture');
+  ok(/class="lnav"><a class="btn" href="#\/resumen\/[^"]+">&larr;/.test(app()) && /&rarr;<\/a><\/div>/.test(app()), 'with the previous and next sheet at both ends');
+  change0({ id: 'lsel', dataset: { kind: 'resumen' }, value: 'bucles' }); ok(hash === '#/resumen/bucles', 'the picker of Resumen goes to that sheet');
+  change0({ id: 'lsel', dataset: { kind: 'teoria' }, value: 't4_dyv' }); ok(/#\/teoria\//.test(hash), 'and the one of Teoría to that tema');
+  go('#/resumen/sumatorios/1'); ok(/id="sec-1"/.test(app()), 'a section of a summary can be linked');
   ok(win.STAGES.every(g => (win.SUMMARIES || {})[g.id] && win.SUMMARIES[g.id].length > 300), 'every etapa has a summary sheet');
-  go('#/resumen/sumatorios'); ok(/Sumatorios: reglas/.test(app()) && /\[math\]/.test(app()) && /Leer la teor&iacute;a completa/.test(app()), 'a sheet shows its formulas and links to the theory');
+  go('#/resumen/sumatorios'); ok(/Sumatorios: reglas/.test(app()) && /\[math\]/.test(app()) && /leer la teor&iacute;a completa/.test(app()), 'a sheet shows its formulas and links to the theory');
   go('#/ruta'); ok((app().match(/&#128221; Resumen y f&oacute;rmulas/g) || []).length === (app().match(/<details class="stage"/g) || []).length, 'each etapa of the route has a sheet row');
   click({ act: 'org', v: 'temas' });
   go('#/resumen/t3.2_analisis_alg_recursivos');

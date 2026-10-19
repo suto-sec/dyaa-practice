@@ -53,9 +53,9 @@ When the page opens, the address starts with `file://`. That is normal. Bookmark
 ## First minutes
 
 1. You land on **Hoy** (today). Press the suggested next step; it is either something to read or an exercise.
-2. **Exercises are done on paper.** The app shows the statement and a timer. Try it yourself, then open the hints one at a time (each one costs a bit of XP), and finally compare with the solution.
+2. **Exercises are done on paper.** The app shows the statement (and, if you turn the stopwatch on in *Ajustes*, how long you take). Try it yourself, then open the hints one at a time (each one costs a bit of XP), and finally compare with the solution.
 3. Rate yourself honestly: **Fallé**, **Dudoso** or **Dominado**. A *Fallé* is not a punishment: it just comes back later in **Hoy** for review.
-4. The gear icon (top right) is for settings: choose *Temario completo* or *Primer examen* (temas 1 to 3), organise by *Etapas* or *Temas*, theme and accent colour.
+4. The gear icon (top right) is for quick settings: choose *Temario completo* or *Primer examen* (temas 1 to 3), organise by *Etapas* or *Temas*, theme and accent colour. The **Ajustes** page (link at the bottom of that menu) has the daily goal, the stopwatch, the exam realism and your data.
 5. Nothing is locked. **Ruta** only recommends an order; you can open any exercise, exam or lecture at any time.
 
 ## Your progress (read this)
@@ -64,7 +64,7 @@ Your progress lives **inside the browser**, not in the folder. So:
 
 - It stays on that browser **profile** on that computer. Another browser, another Chrome profile, another computer, a private/incognito window, or clearing the site data starts from zero (unless you [share it through a file](#share-it-between-profiles-and-computers), below).
 - Some browsers (Firefox, for instance) tie it to the exact location of the file, so moving or renaming the folder can make it look empty. Move it back to see it again.
-- **Make a backup now and then**: gear → *Datos* (or open `#/ajustes`) → *Exportar JSON*. It downloads a JSON file. *Importar JSON* in the same page restores it, also on another computer.
+- **Make a backup now and then**: *Ajustes* (`#/ajustes`) → *Datos* → *Exportar JSON*. It downloads a JSON file. *Importar JSON* in the same page restores it, also on another computer.
 - Route, organisation, theme and accent are saved separately, so *Reiniciar progreso* does not change them.
 
 ### Share it between profiles and computers
@@ -107,7 +107,7 @@ Re-run step 3 whenever you change the exam files. `app/data-exams.js` and `conte
 | Formulas appear as raw `$...$` text or look broken | The download is incomplete: `app/vendor/katex/` is missing. Download the repository again, and unzip all of it. |
 | Pictures in the lectures are missing | Same: `app/img/` is missing. |
 | A yellow box saying "Datos de examen no encontrados", or empty stages | The exams are not added yet, see [Adding the exams](#adding-the-exams-optional). |
-| Progress disappeared | Different browser or window, cleared site data, or the folder was moved. Import your last backup from *Datos*. |
+| Progress disappeared | Different browser or window, cleared site data, or the folder was moved. Import your last backup from *Ajustes*. |
 | Changes to the content do not show | Run `python3 tools/build.py` again and reload the page (Ctrl+F5). |
 | Windows: nothing happens when you open it from the ZIP | Extract the ZIP first. |
 
@@ -126,15 +126,17 @@ Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-lo
 - **Your route** (settings): *Temario completo* (temas 1 to 7) or *Primer examen* (temas 1 to 3: the analysis stages and the analysis checkpoint). Everything outside the chosen route stays reachable, it just is not recommended or counted in the time left. The two routes are defined in `tools/roadmap.json` (`scopes`).
 - **Organise by** (settings): *Etapas* (the stages above) or *Temas* (one block per lecture, as in the slides; tema 3.2 holds two stages). Only the grouping and the names change, not the order or the progress.
 - **Siguiente paso**: after rating an exercise the app offers the next undone step. A *Fallé* does not block you: it enters spaced repetition and comes back in **Hoy**. Any step can be skipped.
-- **Hoy**: due reviews plus the next steps of the roadmap.
+- **Hoy**: a plan that fits your daily goal (*Ajustes*, 30 minutes by default): a few due reviews (at most about 40% of the time) and then the next steps of the roadmap until the goal is covered. What you already did today counts, so the plan shrinks as you work and says *Meta cumplida* when the time is full.
 - **Time estimates**: every reading, exercise, stage and checkpoint shows an orientative time (`~12 min`), with the time left per stage and for the whole route. Reading is a study pace of about 35 words per minute (formulas count as three words, minimum 3 minutes); an exercise is the time the exam gives it ×1.25 plus the time to check it (warm-ups go by difficulty); a checkpoint is an exam plus 20 minutes to mark it. The model is in `app/logic.js`.
 - **Streak flame**: the top bar and **Hoy** show a flame that is lit once you have done something today, dim while the streak is at risk and off at zero.
-- **Settings** (gear, top right): route, organisation, theme (system, light, dark) and accent colour (presets, a picker, or any CSS colour). The accent colours buttons, bars, the flame, the logo and the tab icon. Saved in the browser apart from the progress, so resetting progress keeps it (also the route and organisation). Export, import and reset live under *Datos* (`#/ajustes`).
+- **Gear menu** (top right): route, organisation, theme (system, light, dark) and accent colour (presets, a picker, or any CSS colour). The accent colours buttons, bars, the flame, the logo and the tab icon. Saved in the browser apart from the progress, so resetting progress keeps it. Export, import and reset live in the **Ajustes** page (`#/ajustes`).
 - **Rating** after each exercise: Fallé / Dudoso / Dominado. XP depends on points, hints used and rating; finishing a stage gives a bonus.
-- **Examen**: timed simulator over whole past exams, self-scored.
+- **Examen**: every past exam can be sat whole (clock, then you mark your own answers) or done exercise by exercise from the list, with the hints and the solution of any other exercise. What the whole-exam simulator allows is set in *Ajustes → Simulador de examen*: the countdown, ending by itself when the time is up, hints and solutions while sitting. Two presets, *Examen real* and *Relajado*. Help used costs XP like in the exercises (a hint 25%, a solution 75% of that exercise's share); the mark you give yourself is never changed.
+- **Registro**: every reading, quick check, exercise, exam and skipped step with its day and time, its rating and XP, and how long it took when the stopwatch (*Ajustes*) was on. It can be filtered by type. Without the stopwatch each entry counts with its time estimate in the day totals.
+- **Settings that travel with the progress** (daily goal, stopwatch, exam realism) are saved inside the progress, so a [shared progress file](#share-it-between-profiles-and-computers) carries them to your other profiles. Resetting the progress keeps them. The gear-menu options (theme, accent, route, organisation) stay per browser profile.
 - **Resumen**: one sheet per etapa (per tema when organised by temas) with the formulas, schemes and typical mistakes to remember. It is a quick reference: it has its own tab, a row at the top of every block in **Ruta** and a link in the first hint of each exercise, and it is not a route step, so it does not count towards progress. The sheets live in `content/summaries/<stage id>.md`.
 - **Hints**: the first hint names the skill and links the theory and the summary. Exercises with an official solution then show its first lines and, last, the whole solution. For the extra exercises that come without one, `content/exams/soluciones/<exam id>.md` can hold a proposed solution written in steps (`**Paso 1.** ...`); the app reveals it one step at a time and labels it *no oficial*.
-- **Teoría**: the lecture notes, with deep links from hints and roadmap steps. The figures are cropped from the slides (`app/img/`, listed in `tools/figures.json`); `python3 tools/figures.py <folder with the slide PDFs>` regenerates them (needs `pdftoppm` and ImageMagick).
+- **Teoría**: the lecture notes, with deep links from hints and roadmap steps. Teoría and Resumen are browsed the same way: a picker (tema or etapa) at the top of the sidebar, a filter, the outline of the sections (it follows what you read), and previous/next at both ends of the text. The figures are cropped from the slides (`app/img/`, listed in `tools/figures.json`); `python3 tools/figures.py <folder with the slide PDFs>` regenerates them (needs `pdftoppm` and ImageMagick).
 
 ## Layout
 

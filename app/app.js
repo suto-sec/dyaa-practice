@@ -379,7 +379,7 @@ function vDetail(key) {
   if (V.key !== key) V = { key: key, hints: 0, self: false, done: null };
   if (S.cfg.timer) tmStart(key);
   var e = a.e, sol = e.solution, hasSol = sol != null && String(sol).trim() !== '', st = stepById['e:' + key], gp = st && groupOfStage[st.stage];
-  var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a></p>';
+  var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a>' + (e.src === 'adic' ? '' : ' &middot; <a href="#/examen">Ex&aacute;menes</a>') + '</p>';
   if (gp) {
     var inG = PATH.filter(function (x) { return x.type === 'ex' && gp.stages.indexOf(x.stage) >= 0; });
     h += '<p class="muted">' + esc(gp.label) + ' &middot; ejercicio ' + (inG.indexOf(st) + 1) + ' de ' + inG.length + (inScope[st.id] ? '' : ' &middot; fuera de tu ruta (' + esc(SCOPE.title) + ')') + '</p>';
@@ -513,64 +513,94 @@ function vQuiz(id) {
    They are for looking things up, so they are not steps of the route and do not count towards progress. */
 function sheetStages(g) { return g ? g.stages.filter(function (id) { return SUMM[id]; }) : []; }
 function sheetLink(g) { return sheetStages(g).length ? ' &middot; <a href="#/resumen/' + enc(g.id) + '">Resumen y f&oacute;rmulas</a>' : ''; }
+/* Teoría and Resumen are read the same way: a picker for the tema (or etapa) at the top of the sidebar, a filter, the outline of what is on screen
+   (it follows the reading, see startSpy), prev/next at both ends of the text. Only the things each page really has differ: the readings of the
+   route in the outline of Teoría, the link to the full theory in the summaries. */
+function readerShell(o) {
+  var side = '<aside class="side" id="toc"><label class="lsel"><span class="muted">' + o.label + '</span><select id="lsel" data-kind="' + o.kind + '" aria-label="Cambiar de ' + o.label.toLowerCase() + '">' + o.options.map(function (x) {
+    return '<option value="' + esc(x[0]) + '"' + (x[2] ? ' selected' : '') + '>' + x[1] + '</option>';
+  }).join('') + '</select></label><input type="search" id="tocq" class="tocq" placeholder="Filtrar secciones&hellip;" aria-label="Filtrar las secciones" autocomplete="off"><nav class="outline" aria-label="Secciones">' + o.items + '</nav></aside>';
+  return '<button type="button" class="tocbtn" data-act="toc" aria-label="Mostrar u ocultar el &iacute;ndice"><span>&#9776; &Iacute;ndice</span><b id="tocnow"></b></button><div class="theory">' + side + '<div class="tbody">' +
+    '<div class="thead"><h2>' + o.title + '</h2><div class="muted">' + o.info + '</div>' + o.nav + '</div>' + o.body + '<div class="thead foot">' + o.nav + '</div></div></div><button type="button" class="totop" id="totop" data-act="totop" aria-label="Volver arriba" title="Volver arriba">&uarr;</button>';
+}
+function outlineItem(kind, key, i, sec) {
+  var empty = !String(sec.md || '').trim();
+  return '<a class="o l' + (sec.level || 2) + (empty ? ' grp' : '') + '" href="#/' + kind + '/' + enc(key) + '/' + i + '" data-sec="' + i + '" data-t="' + esc(String(sec.title).toLowerCase()) + '">' + inlineMd(sec.title) + '</a>';
+}
+function readerNav(kind, prev, next, name) {
+  return '<div class="lnav">' + (prev ? '<a class="btn" href="#/' + kind + '/' + enc(prev.id) + '">&larr; ' + esc(name(prev)) + '</a>' : '') + (next ? '<a class="btn" href="#/' + kind + '/' + enc(next.id) + '">' + esc(name(next)) + ' &rarr;</a>' : '') + '</div>';
+}
+
+/* A summary, cut at its "## " headings into sections like a lecture. A tema (several etapas) puts the etapa titles in between. */
+function sheetSections(cur) {
+  var out = [], ids = sheetStages(cur);
+  ids.forEach(function (id) {
+    if (ids.length > 1) out.push({ title: stageById[id].title, level: 1, md: '' });
+    String(SUMM[id]).split(/^(?=## )/m).forEach(function (chunk) {
+      var m = /^## (.*)\n?([\s\S]*)$/.exec(chunk);
+      if (m) out.push({ title: m[1].trim(), level: ids.length > 1 ? 2 : 1, md: m[2] });
+    });
+  });
+  return out;
+}
 function vSheet(gid) {
-  var unit = ORG === 'temas' ? 'tema' : 'etapa', h = '<h2>Resumen</h2>';
+  var h = '<h2 class="ttitle">Resumen</h2>';
   if (!Object.keys(SUMM).length) return h + '<div class="warnbox">No se encontraron los res&uacute;menes en <code>data-lectures.js</code>. Ejecuta <code>python3 tools/build.py</code>.</div>';
   var cur = GROUPS_ALL.find(function (g) { return g.id === gid; }) || groupOfStage[gid] || GROUPS[0] || GROUPS_ALL[0];
-  h += '<p class="muted">Lo que hay que recordar de cada ' + unit + ': f&oacute;rmulas, esquemas y errores t&iacute;picos. Es para consultar r&aacute;pido; no cuenta como paso de la ruta.</p>';
-  h += '<button type="button" class="tocbtn" data-act="toc" aria-label="Mostrar u ocultar la lista de etapas"><span>&#9776; ' + (ORG === 'temas' ? 'Temas' : 'Etapas') + '</span><b>' + esc(cur.short) + '</b></button>';
-  h += '<div class="theory"><div class="side">' + GROUPS_ALL.map(function (g) {
-    return '<a href="#/resumen/' + enc(g.id) + '"' + (g === cur ? ' class="on"' : '') + '>' + esc(g.label) + (GROUPS.indexOf(g) < 0 ? '<br><span class="muted">fuera de tu ruta</span>' : '') + '</a>';
-  }).join('') + '</div><div class="sheet">';
-  h += '<h2>' + esc(cur.label) + '</h2>';
-  var ids = sheetStages(cur);
-  ids.forEach(function (id) {
-    if (ids.length > 1) h += '<h3>' + esc(stageById[id].title) + '</h3>' + mdRender(SUMM[id]);
-    else h += mdRender(SUMM[id].replace(/^## /gm, '# '));   // one sheet: its sections are the headings under the page title
-  });
+  var list = GROUPS_ALL.filter(function (g) { return sheetStages(g).length; }), gi = list.indexOf(cur), secs = sheetSections(cur);
   var th = cur.stages.map(function (id) { return PATH.find(function (x) { return x.type === 'theory' && x.stage === id; }); }).filter(Boolean)[0];
-  h += '<p class="muted">' + (th ? '<a href="' + stepHref(th) + '">Leer la teor&iacute;a completa</a> &middot; ' : '') + '<a href="#/ruta">Volver a la ruta</a></p></div></div>';
-  return h;
+  var nm = function (g) { return g.short || g.label; };
+  return h + readerShell({
+    kind: 'resumen', label: ORG === 'temas' ? 'Tema' : 'Etapa',
+    options: GROUPS_ALL.map(function (g) { return [g.id, esc(g.label) + (GROUPS.indexOf(g) < 0 ? ' (fuera de tu ruta)' : ''), g === cur]; }),
+    items: secs.map(function (sec, i) { return outlineItem('resumen', cur.id, i, sec); }).join(''),
+    title: esc(cur.label),
+    info: 'lo que hay que recordar &middot; ' + secs.filter(function (x) { return String(x.md).trim(); }).length + ' secciones &middot; ' + (th ? '<a href="' + stepHref(th) + '">leer la teor&iacute;a completa</a> &middot; ' : '') + '<a href="#/ruta">volver a la ruta</a>',
+    nav: readerNav('resumen', list[gi - 1], list[gi + 1], nm),
+    body: secs.map(function (sec, i) {
+      var lv = Math.min(6, 3 + Math.max(0, (sec.level || 1) - 1));
+      return '<section class="sec" id="sec-' + i + '"><h' + lv + '>' + esc(sec.title) + '</h' + lv + '>' + mdRender(sec.md) + '</section>';
+    }).join('') || '<p class="muted">Esta ' + (ORG === 'temas' ? 'tema' : 'etapa') + ' no tiene resumen.</p>'
+  });
 }
 
 function vTheory(lid, idx, stepId) {
   var h = '<h2 class="ttitle">Teor&iacute;a</h2>';
   if (!LECT.length) return h + '<div class="warnbox">No se encontr&oacute; <code>data-lectures.js</code>.</div>';
   var cur = LECT.find(function (l) { return l.id === lid; }) || LECT[0], st = stepId && stepById[stepId];
-  var li = LECT.indexOf(cur), prev = LECT[li - 1], next = LECT[li + 1];
+  var li = LECT.indexOf(cur);
   var steps = PATH.filter(function (x) { return x.type === 'theory' && x.lecture === cur.id; }), startAt = {};
   steps.forEach(function (x) { startAt[x.idx] = x; });
   var nDone = steps.filter(function (x) { return L.stepDone(x, S, EXAMS); }).length;
-  /* sidebar: switch of tema, filter, and the outline of the tema on screen (it follows the reading, see startSpy) */
-  var side = '<aside class="side" id="toc"><label class="lsel"><span class="muted">Tema</span><select id="lsel" aria-label="Cambiar de tema">' + LECT.map(function (l) {
-    var ss = PATH.filter(function (x) { return x.type === 'theory' && x.lecture === l.id; }), d = ss.filter(function (x) { return L.stepDone(x, S, EXAMS); }).length;
-    return '<option value="' + esc(l.id) + '"' + (l === cur ? ' selected' : '') + '>' + esc(l.title) + (ss.length ? ' (' + d + '/' + ss.length + ')' : '') + '</option>';
-  }).join('') + '</select></label><input type="search" id="tocq" class="tocq" placeholder="Filtrar secciones&hellip;" aria-label="Filtrar las secciones del tema" autocomplete="off"><nav class="outline" aria-label="Secciones del tema">';
+  var items = '';
   cur.sections.forEach(function (sec, i) {
     var r = startAt[i];
-    if (r) side += '<a class="rd' + (L.stepDone(r, S, EXAMS) ? ' done' : '') + '" href="#/teoria/' + enc(cur.id) + '/' + i + '" data-sec="' + i + '" title="Una lectura de la ruta">' + (L.stepDone(r, S, EXAMS) ? '&#10003;' : '&#128214;') + ' ' + esc(r.label.replace(/^Tema [\d.]+ &middot; |^Tema [\d.]+ \u00b7 /, '')) + ' <span class="muted">' + mins(r.min) + '</span></a>';
-    var empty = !String(sec.md || '').trim();
-    side += '<a class="o l' + (sec.level || 2) + (empty ? ' grp' : '') + '" href="#/teoria/' + enc(cur.id) + '/' + i + '" data-sec="' + i + '" data-t="' + esc(String(sec.title).toLowerCase()) + '">' + inlineMd(sec.title) + '</a>';
+    if (r) items += '<a class="rd' + (L.stepDone(r, S, EXAMS) ? ' done' : '') + '" href="#/teoria/' + enc(cur.id) + '/' + i + '" data-sec="' + i + '" title="Una lectura de la ruta">' + (L.stepDone(r, S, EXAMS) ? '&#10003;' : '&#128214;') + ' ' + esc(r.label.replace(/^Tema [\d.]+ &middot; |^Tema [\d.]+ · /, '')) + ' <span class="muted">' + mins(r.min) + '</span></a>';
+    items += outlineItem('teoria', cur.id, i, sec);
   });
-  side += '</nav></aside>';
-  h += '<button type="button" class="tocbtn" data-act="toc" aria-label="Mostrar u ocultar el &iacute;ndice"><span>&#9776; &Iacute;ndice</span><b id="tocnow"></b></button>';
-  h += '<div class="theory">' + side + '<div class="tbody">';
-  h += '<div class="thead"><h2>' + esc(cur.title) + '</h2><div class="muted">~' + L.fmtMin(LECMIN[cur.id]) + ' de lectura &middot; ' + cur.sections.length + ' secciones' + (steps.length ? ' &middot; lecturas de la ruta: ' + nDone + '/' + steps.length : '') + '</div>' + lectNav(prev, next) + '</div>';
   var here = st && st.lecture === cur.id && String(st.idx) === String(idx), cardAt = here ? (st.to != null ? st.to : +idx) : -1;
-  cur.sections.forEach(function (sec, i) {
+  var body = cur.sections.map(function (sec, i) {
     var lv = Math.min(6, 3 + Math.max(0, (sec.level || 1) - 1));
     var card = '';
     if (i === cardAt) {   // after the last section the step covers, so it is not confirmed before reading it
       var done = L.stepDone(st, S, EXAMS);
       card = '<div class="card next row"><span>&#128214; Paso de la ruta (' + esc(groupOfStage[st.stage].label) + ') &middot; ' + mins(st.min) + ' de lectura: &iquest;lo has le&iacute;do?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
     }
-    h += '<section class="sec" id="sec-' + i + '">' + (i === 0 && sec.title === cur.title ? '' : '<h' + lv + '>' + esc(sec.title) + '</h' + lv + '>') + mdRender(sec.md) + card + '</section>';
+    return '<section class="sec" id="sec-' + i + '">' + (i === 0 && sec.title === cur.title ? '' : '<h' + lv + '>' + esc(sec.title) + '</h' + lv + '>') + mdRender(sec.md) + card + '</section>';
+  }).join('');
+  var short = function (l) { return l.title.replace(/^(Tema [\d.]+)\.?\s.*$/, '$1'); };
+  return h + readerShell({
+    kind: 'teoria', label: 'Tema',
+    options: LECT.map(function (l) {
+      var ss = PATH.filter(function (x) { return x.type === 'theory' && x.lecture === l.id; }), d = ss.filter(function (x) { return L.stepDone(x, S, EXAMS); }).length;
+      return [l.id, esc(l.title) + (ss.length ? ' (' + d + '/' + ss.length + ')' : ''), l === cur];
+    }),
+    items: items,
+    title: esc(cur.title),
+    info: '~' + L.fmtMin(LECMIN[cur.id]) + ' de lectura &middot; ' + cur.sections.length + ' secciones' + (steps.length ? ' &middot; lecturas de la ruta: ' + nDone + '/' + steps.length : ''),
+    nav: readerNav('teoria', LECT[li - 1], LECT[li + 1], short),
+    body: body
   });
-  h += '<div class="thead foot">' + lectNav(prev, next) + '</div></div></div><button type="button" class="totop" id="totop" data-act="totop" aria-label="Volver arriba" title="Volver arriba">&uarr;</button>';
-  return h;
-}
-function lectNav(prev, next) {
-  return '<div class="lnav">' + (prev ? '<a class="btn" href="#/teoria/' + enc(prev.id) + '">&larr; ' + esc(prev.title.replace(/^(Tema [\d.]+)\.?\s.*$/, '$1')) + '</a>' : '') + (next ? '<a class="btn" href="#/teoria/' + enc(next.id) + '">' + esc(next.title.replace(/^(Tema [\d.]+)\.?\s.*$/, '$1')) + ' &rarr;</a>' : '') + '</div>';
 }
 
 /* While reading a tema: highlights the section on screen in the outline (and keeps it in view inside the sidebar), draws the reading progress
@@ -607,7 +637,7 @@ function goSec(i) {
   var el = document.getElementById('sec-' + i); if (!el) return;
   el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 1600);
   var p = (location.hash || '').slice(2).split('/');
-  if (p[0] === 'teoria' && p[1] && !p[3] && window.history && history.replaceState) history.replaceState(null, '', '#/teoria/' + p[1] + '/' + i);
+  if ((p[0] === 'teoria' || p[0] === 'resumen') && p[1] && !p[3] && window.history && history.replaceState) history.replaceState(null, '', '#/' + p[0] + '/' + p[1] + '/' + i);
   var t = document.querySelector('.theory'); if (t) t.classList.remove('tocopen');
 }
 function filterToc(q) {
@@ -785,9 +815,9 @@ function route() {
   h = syncBanner() + h;
   $('#app').innerHTML = h; $('#app').className = tab === 'teoria' || tab === 'resumen' ? 'wide' : ''; stats();
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) { a.classList.toggle('on', a.dataset.tab === tab); });
-  if (tab === 'teoria' && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
+  if ((tab === 'teoria' || tab === 'resumen') && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
   else window.scrollTo(0, 0);
-  if (tab === 'teoria') SPY = startSpy();
+  if (tab === 'teoria' || tab === 'resumen') SPY = startSpy();
   if (tab === 'examen' && X && X.phase === 'run' && S.cfg.extimer) startTimer(function () {
     var t = $('#tm'); if (!t) return; var left = (X.end - Date.now()) / 1000; t.textContent = fmt(left);
     if (left <= 0) { t.style.color = 'var(--bad)'; if (S.cfg.exauto) { examEnd(); route(); } }
@@ -889,7 +919,7 @@ document.addEventListener('change', function (ev) {
   var t = ev.target;
   if (t.dataset && t.dataset.cfg) { S.cfg[t.dataset.cfg] = t.type === 'checkbox' ? !!t.checked : +t.value; S.cfg = L.normCfg(S.cfg); save(); rerender(); }
   else if (t.dataset && t.dataset.f) { F[t.dataset.f] = t.value; route(); }
-  else if (t.id === 'lsel') { location.hash = '#/teoria/' + enc(t.value); }
+  else if (t.id === 'lsel') { location.hash = '#/' + (t.dataset && t.dataset.kind === 'resumen' ? 'resumen' : 'teoria') + '/' + enc(t.value); }
   else if (t.id === 'imp' && t.files[0]) {
     var r = new FileReader();
     r.onload = function () {
