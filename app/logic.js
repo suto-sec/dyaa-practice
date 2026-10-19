@@ -239,7 +239,8 @@ L.defaultCfg = function () {
     exauto: false,    // the exam ends by itself when the time is up
     exhints: false,   // hints while sitting an exam
     exans: false,     // solutions while sitting an exam
-    daily: 30         // minutes of study a day
+    daily: 30,        // minutes of study a day
+    nopaper: false    // only the laptop: no paper to work exercises out on
   };
 };
 L.normCfg = function (c) {
@@ -298,6 +299,57 @@ L.examXp = function (ids, scores, points, help) {
   });
   return mx ? Math.round(got / mx * 20 * 10) / 10 : 0;
 };
+
+/* ---------- study without paper ----------
+   Everything a laptop alone can do: the route's readings and quick checks, a mixed test drawn from the quick-check questions, review cards
+   made from the summary sections, and putting the steps of a worked solution back in order. Exercises need paper. */
+L.paperFree = function (step) { return step.type === 'theory' || step.type === 'quiz'; };
+L.shuffle = function (arr, rnd) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+};
+/* A shuffle that is never the original order (when there is more than one item). */
+L.shuffleNot = function (arr, rnd) {
+  var a = L.shuffle(arr, rnd), same = function () { return a.every(function (x, i) { return x === arr[i]; }); };
+  for (var k = 0; arr.length > 1 && same() && k < 20; k++) a = L.shuffle(arr, rnd);
+  if (arr.length > 1 && same()) a = arr.slice(1).concat(arr.slice(0, 1));
+  return a;
+};
+/* n questions for a mixed test: one from each reading in turn (readings in random order), so no reading dominates. Options are re-shuffled. */
+L.mixQuestions = function (quizzes, readings, n, rnd) {
+  var per = L.shuffle(readings.filter(function (r) { return (quizzes[r] || []).length; }), rnd).map(function (r) {
+    return { rid: r, qs: L.shuffle(quizzes[r].map(function (q, i) { return i; }), rnd) };
+  }), out = [];
+  for (var round = 0; out.length < n; round++) {
+    var any = false;
+    per.forEach(function (p) {
+      if (out.length >= n || round >= p.qs.length) return;
+      any = true;
+      var q = quizzes[p.rid][p.qs[round]], idx = L.shuffle(q.options.map(function (o, i) { return i; }), rnd);
+      out.push({ rid: p.rid, i: p.qs[round], q: q.q, why: q.why, options: idx.map(function (i) { return q.options[i]; }), answer: idx.indexOf(q.answer) });
+    });
+    if (!any) break;
+  }
+  return out;
+};
+/* Review cards: one per section of a summary. State per card like an exercise (L.applyRating). Due cards first, then new ones from the stages allowed. */
+L.cardId = function (stage, title) { return stage + ':' + String(title).toLowerCase().replace(/[^a-z0-9\u00e0-\u00ff]+/g, '-').replace(/^-|-$/g, ''); };
+L.cardQueue = function (cards, state, today, n, stageOk) {
+  var due = cards.filter(function (c) { var x = state[c.id]; return x && x.due && x.due <= today; })
+    .sort(function (a, b) { return state[a.id].due < state[b.id].due ? -1 : state[a.id].due > state[b.id].due ? 1 : 0; });
+  var fresh = cards.filter(function (c) { return !state[c.id] && (!stageOk || stageOk(c.stage)); });
+  return due.concat(fresh).slice(0, n);
+};
+L.cardsDue = function (cards, state, today) { return cards.filter(function (c) { var x = state[c.id]; return x && x.due && x.due <= today; }).length; };
+/* Steps of a proposed solution written as "**Paso k.** text" or "**Paso k. Title.** text", without the number. null when there are fewer than 3 (nothing to order). */
+L.orderPieces = function (sol) {
+  var parts = String(sol || '').split(/\n(?=\*\*Paso \d+)/);
+  if (parts.length < 3 || !parts.every(function (p) { return /^\*\*Paso \d+/.test(p); })) return null;
+  return parts.map(function (p) { return p.replace(/^\*\*Paso \d+\.?\s*\*\*\s*/, '').replace(/^\*\*Paso \d+\.?\s+/, '**').trim(); });   // "**Paso 2.** text" -> "text"; "**Paso 2. Title.** text" -> "**Title.** text"
+};
+/* order[k] = the original position of the piece placed k-th. How many are where they belong. */
+L.orderScore = function (order) { return order.filter(function (o, k) { return o === k; }).length; };
 
 if (typeof module !== 'undefined' && module.exports) module.exports = L; else root.DYAA = L;
 })(typeof window !== 'undefined' ? window : this);

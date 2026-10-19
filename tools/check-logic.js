@@ -284,5 +284,41 @@ const LG = require(path.join(APP, 'logo.js'));
   ok(L.examXp(ids, sc, pts, { a: { sol: true } }) === 12.5 && L.examXp(ids, sc, pts, { a: { hint: true, sol: true } }) === 12.5, 'a solution costs 75% of that exercise\'s share, and an exercise never loses more than that');
   ok(L.examXp(ids, { a: 0, b: 0 }, pts, {}) === 0 && L.examXp([], {}, {}, {}) === 0, 'nothing obtained: 0 XP, no division by zero');
 }
+// study without paper
+{
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  ok(L.defaultCfg().nopaper === false && L.normCfg({ nopaper: true }).nopaper === true, 'the paperless mode is a setting, off by default');
+  ok(['theory', 'quiz'].every(t => L.paperFree({ type: t })) && ['ex', 'exam'].every(t => !L.paperFree({ type: t })), 'readings and quick checks are paper-free, exercises and exams are not');
+  const a = [1, 2, 3, 4, 5, 6];
+  ok(L.shuffle(a, rnd).slice().sort().join() === a.join() && a.join() === '1,2,3,4,5,6', 'a shuffle keeps the items and leaves the original alone');
+  for (let k = 0; k < 200; k++) { const b = L.shuffleNot([1, 2, 3], rnd); if (b.join() === '1,2,3') { ok(false, 'shuffleNot returned the original order'); break; } }
+  ok(L.shuffleNot([9], rnd).join() === '9', 'one item stays as it is');
+  // mixed test from the real quiz questions
+  const quizzes = win.QUIZZES, ids = Object.keys(quizzes);
+  const m = L.mixQuestions(quizzes, ids, 8, rnd);
+  ok(m.length === 8 && new Set(m.map(x => x.rid)).size === 8, 'a mixed test takes one question from each of eight different readings');
+  ok(m.every(x => x.options.length >= 2 && x.answer >= 0 && x.answer < x.options.length), 'every question has its right option');
+  ok(m.every(x => { const q = quizzes[x.rid][x.i]; return x.options[x.answer] === q.options[q.answer] && x.options.slice().sort().join('|') === q.options.slice().sort().join('|'); }), 'the options are re-shuffled but the right one is still right');
+  const small = L.mixQuestions(quizzes, [ids[0], ids[1]], 8, rnd);
+  ok(small.length === quizzes[ids[0]].length + quizzes[ids[1]].length && small.length < 8, 'with few readings it gives what there is, never repeating a question');
+  ok(L.mixQuestions(quizzes, [], 8, rnd).length === 0 && L.mixQuestions(quizzes, ['nope'], 8, rnd).length === 0, 'no readings, no questions');
+  // cards
+  const cards = [{ id: 'a:x', stage: 'a' }, { id: 'a:y', stage: 'a' }, { id: 'b:z', stage: 'b' }, { id: 'c:w', stage: 'c' }];
+  const state = { 'a:x': { due: '2026-01-01' }, 'c:w': { due: '2026-01-05' } };
+  ok(L.cardQueue(cards, state, '2026-01-03', 5, s => s !== 'b').map(c => c.id).join() === 'a:x,a:y', 'cards: the due ones first, then new ones of the allowed stages only');
+  ok(L.cardQueue(cards, state, '2026-01-06', 5).map(c => c.id).join() === 'a:x,c:w,a:y,b:z', 'with no stage filter all new cards come after the due ones, oldest due first');
+  ok(L.cardQueue(cards, state, '2026-01-06', 2).length === 2 && L.cardsDue(cards, state, '2026-01-03') === 1, 'a session has a size, and due cards are counted');
+  ok(L.cardId('sumatorios', 'Potencias y logaritmos') === 'sumatorios:potencias-y-logaritmos' && L.cardId('x', 'Límites: derivadas') === 'x:límites-derivadas', 'a card id is a readable slug');
+  // every summary section can be a card, ids are unique
+  const ids2 = new Set(); let n2 = 0;
+  Object.keys(win.SUMMARIES).forEach(st => String(win.SUMMARIES[st]).split(/^(?=## )/m).forEach(ch => { const mm = /^## (.*)/.exec(ch); if (mm) { n2++; ids2.add(L.cardId(st, mm[1])); } }));
+  ok(n2 >= 40 && ids2.size === n2, 'the summaries give ' + n2 + ' cards with unique ids');
+  // ordering the steps of a solution
+  const sol = '**Paso 1.** primero\n\n**Paso 2.** segundo\n\n**Paso 3.** tercero';
+  ok(L.orderPieces(sol).join('|') === 'primero|segundo|tercero', 'the steps of a stepped solution, without their numbers');
+  ok(L.orderPieces('**Paso 1. Reparte.** uno\n\n**Paso 2. Simplifica.** dos\n\n**Paso 3. Cierra.** tres').join('|') === '**Reparte.** uno|**Simplifica.** dos|**Cierra.** tres', 'a step with a title keeps the title, not the number');
+  ok(L.orderPieces('**Paso 1.** a\n\n**Paso 2.** b') === null && L.orderPieces('una solución sin pasos') === null && L.orderPieces('') === null, 'fewer than three steps, or no steps: nothing to order');
+  ok(L.orderScore([0, 1, 2]) === 3 && L.orderScore([1, 0, 2]) === 1 && L.orderScore([2, 1, 0]) === 1, 'how many steps are in place');
+}
 console.log(fails ? fails + ' FAILURES' : 'logic checks passed');
 process.exit(fails ? 1 : 0);

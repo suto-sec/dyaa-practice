@@ -390,6 +390,77 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   cfgChange('timer', true);   // the reset below must keep it
 }
 
+// study without paper: the mode, the practice activities, what Hoy and the route propose
+{
+  const st = () => JSON.parse(store['dyaa-practice-v1']);
+  const change = (target) => (handlers.change || []).forEach(f => f({ target }));
+  go('#/hoy'); ok(/Hoy estudio/.test(app()) && /data-act="cfgtoggle" data-k="nopaper" data-v="1"/.test(app()), 'Hoy lets you say you have no paper today');
+  ok(/Pr&aacute;ctica en pantalla/.test(app()) && /href="#\/practica\/test"/.test(app()), 'and links to the on-screen practice');
+  openMenu('study'); ok(/data-cfg="nopaper"/.test(popHtml()), 'the gear menu has the paperless setting too'); click({ act: 'settings-close' });
+  go('#/ejercicios'); ok(!/Modo sin papel/.test(app()) && !/&#9998; papel/.test(app()), 'with paper nothing changes in the exercises');
+  click({ act: 'cfgset', k: 'daily', v: '480' }); go('#/hoy'); ok(!hasExams || /href="#\/ejercicios\//.test(app()), 'with paper and a long day, Hoy does propose exercises');
+  click({ act: 'cfgtoggle', k: 'nopaper', v: '1' }); ok(st().cfg.nopaper === true, 'the mode is saved with the settings');
+  go('#/hoy'); ok(!/href="#\/ejercicios\//.test(app()), 'without paper Hoy proposes no exercise');
+  ok(/aria-checked="true" data-act="cfgtoggle" data-k="nopaper" data-v="1"/.test(app()), 'and shows the mode on');
+  go('#/ejercicios'); ok(/Modo sin papel/.test(app()) && /&#9998; papel/.test(app()), 'the exercise list says they need paper and marks each one');
+  if (hasExams) { go('#/examen'); ok(/Modo sin papel/.test(app()), 'and so does the exam list'); }
+  const stepsNow = L.nextSteps(PATHX.filter(L.paperFree), st(), win.EXAMS || [], 3);
+  go('#/ruta'); ok(stepsNow.length === 0 || (/Siguiente en la ruta/.test(app()) && !/class="big">[^<]*Ejercicios adicionales/.test(app())), 'the route proposes a reading or a check next');
+  // practice menu
+  go('#/practica'); ok(/Pr&aacute;ctica sin papel/.test(app()) && /href="#\/practica\/test"/.test(app()) && /href="#\/practica\/tarjetas"/.test(app()) && /Ordenar los pasos/.test(app()), 'the practice page offers the three activities');
+  // mixed test
+  const before = st().xp;
+  go('#/practica/test'); const nq = (app().match(/class="card quiz"/g) || []).length;
+  ok(nq === 8 && !/data-act="testdone"/.test(app()), 'a mixed test has eight questions');
+  for (let i = 0; i < nq; i++) click({ act: 'qpick', q: String(i), o: '0' });
+  const wrong = (app().match(/class="opt bad"/g) || []).length, right = nq - wrong;
+  ok(/data-act="testdone"/.test(app()) && new RegExp(right + ' de 8').test(app()), 'answering all shows the score and offers to register it');
+  click({ act: 'testdone' }); const logN = st().log.length;
+  ok(st().log[logN - 1].ty === 'mix' && st().log[logN - 1].xp === right * 0.5 && Math.abs(st().xp - before - right * 0.5) < 0.01, 'the test is logged and gives half an XP per right answer (' + right + ' right)');
+  click({ act: 'testdone' }); ok(st().log.length === logN, 'registering twice does not count twice');
+  ok(/data-act="pnew" data-k="test"/.test(app()), 'and another test can be started');
+  click({ act: 'pnew', k: 'test' }); ok((app().match(/class="card quiz"/g) || []).length === 8 && !/Registrado/.test(app()), 'a new test starts clean');
+  // review cards
+  go('#/practica/tarjetas'); ok(/Recuerda: /.test(app()) && /data-act="cardshow"/.test(app()) && !/data-act="cardrate"/.test(app()), 'a card first asks you to remember it');
+  click({ act: 'cardshow' }); ok(/data-act="cardrate" data-r="0"/.test(app()) && /data-act="cardrate" data-r="2"/.test(app()), 'then shows it and asks if you remembered');
+  const cx0 = st().xp; let cards = 0;
+  for (let i = 0; i < 8; i++) { if (!/data-act="cardshow"/.test(app()) && !/data-act="cardrate"/.test(app())) break; if (/data-act="cardshow"/.test(app())) click({ act: 'cardshow' }); click({ act: 'cardrate', r: String([2, 1, 0][i % 3]) }); cards++; }
+  ok(cards === 8 && /Tarjetas repasadas: 8/.test(app()), 'a session is eight cards and ends with a summary');
+  ok(Object.keys(st().cards).length === 8 && Object.values(st().cards).every(c => c.due && c.hist.length === 1), 'each card is scheduled like an exercise');
+  ok(st().log[st().log.length - 1].ty === 'card' && st().xp > cx0, 'the session is logged once and gives XP');
+  const cardsLogged = st().log.filter(l => l.ty === 'card').length; ok(cardsLogged === 1, 'one log entry per session, not per card');
+  // the cards that were missed or doubted come back, and Hoy says so
+  { const RealDate = ctx.Date; let now = Date.now() + 5 * 864e5; ctx.Date = class extends RealDate { constructor(...a) { super(...(a.length ? a : [now])); } static now() { return now; } };
+    go('#/hoy'); ok(/Tarjetas de resumen/.test(app()) && /\d+ pendientes/.test(app()) && /href="#\/practica\/tarjetas"/.test(app()), 'later, Hoy lists the cards due as the review of the day');
+    go('#/practica/tarjetas'); ok(/Tarjeta 1 de 8/.test(app()), 'and they are the first ones of the next session');
+    ctx.Date = RealDate; }
+  // putting the steps in order (needs a proposed solution written in steps)
+  if (hasExams) {
+    const ex0 = win.EXAMS.find(e => e.kind === 'analisis') || win.EXAMS[0], e0 = ex0.exercises[0], keep = [e0.solution, e0.own];
+    e0.solution = '**Paso 1.** primero\n\n**Paso 2.** segundo\n\n**Paso 3.** tercero\n\n**Paso 4.** cuarto'; e0.own = true;
+    go('#/practica'); ok(/href="#\/practica\/pasos"/.test(app()), 'with such a solution the ordering exercise is available');
+    go('#/practica/pasos'); const np = (app().match(/data-act="opick"/g) || []).length;
+    ok(np >= 3 && /Toca los pasos/.test(app()), 'the steps come as buttons to tap');
+    const lg = st().log.length;
+    for (let i = 0; i < np; i++) click({ act: 'opick', i: String(i) });   // in the original order
+    ok(new RegExp(np + ' de ' + np + ' pasos en su sitio').test(app()) && /perfecto/.test(app()), 'tapping them in the right order is a perfect score');
+    ok(st().log.length === lg + 1 && st().log[lg].ty === 'order' && st().log[lg].xp === 2, 'it is logged, 2 XP for all in place');
+    click({ act: 'opick', i: '0' }); ok(st().log.length === lg + 1, 'taps after the end do nothing');
+    click({ act: 'pnew', k: 'pasos' }); const np2 = (app().match(/data-act="opick"/g) || []).length;
+    for (let i = np2 - 1; i >= 0; i--) click({ act: 'opick', i: String(i) });   // backwards
+    ok(/El orden de la soluci&oacute;n/.test(app()) && /class="miss"/.test(app()), 'a wrong order shows the right one');
+    click({ act: 'pnew', k: 'pasos' }); const np3 = (app().match(/data-act="opick"/g) || []).length; click({ act: 'opick', i: '1' }); ok(/Deshacer/.test(app()) && (app().match(/data-act="opick"/g) || []).length === np3 - 1, 'a tapped step leaves the list'); click({ act: 'oundo' }); ok(!/Deshacer/.test(app()) && (app().match(/data-act="opick"/g) || []).length === np3, 'and a tap can be undone');
+    e0.solution = keep[0]; e0.own = keep[1];
+  }
+  // the log can show only this kind of practice
+  go('#/registro'); click({ act: 'logty', v: 'paperless' }); ok(/title="mix"|title="card"|title="order"/.test(app()) && !/title="ex"|title="theory"/.test(app()), 'the log can be filtered to practice without paper');
+  click({ act: 'logty', v: '' });
+  // nothing left to read: say so instead of claiming the route is done
+  click({ act: 'cfgtoggle', k: 'nopaper', v: '0' }); ok(st().cfg.nopaper === false, 'and back to paper');
+  click({ act: 'cfgset', k: 'daily', v: '30' });
+  go('#/ejercicios'); ok(!/Modo sin papel/.test(app()), 'the notes are gone with the mode');
+}
+
 // export/import round trip keeps state
 const before = store['dyaa-practice-v1'];
 click({ act: 'reset' }); ok(JSON.parse(store['dyaa-practice-v1']).xp === 0, 'reset clears progress');
