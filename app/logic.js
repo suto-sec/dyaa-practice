@@ -136,6 +136,18 @@ L.posInStage = function (path, key) {
   return { n: list.indexOf(st) + 1, of: list.length, stage: st.stage };
 };
 
+/* ---------- progress shared through a file ----------
+   Every state carries `updated` (ms since the epoch, 0 = never saved). `last` is the `updated` both sides had when they last agreed (0 = never).
+   Returns what to do with this browser's progress (local) and the one in the shared file (remote):
+   'same' nothing, 'pull' take the file's, 'push' write ours, 'conflict' both changed since they last agreed (the user decides). */
+L.syncPlan = function (local, remote, last) {
+  var l = +local.updated || 0, r = +remote.updated || 0;
+  last = +last || 0;
+  if (l === r) return 'same';
+  if (r > l) return (l === 0 || l <= last) ? 'pull' : 'conflict';
+  return (r === 0 || r <= last) ? 'push' : 'conflict';
+};
+
 /* ---------- time estimates (minutes) ----------
    Orientative, meant for planning a session. Reading is a study pace (slides are dense and the examples are worked through),
    not a skim. Exercises start from the time the exam gives them and add the time to check the answer. */

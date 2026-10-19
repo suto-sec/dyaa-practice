@@ -34,7 +34,7 @@ const ctx = {
     addEventListener: (n, f) => { (handlers[n] = handlers[n] || []).push(f); },
   },
   localStorage: { getItem: (k) => store[k] || null, setItem: (k, v) => { store[k] = v; }, removeItem: (k) => { delete store[k]; } },
-  confirm: () => true, setInterval: () => 1, clearInterval() {}, Date, Math, JSON, Array, Object, String, Number, parseFloat, decodeURIComponent, encodeURIComponent, isNaN,
+  confirm: () => true, setInterval: () => 1, clearInterval() {}, setTimeout, clearTimeout, Promise, Date, Math, JSON, Array, Object, String, Number, parseFloat, decodeURIComponent, encodeURIComponent, isNaN,
 };
 ctx.window.window = win;
 Object.assign(ctx, { window: win });
@@ -234,5 +234,44 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
 // export/import round trip keeps state
 const before = store['dyaa-practice-v1'];
 click({ act: 'reset' }); ok(JSON.parse(store['dyaa-practice-v1']).xp === 0, 'reset clears progress');
-console.log(fails ? fails + ' FAILURES' : 'app checks passed');
-process.exit(fails ? 1 : 0);
+
+// progress shared through a file, with a fake File System Access API and a tiny in-memory IndexedDB
+const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
+(async () => {
+  go('#/ajustes'); ok(/D&oacute;nde se guarda el progreso/.test(app()) && /no permite elegir un archivo/.test(app()), 'without the File System Access API the settings explain it and point to export/import');
+  const idbData = {}, req = (v) => { const q = { result: v }; setTimeout(() => q.onsuccess && q.onsuccess()); return q; };
+  win.indexedDB = { open() { const r = {}; setTimeout(() => { r.result = { createObjectStore() {}, transaction: () => ({ objectStore: () => ({ put: (v, k) => { idbData[k] = v; return req(); }, get: (k) => req(idbData[k]), delete: (k) => { delete idbData[k]; return req(); } }) }) }; r.onupgradeneeded && r.onupgradeneeded(); r.onsuccess && r.onsuccess(); }); return r; } };
+  const file = { text: '', perm: 'granted' };
+  const handle = { name: 'dyaa-progreso.json', queryPermission: async () => file.perm, requestPermission: async () => (file.perm = 'granted'), getFile: async () => ({ text: async () => file.text }), createWritable: async () => { let buf = ''; return { write: async (t) => { buf += t; }, close: async () => { file.text = buf; } }; } };
+  win.showSaveFilePicker = async () => handle; win.showOpenFilePicker = async () => [handle];
+  const local = () => JSON.parse(store['dyaa-practice-v1']);
+  click({ act: 'theorydone', step: 't:sumatorios:0' }); const xp0 = local().xp;
+  go('#/ajustes'); ok(/Crear un archivo de progreso/.test(app()) && /solo este perfil/.test(app()), 'with the API the settings offer to create or pick a file');
+  click({ act: 'sync-new' }); await wait(60);
+  ok(file.text && JSON.parse(file.text).theory['t:sumatorios:0'] === true && store['dyaa-practice-sync'] === 'file', 'creating the file writes this profile\'s progress into it');
+  go('#/ajustes'); ok(/dyaa-progreso\.json/.test(app()) && /al d&iacute;a/.test(app()), 'settings show the shared file as up to date');
+  // a change is written to the file shortly after
+  click({ act: 'theorydone', step: 't:sumatorios:1' }); await wait(450);
+  ok(JSON.parse(file.text).theory['t:sumatorios:1'] === true, 'every change is written to the shared file');
+  // the other profile moves on: this one picks it up when the tab gets the focus
+  const other = JSON.parse(file.text); other.theory['t:sumatorios:2'] = true; other.xp = 77; other.updated = Date.now() + 5000; file.text = JSON.stringify(other);
+  (handlers.focus || []).forEach(f => f()); await wait(60);
+  ok(local().xp === 77 && local().theory['t:sumatorios:2'] === true, 'a newer file is adopted on focus');
+  ok(JSON.parse(store['dyaa-practice-backup']).xp !== 77, 'the profile\'s own progress is kept as a backup before it is replaced');
+  // both changed: the user chooses (here: keep this profile, which overwrites the file)
+  click({ act: 'theorydone', step: 't:asintotica:0' });   // changes before the debounce fires
+  const theirs = JSON.parse(file.text); theirs.xp = 123; theirs.updated = Date.now() + 9000; file.text = JSON.stringify(theirs);
+  ctx.confirm = () => false;
+  (handlers.focus || []).forEach(f => f()); await wait(80);
+  ok(local().theory['t:asintotica:0'] === true && JSON.parse(file.text).theory['t:asintotica:0'] === true, 'on a conflict, keeping this profile overwrites the file');
+  ctx.confirm = () => true;
+  // permission that has to be granted again (each new session): a banner, and one click fixes it
+  file.perm = 'prompt'; click({ act: 'sync-now' }); await wait(60);
+  ok(file.perm === 'granted', 'the permission is requested from the click');
+  // stop sharing
+  click({ act: 'sync-off' }); await wait(40);
+  ok(store['dyaa-practice-sync'] == null, 'stopping the sharing forgets the file');
+  go('#/ajustes'); ok(/solo este perfil/.test(app()), 'back to this profile only');
+  console.log(fails ? fails + ' FAILURES' : 'app checks passed');
+  process.exit(fails ? 1 : 0);
+})();

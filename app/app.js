@@ -14,19 +14,90 @@ function fmt(sec) { sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 
 function enc(s) { return encodeURIComponent(s); }
 
 /* ---------- state ---------- */
-function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {} }; }
+function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, updated: 0 }; }
 function norm(o) {
   var s = blank();
   if (o && typeof o === 'object') {
     s.ex = o.ex || {}; s.xp = +o.xp || 0; s.days = o.days || []; s.log = o.log || [];
-    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {};
+    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {}; s.updated = +o.updated || 0;
   }
   return s;
 }
 var S = blank();
 function load() { try { S = norm(JSON.parse(localStorage.getItem(KEY))); } catch (e) { S = blank(); } }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+function store() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+function save() { S.updated = Math.max(Date.now(), S.updated + 1); store(); syncSoon(); }   // never older than what was adopted from the shared file, even if the other machine's clock runs ahead
 load();
+
+/* ---------- progress shared between browser profiles ----------
+   The progress lives in this browser profile's storage, so every Chrome profile (and every browser) starts from zero. To share it, the
+   user picks one JSON file (the File System Access API, Chrome and Edge): it is written after every change and read when the page opens
+   or gets the focus. Which side wins is decided by L.syncPlan; before this profile's progress is replaced a copy is kept. */
+var SYK = { on: 'dyaa-practice-sync', last: 'dyaa-practice-lastsync', bak: 'dyaa-practice-backup' };
+var SYNC = { handle: null, name: '', state: 'off', msg: '', timer: null };   // state: off | needs (permission) | ok | error
+function syncCan() { return !!(window.showSaveFilePicker && window.showOpenFilePicker && window.indexedDB); }
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { } }
+function idb(fn) {
+  return new Promise(function (res, rej) {
+    var r = window.indexedDB.open('dyaa-practice-sync', 1);
+    r.onupgradeneeded = function () { r.result.createObjectStore('kv'); };
+    r.onerror = function () { rej(r.error); };
+    r.onsuccess = function () { var q = fn(r.result.transaction('kv', 'readwrite').objectStore('kv')); q.onsuccess = function () { res(q.result); }; q.onerror = function () { rej(q.error); }; };
+  });
+}
+function syncPerm(ask) {
+  var h = SYNC.handle, o = { mode: 'readwrite' };
+  return h.queryPermission(o).then(function (p) { return p === 'granted' || !ask ? p : h.requestPermission(o); });
+}
+function syncWrite() {
+  return SYNC.handle.createWritable().then(function (w) { return w.write(JSON.stringify(S, null, 1)).then(function () { return w.close(); }); })
+    .then(function () { lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = ''; });
+}
+function syncSoon() {
+  if (!SYNC.handle || SYNC.state !== 'ok') return;
+  clearTimeout(SYNC.timer);
+  SYNC.timer = setTimeout(function () { syncWrite().catch(function (e) { SYNC.state = 'error'; SYNC.msg = String(e && e.message || e); }); }, 400);
+}
+/* Reads the file and applies L.syncPlan. ask = true when it comes from a click (the browser may then ask for permission). Resolves to true if the progress shown changed. */
+function syncRun(ask) {
+  if (!SYNC.handle) return Promise.resolve(false);
+  return syncPerm(ask).then(function (p) {
+    if (p !== 'granted') { SYNC.state = 'needs'; return false; }
+    return SYNC.handle.getFile().then(function (f) { return f.text(); }).then(function (txt) {
+      var remote = null;
+      try { remote = JSON.parse(txt); } catch (e) { }
+      if (txt.trim() && (!remote || typeof remote.ex !== 'object')) { SYNC.state = 'error'; SYNC.msg = 'El archivo elegido no contiene un progreso de DyAA Practice.'; return false; }
+      var plan = remote ? L.syncPlan(S, remote, +lsGet(SYK.last) || 0) : 'push';
+      if (plan === 'conflict') plan = confirm('El progreso de este perfil (' + S.xp + ' XP) y el del archivo compartido (' + (+remote.xp || 0) + ' XP) han cambiado por separado.\n\nAceptar: usar el del archivo (se guarda una copia del de este perfil).\nCancelar: usar el de este perfil y sobrescribir el archivo.') ? 'pull' : 'push';
+      if (plan === 'pull') {
+        lsSet(SYK.bak, JSON.stringify(S));
+        S = norm(remote); store(); lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = '';
+        return true;
+      }
+      if (plan === 'push') return syncWrite().then(function () { return false; });
+      lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = '';
+      return false;
+    });
+  }).catch(function (e) { SYNC.state = 'error'; SYNC.msg = String(e && e.message || e); return false; });
+}
+function syncUse(h) {
+  SYNC.handle = h; SYNC.name = h.name || 'progreso.json';
+  return idb(function (st) { return st.put(h, 'handle'); }).catch(function () { }).then(function () { lsSet(SYK.on, 'file'); lsSet(SYK.last, null); return syncRun(true); }).then(route);
+}
+function syncOff() {
+  clearTimeout(SYNC.timer); SYNC.handle = null; SYNC.name = ''; SYNC.state = 'off'; SYNC.msg = '';
+  lsSet(SYK.on, null); lsSet(SYK.last, null);
+  return idb(function (st) { return st.delete('handle'); }).catch(function () { });
+}
+function syncStart() {
+  if (lsGet(SYK.on) !== 'file' || !syncCan()) return;
+  idb(function (st) { return st.get('handle'); }).then(function (h) {
+    if (!h) { lsSet(SYK.on, null); return false; }
+    SYNC.handle = h; SYNC.name = h.name; SYNC.state = 'needs';
+    return syncRun(false);
+  }).then(function () { route(); }).catch(function () { });
+}
 
 /* ---------- model ---------- */
 var skillById = {}; SK.forEach(function (s) { skillById[s.id] = s; });
@@ -377,8 +448,29 @@ function vProgress() {
   return h;
 }
 
+/* Where the progress lives: only this browser profile, or a file shared between profiles. */
+function syncCard() {
+  var h = '<h3>D&oacute;nde se guarda el progreso</h3><div class="card" id="sync">';
+  h += '<p>Cada perfil de Chrome (y cada navegador) guarda su propio progreso: lo que haces en uno no aparece en los dem&aacute;s. Para compartirlo, elige un archivo (por ejemplo en una carpeta que ya sincronices) y usa <b>el mismo archivo en cada perfil</b>.</p>';
+  if (!syncCan()) return h + '<p class="muted">Este navegador no permite elegir un archivo compartido (hace falta Chrome o Edge, abriendo la p&aacute;gina desde un archivo local o un servidor). Usa Exportar e Importar para llevar el progreso de un sitio a otro.</p></div>';
+  if (SYNC.handle) {
+    var st = SYNC.state === 'ok' ? '<span class="tag r2">al d&iacute;a</span>' : SYNC.state === 'needs' ? '<span class="tag r1">falta permiso</span>' : '<span class="tag r0">error</span>';
+    h += '<p>Progreso compartido mediante <b>' + esc(SYNC.name) + '</b> ' + st + '</p>' + (SYNC.msg ? '<p class="muted">' + esc(SYNC.msg) + '</p>' : '');
+    h += '<div class="row">' + (SYNC.state === 'needs' ? '<button class="btn pri" data-act="sync-now">Dar permiso al archivo</button>' : '<button class="btn" data-act="sync-now">Sincronizar ahora</button>') + '<button class="btn" data-act="sync-off">Dejar de compartir</button></div>';
+    h += '<p class="muted">Se escribe tras cada cambio y se lee al abrir la p&aacute;gina o volver a esta pesta&ntilde;a. Si dos perfiles cambian el progreso por separado se te pregunta cu&aacute;l conservar y se guarda una copia del otro.</p>';
+  } else {
+    h += '<p>Ahora mismo: <b>solo este perfil</b>.</p><div class="row"><button class="btn pri" data-act="sync-new">Crear un archivo de progreso</button><button class="btn" data-act="sync-open">Usar un archivo que ya existe</button></div>';
+    h += '<p class="muted">En el primer perfil crea el archivo; en los dem&aacute;s elige ese mismo archivo. Chrome te pedir&aacute; permiso para editarlo cada vez que abras la p&aacute;gina en un perfil nuevo.</p>';
+  }
+  return h + '</div>';
+}
+function syncBanner() {
+  if (!SYNC.handle || SYNC.state === 'ok') return '';
+  return '<div class="warnbox">' + (SYNC.state === 'needs' ? 'El archivo de progreso compartido (<b>' + esc(SYNC.name) + '</b>) necesita tu permiso para sincronizar. <button class="btn pri" data-act="sync-now">Dar permiso</button>' : 'No se pudo sincronizar el progreso con <b>' + esc(SYNC.name) + '</b>: ' + esc(SYNC.msg) + ' <a href="#/ajustes">Ver ajustes</a>') + '</div>';
+}
+
 function vSettings() {
-  return '<h2>Datos</h2><div class="card"><p>El tema, el color de acento, la ruta de estudio (temario completo o primer examen) y la organizaci&oacute;n por etapas o por temas se cambian con el engranaje de la barra superior.</p><p>Tu progreso se guarda en este navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>';
+  return '<h2>Datos</h2><div class="card"><p>El tema, el color de acento, la ruta de estudio (temario completo o primer examen) y la organizaci&oacute;n por etapas o por temas se cambian con el engranaje de la barra superior.</p><p>Tu progreso se guarda en este perfil del navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>' + syncCard();
 }
 
 /* ---------- settings popover (top bar, right): theme and accent colour ---------- */
@@ -440,6 +532,7 @@ function route() {
   else if (tab === 'ajustes') h = vSettings();
   else { tab = 'hoy'; h = vHoy(); }
   if (NOTE && tab !== 'ejercicios') { h = '<div class="card next">' + NOTE + '</div>' + h; NOTE = ''; }
+  h = syncBanner() + h;
   $('#app').innerHTML = h; stats();
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) { a.classList.toggle('on', a.dataset.tab === tab); });
   if (tab === 'teoria' && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
@@ -499,7 +592,15 @@ document.addEventListener('click', function (ev) {
     var blob = new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' }), a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'dyaa-progress.json'; a.click();
   }
-  else if (act === 'reset') { if (confirm('¿Borrar todo el progreso?')) { S = blank(); save(); route(); } }
+  else if (act === 'reset') { if (confirm('¿Borrar todo el progreso?' + (SYNC.handle ? ' También se borrará en el archivo compartido y, por tanto, en los demás perfiles que lo usen.' : ''))) { S = blank(); save(); route(); } }
+  else if (act === 'sync-new' || act === 'sync-open') {
+    var pick = act === 'sync-new'
+      ? window.showSaveFilePicker({ suggestedName: 'dyaa-progreso.json', types: [{ description: 'Progreso de DyAA Practice', accept: { 'application/json': ['.json'] } }] })
+      : window.showOpenFilePicker({ multiple: false, types: [{ description: 'Progreso de DyAA Practice', accept: { 'application/json': ['.json'] } }] }).then(function (a) { return a[0]; });
+    pick.then(syncUse).catch(function () { });
+  }
+  else if (act === 'sync-now') { syncRun(true).then(route); }
+  else if (act === 'sync-off') { syncOff().then(route); }
 });
 document.addEventListener('input', function (ev) { colorInput(ev); });
 document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && popOpen()) { setPop(false); var b = $('#settings'); if (b && b.focus) b.focus(); } });
@@ -516,6 +617,10 @@ document.addEventListener('change', function (ev) {
   }
 });
 window.addEventListener('hashchange', route);
+function syncRefresh() { if (SYNC.handle && SYNC.state === 'ok') syncRun(false).then(function (changed) { if (changed) route(); }); }
+document.addEventListener('visibilitychange', function () { if (!document.hidden) syncRefresh(); });
+window.addEventListener('focus', syncRefresh);
 drawLogo();
 route();
+syncStart();
 })();

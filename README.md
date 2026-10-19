@@ -8,7 +8,7 @@ Static web app: no server, no installation and no build step to use it (open `ap
 
 - [Install and open](#install-and-open): Linux, Windows, macOS
 - [First minutes](#first-minutes)
-- [Your progress](#your-progress-read-this)
+- [Your progress](#your-progress-read-this) (and [sharing it between profiles](#share-it-between-profiles))
 - [Adding the exams](#adding-the-exams-optional)
 - [Something does not work](#something-does-not-work)
 - [How it works](#how-it-works), [Layout](#layout), [Licensing](#licensing)
@@ -62,10 +62,20 @@ When the page opens, the address starts with `file://`. That is normal. Bookmark
 
 Your progress lives **inside the browser**, not in the folder. So:
 
-- It stays on that browser on that computer. Another browser, another computer, a private/incognito window, or clearing the site data starts from zero.
+- It stays on that browser **profile** on that computer. Another browser, another Chrome profile, another computer, a private/incognito window, or clearing the site data starts from zero (unless you [share it through a file](#share-it-between-profiles), below).
 - Some browsers (Firefox, for instance) tie it to the exact location of the file, so moving or renaming the folder can make it look empty. Move it back to see it again.
 - **Make a backup now and then**: gear → *Datos* (or open `#/ajustes`) → *Exportar JSON*. It downloads a JSON file. *Importar JSON* in the same page restores it, also on another computer.
 - Route, organisation, theme and accent are saved separately, so *Reiniciar progreso* does not change them.
+
+### Share it between profiles
+
+To use the same progress in several Chrome (or Edge) profiles, share one file: gear → *Datos* → *Dónde se guarda el progreso*. In the first profile click *Crear un archivo de progreso* and pick a place (a folder you already sync works well); in every other profile click *Usar un archivo que ya existe* and pick **the same file**. From then on every change is written to the file, and the page reads it when it opens or you come back to its tab.
+
+- The browser asks for permission to edit the file, and may ask again in a new session. Until you allow it a banner says so; one click fixes it.
+- If two profiles changed the progress separately, you are asked which to keep, and a copy of the replaced one is kept in that profile.
+- *Reiniciar progreso* also clears the shared file, so it resets every profile that uses it.
+- It needs the File System Access API (Chrome, Edge, Brave...). Firefox and Safari do not have it: use *Exportar JSON* and *Importar JSON* there.
+- The file holds only your progress, never the exams.
 
 ## Adding the exams (optional)
 

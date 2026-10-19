@@ -170,6 +170,18 @@ const LG = require(path.join(APP, 'logo.js'));
   const src = fs.readFileSync(path.join(APP, f), 'utf8');
   ok(!/locked|bloquead|designTaught|&#128274;/i.test(src), 'no lock logic left in ' + f);
 });
+// shared progress file: who wins
+{
+  const A = (u) => ({ updated: u });
+  ok(L.syncPlan(A(5), A(5), 5) === 'same', 'same stamps: nothing to do');
+  ok(L.syncPlan(A(0), A(9), 0) === 'pull', 'a blank profile takes the file');
+  ok(L.syncPlan(A(9), A(0), 0) === 'push', 'an empty file gets the progress');
+  ok(L.syncPlan(A(5), A(9), 5) === 'pull', 'the file moved on while this profile was idle: pull');
+  ok(L.syncPlan(A(9), A(5), 5) === 'push', 'this profile moved on: push');
+  ok(L.syncPlan(A(7), A(9), 5) === 'conflict', 'both changed since they last agreed: ask');
+  ok(L.syncPlan(A(9), A(7), 5) === 'conflict', 'both changed (ours newer): ask');
+  ok(L.syncPlan(A(7), A(9), 0) === 'conflict', 'two independent histories: ask');
+}
 // page metadata
 {
   const html = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
