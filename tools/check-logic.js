@@ -287,8 +287,6 @@ const LG = require(path.join(APP, 'logo.js'));
 // study without paper
 {
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  ok(L.defaultCfg().nopaper === false && L.normCfg({ nopaper: true }).nopaper === true, 'the paperless mode is a setting, off by default');
-  ok(['theory', 'quiz'].every(t => L.paperFree({ type: t })) && ['ex', 'exam'].every(t => !L.paperFree({ type: t })), 'readings and quick checks are paper-free, exercises and exams are not');
   const a = [1, 2, 3, 4, 5, 6];
   ok(L.shuffle(a, rnd).slice().sort().join() === a.join() && a.join() === '1,2,3,4,5,6', 'a shuffle keeps the items and leaves the original alone');
   for (let k = 0; k < 200; k++) { const b = L.shuffleNot([1, 2, 3], rnd); if (b.join() === '1,2,3') { ok(false, 'shuffleNot returned the original order'); break; } }

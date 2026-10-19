@@ -390,23 +390,17 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   cfgChange('timer', true);   // the reset below must keep it
 }
 
-// study without paper: the mode, the practice activities, what Hoy and the route propose
+// practice without paper: its own tab, the mixed test and the ordering of steps
 {
   const st = () => JSON.parse(store['dyaa-practice-v1']);
-  const change = (target) => (handlers.change || []).forEach(f => f({ target }));
   const navHtml = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
   ok(/<a href="#\/practica" data-tab="practica">Sin papel<\/a>/.test(navHtml), 'the practice without paper has its own tab in the top bar');
   go('#/hoy'); ok(!/#\/practica/.test(app()) && !/Pr&aacute;ctica en pantalla/.test(app()) && !/Hoy estudio/.test(app()), 'and nothing about it is added to Hoy');
-  openMenu('study'); ok(/data-cfg="nopaper"/.test(popHtml()), 'the gear menu has the paperless setting too'); click({ act: 'settings-close' });
-  go('#/ejercicios'); ok(!/Modo sin papel/.test(app()) && !/&#9998; papel/.test(app()), 'with paper nothing changes in the exercises');
-  click({ act: 'cfgset', k: 'daily', v: '480' }); go('#/hoy'); ok(!hasExams || /href="#\/ejercicios\//.test(app()), 'with paper and a long day, Hoy does propose exercises');
-  click({ act: 'cfgtoggle', k: 'nopaper', v: '1' }); ok(st().cfg.nopaper === true, 'the mode is saved with the settings');
-  go('#/hoy'); ok(!/href="#\/ejercicios\//.test(app()), 'without paper Hoy proposes no exercise');
-  openMenu('study'); ok(/data-cfg="nopaper" checked/.test(popHtml()), 'the gear menu shows the mode on'); click({ act: 'settings-close' });
-  go('#/ejercicios'); ok(/Modo sin papel/.test(app()) && /&#9998; papel/.test(app()), 'the exercise list says they need paper and marks each one');
-  if (hasExams) { go('#/examen'); ok(/Modo sin papel/.test(app()), 'and so does the exam list'); }
-  const stepsNow = L.nextSteps(PATHX.filter(L.paperFree), st(), win.EXAMS || [], 3);
-  go('#/ruta'); ok(stepsNow.length === 0 || (/Siguiente en la ruta/.test(app()) && !/class="big">[^<]*Ejercicios adicionales/.test(app())), 'the route proposes a reading or a check next');
+  openMenu('study'); ok(!/nopaper/.test(popHtml()) && !/sin papel/i.test(popHtml()), 'there is no paper / no-paper mode to switch: each entry is picked as usual'); click({ act: 'settings-close' });
+  ok(!('nopaper' in st().cfg), 'and no such setting is saved');
+  go('#/ejercicios'); ok(!/&#9998; papel/.test(app()) && !/Modo sin papel/.test(app()), 'the exercises are not marked or hidden');
+  click({ act: 'cfgset', k: 'daily', v: '480' }); go('#/hoy'); ok(!hasExams || /href="#\/ejercicios\//.test(app()), 'Hoy plans exercises and readings together as always');
+  click({ act: 'cfgset', k: 'daily', v: '30' });
   // practice menu
   go('#/practica'); ok(/Pr&aacute;ctica sin papel/.test(app()) && /href="#\/practica\/test"/.test(app()) && /Ordenar los pasos/.test(app()) && !/arjeta/.test(app()), 'the practice page offers the mixed test and the ordering');
   // mixed test
@@ -442,10 +436,6 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   // the log can show only this kind of practice
   go('#/registro'); click({ act: 'logty', v: 'paperless' }); ok(/title="mix"|title="order"/.test(app()) && !/title="ex"|title="theory"/.test(app()), 'the log can be filtered to practice without paper');
   click({ act: 'logty', v: '' });
-  // nothing left to read: say so instead of claiming the route is done
-  click({ act: 'cfgtoggle', k: 'nopaper', v: '0' }); ok(st().cfg.nopaper === false, 'and back to paper');
-  click({ act: 'cfgset', k: 'daily', v: '30' });
-  go('#/ejercicios'); ok(!/Modo sin papel/.test(app()), 'the notes are gone with the mode');
 }
 
 // export/import round trip keeps state

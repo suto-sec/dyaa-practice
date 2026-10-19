@@ -239,8 +239,7 @@ L.defaultCfg = function () {
     exauto: false,    // the exam ends by itself when the time is up
     exhints: false,   // hints while sitting an exam
     exans: false,     // solutions while sitting an exam
-    daily: 30,        // minutes of study a day
-    nopaper: false    // only the laptop: no paper to work exercises out on
+    daily: 30         // minutes of study a day
   };
 };
 L.normCfg = function (c) {
@@ -301,9 +300,8 @@ L.examXp = function (ids, scores, points, help) {
 };
 
 /* ---------- study without paper ----------
-   Everything a laptop alone can do: the route's readings and quick checks, a mixed test drawn from the quick-check questions, and putting the
-   steps of a worked solution back in order. Exercises need paper. */
-L.paperFree = function (step) { return step.type === 'theory' || step.type === 'quiz'; };
+   What a laptop alone can do besides the route's readings and quick checks: a mixed test drawn from the quick-check questions, and putting the
+   steps of a worked solution back in order. */
 L.shuffle = function (arr, rnd) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rnd() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }

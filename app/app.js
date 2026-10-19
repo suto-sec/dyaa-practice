@@ -175,8 +175,7 @@ function streakHtml() { return '<span class="streak ' + streakState() + '" title
 function mins(m) { return '~' + L.fmtMin(m); }
 function minTag(m) { return '<span class="tag min" title="Estimaci&oacute;n orientativa para estudiar y comprobar, no para el examen">' + mins(m) + '</span>'; }
 function minsOf(steps) { return steps.reduce(function (t, x) { return t + (x.min || 0); }, 0); }
-/* With no paper (settings) the route only proposes what a laptop can do: readings and quick checks. */
-function nextSteps(n) { return L.nextSteps(S.cfg.nopaper ? ACTIVE.filter(L.paperFree) : ACTIVE, S, EXAMS, n); }
+function nextSteps(n) { return L.nextSteps(ACTIVE, S, EXAMS, n); }
 function progress(stage) { return L.stageProgress(PATH, S, EXAMS, stage); }
 function gprog(g) { return L.groupProgress(PATH, S, EXAMS, g); }
 function doneWord() { return ORG === 'temas' ? '&iexcl;Bloque completado!' : '&iexcl;Etapa completada!'; }
@@ -271,18 +270,17 @@ function stepRow(st, cur, inLesson) {
   var tags = '';
   if (st.type === 'ex') {
     var a = byKey[st.key];
-    tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution ? '<span class="tag">' + (a.e.own ? 'soluci&oacute;n propuesta' : 'con soluci&oacute;n') + '</span>' : '') + '<span class="tag">' + (a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>' + (S.cfg.nopaper ? '<span class="tag">&#9998; papel</span>' : '');
+    tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution ? '<span class="tag">' + (a.e.own ? 'soluci&oacute;n propuesta' : 'con soluci&oacute;n') + '</span>' : '') + '<span class="tag">' + (a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>';
   } else if (st.type === 'quiz' && S.quiz[st.id]) tags = '<span class="tag r' + (S.quiz[st.id].score === st.n ? 2 : S.quiz[st.id].score * 2 >= st.n ? 1 : 0) + '">' + S.quiz[st.id].score + '/' + st.n + '</span>';
   else if (S.skip[st.id]) tags = '<span class="tag">saltado</span>';
   tags += minTag(st.min);
   return '<a class="item step' + (done ? ' done' : '') + (cur ? ' cur' : '') + '" href="' + stepHref(st) + '"><span>' + mark + ' ' + (inLesson && st.type === 'theory' ? '&#128214; Leer' : inLesson && st.type === 'quiz' ? '&#10067; Comprobaci&oacute;n r&aacute;pida' : stepLabel(st)) + '</span><span>' + tags + '</span></a>';   // inside a lesson the heading already names the reading
 }
 function exRow(a) {
-  return '<a class="item" href="#/ejercicios/' + enc(a.key) + '"><span><b>' + exTitle(a) + '</b> <span class="tag">' + esc(XKIND[a.e.kind] || a.e.kind) + '</span> <span class="tag">' + esc((groupOfStage[a.e.stage] || {}).short || '') + '</span></span><span>' + status(a.key) + dueTag(a.key) + (S.cfg.nopaper ? '<span class="tag">&#9998; papel</span>' : '') + minTag((stepById['e:' + a.key] || {}).min || 15) + '</span></a>';
+  return '<a class="item" href="#/ejercicios/' + enc(a.key) + '"><span><b>' + exTitle(a) + '</b> <span class="tag">' + esc(XKIND[a.e.kind] || a.e.kind) + '</span> <span class="tag">' + esc((groupOfStage[a.e.stage] || {}).short || '') + '</span></span><span>' + status(a.key) + dueTag(a.key) + minTag((stepById['e:' + a.key] || {}).min || 15) + '</span></a>';
 }
 function nextCard(extra) {
   var n = nextSteps(1)[0];
-  if (!n && S.cfg.nopaper && L.nextSteps(ACTIVE, S, EXAMS, 1).length) return '<div class="card">Ya no quedan lecturas ni comprobaciones en tu ruta: lo que falta son ejercicios y ex&aacute;menes, que piden papel. Mientras tanto, <a href="#/practica">practica en pantalla</a>.</div>';
   if (!n) return '<div class="card">&#127881; Has completado toda la ruta (' + esc(SCOPE.title) + '). Sigue repasando lo pendiente en <a href="#/hoy">Hoy</a>.</div>';
   var g = groupOfStage[n.stage];
   return '<div class="card next"><div class="muted">Siguiente en la ruta &middot; ' + esc(g.label) + '</div><div class="big">' + stepLabel(n) + '</div><div class="muted">' + mins(n.min) + ' estimados</div><div class="row"><a class="btn pri" href="' + stepHref(n) + '">Continuar &rarr;</a>' + (extra || '') + '</div></div>';
@@ -292,8 +290,8 @@ function vHoy() {
   var t = today(), C = S.cfg, h = '<h2>Misi&oacute;n de hoy</h2>' + missingBanner();
   var lv = level(), lo = (lv - 1) * (lv - 1) * 10, hi = lv * lv * 10, pct = Math.round((S.xp - lo) / (hi - lo) * 100);
   h += '<div class="card row"><span>Nivel <b>' + lv + '</b></span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + S.xp + ' / ' + hi + ' XP</span><span class="streakline">' + streakHtml() + '<span class="muted">d&iacute;as de racha</span></span></div>';
-  var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t), nop = C.nopaper;
-  var dueItems = nop ? [] : due.map(function (k) { return { id: k, min: (stepById['e:' + k] || {}).min || 15 }; });
+  var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t);
+  var dueItems = due.map(function (k) { return { id: k, min: (stepById['e:' + k] || {}).min || 15 }; });
   var plan = L.dailyPlan({ goal: C.daily, today: t, log: S.log, due: dueItems, steps: EXAMS.length || LECT.length ? nextSteps(80) : [] });
   var gp = Math.min(100, Math.round(plan.done / plan.goal * 100));
   h += '<div class="card"><div class="row"><b>Tu meta de hoy: ' + plan.goal + ' min</b><span class="grow"></span><button type="button" class="linkbtn" data-act="settings" data-open="study">Cambiar</button></div><div class="row"><div class="bar"><i style="width:' + gp + '%"></i></div><span class="muted">' + plan.done + ' de ' + plan.goal + ' min' + (plan.n ? ' &middot; ' + plan.n + (plan.n === 1 ? ' tarea hecha' : ' tareas hechas') : '') + '</span></div>' +
@@ -348,7 +346,7 @@ function vRoad() {
 }
 
 function vList() {
-  var h = '<h2>Ejercicios</h2>' + missingBanner() + paperNote();
+  var h = '<h2>Ejercicios</h2>' + missingBanner();
   function sel(name, label, opts) {
     return '<label class="fsel"><span class="muted">' + label + '</span><select data-f="' + name + '"' + (F[name] ? ' class="set"' : '') + '><option value="">Todos</option>' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (F[name] === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select></label>';
   }
@@ -382,7 +380,7 @@ function vDetail(key) {
   if (V.key !== key) V = { key: key, hints: 0, self: false, done: null };
   if (S.cfg.timer) tmStart(key);
   var e = a.e, sol = e.solution, hasSol = sol != null && String(sol).trim() !== '', st = stepById['e:' + key], gp = st && groupOfStage[st.stage];
-  var h = paperNote() + '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a>' + (e.src === 'adic' ? '' : ' &middot; <a href="#/examen">Ex&aacute;menes</a>') + '</p>';
+  var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a>' + (e.src === 'adic' ? '' : ' &middot; <a href="#/examen">Ex&aacute;menes</a>') + '</p>';
   if (gp) {
     var inG = PATH.filter(function (x) { return x.type === 'ex' && gp.stages.indexOf(x.stage) >= 0; });
     h += '<p class="muted">' + esc(gp.label) + ' &middot; ejercicio ' + (inG.indexOf(st) + 1) + ' de ' + inG.length + (inScope[st.id] ? '' : ' &middot; fuera de tu ruta (' + esc(SCOPE.title) + ')') + '</p>';
@@ -446,7 +444,7 @@ function vExam() {
   if (!EXAMS.length) return '<h2>Examen</h2>' + missingBanner();
   var C = S.cfg;
   if (!X) {
-    var h = '<h2>Ex&aacute;menes</h2><p class="muted">Cualquier examen est&aacute; disponible, entero (como en el aula) o ejercicio a ejercicio. Los que tienen soluci&oacute;n oficial se auto-corrigen mejor; el recomendado es el siguiente sin hacer.</p>' + paperNote();
+    var h = '<h2>Ex&aacute;menes</h2><p class="muted">Cualquier examen est&aacute; disponible, entero (como en el aula) o ejercicio a ejercicio. Los que tienen soluci&oacute;n oficial se auto-corrigen mejor; el recomendado es el siguiente sin hacer.</p>';
     h += '<div class="card row exset"><span class="grow"><b>Realismo</b> <span class="muted">' + (C.extimer ? (C.exauto ? 'con l&iacute;mite de tiempo' : 'con cuenta atr&aacute;s') : 'sin reloj') + ' &middot; pistas: ' + (C.exhints ? 's&iacute;' : 'no') + ' &middot; soluciones: ' + (C.exans ? 's&iacute;' : 'no') + '</span></span><button type="button" class="btn" data-act="settings" data-open="exam">Cambiar</button></div>';
     ['analisis', 'diseno', 'mixto'].forEach(function (kind) {
       var list = EXAMS.filter(function (e) { return e.kind === kind && (e.exercises || []).length; });
@@ -529,9 +527,6 @@ function qstate() { return PR && PR.kind === 'test' ? PR : Q; }
 var PAPERLESS = { mix: 1, order: 1 };
 function stageInRoute(id) { return GROUPS.some(function (g) { return g.stages.indexOf(id) >= 0; }); }
 function orderable() { return ALL.filter(function (a) { return a.e.own && L.orderPieces(a.e.solution); }); }
-function paperNote() {
-  return S.cfg.nopaper ? '<div class="note">&#128187; <b>Modo sin papel.</b> Los ejercicios y ex&aacute;menes se hacen mejor con papel. Para practicar en pantalla: <a href="#/practica">pr&aacute;ctica sin papel</a>. <button type="button" class="linkbtn" data-act="cfgtoggle" data-k="nopaper" data-v="0">Ya tengo papel</button></div>' : '';
-}
 function practiceStart(kind) {
   TM = null;
   if (kind === 'test') {
@@ -554,9 +549,6 @@ function vPractice() {
   var ord = orderable().length;
   h += '<div class="card"><div class="row"><b>Test mixto</b><span class="grow"></span><a class="btn pri" href="#/practica/test">Empezar</a></div><p class="muted">8 preguntas, cada una de una lectura distinta, de lo que ya has le&iacute;do (si a&uacute;n no has le&iacute;do casi nada, de toda tu ruta). Cada acierto suma 0,5 XP.</p></div>';
   h += '<div class="card"><div class="row"><b>Ordenar los pasos</b><span class="grow"></span>' + (ord ? '<a class="btn pri" href="#/practica/pasos">Empezar</a>' : '<span class="muted">no disponible</span>') + '</div><p class="muted">' + (ord ? 'Un ejercicio con su soluci&oacute;n cortada en pasos, desordenados: t&oacute;calos en el orden en que los har&iacute;as. Hay ' + ord + ' ejercicios con soluci&oacute;n en pasos.' : 'Hace falta alg&uacute;n ejercicio con soluci&oacute;n propuesta en pasos (<code>content/exams/soluciones/</code>); no hay ninguno en esta copia.') + '</p></div>';
-  var n = L.nextSteps(ACTIVE.filter(L.paperFree), S, EXAMS, 1)[0];
-  h += '<div class="card row"><span class="grow">' + (n ? 'Tambi&eacute;n valen las lecturas y comprobaciones de la ruta: siguiente, ' + stepLabel(n) : 'Ya has hecho todas las lecturas y comprobaciones de tu ruta.') + '</span>' + (n ? '<a class="btn" href="' + stepHref(n) + '">Ir</a>' : '') + '</div>';
-  h += '<div class="card row"><span class="grow"><b>' + (S.cfg.nopaper ? 'Modo sin papel activado' : 'Modo sin papel desactivado') + '</b> <span class="muted">' + (S.cfg.nopaper ? 'Hoy y la Ruta solo proponen lo de esta p&aacute;gina y las lecturas.' : 'Act&iacute;valo y Hoy y la Ruta solo propondr&aacute;n lecturas, comprobaciones y esta pr&aacute;ctica.') + '</span></span><button type="button" class="btn" data-act="settings" data-open="study">Cambiar</button></div>';
   return h;
 }
 function vTest() {
@@ -836,7 +828,6 @@ function renderPop() {
   var study = '<div class="setrow"><div><b>Meta diaria</b><span class="muted">Hoy propone repasos y pasos de la ruta hasta llenar ese tiempo, contando lo que ya hiciste.</span></div><div class="ctl"><div class="segs" role="radiogroup" aria-label="Meta diaria">' +
     L.DAILY.map(function (m) { return '<button type="button" class="seg' + (C.daily === m ? ' on' : '') + '" role="radio" aria-checked="' + (C.daily === m) + '" data-act="cfgset" data-k="daily" data-v="' + m + '">' + (m >= 60 && m % 60 === 0 ? m / 60 + ' h' : m) + '</button>'; }).join('') + '</div>' +
     '<label class="muted">minutos, u otra cifra: <input type="number" min="5" max="480" step="5" data-cfg="daily" value="' + C.daily + '" aria-label="Meta diaria en minutos"></label></div></div>' +
-    cfgSwitch('nopaper', 'Modo sin papel (solo el port&aacute;til)', 'Hoy y la Ruta solo proponen lecturas, comprobaciones y pr&aacute;ctica en pantalla, sin ejercicios de papel.') +
     cfgSwitch('timer', 'Cron&oacute;metro en ejercicios y comprobaciones', 'Muestra cu&aacute;nto tardas y lo guarda en el Registro. Solo cuenta con la pesta&ntilde;a a la vista.');
   var exam = '<p class="muted">Se aplica al hacer un examen entero. Los ejercicios sueltos siempre tienen pistas y soluci&oacute;n.</p><div class="presets">' +
     Object.keys(EXPRESETS).map(function (id) { var p = EXPRESETS[id]; return '<button type="button" class="choice' + (activePreset() === id ? ' on' : '') + '" data-act="expreset" data-v="' + id + '"><b>' + p.label + '</b><span class="muted">' + p.blurb + '</span></button>'; }).join('') + '</div>' +
@@ -981,7 +972,6 @@ document.addEventListener('click', function (ev) {
     }
     route();
   }
-  else if (act === 'cfgtoggle') { S.cfg[b.dataset.k] = b.dataset.v === '1'; save(); rerender(); }
   else if (act === 'pnew') { practiceStart(b.dataset.k); route(); }
   else if (act === 'testdone' && PR && PR.kind === 'test' && !PR.logged) {
     var tsc = 0; PR.qs.forEach(function (q, i) { if (PR.pick[i] === q.answer) tsc++; });
