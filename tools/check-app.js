@@ -278,6 +278,9 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
   win.showSaveFilePicker = async () => handle; win.showOpenFilePicker = async () => [handle];
   const local = () => JSON.parse(store['dyaa-practice-v1']);
   click({ act: 'theorydone', step: firstReading('sumatorios') }); const xp0 = local().xp;
+  go('#/hoy'); ok(/Guarda tu progreso en un archivo/.test(app()) && /Ya tengo uno/.test(app()), 'on the first page the offer to keep the progress in a file is shown');
+  go('#/ruta'); ok(!/Guarda tu progreso en un archivo/.test(app()), 'and only there');
+  click({ act: 'sync-later' }); await wait(20); go('#/hoy'); ok(!/Guarda tu progreso en un archivo/.test(app()), '"Ahora no" is remembered');
   go('#/ajustes'); ok(/Crear un archivo de progreso/.test(app()) && /solo este perfil/.test(app()), 'with the API the settings offer to create or pick a file');
   click({ act: 'sync-new' }); await wait(60);
   ok(file.text && JSON.parse(file.text).theory[firstReading('sumatorios')] === true && store['dyaa-practice-sync'] === 'file', 'creating the file writes this profile\'s progress into it');
@@ -301,6 +304,17 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
   // permission that has to be granted again (each new session): a banner, and one click fixes it
   file.perm = 'prompt'; click({ act: 'sync-now' }); await wait(60);
   ok(file.perm === 'granted', 'the permission is requested from the click');
+  // a new session: the permission lapsed. The first click anywhere asks for it, no need to find a button
+  file.perm = 'prompt'; (handlers.focus || []).forEach(f => f()); await wait(40);
+  go('#/hoy'); ok(/Haz clic en cualquier parte/.test(app()), 'a lapsed permission shows a banner');
+  click({ act: 'nothing' }); await wait(60);
+  ok(file.perm === 'granted', 'the first click on the page asks for the permission');
+  go('#/hoy'); ok(!/Haz clic en cualquier parte/.test(app()), 'and the banner is gone');
+  // another profile saved while this one was changing: the pending write reads first and does not overwrite it
+  const mine = local().xp; click({ act: 'theorydone', step: firstReading('bucles') });
+  const rival = JSON.parse(file.text); rival.xp = 555; rival.theory['t:t21-sumas-basicas'] = true; rival.updated = Date.now() + 20000; file.text = JSON.stringify(rival);
+  ctx.confirm = () => true; await wait(600);
+  ok(local().xp === 555 && JSON.parse(file.text).xp === 555, 'a write that would overwrite a newer file asks first instead (' + mine + ' XP here)');
   // stop sharing
   click({ act: 'sync-off' }); await wait(40);
   ok(store['dyaa-practice-sync'] == null, 'stopping the sharing forgets the file');

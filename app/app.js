@@ -31,10 +31,12 @@ load();
 
 /* ---------- progress shared between browser profiles ----------
    The progress lives in this browser profile's storage, so every Chrome profile (and every browser) starts from zero. To share it, the
-   user picks one JSON file (the File System Access API, Chrome and Edge): it is written after every change and read when the page opens
-   or gets the focus. Which side wins is decided by L.syncPlan; before this profile's progress is replaced a copy is kept. */
-var SYK = { on: 'dyaa-practice-sync', last: 'dyaa-practice-lastsync', bak: 'dyaa-practice-backup' };
-var SYNC = { handle: null, name: '', state: 'off', msg: '', timer: null };   // state: off | needs (permission) | ok | error
+   user picks one JSON file once (the File System Access API, Chrome and Edge): it is read when the page opens or gets the focus and
+   written after every change (always after reading it again, so a profile that saved in between is never overwritten blindly). Which side
+   wins is decided by L.syncPlan; before this profile's progress is replaced a copy is kept. A browser asks for permission to edit the file
+   again in a new session: the first click anywhere on the page asks for it, so it is one click and not a hunt for a button. */
+var SYK = { on: 'dyaa-practice-sync', last: 'dyaa-practice-lastsync', bak: 'dyaa-practice-backup', ask: 'dyaa-practice-syncask' };
+var SYNC = { handle: null, name: '', state: 'off', msg: '', timer: null, asked: false };   // state: off | needs (permission) | ok | error
 function syncCan() { return !!(window.showSaveFilePicker && window.showOpenFilePicker && window.indexedDB); }
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { } }
@@ -57,7 +59,7 @@ function syncWrite() {
 function syncSoon() {
   if (!SYNC.handle || SYNC.state !== 'ok') return;
   clearTimeout(SYNC.timer);
-  SYNC.timer = setTimeout(function () { syncWrite().catch(function (e) { SYNC.state = 'error'; SYNC.msg = String(e && e.message || e); }); }, 400);
+  SYNC.timer = setTimeout(function () { syncRun(false).then(function (changed) { if (changed) route(); }); }, 400);   // reads first: if another profile saved meanwhile, that is resolved instead of overwritten
 }
 /* Reads the file and applies L.syncPlan. ask = true when it comes from a click (the browser may then ask for permission). Resolves to true if the progress shown changed. */
 function syncRun(ask) {
@@ -87,7 +89,7 @@ function syncUse(h) {
 }
 function syncOff() {
   clearTimeout(SYNC.timer); SYNC.handle = null; SYNC.name = ''; SYNC.state = 'off'; SYNC.msg = '';
-  lsSet(SYK.on, null); lsSet(SYK.last, null);
+  lsSet(SYK.on, null); lsSet(SYK.last, null); lsSet(SYK.ask, 'no');
   return idb(function (st) { return st.delete('handle'); }).catch(function () { });
 }
 function syncStart() {
@@ -577,13 +579,17 @@ function syncCard() {
     h += '<p class="muted">Se escribe tras cada cambio y se lee al abrir la p&aacute;gina o volver a esta pesta&ntilde;a. Si dos perfiles cambian el progreso por separado se te pregunta cu&aacute;l conservar y se guarda una copia del otro.</p>';
   } else {
     h += '<p>Ahora mismo: <b>solo este perfil</b>.</p><div class="row"><button class="btn pri" data-act="sync-new">Crear un archivo de progreso</button><button class="btn" data-act="sync-open">Usar un archivo que ya existe</button></div>';
-    h += '<p class="muted">En el primer perfil crea el archivo; en los dem&aacute;s elige ese mismo archivo. Chrome te pedir&aacute; permiso para editarlo cada vez que abras la p&aacute;gina en un perfil nuevo.</p>';
+    h += '<p class="muted">En el primer perfil crea el archivo; en los dem&aacute;s elige ese mismo archivo. Chrome te pedir&aacute; permiso para editarlo al abrir la p&aacute;gina (con el primer clic). Si te ofrece <i>Permitir en cada visita</i>, elige esa opci&oacute;n y no volver&aacute; a preguntar.</p>';
   }
   return h + '</div>';
 }
 function syncBanner() {
-  if (!SYNC.handle || SYNC.state === 'ok') return '';
-  return '<div class="warnbox">' + (SYNC.state === 'needs' ? 'El archivo de progreso compartido (<b>' + esc(SYNC.name) + '</b>) necesita tu permiso para sincronizar. <button class="btn pri" data-act="sync-now">Dar permiso</button>' : 'No se pudo sincronizar el progreso con <b>' + esc(SYNC.name) + '</b>: ' + esc(SYNC.msg) + ' <a href="#/ajustes">Ver ajustes</a>') + '</div>';
+  if (!SYNC.handle) {   // not set up: offer it once, on the first page
+    if (!syncCan() || lsGet(SYK.ask) === 'no' || (location.hash || '#/hoy') !== '#/hoy') return '';
+    return '<div class="card next"><b>Guarda tu progreso en un archivo</b><p>Ahora mismo solo existe en este perfil del navegador. Elige un archivo una vez (si lo dejas en una carpeta que ya sincronizas, mejor) y tus otros perfiles y ordenadores lo usar&aacute;n sin exportar ni importar nada.</p><div class="row"><button class="btn pri" data-act="sync-new">Crear el archivo</button><button class="btn" data-act="sync-open">Ya tengo uno</button><button class="btn" data-act="sync-later">Ahora no</button></div></div>';
+  }
+  if (SYNC.state === 'ok') return '';
+  return '<div class="warnbox">' + (SYNC.state === 'needs' ? 'Haz clic en cualquier parte de la p&aacute;gina para dar permiso al archivo de progreso (<b>' + esc(SYNC.name) + '</b>); el navegador lo pide una vez por sesi&oacute;n. <button class="btn pri" data-act="sync-now">Dar permiso</button>' : 'No se pudo sincronizar el progreso con <b>' + esc(SYNC.name) + '</b>: ' + esc(SYNC.msg) + ' <a href="#/ajustes">Ver ajustes</a>') + '</div>';
 }
 
 function vSettings() {
@@ -664,6 +670,7 @@ function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
 
 /* ---------- events ---------- */
 document.addEventListener('click', function (ev) {
+  if (SYNC.handle && SYNC.state === 'needs' && !SYNC.asked) { SYNC.asked = true; syncRun(true).then(function () { route(); }); }   // the browser only shows its permission prompt after a click
   if (popOpen() && ev.target && ev.target.closest && !ev.target.closest('#settings-pop') && !ev.target.closest('#settings')) setPop(false);
   var sl = ev.target.closest && ev.target.closest('a[data-sec]');
   if (sl && sl.dataset && sl.dataset.sec != null && sl.getAttribute) { if (ev.preventDefault) ev.preventDefault(); goSec(+sl.dataset.sec); return; }
@@ -737,6 +744,7 @@ document.addEventListener('click', function (ev) {
   }
   else if (act === 'sync-now') { syncRun(true).then(route); }
   else if (act === 'sync-off') { syncOff().then(route); }
+  else if (act === 'sync-later') { lsSet(SYK.ask, 'no'); route(); }
 });
 document.addEventListener('input', function (ev) { if (ev.target && ev.target.id === 'tocq') { filterToc(ev.target.value); return; } colorInput(ev); });
 document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && popOpen()) { setPop(false); var b = $('#settings'); if (b && b.focus) b.focus(); } });
