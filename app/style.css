@@ -209,3 +209,9 @@ details.stage[open]>summary{border-bottom:1px solid var(--bd);margin-bottom:8px}
 .prow{margin-bottom:8px}
 .plabel{flex:0 1 300px;min-width:min(100%,160px)}
 .pval{flex:0 0 11.5em;text-align:right}
+@media (max-width:700px){
+  .plabel{flex:1 0 100%}
+  .pval{flex:0 0 auto;min-width:0}
+  .seg{white-space:nowrap}
+  .setrow .seg{padding:4px 7px;font-size:.8rem}
+}

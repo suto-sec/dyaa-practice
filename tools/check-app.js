@@ -55,7 +55,7 @@ function click(attrs, tag) {
   (handlers.click || []).forEach(f => f({ target: { closest: () => b } }));
 }
 
-for (const r of ['#/hoy', '#/ruta', '#/ejercicios', '#/examen', '#/teoria', '#/progreso', '#/ajustes']) {
+for (const r of ['#/hoy', '#/ruta', '#/ejercicios', '#/examen', '#/teoria', '#/resumen', '#/registro', '#/progreso', '#/ajustes']) {
   go(r); ok(app().length > 100, 'view renders: ' + r);
   ok(!/locked|bloquead|&#128274;/i.test(app()), 'no lock text in ' + r);
 }
@@ -146,7 +146,7 @@ const change0 = (target) => (handlers.change || []).forEach(f => f({ target }));
   ok((app().match(/data-sec="/g) || []).length === (app().match(/<section class="sec" id="sec-/g) || []).length && /class="o l1" href="#\/resumen\/sumatorios\/0"/.test(app()), 'the outline of a summary lists its sections, like a lecture');
   ok(/class="lnav"><a class="btn" href="#\/resumen\/[^"]+">&larr;/.test(app()) && /&rarr;<\/a><\/div>/.test(app()), 'with the previous and next sheet at both ends');
   change0({ id: 'lsel', dataset: { kind: 'resumen' }, value: 'bucles' }); ok(hash === '#/resumen/bucles', 'the picker of Resumen goes to that sheet');
-  change0({ id: 'lsel', dataset: { kind: 'teoria' }, value: 't4_dyv' }); ok(/#\/teoria\//.test(hash), 'and the one of Teoría to that tema');
+  change0({ id: 'lsel', dataset: { kind: 'teoria' }, value: win.LECTURES[3].id }); ok(hash === '#/teoria/' + encodeURIComponent(win.LECTURES[3].id), 'and the one of Teoría to that tema');
   go('#/resumen/sumatorios/1'); ok(/id="sec-1"/.test(app()), 'a section of a summary can be linked');
   ok(win.STAGES.every(g => (win.SUMMARIES || {})[g.id] && win.SUMMARIES[g.id].length > 300), 'every etapa has a summary sheet');
   go('#/resumen/sumatorios'); ok(/Sumatorios: reglas/.test(app()) && /\[math\]/.test(app()) && /leer la teor&iacute;a completa/.test(app()), 'a sheet shows its formulas and links to the theory');
