@@ -239,5 +239,50 @@ const LG = require(path.join(APP, 'logo.js'));
   const T = require('../app/theme.js');
   ok(typeof T.chrome === 'function', 'theme.js updates the browser chrome colour');
 }
+// settings kept with the progress: defaults, repair of bad values
+{
+  const d = L.defaultCfg();
+  ok(d.timer === false && d.extimer === true && d.daily === 30 && d.exhints === false && d.exans === false && d.exauto === false, 'default settings');
+  const c = L.normCfg({ timer: true, daily: 45, exhints: 'yes', extimer: false, bogus: 1 });
+  ok(c.timer === true && c.daily === 45 && c.extimer === false && c.exhints === false && !('bogus' in c), 'valid settings are kept, invalid ones fall back, unknown ones are dropped');
+  ok(L.normCfg(null).daily === 30 && L.normCfg({ daily: 3 }).daily === 30 && L.normCfg({ daily: 9999 }).daily === 30 && L.normCfg({ daily: '60' }).daily === 60, 'the daily goal is a number of minutes between 5 and 480');
+}
+// activity log: old entries keep working
+{
+  ok(L.logKind({ k: 'exam/x' }) === 'exam' && L.logKind({ k: 'q:t21' }) === 'quiz' && L.logKind({ k: 'ex1/2' }) === 'ex' && L.logKind({ ty: 'theory', k: 'x' }) === 'theory', 'entry kinds, also for entries written before the type existed');
+  ok(L.logMinutes({ m: 12 }) === 12 && L.logMinutes({}) === 10 && L.logMinutes({ m: 10, sec: 300 }) === 5 && L.logMinutes({ m: 10, sec: 99999 }) === 20, 'minutes of an entry: measured, capped at twice the estimate, else the estimate');
+  const t = L.dayTotals([{ m: 10, xp: 3 }, { m: 10, xp: 2.5, sec: 120 }, { ty: 'skip', xp: 0 }]);
+  ok(t.n === 2 && t.xp === 5.5 && Math.round(t.min) === 12 && t.timed === 1, 'day totals ignore skipped steps');
+}
+// plan for today
+{
+  const steps = [10, 10, 15, 15, 20].map((m, i) => ({ id: 's' + i, min: m })), due = [{ id: 'r1', min: 10 }, { id: 'r2', min: 10 }, { id: 'r3', min: 10 }];
+  const log = (m) => [{ t: '2026-01-02', m: m }];
+  let p = L.dailyPlan({ goal: 30, today: '2026-01-02', log: [], due: due, steps: steps });
+  ok(!p.met && p.reviews.length === 1 && p.steps.length === 2 && p.min === 30, 'a 30 minute goal: one review (at most 40%) and steps up to the goal');
+  p = L.dailyPlan({ goal: 60, today: '2026-01-02', log: [], due: due, steps: steps });
+  ok(p.reviews.length === 2 && p.min >= 60 && p.min < 60 + 20, 'a 60 minute goal: more reviews, and the plan covers the goal without going far beyond');
+  p = L.dailyPlan({ goal: 30, today: '2026-01-02', log: log(20), due: due, steps: steps });
+  ok(p.done === 20 && p.left === 10 && p.min >= 10 && p.min <= 30, 'what was done today counts towards the goal');
+  p = L.dailyPlan({ goal: 30, today: '2026-01-02', log: log(35), due: due, steps: steps });
+  ok(p.met && !p.reviews.length && !p.steps.length, 'goal reached: nothing more is planned');
+  p = L.dailyPlan({ goal: 30, today: '2026-01-02', log: [{ t: '2026-01-01', m: 99 }], due: [], steps: steps });
+  ok(p.done === 0 && p.min >= 30 && p.steps.length === 3, 'yesterday does not count');
+  p = L.dailyPlan({ goal: 30, today: '2026-01-02', log: [], due: [{ id: 'r', min: 45 }], steps: [] });
+  ok(p.reviews.length === 1, 'a first review is always planned, even if it is longer than the goal');
+  p = L.dailyPlan({ goal: 15, today: '2026-01-02', log: [], due: [], steps: [] });
+  ok(!p.met && !p.steps.length, 'nothing left to plan is not the same as a goal reached');
+  // the plan does not grow while the day goes on: finishing a step never adds more than the time left
+  let planMin = L.dailyPlan({ goal: 45, today: '2026-01-02', log: [], due: [], steps: steps }).min, l2 = [];
+  for (let i = 0; i < 3; i++) { l2.push({ t: '2026-01-02', m: steps[i].min }); const q = L.dailyPlan({ goal: 45, today: '2026-01-02', log: l2, due: [], steps: steps.slice(i + 1) }); ok(q.met || q.min < 45 + 20, 'plan stays within the goal as steps are completed'); }
+}
+// exam XP: hints and solutions seen while sitting the exam cost like in the exercises
+{
+  const ids = ['a', 'b'], pts = { a: 5, b: 5 }, sc = { a: 5, b: 5 };
+  ok(L.examXp(ids, sc, pts, {}) === 20, 'full marks, no help: 20 XP');
+  ok(L.examXp(ids, sc, pts, { a: { hint: true } }) === 17.5, 'a hint costs 25% of that exercise\'s share');
+  ok(L.examXp(ids, sc, pts, { a: { sol: true } }) === 12.5 && L.examXp(ids, sc, pts, { a: { hint: true, sol: true } }) === 12.5, 'a solution costs 75% of that exercise\'s share, and an exercise never loses more than that');
+  ok(L.examXp(ids, { a: 0, b: 0 }, pts, {}) === 0 && L.examXp([], {}, {}, {}) === 0, 'nothing obtained: 0 XP, no division by zero');
+}
 console.log(fails ? fails + ' FAILURES' : 'logic checks passed');
 process.exit(fails ? 1 : 0);

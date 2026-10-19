@@ -229,5 +229,75 @@ L.fmtMin = function (m) {
   return h + ' h' + (r ? ' ' + (r < 10 ? '0' : '') + r + ' min' : '');
 };
 
+/* ---------- settings kept with the progress ----------
+   They live inside the progress, so a shared progress file carries them to the other profiles too. Anything missing or invalid gets its default. */
+L.DAILY = [15, 30, 45, 60, 90, 120];
+L.defaultCfg = function () {
+  return {
+    timer: false,     // stopwatch on exercises and quick checks
+    extimer: true,    // clock in exams: countdown with the time the exam gives
+    exauto: false,    // the exam ends by itself when the time is up
+    exhints: false,   // hints while sitting an exam
+    exans: false,     // solutions while sitting an exam
+    daily: 30         // minutes of study a day
+  };
+};
+L.normCfg = function (c) {
+  var d = L.defaultCfg(); c = c && typeof c === 'object' ? c : {};
+  Object.keys(d).forEach(function (k) {
+    if (typeof d[k] === 'boolean') { if (typeof c[k] === 'boolean') d[k] = c[k]; }
+    else { var n = Math.round(+c[k]); if (n >= 5 && n <= 480) d[k] = n; }
+  });
+  return d;
+};
+
+/* ---------- activity log ----------
+   Entries: { t: 'YYYY-MM-DD', at: ms, ty: ex|quiz|exam|theory|skip, k: id, label, r?: 0-2, xp, m: estimated minutes, sec?: seconds (stopwatch on), help?: n }.
+   Older entries only have t, k, label, r and xp. */
+L.logKind = function (l) {
+  if (l.ty) return l.ty;
+  var k = String(l.k || '');
+  return k.indexOf('exam/') === 0 ? 'exam' : k.indexOf('q:') === 0 ? 'quiz' : k.indexOf('t:') === 0 ? 'theory' : 'ex';
+};
+/* Minutes an entry counts for: the time measured when there is one (at most twice the estimate, so a forgotten tab does not count for hours), else the estimate. */
+L.logMinutes = function (l) {
+  var est = +l.m || 10;
+  return l.sec > 0 ? Math.min(l.sec / 60, 2 * est) : est;
+};
+L.dayTotals = function (entries) {
+  var t = { n: 0, xp: 0, min: 0, sec: 0, timed: 0 };
+  entries.forEach(function (l) { if (l.ty === 'skip') return; t.n++; t.xp += +l.xp || 0; t.min += L.logMinutes(l); if (l.sec > 0) { t.sec += l.sec; t.timed++; } });
+  t.xp = Math.round(t.xp * 10) / 10;
+  return t;
+};
+
+/* ---------- plan for today ----------
+   o = { goal: minutes, today: 'YYYY-MM-DD', log, due: [{ id, min }] reviews due, steps: [step with .min] next undone steps of the route, in order }.
+   What was already done today counts towards the goal. The rest is filled with a few reviews (at most ~40%, at least one) and then the next
+   steps of the route until the time is covered. When the goal is reached the plan is empty (met). */
+L.dailyPlan = function (o) {
+  var done = 0, n = 0;
+  (o.log || []).forEach(function (l) { if (l.t === o.today && l.ty !== 'skip') { done += L.logMinutes(l); n++; } });
+  done = Math.round(done);
+  var left = o.goal - done;
+  if (left <= 0) return { goal: o.goal, done: done, n: n, left: 0, met: true, reviews: [], steps: [], min: 0 };
+  var reviews = [], steps = [], used = 0, revCap = left * 0.4;
+  (o.due || []).forEach(function (d) { if (!reviews.length || used + d.min <= revCap) { reviews.push(d); used += d.min; } });
+  (o.steps || []).forEach(function (s) { if (used < left) { steps.push(s); used += s.min || 0; } });
+  return { goal: o.goal, done: done, n: n, left: left, met: false, reviews: reviews, steps: steps, min: used };
+};
+
+/* ---------- exams ----------
+   XP of a sitting: up to 20, in proportion to the points obtained. Help used while sitting costs like in the exercises: a hint 25%, a solution 75% of that exercise's share. */
+L.HELP_COST = { hint: 1, sol: 3 };
+L.examXp = function (ids, scores, points, help) {
+  var got = 0, mx = 0;
+  ids.forEach(function (id) {
+    var h = help && help[id] ? (help[id].hint ? L.HELP_COST.hint : 0) + (help[id].sol ? L.HELP_COST.sol : 0) : 0;
+    got += (scores[id] || 0) * Math.max(0.25, 1 - 0.25 * h); mx += points[id];
+  });
+  return mx ? Math.round(got / mx * 20 * 10) / 10 : 0;
+};
+
 if (typeof module !== 'undefined' && module.exports) module.exports = L; else root.DYAA = L;
 })(typeof window !== 'undefined' ? window : this);

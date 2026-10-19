@@ -10,7 +10,7 @@ function ok(c, m) { if (!c) { fails++; console.log('FAIL:', m); } }
 
 const root = { dataset: {}, style: { props: {}, setProperty(k, v) { this.props[k] = v; }, removeProperty(k) { delete this.props[k]; } } };
 const els = { '#app': { innerHTML: '' }, '#stats': { innerHTML: '' }, '#sc': { value: '1' }, '#io': { textContent: '' },
-  '#settings-pop': { innerHTML: '', hidden: true, querySelector: () => null }, '#settings': { setAttribute() {}, focus() {} }, '#logo': { innerHTML: '' } };
+  '#settings-pop': { innerHTML: '', hidden: true, querySelector: () => null }, '#settings': { setAttribute() {}, focus() {} }, '#logo': { innerHTML: '' }, '#tm': { textContent: '', style: {} }, '#sw': { textContent: '' } };
 const handlers = {};
 const store = {};
 let hash = '#/hoy';
@@ -194,7 +194,7 @@ if (hasExams) {
 // time estimates are shown on the route, in lists, on the exercise page and in the theory sidebar
 go('#/ruta'); ok(/~\d+ min/.test(app()) && /quedan ~/.test(app()) && /estimados/.test(app()), 'Ruta shows estimated times and time left');
 ok(/Tiempo estimado de la etapa: ~/.test(app()) && /class="sub">Lecci&oacute;n 1\. [^<]*<span class="t">&middot; ~/.test(app()), 'stages and groups show their total time');
-go('#/hoy'); ok(/Estos \d+ pasos: ~/.test(app()) && /en toda la ruta/.test(app()), 'Hoy shows the time of the next steps and of the whole route');
+go('#/hoy'); ok((/Todo el plan de hoy: ~/.test(app()) || /Meta cumplida/.test(app())) && /quedan ~[^<]* en toda la ruta/.test(app()), 'Hoy shows the time of the plan and of the whole route');
 // figures from the slides: block figures, inline figures and the alt text that stands in if a file is missing
 go('#/teoria/t1_intro_algoritmia'); ok(/<figure class="fig"><img class="fig" src="img\/t1-p\d+\.png" alt="Figura: [^"]+" loading="lazy"><\/figure>/.test(app()) && !/\{\{fig/.test(app()), 'theory renders slide figures with alt text');
 go('#/teoria/t7_algoritmos_voraces'); ok(/hallar arm[^<]*(<[^>]+>)*\s*<img class="fig" src="img\/t7-p48\.png"/.test(app()) || /<img class="fig" src="img\/t7-p48\.png"/.test(app()), 'an inline figure renders inside its bullet');
@@ -204,7 +204,7 @@ ok(/id="tocq"/.test(app()) && /class="tocbtn"/.test(app()) && /id="totop"/.test(
 ok(/href="#\/teoria\/t3\.2_analisis_alg_recursivos"/.test(app()) && /href="#\/teoria\/t5_divide_y_venceras"/.test(app()), 'previous and next tema links');
 go('#/teoria/t1_intro_algoritmia'); ok(!/&larr; Tema/.test(app().split('class="thead foot"')[0].split('class="thead"')[1] || ''), 'the first tema has no previous link');
 if (hasExams) {
-  go('#/ejercicios'); ok(/~[\d ]+(h|min)[^<]*<\/span>/.test(app()) && /en total\./.test(app()), 'exercise list shows times and the total');
+  go('#/ejercicios'); ok(/~[\d ]+(h|min)[^<]*<\/span>/.test(app()) && / en total/.test(app()), 'exercise list shows times and the total');
   go('#/ejercicios/' + encodeURIComponent(win.STAGE_EX.recursion[0])); ok(/estimados<\/div>/.test(app()) && !/\d+ pts &middot; ~\d+ min<\/div>/.test(app()), 'exercise page shows the estimate, once');
 }
 
@@ -256,16 +256,119 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   ok(/Tema 3\.2\. An&aacute;lisis|Tema 3\.2\. Análisis/.test(app()) && /Tiempo estimado del tema/.test(app()) && stages(app()) === 5, 'by temas: one block per tema (3.2 merges two etapas)');
   ok(/Recurrencias: expansi/.test(app()) && /Recurrencias: m&eacute;todo|Recurrencias: método/.test(app()), 'a tema made of several etapas names each one');
   go('#/progreso'); ok(/Ruta por temas/.test(app()) && /fuera de tu ruta/.test(app()), 'progress lists temas and marks those outside the route');
-  go('#/ejercicios'); ok(/tema: todos/.test(app()), 'exercise filter speaks of temas');
+  go('#/ejercicios'); ok(/<span class="muted">Tema<\/span><select data-f="stage"/.test(app()), 'exercise filter speaks of temas');
   click({ act: 'reset' }); ok(store['dyaa-practice-path'] === 'parcial1' && store['dyaa-practice-org'] === 'temas', 'resetting progress keeps the route preferences');
   click({ act: 'scope', v: 'todo' }); click({ act: 'org', v: 'etapas' });
   go('#/ruta'); ok(stages(app()) === win.STAGES.length && /Etapa 2\. Sumatorios/.test(app()), 'back to the whole course by etapas');
   click({ act: 'settings-close' });
 }
 
+// settings, activity log, stopwatch, daily plan, exam realism, exercise filters
+{
+  const st = () => JSON.parse(store['dyaa-practice-v1']);
+  const change = (target) => (handlers.change || []).forEach(f => f({ target }));
+  // some activity to look at: a reading, a skipped exercise
+  click({ act: 'theorydone', step: firstReading('intro') });
+  const skipStep = PATHX.find(x => x.type === 'ex'); if (skipStep) click({ act: 'skip', step: skipStep.id });
+  const cfgChange = (k, v) => change({ dataset: { cfg: k }, type: typeof v === 'boolean' ? 'checkbox' : 'number', checked: v, value: String(v) });
+  // log
+  ok(st().log.length > 0 && st().log.every(l => l.at > 0 && l.ty && l.t), 'every log entry has a time and a type');
+  ok(st().log.some(l => l.ty === 'theory') && st().log.some(l => l.ty === 'skip'), 'readings and skipped steps are logged too');
+  go('#/registro'); ok(/<h2>Registro<\/h2>/.test(app()) && (app().match(/class="item logrow"/g) || []).length > 0 && /class="logday"/.test(app()), 'the log page lists what was done, by day');
+  ok(/>Hoy</.test(app()) && /\d\d:\d\d/.test(app()), 'with the day and the time of each entry');
+  click({ act: 'logty', v: 'theory' }); ok(!/title="skip"/.test(app()) && /title="theory"/.test(app()), 'the log can be filtered by type');
+  click({ act: 'logty', v: 'exam' }); ok(/Nada de este tipo|title="exam"/.test(app()), 'a type without entries says so');
+  click({ act: 'logty', v: '' });
+  ok(/nav|href="#\/registro"/.test(fs.readFileSync(path.join(APP, 'index.html'), 'utf8')) && /data-tab="registro"/.test(fs.readFileSync(path.join(APP, 'index.html'), 'utf8')), 'Registro has its tab');
+  // settings page
+  go('#/ajustes'); ok(/<h2>Ajustes<\/h2>/.test(app()) && /Meta diaria/.test(app()) && /Simulador de examen/.test(app()) && /Cron&oacute;metro en ejercicios/.test(app()), 'the Ajustes page has study, exam and data settings');
+  ok(st().cfg.timer === false && st().cfg.extimer === true && st().cfg.daily === 30, 'defaults: no stopwatch on exercises, clock in exams, 30 minutes');
+  cfgChange('timer', true); ok(st().cfg.timer === true && /data-cfg="timer" checked/.test(app()), 'the stopwatch can be turned on');
+  cfgChange('daily', 45); ok(st().cfg.daily === 45, 'the daily goal can be typed');
+  click({ act: 'cfgset', k: 'daily', v: '60' }); ok(st().cfg.daily === 60, 'or picked');
+  cfgChange('daily', 2); ok(st().cfg.daily === 30, 'an absurd goal falls back to the default');
+  cfgChange('extimer', false); ok(/data-cfg="exauto" disabled/.test(app()), 'the automatic end needs the clock'); cfgChange('extimer', true);
+  // stopwatch on an exercise: shown only when on, and the time goes to the log
+  const unrated = win.EXAMS.length ? Object.keys(win.STAGE_EX).map(k => win.STAGE_EX[k]).reduce((a, b) => a.concat(b), []).find(k => !(st().ex[k] && st().ex[k].hist.length)) : null;
+  if (unrated) {
+    const RealDate = ctx.Date; let now = 1.8e12;
+    ctx.Date = class extends RealDate { constructor(...a) { super(...(a.length ? a : [now])); } static now() { return now; } };
+    go('#/ejercicios/' + encodeURIComponent(unrated)); ok(/id="sw"/.test(app()), 'the stopwatch shows on an exercise when it is on');
+    now += 95000; click({ act: 'rate', r: '2' });
+    const e1 = st().log[st().log.length - 1];
+    ok(e1.ty === 'ex' && e1.sec === 95 && e1.m > 0 && e1.xp > 0, 'the time taken is logged with the exercise: ' + JSON.stringify(e1));
+    ok(/>1:35</.test(app()), 'and stays frozen on screen once rated');
+    go('#/registro'); ok(/&#9201; 1:35/.test(app()) && /medido 1:35/.test(app()), 'the log shows the measured time, also in the day total');
+    ctx.Date = RealDate;
+    cfgChange('timer', false);
+    const un2 = Object.keys(win.STAGE_EX).map(k => win.STAGE_EX[k]).reduce((a, b) => a.concat(b), []).find(k => !(st().ex[k] && st().ex[k].hist.length));
+    go('#/ejercicios/' + encodeURIComponent(un2)); ok(!/id="sw"/.test(app()), 'no stopwatch when it is off');
+    click({ act: 'rate', r: '1' }); ok(!('sec' in st().log[st().log.length - 1]), 'and no time is stored');
+  }
+  // daily plan
+  cfgChange('daily', 480); go('#/hoy'); ok(/Tu meta de hoy: 480 min/.test(app()) && /Quedan \d+ min/.test(app()) && !/Meta cumplida/.test(app()), 'Hoy shows the daily goal and what is left');
+  const big = (app().match(/class="item step/g) || []).length;
+  cfgChange('daily', 15); go('#/hoy'); ok(/Tu meta de hoy: 15 min/.test(app()), 'the goal follows the setting');
+  const doneMin = Math.round(st().log.filter(l => l.t === L.dstr() && l.ty !== 'skip').reduce((t, l) => t + L.logMinutes(l), 0));
+  ok(doneMin >= 15 ? /Meta cumplida/.test(app()) : !/Meta cumplida/.test(app()), 'the goal is met when what was done today covers it (' + doneMin + ' min done)');
+  cfgChange('daily', 480); go('#/hoy'); ok((app().match(/class="item step/g) || []).length >= big, 'a bigger goal never plans less');
+  cfgChange('daily', 30);
+  // exercise filters
+  go('#/ejercicios'); ok(/class="chip on" data-act="fset" data-f="status" data-v=""/.test(app()) && !/Quitar filtros/.test(app()), 'filters start cleared');
+  click({ act: 'fset', f: 'status', v: 'new' }); ok(/class="chip on" data-act="fset" data-f="status" data-v="new"/.test(app()) && /Quitar filtros \(1\)/.test(app()), 'a chip filters and says how many filters are on');
+  change({ dataset: { f: 'kind' }, value: 'analisis' });
+  click({ act: 'fclear' }); ok(!/Quitar filtros/.test(app()), 'all filters can be cleared at once');
+  // exams: individual access and realism
+  if (hasExams) {
+    const ex = win.EXAMS.find(e => e.kind === 'diseno'), key = ex.id + '/' + ex.exercises[0].id;
+    go('#/examen'); ok(/class="exparts"/.test(app()) && app().indexOf('href="#/ejercicios/' + encodeURIComponent(key) + '"') >= 0, 'each exam lists its exercises to do one by one');
+    ok(/Hacer entero|Repetir entero/.test(app()) && /Realismo/.test(app()), 'and offers the whole exam, with the realism in force');
+    go('#/ejercicios/' + encodeURIComponent(key)); ok(/data-act="hint"/.test(app()), 'an exercise of an exam has hints and solution like any other');
+    // default realism: no help while sitting
+    click({ act: 'exstart', id: ex.id }); go('#/examen');
+    ok(/id="tm"/.test(app()) && !/data-act="exhint"/.test(app()) && !/data-act="exsol"/.test(app()), 'by default there is a clock and no help during the exam');
+    click({ act: 'exquit' });
+    // relaxed: help costs XP
+    click({ act: 'expreset', v: 'relax' }); ok(st().cfg.exhints && st().cfg.exans && !st().cfg.exauto, 'the relaxed preset turns the help on');
+    go('#/ajustes'); ok(/choice on" data-act="expreset" data-v="relax"/.test(app()), 'and shows which preset is active');
+    click({ act: 'exstart', id: ex.id }); go('#/examen');
+    ok((app().match(/data-act="exhint"/g) || []).length === ex.exercises.length && (app().match(/data-act="exsol"/g) || []).length === ex.exercises.length, 'every exercise has its own hint and solution buttons');
+    const first = ex.exercises[0].id;
+    click({ act: 'exhint', id: first }); ok(/class="help"><b>Pista\./.test(app()), 'a hint shows under that exercise');
+    click({ act: 'exsol', id: ex.exercises[1] ? ex.exercises[1].id : first }); ok(/class="help">(<b>Soluci|Sin soluci)/.test(app()), 'and so does a solution');
+    click({ act: 'exend' });
+    const maxXp = 20;
+    // the box with the mark is read from #sc: give each exercise its full points
+    const realSc = els['#sc'];
+    ex.exercises.forEach((e) => { els['#sc'] = { value: String(win.DYAA.examPts(ex)[e.id]) }; click({ act: 'exnext' }); });
+    els['#sc'] = realSc;
+    const done = st().log[st().log.length - 1], xpGot = done.xp;
+    ok(done.ty === 'exam' && done.help === (ex.exercises.length > 1 ? 2 : 1) && xpGot < maxXp && xpGot > 0, 'help during the exam lowers the XP and is logged: ' + JSON.stringify(done));
+    ok(/con ayudas en \d/.test(app()) && /Nota: 10\.0/.test(app()), 'the result says so, and the mark itself is left alone');
+    click({ act: 'exquit' }, 'A');
+    // strict: ends by itself when the time is up
+    click({ act: 'expreset', v: 'real' }); ok(st().cfg.exauto && !st().cfg.exhints, 'the real exam preset turns the help off and the automatic end on');
+    let tick = null; const RealSetInterval = ctx.setInterval; ctx.setInterval = (fn) => { tick = fn; return 1; };
+    const RealDate2 = ctx.Date; let now2 = 1.9e12; ctx.Date = class extends RealDate2 { constructor(...a) { super(...(a.length ? a : [now2])); } static now() { return now2; } };
+    click({ act: 'exstart', id: ex.id }); go('#/examen');
+    ok(tick && /id="tm"/.test(app()), 'the clock ticks during the exam');
+    now2 += 60000; tick(); ok(/id="tm"/.test(app()) && !/Tu nota/.test(app()), 'still sitting while there is time');
+    now2 += win.DYAA.examMin(ex) * 60000; tick(); ok(/Tu nota/.test(app()), 'the exam passes to marking by itself when the time is up');
+    click({ act: 'exquit' });
+    cfgChange('extimer', false); click({ act: 'exstart', id: ex.id }); go('#/examen');
+    ok(!/id="tm"/.test(app()) && /Sin l&iacute;mite de tiempo/.test(app()), 'without the clock there is no limit');
+    click({ act: 'exquit' });
+    ctx.Date = RealDate2; ctx.setInterval = RealSetInterval;
+    cfgChange('extimer', true);
+  }
+  cfgChange('timer', true);   // the reset below must keep it
+}
+
 // export/import round trip keeps state
 const before = store['dyaa-practice-v1'];
 click({ act: 'reset' }); ok(JSON.parse(store['dyaa-practice-v1']).xp === 0, 'reset clears progress');
+ok(JSON.parse(store['dyaa-practice-v1']).cfg.timer === true && JSON.parse(store['dyaa-practice-v1']).log.length === 0, 'but keeps the settings');
+{ const c = (handlers.change || []); c.forEach(f => f({ target: { dataset: { cfg: 'timer' }, type: 'checkbox', checked: false } })); }
 
 // progress shared through a file, with a fake File System Access API and a tiny in-memory IndexedDB
 const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
@@ -289,9 +392,11 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
   click({ act: 'theorydone', step: firstReading('asintotica') }); await wait(450);
   ok(JSON.parse(file.text).theory[firstReading('asintotica')] === true, 'every change is written to the shared file');
   // the other profile moves on: this one picks it up when the tab gets the focus
-  const other = JSON.parse(file.text); other.theory[firstReading('bucles')] = true; other.theory['t:sumatorios:0'] = true; other.ver = 1; other.xp = 77; other.updated = Date.now() + 5000; file.text = JSON.stringify(other);   // progress saved by an older version: numbered readings
+  click({ act: 'cfgset', k: 'daily', v: '45' });
+  const other = JSON.parse(file.text); delete other.cfg; other.theory[firstReading('bucles')] = true; other.theory['t:sumatorios:0'] = true; other.ver = 1; other.xp = 77; other.updated = Date.now() + 5000; file.text = JSON.stringify(other);   // progress saved by an older version: numbered readings
   (handlers.focus || []).forEach(f => f()); await wait(60);
   ok(local().xp === 77 && local().theory[firstReading('bucles')] === true, 'a newer file is adopted on focus');
+  ok(local().cfg.daily === 45, 'a shared file from before the settings existed does not reset them');
   ok(local().theory['t:t21-sumas-basicas'] === true && !('t:sumatorios:0' in local().theory) && local().ver === 2, 'old numbered readings are moved to the named reading that contains their section');
   ok(JSON.parse(store['dyaa-practice-backup']).xp !== 77, 'the profile\'s own progress is kept as a backup before it is replaced');
   // both changed: the user chooses (here: keep this profile, which overwrites the file)

@@ -11,19 +11,23 @@ var $ = function (s) { return document.querySelector(s); };
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 function today() { return L.dstr(); }
 function fmt(sec) { sec = Math.max(0, Math.round(sec)); return Math.floor(sec / 60) + ':' + ('0' + sec % 60).slice(-2); }
+/* A length of time read by a person: 2:30, 21:40, 1 h 20 min. */
+function dur(sec) { sec = Math.max(0, Math.round(sec)); if (sec < 3600) return fmt(sec); var m = Math.round(sec / 60); return Math.floor(m / 60) + ' h ' + ('0' + m % 60).slice(-2) + ' min'; }
 function enc(s) { return encodeURIComponent(s); }
 
 /* ---------- state ---------- */
-function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, quiz: {}, ver: 2, updated: 0 }; }
+function blank() { return { ex: {}, xp: 0, days: [], log: [], theory: {}, skip: {}, exams: {}, bonus: {}, quiz: {}, ver: 2, updated: 0, cfg: L.defaultCfg() }; }
 function norm(o) {
   var s = blank();
   if (o && typeof o === 'object') {
     s.ex = o.ex || {}; s.xp = +o.xp || 0; s.days = o.days || []; s.log = o.log || [];
-    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {}; s.quiz = o.quiz || {}; s.ver = +o.ver || 1; s.updated = +o.updated || 0;
+    s.theory = o.theory || {}; s.skip = o.skip || {}; s.exams = o.exams || {}; s.bonus = o.bonus || {}; s.quiz = o.quiz || {}; s.ver = +o.ver || 1; s.updated = +o.updated || 0; s.cfg = L.normCfg(o.cfg);
   }
   return s;
 }
 var S = blank();
+/* Progress coming from outside (an import, the shared file): its settings are kept only if it has some, so an older file does not reset them. */
+function adopt(o) { var keep = S.cfg, n = norm(o); if (!(o && o.cfg)) n.cfg = keep; return n; }
 function load() { try { S = norm(JSON.parse(localStorage.getItem(KEY))); } catch (e) { S = blank(); } }
 function store() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
 function save() { S.updated = Math.max(Date.now(), S.updated + 1); store(); syncSoon(); }   // never older than what was adopted from the shared file, even if the other machine's clock runs ahead
@@ -74,7 +78,7 @@ function syncRun(ask) {
       if (plan === 'conflict') plan = confirm('El progreso de este perfil (' + S.xp + ' XP) y el del archivo compartido (' + (+remote.xp || 0) + ' XP) han cambiado por separado.\n\nAceptar: usar el del archivo (se guarda una copia del de este perfil).\nCancelar: usar el de este perfil y sobrescribir el archivo.') ? 'pull' : 'push';
       if (plan === 'pull') {
         lsSet(SYK.bak, JSON.stringify(S));
-        S = norm(remote); migrate(); store(); lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = '';
+        S = adopt(remote); migrate(); store(); lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = '';
         return true;
       }
       if (plan === 'push') return syncWrite().then(function () { return false; });
@@ -176,6 +180,28 @@ function progress(stage) { return L.stageProgress(PATH, S, EXAMS, stage); }
 function gprog(g) { return L.groupProgress(PATH, S, EXAMS, g); }
 function doneWord() { return ORG === 'temas' ? '&iexcl;Bloque completado!' : '&iexcl;Etapa completada!'; }
 function touchDay() { var t = today(); if (S.days.indexOf(t) < 0) S.days.push(t); }
+/* Activity log (see L.logKind): what was done, when, how long it took if the stopwatch was on. */
+var LOGMAX = 2000;
+function logAdd(ty, k, label, r, xp, more) {
+  var e = { t: today(), at: Date.now(), ty: ty, k: k, label: label, xp: xp || 0 };
+  if (r != null) e.r = r;
+  if (more) Object.keys(more).forEach(function (f) { if (more[f] != null) e[f] = more[f]; });
+  S.log.push(e);
+  while (S.log.length > LOGMAX) S.log.shift();
+}
+function stepPlain(st) {
+  if (st.type === 'ex') { var a = byKey[st.key]; return a.exam.title + ' \u00b7 ' + (a.e.title || 'ejercicio ' + (a.e.n != null ? a.e.n : a.e.id)); }
+  return (st.type === 'theory' ? 'Lectura: ' : st.type === 'quiz' ? 'Comprobaci\u00f3n: ' : '') + st.label;
+}
+/* Stopwatch of the exercise or quick check on screen (settings: timer). It only counts while the tab is visible and keeps its value across re-renders. */
+var TM = null;
+function tmStart(id) { if (!TM || TM.id !== id) TM = { id: id, ms: 0, since: document.hidden ? null : Date.now() }; }
+function tmMs() { return TM ? TM.ms + (TM.since ? Date.now() - TM.since : 0) : 0; }
+function tmPause() { if (TM && TM.since) { TM.ms += Date.now() - TM.since; TM.since = null; } }
+function tmResume() { if (TM && !TM.since && !TM.stopped) TM.since = Date.now(); }
+function tmStop() { tmPause(); if (TM) TM.stopped = true; }
+function tmSec(id) { return S.cfg.timer && TM && TM.id === id ? Math.round(tmMs() / 1000) : null; }
+function tmBox() { return S.cfg.timer ? ' <span class="swatch" title="Tiempo en este ejercicio (Ajustes: cron&oacute;metro)">&#9201; <span class="timer" id="sw">' + fmt(tmMs() / 1000) + '</span></span>' : ''; }
 
 var NOTE = '';
 /* Awards the one-time stage bonus for every stage that is now fully done. Call after any change of progress. */
@@ -194,8 +220,8 @@ function rate(key, r, hints) {
   var xp = L.xpFor(pts(a), hints, r);
   S.ex[key] = L.applyRating(S.ex[key], r, hints, xp, t);
   S.xp = Math.round((S.xp + xp) * 10) / 10; touchDay();
-  S.log.push({ t: t, k: key, label: a.exam.title + ' · ' + a.e.title, r: r, xp: xp });
-  if (S.log.length > 300) S.log.shift();
+  logAdd('ex', key, a.exam.title + ' · ' + (a.e.title || 'ejercicio ' + (a.e.n != null ? a.e.n : a.e.id)), r, xp, { m: (stepById['e:' + key] || {}).min || L.exMinutes(a.e, a.exam), sec: tmSec(key), help: hints || null });
+  tmStop();
   var got = awardAll();
   save();
   NOTE = '';
@@ -217,6 +243,9 @@ function theoryLinks(sid) {
     var si = LECT[li].sections.findIndex(function (x) { return x.title.indexOf(t.section) >= 0; });
     return '<a href="#/teoria/' + enc(t.lecture) + '/' + Math.max(0, si) + '">' + esc(t.section) + '</a>';
   }).filter(Boolean).join(' · ');
+}
+function skillHint(e) {
+  return 'Habilidad: ' + (e.skills || []).map(function (id) { return esc(skillById[id] ? skillById[id].label : id) + ' (' + (theoryLinks(id) || 'sin teor&iacute;a') + ')'; }).join('; ');
 }
 function exTitle(a) {
   var n = a.e.n != null ? a.e.n : a.e.id, t = a.e.title || '', same = !t || t === 'Ejercicio ' + n;
@@ -258,21 +287,23 @@ function nextCard(extra) {
 }
 
 function vHoy() {
-  var t = today(), h = '<h2>Misi&oacute;n de hoy</h2>' + missingBanner();
+  var t = today(), C = S.cfg, h = '<h2>Misi&oacute;n de hoy</h2>' + missingBanner();
   var lv = level(), lo = (lv - 1) * (lv - 1) * 10, hi = lv * lv * 10, pct = Math.round((S.xp - lo) / (hi - lo) * 100);
   h += '<div class="card row"><span>Nivel <b>' + lv + '</b></span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + S.xp + ' / ' + hi + ' XP</span><span class="streakline">' + streakHtml() + '<span class="muted">d&iacute;as de racha</span></span></div>';
   var due = L.dueKeys(ALL.map(function (a) { return a.key; }), S, t);
-  if (due.length) {
+  var plan = L.dailyPlan({ goal: C.daily, today: t, log: S.log, due: due.map(function (k) { return { id: k, min: (stepById['e:' + k] || {}).min || 15 }; }), steps: EXAMS.length || LECT.length ? nextSteps(80) : [] });
+  var gp = Math.min(100, Math.round(plan.done / plan.goal * 100));
+  h += '<div class="card"><div class="row"><b>Tu meta de hoy: ' + plan.goal + ' min</b><span class="grow"></span><a href="#/ajustes">Cambiar</a></div><div class="row"><div class="bar"><i style="width:' + gp + '%"></i></div><span class="muted">' + plan.done + ' de ' + plan.goal + ' min' + (plan.n ? ' &middot; ' + plan.n + (plan.n === 1 ? ' tarea hecha' : ' tareas hechas') : '') + '</span></div>' +
+    (plan.met ? '<p>' + flame('sm') + ' <b>&iexcl;Meta cumplida!</b> Todo lo que hagas ahora es de propina.</p>' : '<p class="muted">Quedan ' + plan.left + ' min. Abajo tienes lo que te propongo para llenarlos' + (plan.min ? ' (' + mins(plan.min) + ')' : '') + '.</p>') + '</div>';
+  if (plan.reviews.length) {
     h += '<h3>Repaso pendiente (' + due.length + ')</h3>';
-    due.slice(0, 3).forEach(function (k) { h += exRow(byKey[k]); });
+    plan.reviews.forEach(function (r) { h += exRow(byKey[r.id]); });
+    if (due.length > plan.reviews.length) h += '<p class="muted">Y ' + (due.length - plan.reviews.length) + ' m&aacute;s que caben otro d&iacute;a (<a href="#/ejercicios">Ejercicios</a>, estado &laquo;repasar hoy&raquo;).</p>';
   }
   if (EXAMS.length || LECT.length) {
-    h += '<h3>Ruta</h3>' + nextCard();
-    var more = nextSteps(4).slice(1);
-    more.forEach(function (st) { h += stepRow(st); });
-    var four = nextSteps(4), all = L.pathMinutes(ACTIVE, S, EXAMS);
-    if (four.length) h += '<p class="muted">Estos ' + four.length + (four.length === 1 ? ' paso: ' : ' pasos: ') + mins(minsOf(four)) + ' &middot; quedan ' + mins(all.left) + ' en toda la ruta.</p>';
-    h += '<p><a href="#/ruta">Ver toda la ruta &rarr;</a></p>';
+    h += '<h3>' + (plan.met ? 'Si quieres seguir' : 'Ruta') + '</h3>' + nextCard();
+    plan.steps.slice(1).forEach(function (st) { h += stepRow(st); });
+    h += '<p class="muted">' + (plan.min ? 'Todo el plan de hoy: ' + mins(plan.min) + ' &middot; ' : '') + 'quedan ' + mins(L.pathMinutes(ACTIVE, S, EXAMS).left) + ' en toda la ruta.</p><p><a href="#/ruta">Ver toda la ruta &rarr;</a></p>';
   }
   return h;
 }
@@ -315,12 +346,13 @@ function vRoad() {
 
 function vList() {
   var h = '<h2>Ejercicios</h2>' + missingBanner();
-  var FL = { stage: ORG === 'temas' ? 'tema' : 'etapa', exam: 'examen', skill: 'habilidad', kind: 'tipo', status: 'estado' };
-  function sel(name, opts) { return '<select data-f="' + name + '"><option value="">' + FL[name] + ': todos</option>' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (F[name] === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select>'; }
-  h += '<div class="row card">' + sel('stage', GROUPS_ALL.map(function (g) { return [g.id, g.label]; })) + sel('exam', EXAMS.map(function (e) { return [e.id, e.title]; })) + sel('skill', SK.map(function (s) { return [s.id, s.label]; })) +
-    sel('kind', [['analisis', 'análisis'], ['diseno', 'diseño'], ['ejs', 'adicionales']]) +
-    sel('status', [['new', 'nuevo'], ['due', 'repasar hoy'], ['0', 'Fallé'], ['1', 'Dudoso'], ['2', 'Dominado']]) + '</div>';
-  var t = today();
+  function sel(name, label, opts) {
+    return '<label class="fsel"><span class="muted">' + label + '</span><select data-f="' + name + '"' + (F[name] ? ' class="set"' : '') + '><option value="">Todos</option>' + opts.map(function (o) { return '<option value="' + esc(o[0]) + '"' + (F[name] === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>'; }).join('') + '</select></label>';
+  }
+  function chips(name, label, opts) {
+    return '<div class="fchips"><span class="muted">' + label + '</span><div class="chips" role="group" aria-label="' + label + '">' + [['', 'Todos']].concat(opts).map(function (o) { return '<button type="button" class="chip' + (F[name] === o[0] ? ' on' : '') + '" data-act="fset" data-f="' + name + '" data-v="' + esc(o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div></div>';
+  }
+  var t = today(), active = Object.keys(F).filter(function (k) { return F[k]; }).length;
   var list = ALL.filter(function (a) {
     if (F.stage && (groupOfStage[a.e.stage] || {}).id !== F.stage) return false;
     if (F.exam && a.exam.id !== F.exam) return false;
@@ -333,8 +365,11 @@ function vList() {
     return true;
   });
   list.sort(function (a, b) { var x = stepById['e:' + a.key], y = stepById['e:' + b.key]; return (x ? x.i : 1e9) - (y ? y.i : 1e9); });
-  h += '<p class="muted">' + list.length + ' ejercicios, en orden de ruta &middot; ' + mins(list.reduce(function (t, a) { return t + ((stepById['e:' + a.key] || {}).min || 0); }, 0)) + ' en total.</p>';
-  h += list.map(exRow).join('') || '<p class="muted">Sin resultados.</p>';
+  h += '<div class="card filters"><div class="fgrid">' + sel('stage', ORG === 'temas' ? 'Tema' : 'Etapa', GROUPS_ALL.map(function (g) { return [g.id, g.label]; })) + sel('exam', 'Examen', EXAMS.map(function (e) { return [e.id, e.title]; })) + sel('skill', 'Habilidad', SK.map(function (s) { return [s.id, s.label]; })) + '</div>' +
+    chips('kind', 'Tipo', [['analisis', 'An&aacute;lisis'], ['diseno', 'Dise&ntilde;o'], ['ejs', 'Adicionales']]) +
+    chips('status', 'Estado', [['new', 'Nuevo'], ['due', 'Repasar hoy'], ['0', 'Fall&eacute;'], ['1', 'Dudoso'], ['2', 'Dominado']]) +
+    '<div class="frow"><span class="muted"><b>' + list.length + '</b> ' + (list.length === 1 ? 'ejercicio' : 'ejercicios') + ', en orden de ruta &middot; ' + mins(list.reduce(function (t, a) { return t + ((stepById['e:' + a.key] || {}).min || 0); }, 0)) + ' en total</span>' + (active ? '<button type="button" class="linkbtn" data-act="fclear">Quitar filtros (' + active + ')</button>' : '') + '</div></div>';
+  h += list.map(exRow).join('') || '<p class="muted">Ning&uacute;n ejercicio cumple esos filtros.</p>';
   return h;
 }
 
@@ -342,6 +377,7 @@ function vDetail(key) {
   var a = byKey[key];
   if (!a) return '<p>Ejercicio no encontrado. <a href="#/ejercicios">Volver</a></p>';
   if (V.key !== key) V = { key: key, hints: 0, self: false, done: null };
+  if (S.cfg.timer) tmStart(key);
   var e = a.e, sol = e.solution, hasSol = sol != null && String(sol).trim() !== '', st = stepById['e:' + key], gp = st && groupOfStage[st.stage];
   var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a></p>';
   if (gp) {
@@ -349,10 +385,10 @@ function vDetail(key) {
     h += '<p class="muted">' + esc(gp.label) + ' &middot; ejercicio ' + (inG.indexOf(st) + 1) + ' de ' + inG.length + (inScope[st.id] ? '' : ' &middot; fuera de tu ruta (' + esc(SCOPE.title) + ')') + '</p>';
   }
   h += '<div class="card"><h2>' + exTitle(a) + '</h2>' +
-    '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados</div>' + mdRender(e.statement) + '</div>';
+    '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados' + tmBox() + '</div>' + mdRender(e.statement) + '</div>';
   /* A proposed (unofficial) solution is written in steps ("**Paso 1.** ..."): they are shown one at a time. */
   var pieces = e.own && hasSol ? String(sol).split(/\n(?=\*\*Paso \d+)/) : null;
-  if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> Habilidad: ' + (e.skills || []).map(function (id) { return esc(skillById[id] ? skillById[id].label : id) + ' (' + (theoryLinks(id) || 'sin teor&iacute;a') + ')'; }).join('; ') + sheetLink(gp) + '</div>';
+  if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> ' + skillHint(e) + sheetLink(gp) + '</div>';
   if (pieces) {
     var shown = Math.min(Math.max(V.hints - 1, 0), pieces.length);
     if (shown) h += '<div class="card"><b>Soluci&oacute;n propuesta, paso a paso.</b> <span class="muted">No es oficial: el ejercicio no trae soluci&oacute;n, as&iacute; que la he escrito yo. Comp&aacute;rala con tus apuntes.</span>' + mdRender(pieces.slice(0, shown).join('\n\n')) + (shown < pieces.length ? '<p class="muted">Quedan ' + (pieces.length - shown) + ' de ' + pieces.length + ' pasos.</p>' : '') + '</div>';
@@ -383,27 +419,55 @@ function examPts(ex) { return L.examPts(ex); }
 function examMin(ex) { return L.examMin(ex); }
 function examSols(ex) { return ex.exercises.filter(function (e) { return e.solution; }).length; }
 
+/* One exam, sat as a whole (timer, optional help, then you mark your own answers), or exercise by exercise like any other exercise. */
+function examHelp(id) { return X.help[id] || (X.help[id] = {}); }
+function examEnd() {
+  if (!X || X.phase !== 'run') return;
+  X.sec = S.cfg.extimer ? Math.round((Date.now() - X.start) / 1000) : null;
+  X.phase = 'review'; X.i = 0;
+}
+function examRow(ex, rec) {
+  var d = S.exams[ex.id], n = ex.exercises.length, done = ex.exercises.filter(function (e) { return last(ex.id + '/' + e.id) != null; }).length;
+  var h = '<div class="card exam"><div class="row exhead"><span class="grow"><b>' + esc(ex.title) + '</b> <span class="muted">' + examMin(ex) + ' min &middot; ' + n + ' ejercicios &middot; ' + examSols(ex) + ' con soluci&oacute;n</span>' +
+    (d ? ' <span class="tag r' + (d.grade >= 7 ? 2 : d.grade >= 4 ? 1 : 0) + '">' + d.grade.toFixed(1) + '/10</span>' : '') + (ex === rec ? ' <span class="tag due">recomendado</span>' : '') + '</span>' +
+    '<button class="btn pri" data-act="exstart" data-id="' + esc(ex.id) + '">' + (d ? 'Repetir entero' : 'Hacer entero') + '</button></div>';
+  h += '<details class="exparts"><summary>Hacerlo por ejercicios <span class="muted">&middot; ' + done + '/' + n + ' hechos, con pistas y soluci&oacute;n como en Ejercicios</span></summary>';
+  ex.exercises.forEach(function (e) {
+    var key = ex.id + '/' + e.id, a = byKey[key], st = stepById['e:' + key];
+    h += '<a class="item" href="#/ejercicios/' + enc(key) + '"><span><b>' + esc((e.n != null ? e.n : e.id) + '. ' + (e.title && e.title !== 'Ejercicio ' + e.n ? e.title : 'Ejercicio')) + '</b> <span class="muted">' + pts(a) + ' pts</span></span><span>' + status(key) + dueTag(key) + minTag(st ? st.min : L.exMinutes(e, ex)) + '</span></a>';
+  });
+  return h + '</details></div>';
+}
+
 function vExam() {
   if (!EXAMS.length) return '<h2>Examen</h2>' + missingBanner();
+  var C = S.cfg;
   if (!X) {
-    var h = '<h2>Simulador de examen</h2><p class="muted">Cualquier examen est&aacute; disponible. Los que tienen soluci&oacute;n oficial se auto-corrigen mejor; el recomendado es el siguiente sin hacer.</p>';
+    var h = '<h2>Ex&aacute;menes</h2><p class="muted">Cualquier examen est&aacute; disponible, entero (como en el aula) o ejercicio a ejercicio. Los que tienen soluci&oacute;n oficial se auto-corrigen mejor; el recomendado es el siguiente sin hacer.</p>';
+    h += '<div class="card row exset"><span class="grow"><b>Realismo</b> <span class="muted">' + (C.extimer ? (C.exauto ? 'con l&iacute;mite de tiempo' : 'con cuenta atr&aacute;s') : 'sin reloj') + ' &middot; pistas: ' + (C.exhints ? 's&iacute;' : 'no') + ' &middot; soluciones: ' + (C.exans ? 's&iacute;' : 'no') + '</span></span><a class="btn" href="#/ajustes">Cambiar en Ajustes</a></div>';
     ['analisis', 'diseno', 'mixto'].forEach(function (kind) {
       var list = EXAMS.filter(function (e) { return e.kind === kind && (e.exercises || []).length; });
       list.sort(function (a, b) { return (!!S.exams[a.id] - !!S.exams[b.id]) || (examSols(b) / b.exercises.length - examSols(a) / a.exercises.length) || (a.id < b.id ? -1 : 1); });
       var rec = list.find(function (e) { return !S.exams[e.id] && examSols(e); }) || list.find(function (e) { return !S.exams[e.id]; });
       if (!list.length) return;
       h += '<h3>' + (kind === 'analisis' ? 'An&aacute;lisis' : kind === 'diseno' ? 'Dise&ntilde;o' : 'Completos (an&aacute;lisis y dise&ntilde;o)') + '</h3>';
-      list.forEach(function (ex) {
-        var d = S.exams[ex.id];
-        h += '<div class="item"><span>' + esc(ex.title) + ' <span class="muted">' + examMin(ex) + ' min &middot; ' + examSols(ex) + '/' + ex.exercises.length + ' con soluci&oacute;n</span>' + (d ? ' <span class="tag r' + (d.grade >= 7 ? 2 : d.grade >= 4 ? 1 : 0) + '">' + d.grade.toFixed(1) + '/10</span>' : '') + (ex === rec ? ' <span class="tag due">recomendado</span>' : '') + '</span><button class="btn pri" data-act="exstart" data-id="' + esc(ex.id) + '">' + (d ? 'Repetir' : 'Empezar') + '</button></div>';
-      });
+      list.forEach(function (ex) { h += examRow(ex, rec); });
     });
     return h;
   }
   var ex = X.ex, hh = '<h2>' + esc(ex.title) + '</h2>';
   if (X.phase === 'run') {
-    hh += '<div class="card row"><span class="timer" id="tm"></span><button class="btn pri" data-act="exend">Terminar</button><button class="btn" data-act="exquit">Abandonar</button></div>';
-    ex.exercises.forEach(function (e) { hh += '<div class="card"><b>' + esc(e.n != null ? e.n : e.id) + '. ' + esc(e.title || '') + '</b> <span class="muted">' + X.p[e.id].toFixed(1) + ' pts</span>' + mdRender(e.statement) + '</div>'; });
+    hh += '<div class="card row">' + (C.extimer ? '<span class="timer" id="tm"></span><span class="muted">de ' + examMin(ex) + ' min' + (C.exauto ? ' &middot; termina solo' : '') + '</span>' : '<span class="muted">Sin l&iacute;mite de tiempo</span>') + '<span class="grow"></span><button class="btn pri" data-act="exend">Terminar</button><button class="btn" data-act="exquit">Abandonar</button></div>';
+    ex.exercises.forEach(function (e) {
+      var hp = X.help[e.id] || {}, hasSol = e.solution != null && String(e.solution).trim() !== '';
+      hh += '<div class="card"><b>' + esc(e.n != null ? e.n : e.id) + '. ' + esc(e.title || '') + '</b> <span class="muted">' + X.p[e.id].toFixed(1) + ' pts</span>' + mdRender(e.statement);
+      if (C.exhints || C.exans) {
+        if (hp.hint) hh += '<div class="help"><b>Pista.</b> ' + skillHint(e) + '</div>';
+        if (hp.sol) hh += hasSol ? '<div class="help"><b>Soluci&oacute;n.</b>' + mdRender(e.solution) + '</div>' : '<div class="help">Sin soluci&oacute;n oficial.</div>';
+        hh += '<div class="row">' + (C.exhints && !hp.hint ? '<button class="btn" data-act="exhint" data-id="' + esc(e.id) + '">Pista <span class="muted">(&minus;25 % de XP)</span></button>' : '') + (C.exans && !hp.sol ? '<button class="btn" data-act="exsol" data-id="' + esc(e.id) + '">Ver la soluci&oacute;n <span class="muted">(&minus;75 % de XP)</span></button>' : '') + '</div>';
+      }
+      hh += '</div>';
+    });
     return hh;
   }
   if (X.phase === 'review') {
@@ -414,8 +478,8 @@ function vExam() {
     return hh;
   }
   var tot = 0, mxs = 0; ex.exercises.forEach(function (e) { tot += X.s[e.id] || 0; mxs += X.p[e.id]; });
-  var g = Math.round(tot / mxs * 100) / 10, nx = nextSteps(1)[0];
-  return hh + '<div class="card"><h3>Nota: ' + g.toFixed(1) + ' / 10</h3><p>+' + X.xp + ' XP</p><div class="row"><button class="btn" data-act="exquit">Cerrar</button>' + (nx ? '<a class="btn pri" href="' + stepHref(nx) + '" data-act="exquit">Siguiente en la ruta &rarr;</a>' : '') + '</div></div>';
+  var g = Math.round(tot / mxs * 100) / 10, nx = nextSteps(1)[0], helped = Object.keys(X.help).length;
+  return hh + '<div class="card"><h3>Nota: ' + g.toFixed(1) + ' / 10</h3><p>+' + X.xp + ' XP' + (helped ? ' <span class="muted">&middot; con ayudas en ' + helped + (helped === 1 ? ' ejercicio' : ' ejercicios') + ' (XP reducida)</span>' : '') + (X.sec != null ? ' <span class="muted">&middot; tiempo: ' + dur(X.sec) + ' de ' + examMin(ex) + ' min</span>' : '') + '</p><div class="row"><button class="btn" data-act="exquit">Cerrar</button>' + (nx ? '<a class="btn pri" href="' + stepHref(nx) + '" data-act="exquit">Siguiente en la ruta &rarr;</a>' : '') + '</div></div>';
 }
 
 /* ---------- quick checks: a few questions after each reading ---------- */
@@ -425,10 +489,11 @@ function vQuiz(id) {
   var st = stepById[id], qs = st && st.type === 'quiz' ? QUIZ[st.tile] : null;
   if (!qs) return '<p>Comprobaci&oacute;n no encontrada. <a href="#/ruta">Volver</a></p>';
   if (!Q || Q.id !== id) Q = { id: id, pick: {} };
+  if (S.cfg.timer) tmStart(id);
   var th = stepById['t:' + st.tile], answered = Object.keys(Q.pick).length, score = 0, prev = S.quiz[id];
   qs.forEach(function (q, i) { if (Q.pick[i] === q.answer) score++; });
   var h = '<p><a href="#/ruta">&larr; Ruta</a>' + (th ? ' &middot; <a href="' + stepHref(th) + '">Releer la teor&iacute;a</a>' : '') + '</p>';
-  h += '<div class="card"><h2>Comprobaci&oacute;n r&aacute;pida</h2><div class="muted">' + esc(st.label) + ' &middot; ' + qs.length + ' preguntas &middot; ' + mins(st.min) + '</div><p class="muted">Sin nota ni penalizaci&oacute;n: sirve para fijar lo que acabas de leer. ' + (prev ? 'Ya la hiciste (' + prev.score + '/' + st.n + '); repetirla no suma XP.' : 'Cada acierto suma 1 XP, la primera vez.') + '</p></div>';
+  h += '<div class="card"><h2>Comprobaci&oacute;n r&aacute;pida</h2><div class="muted">' + esc(st.label) + ' &middot; ' + qs.length + ' preguntas &middot; ' + mins(st.min) + tmBox() + '</div><p class="muted">Sin nota ni penalizaci&oacute;n: sirve para fijar lo que acabas de leer. ' + (prev ? 'Ya la hiciste (' + prev.score + '/' + st.n + '); repetirla no suma XP.' : 'Cada acierto suma 1 XP, la primera vez.') + '</p></div>';
   qs.forEach(function (q, i) {
     var done = Q.pick[i] != null;
     h += '<div class="card quiz"><div><b>' + (i + 1) + '.</b> ' + inlineMd(q.q) + '</div><div class="opts">' + q.options.map(function (o, j) {
@@ -437,6 +502,7 @@ function vQuiz(id) {
     }).join('') + '</div>' + (done ? '<div class="why ' + (Q.pick[i] === q.answer ? 'good' : 'miss') + '"><b>' + (Q.pick[i] === q.answer ? 'Correcto.' : 'No exactamente.') + '</b> ' + inlineMd(q.why) + '</div>' : '') + '</div>';
   });
   if (answered === qs.length) {
+    tmStop();
     var nx = L.nextAfter(PATH, S, EXAMS, id, keepScope);
     h += '<div class="card next"><div class="big">' + score + ' de ' + qs.length + (score === qs.length ? ' &middot; &iexcl;perfecto!' : score * 2 >= qs.length ? ' &middot; bien' : ' &middot; repasa la teor&iacute;a o el resumen') + '</div><div class="row"><button class="btn pri" data-act="quizdone" data-step="' + esc(id) + '">' + (nx ? 'Continuar &rarr;' : 'Terminar') + '</button>' + (th ? '<a class="btn" href="' + stepHref(th) + '">Releer la teor&iacute;a</a>' : '') + sheetLink(groupOfStage[st.stage]).replace(' &middot; ', '') + '</div></div>';
   } else if (!L.stepDone(st, S, EXAMS)) h += '<p><button class="btn" data-act="skip" data-step="' + esc(id) + '">Saltar esta comprobaci&oacute;n</button></p>';
@@ -552,18 +618,51 @@ function filterToc(q) {
   });
 }
 
+/* ---------- activity log page ---------- */
+var R = { ty: '', days: 10 };
+var LOGTY = [['', 'Todo'], ['ex', 'Ejercicios'], ['quiz', 'Comprobaciones'], ['theory', 'Lecturas'], ['exam', 'Ex&aacute;menes'], ['skip', 'Saltados']];
+var LOGICON = { ex: '&#9998;', quiz: '&#10067;', exam: '&#127937;', theory: '&#128214;', skip: '&#8631;' };
+function dayLabel(d) {
+  try { var p = d.split('-'), s = new Date(+p[0], p[1] - 1, +p[2]).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }); return (d === today() ? 'Hoy' : d === L.addDays(today(), -1) ? 'Ayer' : s.charAt(0).toUpperCase() + s.slice(1)); } catch (e) { return d; }
+}
+function clock(ms) { var d = new Date(ms); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+function logRow(l) {
+  var ty = L.logKind(l), tags = '';
+  if (l.r != null && ty !== 'theory' && ty !== 'skip') tags += '<span class="tag r' + l.r + '">' + (ty === 'quiz' ? ['Flojo', 'Bien', 'Perfecto'][l.r] : RN[l.r]) + '</span>';
+  if (l.help) tags += '<span class="tag" title="Pistas o soluciones usadas">con ayudas</span>';
+  if (l.xp) tags += '<span class="tag">+' + l.xp + ' XP</span>';
+  tags += l.sec > 0 ? '<span class="tag min" title="Tiempo medido con el cron&oacute;metro">&#9201; ' + dur(l.sec) + '</span>' : '';
+  return '<div class="item logrow"><span><span class="when">' + (l.at ? clock(l.at) : '&ndash;') + '</span> <span class="lty" title="' + ty + '">' + (LOGICON[ty] || '') + '</span> ' + esc(l.label) + '</span><span>' + tags + '</span></div>';
+}
+function vLog() {
+  var h = '<h2>Registro</h2><p class="muted">Lo que has hecho, cu&aacute;ndo y cu&aacute;nto te llev&oacute;. El tiempo exacto solo se anota con el cron&oacute;metro activado en <a href="#/ajustes">Ajustes</a>; sin &eacute;l, cada tarea cuenta con su estimaci&oacute;n.</p>';
+  var all = S.log.slice().reverse(), shown = R.ty ? all.filter(function (l) { return L.logKind(l) === R.ty; }) : all;
+  h += '<div class="chips" role="group" aria-label="Tipo de tarea">' + LOGTY.map(function (c) { return '<button type="button" class="chip' + (R.ty === c[0] ? ' on' : '') + '" data-act="logty" data-v="' + c[0] + '">' + c[1] + '</button>'; }).join('') + '</div>';
+  if (!shown.length) return h + '<p class="muted">' + (all.length ? 'Nada de este tipo todav&iacute;a.' : 'A&uacute;n no hay nada. Cuando completes una lectura, una comprobaci&oacute;n, un ejercicio o un examen aparecer&aacute; aqu&iacute;.') + '</p>';
+  var days = [], by = {};
+  shown.forEach(function (l) { if (!by[l.t]) { by[l.t] = []; days.push(l.t); } by[l.t].push(l); });
+  days.sort().reverse();
+  days.slice(0, R.days).forEach(function (d) {
+    var tt = L.dayTotals(by[d]);
+    h += '<div class="logday"><div class="row"><b>' + esc(dayLabel(d)) + '</b><span class="muted">' + tt.n + (tt.n === 1 ? ' tarea' : ' tareas') + ' &middot; ' + tt.xp + ' XP &middot; ' + (tt.timed ? 'medido ' + dur(tt.sec) + (tt.timed < tt.n ? ' (+ estimaci&oacute;n del resto)' : '') : '~' + L.fmtMin(tt.min)) + '</span></div>' + by[d].map(logRow).join('') + '</div>';
+  });
+  if (days.length > R.days) h += '<p><button class="btn" data-act="logmore">Mostrar d&iacute;as anteriores (' + (days.length - R.days) + ')</button></p>';
+  return h;
+}
+
 function vProgress() {
   var h = '<h2>Progreso</h2><div class="card row">XP <b>' + S.xp + '</b> &middot; Nivel <b>' + level() + '</b> &middot; <span class="streakline">' + streakHtml() + '<span>d&iacute;as de racha</span></span> &middot; quedan ' + mins(L.pathMinutes(ACTIVE, S, EXAMS).left) + ' de ruta</div><h3>Ruta por ' + (ORG === 'temas' ? 'temas' : 'etapas') + '</h3>';
   GROUPS_ALL.forEach(function (g) {
     var p = gprog(g), pct = p.total ? Math.round(p.done / p.total * 100) : 0, off = GROUPS.indexOf(g) < 0;
-    h += '<div class="row' + (off ? ' off' : '') + '" style="margin-bottom:8px"><span style="width:300px;max-width:100%">' + esc(g.label) + (g.stages.every(function (id) { return S.bonus[id]; }) ? ' ' + flame('sm') : '') + (off ? ' <span class="tag">fuera de tu ruta</span>' : '') + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted">' + p.done + '/' + p.total + (p.left ? ' &middot; ' + mins(p.left) : '') + '</span></div>';
+    h += '<div class="row prow' + (off ? ' off' : '') + '"><span class="plabel">' + esc(g.label) + (g.stages.every(function (id) { return S.bonus[id]; }) ? ' ' + flame('sm') : '') + (off ? ' <span class="tag">fuera de tu ruta</span>' : '') + '</span><div class="bar"><i style="width:' + pct + '%"></i></div><span class="muted pval">' + p.done + '/' + p.total + (p.left ? ' &middot; ' + mins(p.left) : '') + '</span></div>';
   });
   h += '<h3>Dominio por habilidad</h3><p class="muted">Porcentaje de ejercicios de la habilidad cuya &uacute;ltima valoraci&oacute;n fue Dominado (Dudoso cuenta la mitad).</p>';
   SK.forEach(function (s) {
     var m = mastery(s.id);
-    h += '<div class="row" style="margin-bottom:8px"><span style="width:300px;max-width:100%">' + esc(s.label) + '</span><div class="bar"><i style="width:' + Math.round(m * 100) + '%"></i></div><span class="muted">' + Math.round(m * 100) + '%</span></div>';
+    h += '<div class="row prow"><span class="plabel">' + esc(s.label) + '</span><div class="bar"><i style="width:' + Math.round(m * 100) + '%"></i></div><span class="muted pval">' + Math.round(m * 100) + '%</span></div>';
   });
-  h += '<h3>Historial</h3>' + (S.log.slice(-30).reverse().map(function (l) { return '<div class="item"><span>' + esc(l.label) + '</span><span><span class="tag r' + l.r + '">' + RN[l.r] + '</span> +' + l.xp + ' XP &middot; ' + esc(l.t) + '</span></div>'; }).join('') || '<p class="muted">A&uacute;n nada.</p>');
+  var recent = S.log.slice(-5).reverse();
+  h += '<h3>Lo &uacute;ltimo</h3>' + (recent.map(logRow).join('') || '<p class="muted">A&uacute;n nada.</p>') + (S.log.length ? '<p><a href="#/registro">Ver el registro completo &rarr;</a></p>' : '');
   return h;
 }
 
@@ -592,8 +691,31 @@ function syncBanner() {
   return '<div class="warnbox">' + (SYNC.state === 'needs' ? 'Haz clic en cualquier parte de la p&aacute;gina para dar permiso al archivo de progreso (<b>' + esc(SYNC.name) + '</b>); el navegador lo pide una vez por sesi&oacute;n. <button class="btn pri" data-act="sync-now">Dar permiso</button>' : 'No se pudo sincronizar el progreso con <b>' + esc(SYNC.name) + '</b>: ' + esc(SYNC.msg) + ' <a href="#/ajustes">Ver ajustes</a>') + '</div>';
 }
 
+/* The Ajustes page: how you study (stopwatch, daily goal), how the exam simulator behaves, and the data. Theme, accent and route are in the gear menu. */
+function cfgSwitch(k, label, hint, disabled) {
+  return '<label class="swrow' + (disabled ? ' dis' : '') + '"><input type="checkbox" data-cfg="' + k + '"' + (S.cfg[k] ? ' checked' : '') + (disabled ? ' disabled' : '') + '><span><b>' + label + '</b>' + (hint ? '<span class="muted">' + hint + '</span>' : '') + '</span></label>';
+}
+var EXPRESETS = { real: { label: 'Examen real', blurb: 'Con cuenta atr&aacute;s, termina solo, sin pistas ni soluciones.', cfg: { extimer: true, exauto: true, exhints: false, exans: false } },
+  relax: { label: 'Relajado', blurb: 'Con cuenta atr&aacute;s, pero puedes pedir pistas y ver soluciones (cuesta XP).', cfg: { extimer: true, exauto: false, exhints: true, exans: true } } };
+function activePreset() {
+  return Object.keys(EXPRESETS).find(function (id) { return Object.keys(EXPRESETS[id].cfg).every(function (k) { return S.cfg[k] === EXPRESETS[id].cfg[k]; }); }) || '';
+}
 function vSettings() {
-  return '<h2>Datos</h2><div class="card"><p>El tema, el color de acento, la ruta de estudio (temario completo o primer examen) y la organizaci&oacute;n por etapas o por temas se cambian con el engranaje de la barra superior.</p><p>Tu progreso se guarda en este perfil del navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>' + syncCard();
+  var C = S.cfg, h = '<h2>Ajustes</h2>';
+  h += '<h3>Estudio</h3><div class="card">';
+  h += '<div class="setrow"><div><b>Meta diaria</b><span class="muted">Cu&aacute;nto quieres estudiar al d&iacute;a. La p&aacute;gina <a href="#/hoy">Hoy</a> propone repasos y pasos de la ruta hasta llenar ese tiempo, contando lo que ya hiciste hoy.</span></div><div class="ctl"><div class="segs" role="radiogroup" aria-label="Meta diaria">' +
+    L.DAILY.map(function (m) { return '<button type="button" class="seg' + (C.daily === m ? ' on' : '') + '" role="radio" aria-checked="' + (C.daily === m) + '" data-act="cfgset" data-k="daily" data-v="' + m + '">' + (m >= 60 && m % 60 === 0 ? m / 60 + ' h' : m + ' min') + '</button>'; }).join('') + '</div>' +
+    '<label class="muted">otra: <input type="number" min="5" max="480" step="5" data-cfg="daily" value="' + C.daily + '" aria-label="Meta diaria en minutos"> min</label></div></div>';
+  h += cfgSwitch('timer', 'Cron&oacute;metro en ejercicios y comprobaciones', 'Muestra cu&aacute;nto tardas y lo guarda en el <a href="#/registro">Registro</a>. Solo cuenta mientras la pesta&ntilde;a est&aacute; a la vista.') + '</div>';
+  h += '<h3>Simulador de examen</h3><div class="card"><p class="muted">Se aplica al hacer un examen entero. Los ejercicios sueltos, desde Ejercicios o desde la lista de ex&aacute;menes, siempre tienen pistas y soluci&oacute;n.</p><div class="presets">' +
+    Object.keys(EXPRESETS).map(function (id) { var p = EXPRESETS[id]; return '<button type="button" class="choice' + (activePreset() === id ? ' on' : '') + '" data-act="expreset" data-v="' + id + '"><b>' + p.label + '</b><span class="muted">' + p.blurb + '</span></button>'; }).join('') + '</div>';
+  h += cfgSwitch('extimer', 'Reloj con el tiempo del examen', 'Cuenta atr&aacute;s con los minutos que da el examen. Sin &eacute;l, ni l&iacute;mite ni cron&oacute;metro.');
+  h += cfgSwitch('exauto', 'Terminar cuando se acabe el tiempo', 'Como en el aula: pasa solo a la correcci&oacute;n.', !C.extimer);
+  h += cfgSwitch('exhints', 'Permitir pistas durante el examen', 'Cada pista quita el 25 % de la XP de ese ejercicio. La nota que te pones no cambia.');
+  h += cfgSwitch('exans', 'Permitir ver la soluci&oacute;n durante el examen', 'Ver la soluci&oacute;n quita el 75 % de la XP de ese ejercicio. La nota que te pones no cambia.') + '</div>';
+  h += '<h3>Apariencia y ruta</h3><div class="card"><p>El tema (claro u oscuro), el color de acento, la ruta de estudio (temario completo o primer examen) y la organizaci&oacute;n por etapas o por temas se cambian con el engranaje <b>&#9881;</b> de la barra superior.</p></div>';
+  h += '<h3>Datos</h3><div class="card"><p>' + (SYNC.handle ? 'Tu progreso se guarda en este perfil y en el archivo compartido (abajo).' : 'Tu progreso se guarda en este perfil del navegador. Exporta una copia para no perderlo o llevarlo a otro navegador.') + ' Los ajustes de esta p&aacute;gina viajan con &eacute;l.</p><div class="row"><button class="btn" data-act="export">Exportar JSON</button><label class="btn">Importar JSON<input type="file" id="imp" accept="application/json" hidden></label><button class="btn bad" data-act="reset">Reiniciar progreso</button></div><div id="io"></div></div>' + syncCard();
+  return h;
 }
 
 /* ---------- settings popover (top bar, right): theme and accent colour ---------- */
@@ -616,7 +738,7 @@ function renderPop() {
     '<div class="accentrow"><input type="color" class="accentpick" id="acc-pick" value="' + cur + '" aria-label="Elegir el color de acento"><input type="text" class="accenttext" id="acc-text" value="' + (acc ? esc(acc) : '') + '" placeholder="#c2410c, rgb(194 65 12), tomato&hellip;" spellcheck="false" autocomplete="off" aria-label="Color de acento como texto" title="Cualquier color CSS: #hex, rgb(), hsl() o un nombre"></div>' +
     '<div class="pop-note bad" id="acc-msg" hidden>Eso no es un color que CSS entienda.</div></div>' +
     '<div class="pop-note">El acento colorea botones, barras, la llama, el logo y el icono de la pesta&ntilde;a.</div>' +
-    '<div class="pop-block"><a href="#/ajustes" data-act="settings-close">Datos: exportar, importar o reiniciar el progreso &rarr;</a></div>';
+    '<div class="pop-block"><a href="#/ajustes" data-act="settings-close">M&aacute;s ajustes: meta diaria, cron&oacute;metro, examen y datos &rarr;</a></div>';
   if (keep && keep.dataset && keep.dataset.act) { var again = pop.querySelector('[data-act="' + keep.dataset.act + '"]' + (keep.dataset.m ? '[data-m="' + keep.dataset.m + '"]' : '') + (keep.dataset.v ? '[data-v="' + keep.dataset.v + '"]' : '') + (keep.dataset.c ? '[data-c="' + keep.dataset.c + '"]' : '')); if (again && again.focus) again.focus(); }
 }
 function setPop(open) {
@@ -648,6 +770,7 @@ function route() {
   var p = (location.hash || '#/hoy').slice(2).split('/').map(decodeURIComponent), tab = p[0] || 'hoy', h;
   if (tab !== 'ejercicios') V = {};
   if (tab !== 'quiz') Q = null;
+  if (tab !== 'quiz' && !(tab === 'ejercicios' && p[1])) TM = null;
   if (tab === 'ejercicios') h = p[1] ? vDetail(p.slice(1).join('/')) : vList();
   else if (tab === 'ruta') h = vRoad();
   else if (tab === 'examen') h = vExam();
@@ -655,6 +778,7 @@ function route() {
   else if (tab === 'resumen') h = vSheet(p[1]);
   else if (tab === 'quiz') h = vQuiz(p.slice(1).join('/'));
   else if (tab === 'progreso') h = vProgress();
+  else if (tab === 'registro') h = vLog();
   else if (tab === 'ajustes') h = vSettings();
   else { tab = 'hoy'; h = vHoy(); }
   if (NOTE && tab !== 'ejercicios') { h = '<div class="card next">' + NOTE + '</div>' + h; NOTE = ''; }
@@ -664,7 +788,11 @@ function route() {
   if (tab === 'teoria' && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
   else window.scrollTo(0, 0);
   if (tab === 'teoria') SPY = startSpy();
-  if (tab === 'examen' && X && X.phase === 'run') startTimer(function () { var t = $('#tm'); if (!t) return; var left = (X.end - Date.now()) / 1000; t.textContent = fmt(left); if (left <= 0) t.style.color = 'var(--bad)'; });
+  if (tab === 'examen' && X && X.phase === 'run' && S.cfg.extimer) startTimer(function () {
+    var t = $('#tm'); if (!t) return; var left = (X.end - Date.now()) / 1000; t.textContent = fmt(left);
+    if (left <= 0) { t.style.color = 'var(--bad)'; if (S.cfg.exauto) { examEnd(); route(); } }
+  });
+  if ((tab === 'ejercicios' || tab === 'quiz') && S.cfg.timer && TM) startTimer(function () { var t = $('#sw'); if (t) t.textContent = fmt(tmMs() / 1000); });
 }
 function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
 
@@ -697,45 +825,54 @@ document.addEventListener('click', function (ev) {
     qs2.forEach(function (q, i) { if (Q && Q.pick[i] === q.answer) sc++; });
     var first = !S.quiz[qid];
     if (first || sc > S.quiz[qid].score) S.quiz[qid] = { score: sc, n: qs2.length, t: today() };
-    if (first) { S.xp = Math.round((S.xp + sc) * 10) / 10; S.log.push({ t: today(), k: qid, label: 'Comprobaci\u00f3n: ' + qst.label, r: sc === qs2.length ? 2 : sc * 2 >= qs2.length ? 1 : 0, xp: sc }); if (S.log.length > 300) S.log.shift(); }
+    if (first) { S.xp = Math.round((S.xp + sc) * 10) / 10; logAdd('quiz', qid, stepPlain(qst), sc === qs2.length ? 2 : sc * 2 >= qs2.length ? 1 : 0, sc, { m: qst.min, sec: tmSec(qid) }); }
     touchDay(); awardAll(); save();
     var nq = L.nextAfter(PATH, S, EXAMS, qid, keepScope);
     location.hash = nq ? stepHref(nq) : '#/ruta'; route();
   }
   else if (act === 'skip') {
-    var sid = b.dataset.step; S.skip[sid] = true; awardAll(); save();
+    var sid = b.dataset.step, sst = stepById[sid]; if (sst && !S.skip[sid]) logAdd('skip', sid, 'Saltado: ' + stepPlain(sst), null, 0, { m: 0 }); S.skip[sid] = true; awardAll(); save();
     var nx = L.nextAfter(PATH, S, EXAMS, sid, keepScope);
     location.hash = nx ? stepHref(nx) : '#/ruta'; if (!nx) route();
   }
   else if (act === 'theorydone') {
-    var tid = b.dataset.step; S.theory[tid] = true; touchDay(); awardAll(); save();
+    var tid = b.dataset.step, tst = stepById[tid]; if (tst && !S.theory[tid]) logAdd('theory', tid, stepPlain(tst), null, 0, { m: tst.min }); S.theory[tid] = true; touchDay(); awardAll(); save();
     var nt = L.nextAfter(PATH, S, EXAMS, tid, keepScope);
     location.hash = nt ? stepHref(nt) : '#/ruta'; route();
   }
   else if (act === 'exstart') {
     var ex = EXAMS.find(function (e) { return e.id === b.dataset.id; });
-    X = { ex: ex, phase: 'run', end: Date.now() + examMin(ex) * 60000, p: examPts(ex), s: {}, i: 0 }; route();
+    X = { ex: ex, phase: 'run', start: Date.now(), end: Date.now() + examMin(ex) * 60000, p: examPts(ex), s: {}, i: 0, help: {}, sec: null }; route();
   }
-  else if (act === 'exend') { X.phase = 'review'; X.i = 0; route(); }
+  else if (act === 'exend') { examEnd(); route(); }
+  else if (act === 'exhint' && X && S.cfg.exhints) { examHelp(b.dataset.id).hint = true; rerender(); }
+  else if (act === 'exsol' && X && S.cfg.exans) { examHelp(b.dataset.id).sol = true; rerender(); }
   else if (act === 'exnext') {
     var e = X.ex.exercises[X.i], v = parseFloat($('#sc').value) || 0;
     X.s[e.id] = Math.max(0, Math.min(X.p[e.id], v));
     if (++X.i >= X.ex.exercises.length) {
       var tot = 0, mx = 0; X.ex.exercises.forEach(function (q) { tot += X.s[q.id] || 0; mx += X.p[q.id]; });
-      X.xp = Math.round(tot / mx * 20 * 10) / 10; X.phase = 'done'; S.xp = Math.round((S.xp + X.xp) * 10) / 10;
+      X.xp = L.examXp(X.ex.exercises.map(function (q) { return q.id; }), X.s, X.p, X.help); X.phase = 'done'; S.xp = Math.round((S.xp + X.xp) * 10) / 10;
       var t = today(); touchDay();
       S.exams[X.ex.id] = { grade: Math.round(tot / mx * 100) / 10, t: t };
-      S.log.push({ t: t, k: 'exam/' + X.ex.id, label: 'Examen ' + X.ex.title + ' (' + (tot / mx * 10).toFixed(1) + '/10)', r: tot / mx > 0.7 ? 2 : tot / mx > 0.4 ? 1 : 0, xp: X.xp });
+      if (X.sec != null) S.exams[X.ex.id].sec = X.sec;
+      logAdd('exam', 'exam/' + X.ex.id, 'Examen ' + X.ex.title + ' (' + (tot / mx * 10).toFixed(1) + '/10)', tot / mx > 0.7 ? 2 : tot / mx > 0.4 ? 1 : 0, X.xp, { m: examMin(X.ex), sec: X.sec, help: Object.keys(X.help).length || null });
       awardAll(); save();
     }
     route();
   }
+  else if (act === 'fset') { F[b.dataset.f] = b.dataset.v; rerender(); }
+  else if (act === 'fclear') { F = { stage: '', exam: '', skill: '', kind: '', status: '' }; rerender(); }
+  else if (act === 'cfgset') { S.cfg[b.dataset.k] = +b.dataset.v; S.cfg = L.normCfg(S.cfg); save(); rerender(); }
+  else if (act === 'expreset') { Object.assign(S.cfg, EXPRESETS[b.dataset.v].cfg); save(); rerender(); }
+  else if (act === 'logty') { R.ty = b.dataset.v; R.days = 10; rerender(); }
+  else if (act === 'logmore') { R.days += 10; rerender(); }
   else if (act === 'exquit') { X = null; if (b.tagName !== 'A') route(); }
   else if (act === 'export') {
     var blob = new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' }), a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'dyaa-progress.json'; a.click();
   }
-  else if (act === 'reset') { if (confirm('¿Borrar todo el progreso?' + (SYNC.handle ? ' También se borrará en el archivo compartido y, por tanto, en los demás perfiles que lo usen.' : ''))) { S = blank(); save(); route(); } }
+  else if (act === 'reset') { if (confirm('¿Borrar todo el progreso?' + (SYNC.handle ? ' También se borrará en el archivo compartido y, por tanto, en los demás perfiles que lo usen.' : ''))) { var keepCfg = S.cfg; S = blank(); S.cfg = keepCfg; save(); route(); } }
   else if (act === 'sync-new' || act === 'sync-open') {
     var pick = act === 'sync-new'
       ? window.showSaveFilePicker({ suggestedName: 'dyaa-progreso.json', types: [{ description: 'Progreso de DyAA Practice', accept: { 'application/json': ['.json'] } }] })
@@ -750,12 +887,13 @@ document.addEventListener('input', function (ev) { if (ev.target && ev.target.id
 document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && popOpen()) { setPop(false); var b = $('#settings'); if (b && b.focus) b.focus(); } });
 document.addEventListener('change', function (ev) {
   var t = ev.target;
-  if (t.dataset && t.dataset.f) { F[t.dataset.f] = t.value; route(); }
+  if (t.dataset && t.dataset.cfg) { S.cfg[t.dataset.cfg] = t.type === 'checkbox' ? !!t.checked : +t.value; S.cfg = L.normCfg(S.cfg); save(); rerender(); }
+  else if (t.dataset && t.dataset.f) { F[t.dataset.f] = t.value; route(); }
   else if (t.id === 'lsel') { location.hash = '#/teoria/' + enc(t.value); }
   else if (t.id === 'imp' && t.files[0]) {
     var r = new FileReader();
     r.onload = function () {
-      try { var o = JSON.parse(r.result); if (!o || typeof o.ex !== 'object') throw 0; S = norm(o); save(); route(); $('#io').textContent = 'Importado.'; }
+      try { var o = JSON.parse(r.result); if (!o || typeof o.ex !== 'object') throw 0; S = adopt(o); save(); route(); $('#io').textContent = 'Importado.'; }
       catch (e) { $('#io').textContent = 'Archivo inválido.'; }
     };
     r.readAsText(t.files[0]);
@@ -763,7 +901,7 @@ document.addEventListener('change', function (ev) {
 });
 window.addEventListener('hashchange', route);
 function syncRefresh() { if (SYNC.handle && SYNC.state === 'ok') syncRun(false).then(function (changed) { if (changed) route(); }); }
-document.addEventListener('visibilitychange', function () { if (!document.hidden) syncRefresh(); });
+document.addEventListener('visibilitychange', function () { if (document.hidden) tmPause(); else { tmResume(); syncRefresh(); } });
 window.addEventListener('focus', syncRefresh);
 function setTopH() { var t = document.getElementById('top'); if (t && t.offsetHeight) document.documentElement.style.setProperty('--topH', t.offsetHeight + 'px'); }
 window.addEventListener('resize', setTopH);
