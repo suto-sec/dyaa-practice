@@ -115,13 +115,16 @@ Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-lo
 - **Settings** (gear, top right): route, organisation, theme (system, light, dark) and accent colour (presets, a picker, or any CSS colour). The accent colours buttons, bars, the flame, the logo and the tab icon. Saved in the browser apart from the progress, so resetting progress keeps it (also the route and organisation). Export, import and reset live under *Datos* (`#/ajustes`).
 - **Rating** after each exercise: Fallé / Dudoso / Dominado. XP depends on points, hints used and rating; finishing a stage gives a bonus.
 - **Examen**: timed simulator over whole past exams, self-scored.
+- **Resumen**: one sheet per etapa (per tema when organised by temas) with the formulas, schemes and typical mistakes to remember. It is a quick reference: it has its own tab, a row at the top of every block in **Ruta** and a link in the first hint of each exercise, and it is not a route step, so it does not count towards progress. The sheets live in `content/summaries/<stage id>.md`.
+- **Hints**: the first hint names the skill and links the theory and the summary. Exercises with an official solution then show its first lines and, last, the whole solution. For the extra exercises that come without one, `content/exams/soluciones/<exam id>.md` can hold a proposed solution written in steps (`**Paso 1.** ...`); the app reveals it one step at a time and labels it *no oficial*.
 - **Teoría**: the lecture notes, with deep links from hints and roadmap steps. The figures are cropped from the slides (`app/img/`, listed in `tools/figures.json`); `python3 tools/figures.py <folder with the slide PDFs>` regenerates them (needs `pdftoppm` and ImageMagick).
 
 ## Layout
 
 ```
 content/lectures/   lecture notes (temas 1-7) converted from the slides (CC BY-SA 4.0)
-content/exams/      past exams and extra exercises (NOT in git, see below)
+content/summaries/  one summary sheet per etapa: formulas and things to remember (CC BY-SA 4.0)
+content/exams/      past exams and extra exercises, and soluciones/ with proposed solutions (NOT in git, see below)
 tools/build.py      Markdown -> app/data-lectures.js, app/data-exams.js
 tools/skills.json   skills, theory links, tagging patterns
 tools/figures.*     slide figures: figures.json (page and crop of each) and figures.py (cuts them out of the PDFs)

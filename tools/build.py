@@ -6,7 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LEC = ROOT / "content" / "lectures"
 EXA = ROOT / "content" / "exams"
+OWN = EXA / "soluciones"   # proposed solutions for exercises that come without one: <exam id>.md with "### Ejercicio N.M" blocks
 APP = ROOT / "app"
+SUMM = ROOT / "content" / "summaries"   # one sheet per etapa (formulas and things to remember), named <stage id>.md
 TOOLS = Path(__file__).resolve().parent
 FENCE = re.compile(r"^\s*```")
 
@@ -66,6 +68,21 @@ def parse_lecture(path):
             if s["title"] is None:
                 s["title"] = title
     return {"id": path.stem, "title": title, "sections": sections}
+
+
+# ---------------- summaries ----------------
+def load_summaries(roadmap):
+    out = {}
+    for st in roadmap["stages"]:
+        p = SUMM / (st["id"] + ".md")
+        if p.is_file():
+            out[st["id"]] = p.read_text(encoding="utf-8").strip()
+        else:
+            warn("no summary sheet for stage", st["id"])
+    for p in sorted(SUMM.glob("*.md")) if SUMM.is_dir() else []:
+        if p.stem not in out and p.stem not in {s["id"] for s in roadmap["stages"]}:
+            warn("summary sheet for an unknown stage:", p.name)
+    return out
 
 
 # ---------------- skills ----------------
@@ -161,6 +178,25 @@ def difficulty(ex, adic, ch, has_sol):
 
 
 # ---------------- exams ----------------
+def load_own(stem):
+    """Proposed solutions written for the exercises of one exam file that has none: {n: markdown}."""
+    path = OWN / (stem + ".md")
+    out, n, buf = {}, None, []
+    if not path.is_file():
+        return out
+    def flush():
+        if n is not None:
+            out[n] = "\n".join(buf).strip()
+    for line, infence in iter_lines(path.read_text(encoding="utf-8")):
+        m = None if infence else re.match(r"^###\s+Ejercicio\s+(\d+\.\d+)\s*$", line)
+        if m:
+            flush(); n, buf = m.group(1), []
+        elif n is not None:
+            buf.append(line)
+    flush()
+    return out
+
+
 MARKER = re.compile(r"^(###\s+(Solución|Posible solución|Posibles soluciones)\s*:?\s*|\*\*Solución:\*\*\s*)$")
 
 
@@ -311,6 +347,7 @@ def main():
         f.write("window.WORLDS = %s;\n" % json.dumps(roadmap["worlds"], ensure_ascii=False))
         f.write("window.SCOPES = %s;\n" % json.dumps(roadmap["scopes"], ensure_ascii=False, indent=1))
         f.write("window.STAGES = %s;\n" % json.dumps(roadmap["stages"], ensure_ascii=False, indent=1))
+        f.write("window.SUMMARIES = %s;\n" % json.dumps(load_summaries(roadmap), ensure_ascii=False, indent=1))
     print("lectures: %d (%d sections)" % (len(lectures), sum(len(l["sections"]) for l in lectures)))
     if not EXA.is_dir():
         print("content/exams missing; skipping data-exams.js")
@@ -331,6 +368,16 @@ def main():
                 if not t["solution"]:
                     t["solution"] = have[0]["solution"]
                     t["solutionFrom"] = have[0]["id"]
+    # own solutions fill only the gaps (after "diff" was computed, so the order of the route does not depend on them)
+    for e in exams:
+        own = load_own(e["id"])
+        known = {x["n"] for x in e["exercises"]}
+        for n in own:
+            if n not in known: warn("proposed solution for an unknown exercise:", e["id"], n)
+        for x in e["exercises"]:
+            if not x["solution"] and own.get(x["n"]):
+                x["solution"] = own[x["n"]]
+                x["own"] = True
     write_js(APP / "data-exams.js", "EXAMS", exams)
     order = {}
     for g in roadmap["stages"]:
@@ -342,7 +389,7 @@ def main():
     print("%-42s %5s %5s %6s" % ("exam", "exs", "sols", "min"))
     te = ts = 0
     for e in exams:
-        n = len(e["exercises"]); s = sum(1 for x in e["exercises"] if x["solution"])
+        n = len(e["exercises"]); s = sum(1 for x in e["exercises"] if x["solution"] and not x.get("own"))
         te += n; ts += s
         print("%-42s %5d %5d %6s" % (e["id"], n, s, e["durationMin"]))
     print("%-42s %5d %5d" % ("TOTAL", te, ts))

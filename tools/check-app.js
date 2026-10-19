@@ -96,8 +96,10 @@ if (hasExams) {
   const first = stageEx.sumatorios[0];
   go('#/ejercicios/' + encodeURIComponent(first));
   ok(/Etapa 2\. /.test(app()) && /ejercicio 1 de/.test(app()), 'exercise shows its place in the stage');
-  const hasSol = /Mostrar pista \(1\/3\)/.test(app());
-  if (hasSol) { click({ act: 'hint' }); click({ act: 'hint' }); click({ act: 'hint' }); } else { click({ act: 'hint' }); click({ act: 'self' }); }
+  ok(!/id="tm"/.test(app()) && !/cron&oacute;metro/.test(app()), 'the exercise page has no stopwatch');
+  ok(/Resumen y f&oacute;rmulas/.test((click({ act: 'hint' }), app())), 'the first hint links to the summary sheet of the etapa');
+  for (let i = 0; i < 6 && /data-act="hint"/.test(app()); i++) click({ act: 'hint' });
+  if (!/data-act="rate"/.test(app())) click({ act: 'self' });
   ok(/Fallé/.test(app()) && /Dominado/.test(app()), 'rating buttons appear after checking');
   click({ act: 'rate', r: '2' });
   ok(/Registrado: <b>\+/.test(app()) && /Siguiente en la ruta/.test(app()), 'rating registers XP and offers next step');
@@ -129,6 +131,36 @@ if (hasExams) {
   ok(JSON.parse(store['dyaa-practice-v1']).exams[ex.id], 'exam result saved');
   click({ act: 'exquit' }, 'A'); go('#/examen'); ok(/recomendado/.test(app()), 'exam list recommends a next exam');
   go('#/progreso'); ok(/Ruta por etapas/.test(app()), 'progress lists stages');
+}
+
+// summary sheets: a tab, a row in every etapa of the route, a link from the exercises, and one sheet per etapa (a tema joins its etapas')
+{
+  go('#/resumen');
+  const sh = app(), nStages = win.STAGES.length;
+  ok(/<h2>Resumen<\/h2>/.test(sh) && (sh.match(/href="#\/resumen\//g) || []).length >= nStages, 'Resumen lists every etapa');
+  ok(win.STAGES.every(g => (win.SUMMARIES || {})[g.id] && win.SUMMARIES[g.id].length > 300), 'every etapa has a summary sheet');
+  go('#/resumen/sumatorios'); ok(/Sumatorios: reglas/.test(app()) && /\[math\]/.test(app()) && /Leer la teor&iacute;a completa/.test(app()), 'a sheet shows its formulas and links to the theory');
+  go('#/ruta'); ok((app().match(/&#128221; Resumen y f&oacute;rmulas/g) || []).length === (app().match(/<details class="stage"/g) || []).length, 'each etapa of the route has a sheet row');
+  click({ act: 'org', v: 'temas' });
+  go('#/resumen/t3.2_analisis_alg_recursivos');
+  ok(/Recurrencias: expansi/.test(app()) && /Recurrencias: m&eacute;todo|Recurrencias: método/.test(app()), 'a tema with two etapas shows both sheets');
+  go('#/resumen/no-existe'); ok(app().length > 200, 'an unknown sheet falls back to the first one');
+  click({ act: 'org', v: 'etapas' });
+}
+
+if (hasExams) {
+  // an unofficial solution written in steps is revealed one step at a time
+  const key = win.STAGE_EX.bucles[0], ex = win.EXAMS.find(e => key.indexOf(e.id + '/') === 0), e = ex.exercises.find(x => ex.id + '/' + x.id === key), keep = [e.solution, e.own];
+  e.solution = '**Paso 1.** primero\n\n**Paso 2.** segundo\n\n**Paso 3.** tercero'; e.own = true;
+  go('#/ejercicios/' + encodeURIComponent(key));
+  ok(/Mostrar pista/.test(app()) && !/primero/.test(app()), 'a stepped solution starts hidden');
+  click({ act: 'hint' }); click({ act: 'hint' });
+  ok(/primero/.test(app()) && !/segundo/.test(app()) && /Quedan 2 de 3 pasos/.test(app()) && /no es oficial/i.test(app()), 'the first step shows alone, marked as unofficial');
+  ok(!/data-act="rate"/.test(app()), 'rating waits until every step has been shown');
+  click({ act: 'allsteps' });
+  ok(/primero/.test(app()) && /tercero/.test(app()) && /data-act="rate"/.test(app()), 'the full solution can be shown at once');
+  go('#/ruta'); ok(/<span class="tag">soluci&oacute;n propuesta<\/span>/.test(app()), 'the route marks proposed solutions apart from official ones');
+  e.solution = keep[0]; e.own = keep[1];
 }
 
 // time estimates are shown on the route, in lists, on the exercise page and in the theory sidebar

@@ -26,6 +26,11 @@ Licensing overview
    The text content was kept. Errors from the conversion may exist.
    The author has not reviewed or endorsed these adaptations.
 
+   The summary sheets (content/summaries/*.md) are condensed from those lecture
+   notes (definitions, formulas and schemes, restated and reorganised, with a few
+   short remarks of our own). They are an adaptation too and are licensed under
+   CC BY-SA 4.0 with the same attribution. They contain nothing from item 4.
+
    As required by ShareAlike, these adapted files are licensed under
    CC BY-SA 4.0 as well.
 
@@ -37,7 +42,9 @@ Licensing overview
    (.gitignore) and must not be redistributed or published without the
    author's permission. The generated app/data-exams.js is excluded too.
 
-   The same applies to any text derived from them.
+   The same applies to any text derived from them, including the proposed
+   solutions written for the exercises that come without one
+   (content/exams/soluciones/): they stay local like the exercises themselves.
 
 5. Roadmap (tools/roadmap.json): part of the MIT-licensed code. It only names
    lecture sections and stages. The ordering of exam exercises inside each

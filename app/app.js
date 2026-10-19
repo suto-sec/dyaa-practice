@@ -2,7 +2,7 @@
 'use strict';
 var L = window.DYAA, mdRender = window.mdRender;
 var LECT = window.LECTURES || [], SK = window.SKILLS || [], EXAMS = window.EXAMS || [];
-var STAGES = window.STAGES || [], WORLDS = window.WORLDS || {}, STAGE_EX = window.STAGE_EX || {};
+var STAGES = window.STAGES || [], WORLDS = window.WORLDS || {}, STAGE_EX = window.STAGE_EX || {}, SUMM = window.SUMMARIES || {};
 var KEY = 'dyaa-practice-v1';
 var RN = L.RN, RM = L.RM, BONUS = 15;
 var $ = function (s) { return document.querySelector(s); };
@@ -149,7 +149,7 @@ function stepRow(st, cur) {
   var tags = '';
   if (st.type === 'ex') {
     var a = byKey[st.key];
-    tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution ? '<span class="tag">con soluci&oacute;n</span>' : '') + '<span class="tag">' + (a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>';
+    tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution ? '<span class="tag">' + (a.e.own ? 'soluci&oacute;n propuesta' : 'con soluci&oacute;n') + '</span>' : '') + '<span class="tag">' + (a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>';
   } else if (S.skip[st.id]) tags = '<span class="tag">saltado</span>';
   tags += minTag(st.min);
   return '<a class="item step' + (done ? ' done' : '') + (cur ? ' cur' : '') + '" href="' + stepHref(st) + '"><span>' + mark + ' ' + stepLabel(st) + '</span><span>' + tags + '</span></a>';
@@ -203,6 +203,7 @@ function vRoad() {
       if (!cur || cur.name !== grp) { cur = { name: grp, steps: [] }; groups.push(cur); }
       cur.steps.push(st);
     });
+    if (sheetStages(g).length) h += '<div class="sub">Resumen</div><a class="item" href="#/resumen/' + enc(g.id) + '"><span>&#128221; Resumen y f&oacute;rmulas: lo que hay que recordar</span><span><span class="tag">consulta</span></span></a>';
     groups.forEach(function (gr) {
       h += '<div class="sub">' + gr.name + ' <span class="t">&middot; ' + mins(minsOf(gr.steps)) + '</span></div>';
       gr.steps.forEach(function (st) { h += stepRow(st, n && n.id === st.id); });
@@ -251,10 +252,17 @@ function vDetail(key) {
   }
   h += '<div class="card"><h2>' + exTitle(a) + '</h2>' +
     '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados</div>' + mdRender(e.statement) + '</div>';
-  if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> Habilidad: ' + (e.skills || []).map(function (id) { return esc(skillById[id] ? skillById[id].label : id) + ' (' + (theoryLinks(id) || 'sin teor&iacute;a') + ')'; }).join('; ') + '</div>';
-  if (V.hints >= 2 && hasSol) h += '<div class="card"><b>Pista 2.</b>' + mdRender(String(sol).split('\n').filter(function (l) { return l.trim(); }).slice(0, 3).join('\n')) + '</div>';
-  if (V.hints >= 3) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';
-  var maxH = hasSol ? 3 : 1, canRate = hasSol ? V.hints >= 3 : V.self;
+  /* A proposed (unofficial) solution is written in steps ("**Paso 1.** ..."): they are shown one at a time. */
+  var pieces = e.own && hasSol ? String(sol).split(/\n(?=\*\*Paso \d+)/) : null;
+  if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> Habilidad: ' + (e.skills || []).map(function (id) { return esc(skillById[id] ? skillById[id].label : id) + ' (' + (theoryLinks(id) || 'sin teor&iacute;a') + ')'; }).join('; ') + sheetLink(gp) + '</div>';
+  if (pieces) {
+    var shown = Math.min(Math.max(V.hints - 1, 0), pieces.length);
+    if (shown) h += '<div class="card"><b>Soluci&oacute;n propuesta, paso a paso.</b> <span class="muted">No es oficial: el ejercicio no trae soluci&oacute;n, as&iacute; que la he escrito yo. Comp&aacute;rala con tus apuntes.</span>' + mdRender(pieces.slice(0, shown).join('\n\n')) + (shown < pieces.length ? '<p class="muted">Quedan ' + (pieces.length - shown) + ' de ' + pieces.length + ' pasos.</p>' : '') + '</div>';
+  } else {
+    if (V.hints >= 2 && hasSol) h += '<div class="card"><b>Pista 2.</b>' + mdRender(String(sol).split('\n').filter(function (l) { return l.trim(); }).slice(0, 3).join('\n')) + '</div>';
+    if (V.hints >= 3) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';
+  }
+  var maxH = pieces ? 1 + pieces.length : hasSol ? 3 : 1, canRate = hasSol ? V.hints >= maxH : V.self;
   if (V.done != null) {
     var nx = st ? L.nextAfter(PATH, S, EXAMS, st.id, keepScope) : null;
     h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' ' + flame('sm') + ' <b>' + doneWord() + '</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
@@ -263,7 +271,8 @@ function vDetail(key) {
     h += '<div class="card row">&iquest;C&oacute;mo te fue? ' + RN.map(function (n, i) { return '<button class="btn ' + ['bad', 'warn', 'ok'][i] + '" data-act="rate" data-r="' + i + '">' + n + '</button>'; }).join('') + '</div>';
   } else {
     h += '<div class="row">';
-    if (V.hints < maxH) h += '<button class="btn" data-act="hint">Mostrar pista (' + (V.hints + 1) + '/' + maxH + ')</button>';
+    if (V.hints < maxH) h += '<button class="btn" data-act="hint">' + (pieces ? (V.hints === 0 ? 'Mostrar pista' : 'Mostrar el paso ' + V.hints + ' de ' + pieces.length) : 'Mostrar pista (' + (V.hints + 1) + '/' + maxH + ')') + '</button>';
+    if (pieces && V.hints < maxH - 1) h += '<button class="btn" data-act="allsteps">Ver la soluci&oacute;n completa</button>';
     if (!hasSol) h += '<span class="muted">Sin soluci&oacute;n oficial.</span>';
     if (!hasSol && V.hints >= 1) h += '<button class="btn pri" data-act="self">Ya lo comprob&eacute; por mi cuenta</button>';
     h += '</div>';
@@ -309,6 +318,29 @@ function vExam() {
   var tot = 0, mxs = 0; ex.exercises.forEach(function (e) { tot += X.s[e.id] || 0; mxs += X.p[e.id]; });
   var g = Math.round(tot / mxs * 100) / 10, nx = nextSteps(1)[0];
   return hh + '<div class="card"><h3>Nota: ' + g.toFixed(1) + ' / 10</h3><p>+' + X.xp + ' XP</p><div class="row"><button class="btn" data-act="exquit">Cerrar</button>' + (nx ? '<a class="btn pri" href="' + stepHref(nx) + '" data-act="exquit">Siguiente en la ruta &rarr;</a>' : '') + '</div></div>';
+}
+
+/* Summary sheets: what to remember of each etapa (formulas, schemes, typical mistakes). A tema shows the sheets of its etapas one after another.
+   They are for looking things up, so they are not steps of the route and do not count towards progress. */
+function sheetStages(g) { return g ? g.stages.filter(function (id) { return SUMM[id]; }) : []; }
+function sheetLink(g) { return sheetStages(g).length ? ' &middot; <a href="#/resumen/' + enc(g.id) + '">Resumen y f&oacute;rmulas</a>' : ''; }
+function vSheet(gid) {
+  var unit = ORG === 'temas' ? 'tema' : 'etapa', h = '<h2>Resumen</h2>';
+  if (!Object.keys(SUMM).length) return h + '<div class="warnbox">No se encontraron los res&uacute;menes en <code>data-lectures.js</code>. Ejecuta <code>python3 tools/build.py</code>.</div>';
+  var cur = GROUPS_ALL.find(function (g) { return g.id === gid; }) || groupOfStage[gid] || GROUPS[0] || GROUPS_ALL[0];
+  h += '<p class="muted">Lo que hay que recordar de cada ' + unit + ': f&oacute;rmulas, esquemas y errores t&iacute;picos. Es para consultar r&aacute;pido; no cuenta como paso de la ruta.</p>';
+  h += '<div class="theory"><div class="side">' + GROUPS_ALL.map(function (g) {
+    return '<a href="#/resumen/' + enc(g.id) + '"' + (g === cur ? ' class="on"' : '') + '>' + esc(g.label) + (GROUPS.indexOf(g) < 0 ? '<br><span class="muted">fuera de tu ruta</span>' : '') + '</a>';
+  }).join('') + '</div><div class="sheet">';
+  h += '<h2>' + esc(cur.label) + '</h2>';
+  var ids = sheetStages(cur);
+  ids.forEach(function (id) {
+    if (ids.length > 1) h += '<h3>' + esc(stageById[id].title) + '</h3>' + mdRender(SUMM[id]);
+    else h += mdRender(SUMM[id].replace(/^## /gm, '# '));   // one sheet: its sections are the headings under the page title
+  });
+  var th = cur.stages.map(function (id) { return PATH.find(function (x) { return x.type === 'theory' && x.stage === id; }); }).filter(Boolean)[0];
+  h += '<p class="muted">' + (th ? '<a href="' + stepHref(th) + '">Leer la teor&iacute;a completa</a> &middot; ' : '') + '<a href="#/ruta">Volver a la ruta</a></p></div></div>';
+  return h;
 }
 
 function vTheory(lid, idx, stepId) {
@@ -403,6 +435,7 @@ function route() {
   else if (tab === 'ruta') h = vRoad();
   else if (tab === 'examen') h = vExam();
   else if (tab === 'teoria') h = vTheory(p[1], p[2], p[3]);
+  else if (tab === 'resumen') h = vSheet(p[1]);
   else if (tab === 'progreso') h = vProgress();
   else if (tab === 'ajustes') h = vSettings();
   else { tab = 'hoy'; h = vHoy(); }
@@ -430,6 +463,7 @@ document.addEventListener('click', function (ev) {
   if (act === 'accent-set') { if (TH) TH.setAccent(b.dataset.c); renderPop(); return; }
   if (act === 'accent-reset') { if (TH) TH.setAccent(null); renderPop(); return; }
   if (act === 'hint') { V.hints++; rerender(); }
+  else if (act === 'allsteps') { V.hints = 1e3; rerender(); }
   else if (act === 'self') { V.self = true; rerender(); }
   else if (act === 'rate') { V.done = rate(V.key, +b.dataset.r, Math.min(3, V.hints)); rerender(); }
   else if (act === 'skip') {
