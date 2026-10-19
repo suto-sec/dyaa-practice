@@ -652,7 +652,7 @@ function route() {
   else { tab = 'hoy'; h = vHoy(); }
   if (NOTE && tab !== 'ejercicios') { h = '<div class="card next">' + NOTE + '</div>' + h; NOTE = ''; }
   h = syncBanner() + h;
-  $('#app').innerHTML = h; stats();
+  $('#app').innerHTML = h; $('#app').className = tab === 'teoria' || tab === 'resumen' ? 'wide' : ''; stats();
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) { a.classList.toggle('on', a.dataset.tab === tab); });
   if (tab === 'teoria' && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
   else window.scrollTo(0, 0);

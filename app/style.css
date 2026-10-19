@@ -39,6 +39,10 @@ select,input[type=number]{font:inherit;padding:6px;border-radius:8px;border:1px 
 .bar>i{display:block;height:100%;background:var(--ac)}
 .timer{font-variant-numeric:tabular-nums;font-weight:700}
 .warnbox{border:1px dashed var(--warn);padding:10px;border-radius:10px;margin-bottom:12px}
+/* reading pages use the whole width: the outline sits at the far left and the text takes the rest (capped so lines stay readable) */
+main.wide{max-width:none;padding:16px clamp(12px,2vw,28px) 40px}
+main.wide .theory{grid-template-columns:clamp(240px,20vw,320px) minmax(0,1fr);gap:clamp(20px,3vw,48px)}
+main.wide .tbody{max-width:1180px}
 .theory{display:grid;grid-template-columns:270px minmax(0,1fr);gap:24px;align-items:start}
 .theory .side{position:sticky;top:calc(var(--topH,56px) + 12px);max-height:calc(100vh - var(--topH,56px) - 24px);overflow-y:auto;overscroll-behavior:contain;padding-right:4px;scrollbar-width:thin}
 .theory .side a{display:block;padding:6px 10px;border-radius:8px;text-decoration:none;color:var(--fg)}
@@ -69,7 +73,7 @@ select,input[type=number]{font:inherit;padding:6px;border-radius:8px;border:1px 
 .tocbtn{display:none}
 .ttitle{margin-bottom:.3em}
 @media (max-width:860px){
-  .theory{grid-template-columns:1fr}
+  .theory,main.wide .theory{grid-template-columns:1fr}
   .theory .side{display:none}
   .theory.tocopen .side{display:block;position:fixed;z-index:30;left:8px;right:8px;top:calc(var(--topH,56px) + 52px);bottom:8px;max-height:none;padding:12px;background:var(--card);border:1px solid var(--bd);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.3)}
   .tocbtn{display:flex;gap:10px;align-items:center;position:sticky;top:calc(var(--topH,56px) + 4px);z-index:6;width:100%;margin:0 0 10px;padding:9px 12px;font:inherit;text-align:left;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08)}
