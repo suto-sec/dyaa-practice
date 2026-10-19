@@ -242,7 +242,7 @@ function vList() {
 function vDetail(key) {
   var a = byKey[key];
   if (!a) return '<p>Ejercicio no encontrado. <a href="#/ejercicios">Volver</a></p>';
-  if (V.key !== key) V = { key: key, hints: 0, started: null, self: false, done: null };
+  if (V.key !== key) V = { key: key, hints: 0, self: false, done: null };
   var e = a.e, sol = e.solution, hasSol = sol != null && String(sol).trim() !== '', st = stepById['e:' + key], gp = st && groupOfStage[st.stage];
   var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a></p>';
   if (gp) {
@@ -251,7 +251,6 @@ function vDetail(key) {
   }
   h += '<div class="card"><h2>' + exTitle(a) + '</h2>' +
     '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados</div>' + mdRender(e.statement) + '</div>';
-  h += '<div class="card row"><span class="timer" id="tm"></span> <button class="btn" data-act="timer">' + (V.started ? 'Reiniciar cron&oacute;metro' : 'Iniciar cron&oacute;metro') + '</button></div>';
   if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> Habilidad: ' + (e.skills || []).map(function (id) { return esc(skillById[id] ? skillById[id].label : id) + ' (' + (theoryLinks(id) || 'sin teor&iacute;a') + ')'; }).join('; ') + '</div>';
   if (V.hints >= 2 && hasSol) h += '<div class="card"><b>Pista 2.</b>' + mdRender(String(sol).split('\n').filter(function (l) { return l.trim(); }).slice(0, 3).join('\n')) + '</div>';
   if (V.hints >= 3) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';
@@ -412,7 +411,6 @@ function route() {
   Array.prototype.forEach.call(document.querySelectorAll('#nav a'), function (a) { a.classList.toggle('on', a.dataset.tab === tab); });
   if (tab === 'teoria' && p[2] != null) { var el = document.getElementById('sec-' + p[2]); if (el) { el.scrollIntoView(); el.classList.add('flash'); } }
   else window.scrollTo(0, 0);
-  if (tab === 'ejercicios' && p[1] && V.started) startTimer(function () { var t = $('#tm'); if (t) t.textContent = fmt((Date.now() - V.started) / 1000); });
   if (tab === 'examen' && X && X.phase === 'run') startTimer(function () { var t = $('#tm'); if (!t) return; var left = (X.end - Date.now()) / 1000; t.textContent = fmt(left); if (left <= 0) t.style.color = 'var(--bad)'; });
 }
 function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
@@ -433,7 +431,6 @@ document.addEventListener('click', function (ev) {
   if (act === 'accent-reset') { if (TH) TH.setAccent(null); renderPop(); return; }
   if (act === 'hint') { V.hints++; rerender(); }
   else if (act === 'self') { V.self = true; rerender(); }
-  else if (act === 'timer') { V.started = Date.now(); rerender(); }
   else if (act === 'rate') { V.done = rate(V.key, +b.dataset.r, Math.min(3, V.hints)); rerender(); }
   else if (act === 'skip') {
     var sid = b.dataset.step; S.skip[sid] = true; awardAll(); save();
