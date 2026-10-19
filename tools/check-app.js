@@ -45,7 +45,7 @@ function run(f) { vm.runInContext(fs.readFileSync(path.join(APP, f), 'utf8'), ct
 run('data-lectures.js');
 const hasExams = fs.existsSync(path.join(APP, 'data-exams.js'));
 if (hasExams) run('data-exams.js');
-run('md.js'); run('logic.js'); run('logo.js'); run('theme.js');
+run('md.js'); run('logic.js'); run('practice.js'); run('logo.js'); run('theme.js');
 run('app.js');
 
 const app = () => els['#app'].innerHTML;
@@ -390,7 +390,7 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   cfgChange('timer', true);   // the reset below must keep it
 }
 
-// practice without paper: its own tab, the mixed test and the ordering of steps
+// practice without paper: its own tab, generated practice, code fragments, the notebook, the mixed test
 {
   const st = () => JSON.parse(store['dyaa-practice-v1']);
   const navHtml = fs.readFileSync(path.join(APP, 'index.html'), 'utf8');
@@ -401,41 +401,73 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   go('#/ejercicios'); ok(!/&#9998; papel/.test(app()) && !/Modo sin papel/.test(app()), 'the exercises are not marked or hidden');
   click({ act: 'cfgset', k: 'daily', v: '480' }); go('#/hoy'); ok(!hasExams || /href="#\/ejercicios\//.test(app()), 'Hoy plans exercises and readings together as always');
   click({ act: 'cfgset', k: 'daily', v: '30' });
-  // practice menu
-  go('#/practica'); ok(/Pr&aacute;ctica sin papel/.test(app()) && /href="#\/practica\/test"/.test(app()) && /Ordenar los pasos/.test(app()) && !/arjeta/.test(app()), 'the practice page offers the mixed test and the ordering');
-  // mixed test
+  // practice page: three kinds of generated practice, the code fragments, the notebook, the mixed test
+  const PRC = win.DYAA_PRACTICE, blocks = PRC.codeBlocks(win.LECTURES);
+  go('#/practica'); const pg = app();
+  ok(/<h2>Sin papel<\/h2>/.test(pg) && /Ejercicios generados/.test(pg) && /Trazar el algoritmo/.test(pg) && /Completar el c&oacute;digo/.test(pg) && /<h3>Cuaderno<\/h3>/.test(pg) && /Test mixto/.test(pg), 'the page has its sections');
+  ok(PRC.DRILLS.every(d => pg.indexOf('href="#/practica/ej/' + d.id + '"') >= 0) && PRC.TRACES.every(d => pg.indexOf('href="#/practica/traza/' + d.id + '"') >= 0), 'every drill and every trace is a row you can pick');
+  ok((pg.match(/href="#\/practica\/codigo\/(?!mezcla)/g) || []).length === blocks.length && blocks.length >= 50, 'and so is every code fragment of the lectures (' + blocks.length + ')');
+  ok(!/Ordenar los pasos|arjeta/.test(pg), 'the step ordering and the cards are not there');
+  const lec1 = blocks[0].lecture; click({ act: 'clfilter', v: lec1 });
+  ok((app().match(/href="#\/practica\/codigo\/(?!mezcla)/g) || []).length === blocks.filter(b => b.lecture === lec1).length, 'the code list can be filtered by tema'); click({ act: 'clfilter', v: '' });
+  ok(/>nuevo</.test(app()), 'what has not been practised says so');
+  // a session of generated questions
+  const answerAll = (n) => { let right = 0; for (let i = 0; i < n; i++) { click({ act: 'sopt', o: '0' }); if (/<b>Correcto\./.test(app())) right++; click({ act: 'sopt', o: '1' }); click({ act: 'snext' }); } return right; };
+  const xp0 = st().xp, log0 = st().log.length;
+  go('#/practica/ej/master'); ok(/pregunta 1 de 10/.test(app()) && /data-act="sopt"/.test(app()) && !/data-act="snext"/.test(app()), 'a drill session shows one question at a time');
+  click({ act: 'sopt', o: '0' }); ok(/data-act="snext"/.test(app()) && /class="why (good|miss)"/.test(app()), 'answering shows whether it was right, why, and a way on');
+  const first = /<b>Correcto\./.test(app()); click({ act: 'sopt', o: '1' }); ok(/<b>Correcto\./.test(app()) === first && st().prac['drill:master'].n === 1, 'an answer cannot be changed or counted twice');
+  click({ act: 'snext' }); ok(/pregunta 2 de 10/.test(app()), 'on to the next question');
+  const right = (first ? 1 : 0) + answerAll(9);
+  ok(/Registrado: <b>\+/.test(app()) && new RegExp(': ' + right + ' de 10').test(app()), 'ten questions end with the result: ' + right + ' of 10');
+  ok(st().prac['drill:master'].n === 10 && st().prac['drill:master'].ok === right, 'the right answers are counted for that drill');
+  ok(Math.abs(st().xp - xp0 - right * 0.3) < 0.011, 'each right answer gives 0.3 XP');
+  const ent = st().log[st().log.length - 1]; ok(st().log.length === log0 + 1 && ent.ty === 'drill' && /Teorema maestro \(\d+\/10\)/.test(ent.label), 'one log entry per session: ' + JSON.stringify(ent));
+  click({ act: 'pnew', k: 'ej', key: 'master' }); ok(/pregunta 1 de 10/.test(app()) && !/Registrado/.test(app()), 'another round starts clean');
+  go('#/practica'); ok(new RegExp('<span class="tag r\\d" title="Aciertos hasta ahora">' + right + ' de 10</span>').test(app()), 'the list now shows how many you got right in that drill');
+  // ranking question: tap in order, undo
+  go('#/practica/ej/orden'); const nr = (app().match(/data-act="srank"/g) || []).length;
+  ok(nr === 5, 'a ranking question has five items to tap'); click({ act: 'srank', i: '0' }); ok((app().match(/data-act="srank"/g) || []).length === 4 && /data-act="sundo"/.test(app()), 'a tapped item leaves the pool');
+  click({ act: 'sundo' }); ok((app().match(/data-act="srank"/g) || []).length === 5, 'and comes back with undo');
+  for (let i = 0; i < 5; i++) click({ act: 'srank', i: String(i) }); ok(/<b>(Correcto|No exactamente)\./.test(app()) && /De menor a mayor/.test(app()), 'the fifth tap answers it and shows the right order'); ok(st().prac['drill:orden'].n === 1, 'and counts');
+  // traces and code
+  go('#/practica/traza/hanoi'); ok(/pregunta 1 de 6/.test(app()), 'a trace session is six questions'); const px = st().xp; click({ act: 'sopt', o: '0' }); ok(st().xp === px || Math.abs(st().xp - px - 0.5) < 0.011, 'a right trace answer gives 0.5 XP');
+  go('#/practica/traza/mezcla'); ok(/pregunta 1 de 6/.test(app()), 'a mix of all traces');
+  go('#/practica/codigo/' + encodeURIComponent(blocks[0].id)); ok(/qué línea falta/.test(app()) && /\?\?\?/.test(app()) && /class="opt/.test(app()), 'a code session hides a line and offers lines to put back');
+  ok(new RegExp('pregunta 1 de ' + Math.min(5, blocks[0].blankable.length)).test(app()), 'with up to five questions per fragment');
+  go('#/practica/codigo/mezcla'); ok(/Mezcla de código/.test(app()) && /pregunta 1 de 8/.test(app()), 'a mix of fragments');
+  go('#/practica/codigo/no-existe'); ok(/No hay preguntas/.test(app()), 'an unknown fragment does not break the page');
+  go('#/practica/ej/mezcla'); ok(/pregunta 1 de 10/.test(app()), 'a mix of all drills');
+  // the mixed test
   const before = st().xp;
   go('#/practica/test'); const nq = (app().match(/class="card quiz"/g) || []).length;
   ok(nq === 8 && !/data-act="testdone"/.test(app()), 'a mixed test has eight questions');
   for (let i = 0; i < nq; i++) click({ act: 'qpick', q: String(i), o: '0' });
-  const wrong = (app().match(/class="opt bad"/g) || []).length, right = nq - wrong;
-  ok(/data-act="testdone"/.test(app()) && new RegExp(right + ' de 8').test(app()), 'answering all shows the score and offers to register it');
+  const wrong = (app().match(/class="opt bad"/g) || []).length, rightT = nq - wrong;
+  ok(/data-act="testdone"/.test(app()) && new RegExp(rightT + ' de 8').test(app()), 'answering all shows the score and offers to register it');
   click({ act: 'testdone' }); const logN = st().log.length;
-  ok(st().log[logN - 1].ty === 'mix' && st().log[logN - 1].xp === right * 0.5 && Math.abs(st().xp - before - right * 0.5) < 0.01, 'the test is logged and gives half an XP per right answer (' + right + ' right)');
+  ok(st().log[logN - 1].ty === 'mix' && st().log[logN - 1].xp === rightT * 0.5 && Math.abs(st().xp - before - rightT * 0.5) < 0.01, 'the test is logged and gives half an XP per right answer (' + rightT + ' right)');
   click({ act: 'testdone' }); ok(st().log.length === logN, 'registering twice does not count twice');
-  ok(/data-act="pnew" data-k="test"/.test(app()), 'and another test can be started');
   click({ act: 'pnew', k: 'test' }); ok((app().match(/class="card quiz"/g) || []).length === 8 && !/Registrado/.test(app()), 'a new test starts clean');
-  // putting the steps in order (needs a proposed solution written in steps)
-  if (hasExams) {
-    const ex0 = win.EXAMS.find(e => e.kind === 'analisis') || win.EXAMS[0], e0 = ex0.exercises[0], keep = [e0.solution, e0.own];
-    e0.solution = '**Paso 1.** primero\n\n**Paso 2.** segundo\n\n**Paso 3.** tercero\n\n**Paso 4.** cuarto'; e0.own = true;
-    go('#/practica'); ok(/href="#\/practica\/pasos"/.test(app()), 'with such a solution the ordering exercise is available');
-    go('#/practica/pasos'); const np = (app().match(/data-act="opick"/g) || []).length;
-    ok(np >= 3 && /Toca los pasos/.test(app()), 'the steps come as buttons to tap');
-    const lg = st().log.length;
-    for (let i = 0; i < np; i++) click({ act: 'opick', i: String(i) });   // in the original order
-    ok(new RegExp(np + ' de ' + np + ' pasos en su sitio').test(app()) && /perfecto/.test(app()), 'tapping them in the right order is a perfect score');
-    ok(st().log.length === lg + 1 && st().log[lg].ty === 'order' && st().log[lg].xp === 2, 'it is logged, 2 XP for all in place');
-    click({ act: 'opick', i: '0' }); ok(st().log.length === lg + 1, 'taps after the end do nothing');
-    click({ act: 'pnew', k: 'pasos' }); const np2 = (app().match(/data-act="opick"/g) || []).length;
-    for (let i = np2 - 1; i >= 0; i--) click({ act: 'opick', i: String(i) });   // backwards
-    ok(/El orden de la soluci&oacute;n/.test(app()) && /class="miss"/.test(app()), 'a wrong order shows the right one');
-    click({ act: 'pnew', k: 'pasos' }); const np3 = (app().match(/data-act="opick"/g) || []).length; click({ act: 'opick', i: '1' }); ok(/Deshacer/.test(app()) && (app().match(/data-act="opick"/g) || []).length === np3 - 1, 'a tapped step leaves the list'); click({ act: 'oundo' }); ok(!/Deshacer/.test(app()) && (app().match(/data-act="opick"/g) || []).length === np3, 'and a tap can be undone');
-    e0.solution = keep[0]; e0.own = keep[1];
-  }
   // the log can show only this kind of practice
-  go('#/registro'); click({ act: 'logty', v: 'paperless' }); ok(/title="mix"|title="order"/.test(app()) && !/title="ex"|title="theory"/.test(app()), 'the log can be filtered to practice without paper');
+  go('#/registro'); click({ act: 'logty', v: 'paperless' }); ok(/title="drill"/.test(app()) && /title="mix"/.test(app()) && !/title="ex"|title="theory"/.test(app()), 'the log can be filtered to practice without paper');
   click({ act: 'logty', v: '' });
+  // notebook of an exercise
+  if (hasExams) {
+    const key = Object.keys(win.STAGE_EX).map(k => win.STAGE_EX[k]).reduce((a, b) => a.concat(b), [])[0];
+    go('#/ejercicios/' + encodeURIComponent(key)); ok(/<details class="card nb" id="nbd">/.test(app()) && /<textarea id="nb"/.test(app()) && /data-act="nbins"/.test(app()), 'every exercise has a notebook, closed while empty');
+    (handlers.input || []).forEach(f => f({ target: { id: 'nb', value: 'Primero $\\sum_{i=1}^{n} i = n(n+1)/2$' } }));
+    ok(st().notes[key] === 'Primero $\\sum_{i=1}^{n} i = n(n+1)/2$', 'what you type is saved with the progress');
+    go('#/ejercicios/' + encodeURIComponent(key)); ok(/<details class="card nb" id="nbd" open>/.test(app()) && />Primero \$\\sum/.test(app()), 'it comes back, open, with the text');
+    go('#/ejercicios'); ok(/&#9998; notas/.test(app()), 'the list marks the exercises with notes');
+    const ta = { value: 'ab', selectionStart: 1, selectionEnd: 1, focus() {} }, realGet = ctx.document.getElementById; ctx.document.getElementById = (i) => i === 'nb' ? ta : null;
+    ctx.document.getElementById = realGet;
+    (handlers.input || []).forEach(f => f({ target: { id: 'nb', value: '' } })); ok(!(key in st().notes), 'emptying it removes the note');
+    ctx.document.getElementById = (i) => i === 'nb' ? ta : null; click({ act: 'nbins', t: '$x$' }); ctx.document.getElementById = realGet;
+    ok(st().notes[key] === 'a$x$b' && ta.selectionStart === 4, 'a symbol button inserts at the cursor');
+    (handlers.input || []).forEach(f => f({ target: { id: 'nb', value: '' } }));
+    go('#/practica'); ok(/<h3>Cuaderno<\/h3>/.test(app()), 'the practice page points to the notebook');
+  }
 }
 
 // export/import round trip keeps state

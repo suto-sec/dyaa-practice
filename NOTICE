@@ -35,6 +35,11 @@ Licensing overview
    questions written from the content of each reading of those lecture notes. They
    are licensed under CC BY-SA 4.0 and contain nothing from item 4.
 
+   The "Completar el codigo" practice shows fragments of the code printed in
+   those lecture notes (read from the generated data at runtime); the generators
+   of the other practice (app/practice.js) are original code under the MIT
+   License.
+
    As required by ShareAlike, these adapted files are licensed under
    CC BY-SA 4.0 as well.
 

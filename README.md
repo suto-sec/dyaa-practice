@@ -113,7 +113,7 @@ Re-run step 3 whenever you change the exam files. `app/data-exams.js` and `conte
 
 ## For developers
 
-Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-logic.js`, `node tools/check-app.js`.
+Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-logic.js`, `node tools/check-app.js`, `node tools/check-practice.js` (the generators: every question has one right answer, checked against independent computations).
 
 `python3 tools/build.py` regenerates `app/data-lectures.js` (committed) and `app/data-exams.js` (not committed) from `content/`. Edit `content/lectures/*.md` or `tools/roadmap.json` and run it again. Regenerating the slide figures needs `pdftoppm` and ImageMagick (`tools/figures.py`).
 
@@ -132,7 +132,13 @@ Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-lo
 - **Gear menu** (top right): the only place for settings. Theme (system, light, dark) and accent colour (presets, a picker, or any CSS colour; it colours buttons, bars, the flame, the logo and the tab icon), route and organisation, daily goal, stopwatch, exam realism, and the data (export, import, reset, shared file). Theme, accent, route and organisation are saved in the browser apart from the progress; resetting progress keeps them. The old `#/ajustes` address now opens the menu.
 - **Rating** after each exercise: Fallé / Dudoso / Dominado. XP depends on points, hints used and rating; finishing a stage gives a bonus.
 - **Examen**: every past exam can be sat whole (clock, then you mark your own answers) or done exercise by exercise from the list, with the hints and the solution of any other exercise. What the whole-exam simulator allows is set in the gear menu → *Simulador de examen*: the countdown, ending by itself when the time is up, hints and solutions while sitting. Two presets, *Examen real* and *Relajado*. Help used costs XP like in the exercises (a hint 25%, a solution 75% of that exercise's share); the mark you give yourself is never changed.
-- **Sin papel** (its own tab in the top bar): for when you only have the laptop. *Test mixto*: 8 questions, each from a different reading you have done, taken from the quick checks (0.5 XP per right answer). *Ordenar los pasos*: an exercise with a proposed solution written in steps, shuffled; you tap the steps in order (needs `content/exams/soluciones/`). There is no mode to switch: you pick whichever entry fits what you have at hand.
+- **Sin papel** (its own tab in the top bar): practice for when you only have the laptop. Nothing to write by hand, everything is answered with clicks and checked at once, and every list shows how many you have got right.
+  - *Ejercicios generados* (10 questions a round, 0.3 XP per right answer): questions made on the spot, so they never run out and the numbers change every time. Master theorem, recurrences by subtraction, cost of nested loops, ordering functions by growth, closed forms of sums, logarithms and powers. Each answer comes with the reason.
+  - *Trazar el algoritmo* (6 questions, 0.5 XP each): run an algorithm in your head on a small random input and say what it does. Towers of Hanoi, Fibonacci calls, merge sort comparisons, binary search, Lomuto partition, activity selection, greedy coins (and when greedy is not optimal), n queens, subset sums, Dijkstra. The answers come from real implementations.
+  - *Completar el código* (up to 5 questions per fragment, 0.3 XP each): a line of code from the lecture notes is hidden and you pick the right one among slips on it (a changed bound, operator or constant) and lines of the same kind. One entry per code block of the lectures, filterable by tema.
+  - *Test mixto* (0.5 XP per right answer): 8 questions from the quick checks, each from a different reading you have done.
+  - Every exercise also has a **cuaderno**: a box to write your working on screen, with formulas between `$...$`, a live preview and buttons for common symbols. It is saved with your progress (and marked *notas* in the lists); then compare with the hints and the solution as usual.
+  Each finished round is one entry in the **Registro** (filter *Sin papel*). The generators are in `app/practice.js`.
 - **Registro**: every reading, quick check, exercise, exam and skipped step with its day and time, its rating and XP, and how long it took when the stopwatch (gear menu → *Estudio*) was on. It can be filtered by type. Without the stopwatch each entry counts with its time estimate in the day totals.
 - **Settings that travel with the progress** (daily goal, stopwatch, exam realism) are saved inside the progress, so a [shared progress file](#share-it-between-profiles-and-computers) carries them to your other profiles. Resetting the progress keeps them. The gear-menu options (theme, accent, route, organisation) stay per browser profile.
 - **Resumen**: one sheet per etapa (per tema when organised by temas) with the formulas, schemes and typical mistakes to remember. It is a quick reference: it has its own tab, a row at the top of every block in **Ruta** and a link in the first hint of each exercise, and it is not a route step, so it does not count towards progress. The sheets live in `content/summaries/<stage id>.md`.
@@ -152,7 +158,7 @@ tools/figures.*     slide figures: figures.json (page and crop of each) and figu
 tools/roadmap.json  stages, theory per stage, manual stage overrides
 tools/check-*.js    node checks: math rendering, roadmap logic, app click-through
 tools/route-table.js  prints the route (readings, checks, exercises) to review how it alternates
-app/                index.html, app.js, logic.js (pure roadmap/SRS/time logic), theme.js (theme and accent, loaded in <head>), logo.js, md.js, style.css, img/ (figures), vendor/katex
+app/                index.html, app.js, logic.js (pure roadmap/SRS/time logic), practice.js (generators of the practice without paper), theme.js (theme and accent, loaded in <head>), logo.js, md.js, style.css, img/ (figures), vendor/katex
 ```
 
 ## Licensing
