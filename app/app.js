@@ -85,7 +85,10 @@ function syncRun(ask) {
       lsSet(SYK.last, String(S.updated)); SYNC.state = 'ok'; SYNC.msg = '';
       return false;
     });
-  }).catch(function (e) { SYNC.state = 'error'; SYNC.msg = String(e && e.message || e); return false; });
+  }).catch(function (e) {
+    if (e && e.name === 'NotFoundError') { SYNC.state = 'missing'; SYNC.msg = ''; return false; }   // the remembered path is gone: another computer, or the file was moved
+    SYNC.state = 'error'; SYNC.msg = String(e && e.message || e); return false;
+  });
 }
 function syncUse(h) {
   SYNC.handle = h; SYNC.name = h.name || 'progreso.json';
@@ -847,9 +850,10 @@ function syncBlock() {
   h += '<p class="muted">Cada perfil de Chrome (y cada navegador) guarda su propio progreso. Para compartirlo, elige un archivo (por ejemplo en una carpeta que ya sincronices) y usa <b>el mismo archivo en cada perfil</b>.</p>';
   if (!syncCan()) return h + '<p class="muted">Este navegador no permite elegir un archivo compartido (hace falta Chrome o Edge, abriendo la p&aacute;gina desde un archivo local o un servidor). Usa Exportar e Importar para llevar el progreso de un sitio a otro.</p></div>';
   if (SYNC.handle) {
-    var st = SYNC.state === 'ok' ? '<span class="tag r2">al d&iacute;a</span>' : SYNC.state === 'needs' ? '<span class="tag r1">falta permiso</span>' : '<span class="tag r0">error</span>';
+    var st = SYNC.state === 'ok' ? '<span class="tag r2">al d&iacute;a</span>' : SYNC.state === 'needs' ? '<span class="tag r1">falta permiso</span>' : SYNC.state === 'missing' ? '<span class="tag r1">no encontrado</span>' : '<span class="tag r0">error</span>';
     h += '<p>Progreso compartido mediante <b>' + esc(SYNC.name) + '</b> ' + st + '</p>' + (SYNC.msg ? '<p class="muted">' + esc(SYNC.msg) + '</p>' : '');
-    h += '<div class="row">' + (SYNC.state === 'needs' ? '<button class="btn pri" data-act="sync-now">Dar permiso al archivo</button>' : '<button class="btn" data-act="sync-now">Sincronizar ahora</button>') + '<button class="btn" data-act="sync-off">Dejar de compartir</button></div>';
+    if (SYNC.state === 'missing') h += '<p class="muted">El navegador recuerda la ruta del archivo, pero ya no existe en este ordenador (otra carpeta u otro usuario). Elige de nuevo el archivo.</p>';
+    h += '<div class="row">' + (SYNC.state === 'needs' ? '<button class="btn pri" data-act="sync-now">Dar permiso al archivo</button>' : SYNC.state === 'missing' ? '<button class="btn pri" data-act="sync-open">Elegir el archivo</button><button class="btn" data-act="sync-new">Crear uno nuevo</button>' : '<button class="btn" data-act="sync-now">Sincronizar ahora</button>') + '<button class="btn" data-act="sync-off">Dejar de compartir</button></div>';
     h += '<p class="muted">Se escribe tras cada cambio y se lee al abrir la p&aacute;gina o volver a esta pesta&ntilde;a. Si dos perfiles cambian el progreso por separado se te pregunta cu&aacute;l conservar y se guarda una copia del otro.</p>';
   } else {
     h += '<p>Ahora mismo: <b>solo este perfil</b>.</p><div class="row"><button class="btn pri" data-act="sync-new">Crear un archivo de progreso</button><button class="btn" data-act="sync-open">Usar un archivo que ya existe</button></div>';
@@ -863,6 +867,7 @@ function syncBanner() {
     return '<div class="card next"><b>Guarda tu progreso en un archivo</b><p>Ahora mismo solo existe en este perfil del navegador. Elige un archivo una vez (si lo dejas en una carpeta que ya sincronizas, mejor) y tus otros perfiles y ordenadores lo usar&aacute;n sin exportar ni importar nada.</p><div class="row"><button class="btn pri" data-act="sync-new">Crear el archivo</button><button class="btn" data-act="sync-open">Ya tengo uno</button><button class="btn" data-act="sync-later">Ahora no</button></div></div>';
   }
   if (SYNC.state === 'ok') return '';
+  if (SYNC.state === 'missing') return '<div class="warnbox">No encuentro el archivo de progreso (<b>' + esc(SYNC.name) + '</b>) en la ruta que recuerda el navegador; seguramente es de otro ordenador. <button class="btn pri" data-act="sync-open">Elegir el archivo</button> <button type="button" class="linkbtn" data-act="sync-off">Dejar de compartir</button></div>';
   return '<div class="warnbox">' + (SYNC.state === 'needs' ? 'Haz clic en cualquier parte de la p&aacute;gina para dar permiso al archivo de progreso (<b>' + esc(SYNC.name) + '</b>); el navegador lo pide una vez por sesi&oacute;n. <button class="btn pri" data-act="sync-now">Dar permiso</button>' : 'No se pudo sincronizar el progreso con <b>' + esc(SYNC.name) + '</b>: ' + esc(SYNC.msg) + ' <button type="button" class="linkbtn" data-act="settings" data-open="data">Ver ajustes</button>') + '</div>';
 }
 

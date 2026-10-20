@@ -526,6 +526,13 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms || 15));
   const rival = JSON.parse(file.text); rival.xp = 555; rival.theory['t:t21-sumas-basicas'] = true; rival.updated = Date.now() + 20000; file.text = JSON.stringify(rival);
   ctx.confirm = () => true; await wait(600);
   ok(local().xp === 555 && JSON.parse(file.text).xp === 555, 'a write that would overwrite a newer file asks first instead (' + mine + ' XP here)');
+  // the remembered path does not exist here (profile copied from another computer, file moved): say so and offer to pick the file again
+  const goodGet = handle.getFile; handle.getFile = async () => { const e = new Error('A requested file or directory could not be found at the time an operation was processed.'); e.name = 'NotFoundError'; throw e; };
+  click({ act: 'sync-now' }); await wait(60);
+  go('#/hoy'); ok(/No encuentro el archivo de progreso/.test(app()) && /Elegir el archivo/.test(app()) && !/could not be found/.test(app()), 'a path that no longer exists gets a plain message and a button to pick the file again');
+  openMenu('data'); ok(/no encontrado/.test(popHtml()) && /Elegir el archivo/.test(popHtml()), 'and the settings offer the same');
+  handle.getFile = goodGet; click({ act: 'sync-open' }); await wait(80);
+  go('#/hoy'); ok(!/No encuentro el archivo/.test(app()), 'picking the file again clears it');
   // stop sharing
   click({ act: 'sync-off' }); await wait(40);
   ok(store['dyaa-practice-sync'] == null, 'stopping the sharing forgets the file');
