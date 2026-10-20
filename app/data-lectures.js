@@ -6229,6 +6229,492 @@ window.LADDER = {
     "solution": "**Paso 1. $n=2$ a mano.** a) $i=0$: $j=1$ da $1$ llamada, $j=2$ da $2$. $i=1$: $j=2$ da $2$. Total $5$.\n\n**Paso 2. Plantea el sumatorio.** b) La vuelta $(i,j)$ ejecuta el `for k` $j$ veces: $\\sum_{i=0}^{n-1}\\sum_{j=i+1}^{n}j$.\n\n**Paso 3. Cambia el orden.** c) El valor $j$ ($1\\le j\\le n$) aparece para $i=0,\\dots,j-1$, es decir, $j$ veces. El total es $\\sum_{j=1}^{n}j\\cdot j=\\sum_{j=1}^{n}j^{2}=\\dfrac{n(n+1)(2n+1)}{6}$. Con $n=2$: $\\frac{2\\cdot3\\cdot5}{6}=5$.\n\n**Paso 4. Comprueba y ordena.** d) $n=3$: $i=0$: $1+2+3=6$; $i=1$: $2+3=5$; $i=2$: $3$. Total $14$ y $\\frac{3\\cdot4\\cdot7}{6}=14$. Orden $\\Theta(n^{3})$."
    },
    {
+    "id": "peldanos#E01",
+    "n": "E01",
+    "title": "Calcular valores y ver el patrón",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.2,
+    "steps": true,
+    "statement": "Una recurrencia dice cómo se calcula $T(n)$ a partir de valores anteriores. Calcula los primeros valores y adivina una fórmula sin recurrencia:\n- a) $T(0)=2$ y $T(n)=T(n-1)+4$. Calcula $T(1),\\dots,T(4)$.\n- b) $T(1)=1$ y $T(n)=T(n-1)+n$. Calcula $T(2),\\dots,T(5)$.\n- c) $T(1)=1$ y $T(n)=2\\,T(n-1)+1$. Calcula $T(2),\\dots,T(5)$.",
+    "hint": "Calcula en orden: cada valor usa el anterior. Después mira cómo se relaciona cada resultado con $n$.",
+    "solution": "**Paso 1. a).** $T(1)=6$, $T(2)=10$, $T(3)=14$, $T(4)=18$. Crece de $4$ en $4$ desde $2$: parece $T(n)=4n+2$.\n\n**Paso 2. b).** $T(2)=3$, $T(3)=6$, $T(4)=10$, $T(5)=15$: son las sumas $1+2+\\cdots+n$, es decir $\\frac{n(n+1)}{2}$.\n\n**Paso 3. c).** $T(2)=3$, $T(3)=7$, $T(4)=15$, $T(5)=31$: uno menos que una potencia de $2$, $T(n)=2^{n}-1$.\n\n**Paso 4. Qué falta.** Esto es una conjetura a partir de unos pocos valores. La expansión de recurrencias (los siguientes ejercicios) es la forma de demostrarla para todo $n$."
+   },
+   {
+    "id": "peldanos#E02",
+    "n": "E02",
+    "title": "Plantear la recurrencia de un código",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.3,
+    "steps": true,
+    "statement": "Contamos $1$ operación por cada línea ejecutada (sin contar la línea `def`).\n```python\ndef suma(n):\n    if n == 0:\n        return 0\n    return n + suma(n - 1)\n```\n- a) ¿Cuánto vale $T(0)$ (caso base)? ¿Y $T(n)$ para $n>0$, en función de $T(n-1)$?\n- b) Resuélvela con la idea de E01: calcula $T(1)$, $T(2)$, $T(3)$ y da la fórmula.\n- c) Haz lo mismo con\n```python\ndef bits(n):\n    if n <= 1:\n        return 1\n    return 1 + bits(n // 2)\n```\nsuponiendo que $n$ es una potencia de $2$ (así `n // 2` es exacto) y que el caso base es $n=1$.",
+    "hint": "En el caso base se ejecutan el `if` y su `return`. En el caso recursivo, el `if` (que sale falso), el `return` de abajo y, además, el tiempo de la llamada recursiva.",
+    "solution": "**Paso 1. a).** Caso base: `if` y `return 0`, $T(0)=2$. Caso recursivo: `if` y `return`, $2$ operaciones más lo que cueste `suma(n-1)`: $T(n)=2+T(n-1)$.\n\n**Paso 2. b).** $T(1)=4$, $T(2)=6$, $T(3)=8$: $T(n)=2n+2$.\n\n**Paso 3. c).** $T(1)=2$ y $T(n)=2+T(n/2)$. Para $n=8$: $T(8)=2+T(4)=4+T(2)=6+T(1)=8$. Cada vez el tamaño se divide por $2$ y se suma $2$: $T(n)=2\\log_2n+2$."
+   },
+   {
+    "id": "peldanos#E03",
+    "n": "E03",
+    "title": "Expandir paso a paso",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.35,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=0\\\\ T(n-1)+3 & n>0\\end{cases}$\n- a) Expande tres veces: $T(n)=T(n-1)+3=\\ldots$\n- b) Escribe el patrón después de $i$ expansiones.\n- c) ¿Para qué $i$ se llega al caso base? Sustituye.\n- d) Comprueba con $n=3$.",
+    "hint": "Sustituye $T(n-1)$ por su definición: $T(n-1)=T(n-2)+3$. Y así sucesivamente. Anota qué se acumula.",
+    "solution": "**Paso 1. Expande.** $T(n)=T(n-1)+3=\\bigl(T(n-2)+3\\bigr)+3=T(n-2)+2\\cdot3=T(n-3)+3\\cdot3$.\n\n**Paso 2. Patrón.** Tras $i$ expansiones: $T(n)=T(n-i)+3i$.\n\n**Paso 3. Caso base.** Se llega a $T(0)$ cuando $n-i=0$, es decir $i=n$. Sustituyendo: $T(n)=T(0)+3n=3n+1\\in\\Theta(n)$.\n\n**Paso 4. Comprueba.** Con $n=3$: $T(1)=4$, $T(2)=7$, $T(3)=10$, y la fórmula da $3\\cdot3+1=10$."
+   },
+   {
+    "id": "peldanos#E04",
+    "n": "E04",
+    "title": "Expandir con una división",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.4,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=1\\\\ T(n/2)+5 & n>1\\end{cases}$ suponiendo que $n$ es una potencia de $2$.\n- a) Patrón tras $i$ expansiones.\n- b) ¿Cuándo se llega al caso base? (Ojo: el parámetro es $n/2^{i}$.)\n- c) Resultado y comprobación con $n=8$.",
+    "hint": "Igual que el anterior, pero el argumento ya no baja de uno en uno: $n,\\ n/2,\\ n/4,\\ n/8,\\ \\dots$ El caso base es $T(1)$.",
+    "solution": "**Paso 1. Patrón.** $T(n)=T(n/2)+5=T(n/4)+2\\cdot5=T(n/8)+3\\cdot5=\\cdots=T(n/2^{i})+5i$.\n\n**Paso 2. Caso base.** $n/2^{i}=1\\iff i=\\log_2n$.\n\n**Paso 3. Resultado.** $T(n)=T(1)+5\\log_2n=5\\log_2n+1\\in\\Theta(\\log n)$.\n\n**Paso 4. Comprueba.** $n=8$: $T(8)=T(4)+5=T(2)+10=T(1)+15=16$ y $5\\cdot3+1=16$."
+   },
+   {
+    "id": "peldanos#E05",
+    "n": "E05",
+    "title": "Un término que crece con n",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}0 & n=0\\\\ T(n-1)+2n+1 & n>0\\end{cases}$\n- a) Escribe las tres primeras expansiones. ¿Qué cambia en el término que se suma?\n- b) Patrón tras $i$ expansiones, como un sumatorio.\n- c) Resuelve el sumatorio y sustituye el valor de $i$ del caso base.\n- d) Comprueba con $n=2$.",
+    "hint": "El término sumado ya no es constante: en la primera expansión es $2n+1$, en la segunda $2(n-1)+1$, en la tercera $2(n-2)+1$. Es $\\sum_{j=0}^{i-1}\\bigl(2(n-j)+1\\bigr)$.",
+    "solution": "**Paso 1. Expande.** $T(n)=(2n+1)+T(n-1)=(2n+1)+\\bigl(2(n-1)+1\\bigr)+T(n-2)=(2n+1)+(2n-1)+(2n-3)+T(n-3)$.\n\n**Paso 2. Patrón.** $T(n)=T(n-i)+\\sum_{j=0}^{i-1}\\bigl(2(n-j)+1\\bigr)$.\n\n**Paso 3. Resuelve el sumatorio.** $\\sum_{j=0}^{i-1}(2n+1)-2\\sum_{j=0}^{i-1}j=(2n+1)i-i(i-1)=2ni-i^{2}+2i$.\n\n**Paso 4. Caso base.** Con $i=n$: $T(n)=T(0)+2n^{2}-n^{2}+2n=n^{2}+2n\\in\\Theta(n^{2})$.\n\n**Paso 5. Comprueba.** $n=2$: $T(1)=3$ y $T(2)=3+5=8$. La fórmula da $4+4=8$."
+   },
+   {
+    "id": "peldanos#E06",
+    "n": "E06",
+    "title": "Comprobar la fórmula obtenida",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.55,
+    "steps": true,
+    "statement": "Un error muy frecuente es no comprobar el resultado final. Sea $T(0)=2$ y $T(n)=T(n-1)+3$. Tres estudiantes proponen:\n- a) $T(n)=3n+2$\n- b) $T(n)=3n+3$\n- c) $T(n)=3(n-1)+2$\n\nAverigua cuál es correcta con dos pruebas: el caso base, y que la fórmula cumpla la recurrencia.",
+    "hint": "Prueba 1: sustituye $n=0$ y mira si da $2$. Prueba 2: sustituye la fórmula en los dos lados de $T(n)=T(n-1)+3$ y mira si coinciden.",
+    "solution": "**Paso 1. Caso base.** a) $T(0)=2$ ✓. b) $T(0)=3$ ✗. c) $T(0)=-1$ ✗. Ya descartamos b) y c).\n\n**Paso 2. La recurrencia, para a).** $T(n-1)+3=3(n-1)+2+3=3n+2=T(n)$ ✓.\n\n**Paso 3. Conclusión.** Solo a) es correcta: $T(n)=3n+2$. Con el caso base y la recurrencia basta (es una inducción), y evita fiarse de una expansión mal hecha."
+   },
+   {
+    "id": "peldanos#E07",
+    "n": "E07",
+    "title": "Dos llamadas y trabajo constante",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=1\\\\ 2T(n/2)+1 & n>1\\end{cases}$ con $n$ potencia de $2$.\n- a) Patrón tras $i$ expansiones. ¿Qué se acumula fuera de $T$?\n- b) Resultado.\n- c) Comprueba con $n=8$.",
+    "hint": "Ahora hay un factor $2$ delante de $T$ en cada expansión: tras $i$ pasos, $2^{i}\\,T(n/2^{i})$. Lo que se acumula es $1+2+4+\\cdots$, una serie geométrica.",
+    "solution": "**Paso 1. Expande.** $T(n)=2T(n/2)+1=2\\bigl(2T(n/4)+1\\bigr)+1=4T(n/4)+2+1=8T(n/8)+4+2+1$.\n\n**Paso 2. Patrón.** $T(n)=2^{i}\\,T(n/2^{i})+\\sum_{j=0}^{i-1}2^{j}=2^{i}\\,T(n/2^{i})+2^{i}-1$.\n\n**Paso 3. Caso base.** Con $i=\\log_2n$ se llega a $T(1)$, y $2^{i}=n$: $T(n)=n\\cdot1+n-1=2n-1\\in\\Theta(n)$.\n\n**Paso 4. Comprueba.** $T(2)=3$, $T(4)=7$, $T(8)=15=2\\cdot8-1$."
+   },
+   {
+    "id": "peldanos#E08",
+    "n": "E08",
+    "title": "Dos llamadas y trabajo lineal",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=1\\\\ 2T(n/2)+n & n>1\\end{cases}$ con $n$ potencia de $2$. Es el coste de mergesort.\n- a) Patrón tras $i$ expansiones. ¿Cuánto vale lo que se acumula en cada paso?\n- b) Resultado y orden.\n- c) Comprueba con $n=8$.",
+    "hint": "En la primera expansión se acumula $n$. En la segunda, $2\\cdot\\frac n2=n$. En la tercera, $4\\cdot\\frac n4=n$. Cada nivel aporta $n$.",
+    "solution": "**Paso 1. Expande.** $T(n)=2T(n/2)+n=4T(n/4)+n+n=8T(n/8)+n+n+n$.\n\n**Paso 2. Patrón.** $T(n)=2^{i}\\,T(n/2^{i})+i\\,n$.\n\n**Paso 3. Caso base.** Con $i=\\log_2n$: $T(n)=n\\cdot T(1)+n\\log_2n=n\\log_2n+n\\in\\Theta(n\\log n)$.\n\n**Paso 4. Comprueba.** $T(2)=4$, $T(4)=2\\cdot4+4=12$, $T(8)=2\\cdot12+8=32$, y la fórmula da $8\\cdot3+8=32$."
+   },
+   {
+    "id": "peldanos#E09",
+    "n": "E09",
+    "title": "Plantear la recurrencia (sin resolverla)",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Escribe la recurrencia del coste en tiempo de cada función. Llama $c$ a una cantidad constante de operaciones y da también el caso base.\n```python\ndef f(n):                       # (a)\n    if n <= 1: return 1\n    return f(n - 1) + f(n - 1)\n\ndef g(n):                       # (b)\n    if n <= 1: return 1\n    for i in range(n):\n        trabajo()\n    return g(n // 2)\n\ndef h(n):                       # (c)\n    if n <= 1: return 1\n    return h(n // 3) + h(n // 3) + h(n // 3)\n\ndef k(n):                       # (d)\n    if n <= 1: return 1\n    return k(n - 1) + k(n - 2)\n```",
+    "hint": "Para cada una pregúntate tres cosas: ¿cuántas llamadas recursivas hace?, ¿con qué tamaño?, y ¿cuánto trabajo hace *además* de llamarse?",
+    "solution": "**Paso 1. (a).** Dos llamadas con $n-1$ y trabajo constante: $T(n)=2T(n-1)+c$, con $T(1)=c$.\n\n**Paso 2. (b).** Una llamada con $n/2$ y un bucle de $n$ vueltas: $T(n)=T(n/2)+n$ (más constantes).\n\n**Paso 3. (c).** Tres llamadas con $n/3$: $T(n)=3T(n/3)+c$.\n\n**Paso 4. (d).** Dos llamadas, una con $n-1$ y otra con $n-2$: $T(n)=T(n-1)+T(n-2)+c$.\n\n**Paso 5. Qué se puede resolver ya.** (a), (b) y (c) se resuelven por expansión: (a) $\\Theta(2^{n})$, (b) $\\Theta(n)$ (el bucle hace $n+\\frac n2+\\frac n4+\\cdots$), (c) $\\Theta(n)$. La (d) es de tipo Fibonacci y necesita el método general."
+   },
+   {
+    "id": "peldanos#E10",
+    "n": "E10",
+    "title": "Dos llamadas con n−1",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.75,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=0\\\\ 2T(n-1)+3 & n>0\\end{cases}$\n- a) Patrón tras $i$ expansiones.\n- b) Caso base y resultado.\n- c) Comprueba con $n=2$.",
+    "hint": "Cada expansión multiplica por $2$ el $T$ que queda y suma $3$ multiplicado por la potencia correspondiente: $3,\\ 3\\cdot2,\\ 3\\cdot4,\\dots$",
+    "solution": "**Paso 1. Expande.** $T(n)=2T(n-1)+3=2\\bigl(2T(n-2)+3\\bigr)+3=4T(n-2)+3\\cdot2+3=8T(n-3)+3\\cdot4+3\\cdot2+3$.\n\n**Paso 2. Patrón.** $T(n)=2^{i}\\,T(n-i)+3\\sum_{j=0}^{i-1}2^{j}=2^{i}\\,T(n-i)+3(2^{i}-1)$.\n\n**Paso 3. Caso base.** Con $i=n$: $T(n)=2^{n}\\cdot1+3(2^{n}-1)=4\\cdot2^{n}-3=2^{n+2}-3\\in\\Theta(2^{n})$.\n\n**Paso 4. Comprueba.** $T(1)=2+3=5$ y $T(2)=10+3=13$. La fórmula da $2^{3}-3=5$ y $2^{4}-3=13$."
+   },
+   {
+    "id": "peldanos#E11",
+    "n": "E11",
+    "title": "Una recurrencia con una suma",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Sea $T(0)=1$ y $T(n)=2+\\displaystyle\\sum_{j=0}^{n-1}T(j)$ para $n>0$.\n- a) Calcula $T(1),\\dots,T(4)$.\n- b) Resta $T(n)$ y $T(n-1)$ (para $n\\ge2$) y simplifica. ¿Qué recurrencia más sencilla sale?\n- c) Resuélvela por expansión. Comprueba con $n=4$.",
+    "hint": "$T(n)$ y $T(n-1)$ tienen casi los mismos sumandos; al restarlos se cancelan todos menos uno.",
+    "solution": "**Paso 1. Valores.** a) $T(1)=2+1=3$, $T(2)=2+1+3=6$, $T(3)=2+1+3+6=12$, $T(4)=2+1+3+6+12=24$.\n\n**Paso 2. Resta.** b) $T(n)-T(n-1)=\\Bigl(2+\\sum_{j=0}^{n-1}T(j)\\Bigr)-\\Bigl(2+\\sum_{j=0}^{n-2}T(j)\\Bigr)=T(n-1)$. Por tanto $T(n)=2\\,T(n-1)$ para $n\\ge2$.\n\n**Paso 3. Expansión.** c) $T(n)=2T(n-1)=4T(n-2)=\\cdots=2^{i}\\,T(n-i)$. Se para en $T(1)=3$ cuando $i=n-1$: $T(n)=3\\cdot2^{n-1}\\in\\Theta(2^{n})$. Con $n=4$: $3\\cdot8=24$ ✓."
+   },
+   {
+    "id": "peldanos#G01",
+    "n": "G01",
+    "title": "Qué caso del teorema maestro es",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.3,
+    "steps": true,
+    "statement": "El teorema maestro (versión simple) resuelve $T(n)=a\\,T(n/b)+c\\,n^{k}$ comparando $a$ con $b^{k}$:\n$$\\Theta(n^{k})\\ \\text{si } \\tfrac{a}{b^{k}}<1,\\qquad \\Theta(n^{k}\\log n)\\ \\text{si } \\tfrac{a}{b^{k}}=1,\\qquad \\Theta(n^{\\log_b a})\\ \\text{si } \\tfrac{a}{b^{k}}>1.$$\n\n**Ejemplo resuelto.** $T(n)=T(n/2)+n$: $a=1$, $b=2$, $k=1$, $\\frac{a}{b^{k}}=\\frac12<1$, luego $\\Theta(n)$.\n\n**Ahora tú.** Identifica $a$, $b$, $k$, calcula $\\frac{a}{b^{k}}$ y da el orden:\n- a) $T(n)=2T(n/2)+n$\n- b) $T(n)=4T(n/2)+n$\n- c) $T(n)=3T(n/3)+1$\n- d) $T(n)=T(n/2)+1$\n- e) $T(n)=8T(n/2)+n^{2}$\n- f) $T(n)=2T(n/2)+n^{2}$",
+    "hint": "$a$ es cuántas llamadas hace, $b$ cuántas veces más pequeño es el subproblema, y $n^{k}$ es el trabajo de fuera. Un trabajo constante es $n^{0}$, es decir $k=0$.",
+    "solution": "**Paso 1. Lee los parámetros.** a) $a=2,b=2,k=1$. b) $4,2,1$. c) $3,3,0$. d) $1,2,0$. e) $8,2,2$. f) $2,2,2$.\n\n**Paso 2. Calcula $a/b^{k}$.** a) $2/2=1$. b) $4/2=2$. c) $3/1=3$. d) $1/1=1$. e) $8/4=2$. f) $2/4=\\frac12$.\n\n**Paso 3. Elige el caso.** a) $=1$: $\\Theta(n\\log n)$. b) $>1$: $\\Theta(n^{\\log_24})=\\Theta(n^{2})$. c) $>1$: $\\Theta(n^{\\log_33})=\\Theta(n)$. d) $=1$: $\\Theta(n^{0}\\log n)=\\Theta(\\log n)$. e) $>1$: $\\Theta(n^{\\log_28})=\\Theta(n^{3})$. f) $<1$: $\\Theta(n^{2})$."
+   },
+   {
+    "id": "peldanos#G02",
+    "n": "G02",
+    "title": "Recurrencias de algoritmos conocidos",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.4,
+    "steps": true,
+    "statement": "Resuelve con el teorema maestro la recurrencia de cada algoritmo:\n- a) Mergesort: $T(n)=2T(n/2)+n$\n- b) Búsqueda binaria: $T(n)=T(n/2)+1$\n- c) Multiplicación de enteros con divide y vencerás sin trucos: $T(n)=4T(n/2)+n$\n- d) Karatsuba: $T(n)=3T(n/2)+n$\n- e) Multiplicación de matrices con $8$ subproblemas: $T(n)=8T(n/2)+n^{2}$\n- f) Strassen: $T(n)=7T(n/2)+n^{2}$",
+    "hint": "Para cada una calcula $\\frac{a}{b^{k}}$. Cuando sea mayor que $1$, el resultado es $n^{\\log_ba}$: deja el exponente como un logaritmo y, si quieres, aproxímalo.",
+    "solution": "**Paso 1. a) y b).** a) $a=2,b=2,k=1$: $\\frac{a}{b^{k}}=1$, $\\Theta(n\\log n)$. b) $a=1,b=2,k=0$: igual a $1$, $\\Theta(\\log n)$.\n\n**Paso 2. c) y e).** c) $\\frac{4}{2}=2>1$: $\\Theta(n^{\\log_24})=\\Theta(n^{2})$. e) $\\frac{8}{4}=2>1$: $\\Theta(n^{3})$.\n\n**Paso 3. d) y f).** d) $\\frac32>1$: $\\Theta(n^{\\log_23})\\approx\\Theta(n^{1{,}585})$, mejor que $n^{2}$. f) $\\frac74>1$: $\\Theta(n^{\\log_27})\\approx\\Theta(n^{2{,}807})$, mejor que $n^{3}$.\n\n**Paso 4. Moraleja.** Con el mismo trabajo de fuera, reducir el número de llamadas $a$ baja el exponente: de $4$ a $3$ subproblemas (Karatsuba), de $8$ a $7$ (Strassen)."
+   },
+   {
+    "id": "peldanos#G03",
+    "n": "G03",
+    "title": "Cuando la versión simple no sirve",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Decide si se puede aplicar la versión simple del teorema maestro ($T(n)=aT(n/b)+cn^{k}$). Si no, di qué hacer, y da el orden:\n- a) $T(n)=T(n-1)+n$\n- b) $T(n)=2T(n/2)+n\\log_2n$\n- c) $T(n)=2T(n/2)+\\sqrt n$",
+    "hint": "La versión simple pide un subproblema de tamaño $n/b$ (una división, no una resta) y un trabajo de fuera de la forma $c\\,n^{k}$ (una potencia de $n$; $k$ puede ser una fracción). La versión completa admite $\\Theta(n^{\\log_ba}\\log^{k}n)$.",
+    "solution": "**Paso 1. a).** No: el subproblema es $n-1$, no $n/b$. Se resuelve por expansión: $T(n)=T(n-i)+\\sum$, y da $\\frac{n(n+1)}{2}+T(0)\\in\\Theta(n^{2})$.\n\n**Paso 2. b).** No es de la forma $cn^{k}$, por el $\\log$. Pero cumple la versión completa, caso 2: $n^{\\log_22}=n$ y $f(n)=n\\log^{1}n$, con $k=1$ en el logaritmo. Resultado: $\\Theta(n\\log^{2}n)$.\n\n**Paso 3. c).** Sí: $\\sqrt n=n^{1/2}$, así que $k=\\frac12$. $\\frac{a}{b^{k}}=\\frac{2}{\\sqrt2}=\\sqrt2>1$: $\\Theta(n^{\\log_22})=\\Theta(n)$."
+   },
+   {
+    "id": "peldanos#G04",
+    "n": "G04",
+    "title": "La ecuación característica",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.4,
+    "steps": true,
+    "statement": "Una recurrencia lineal homogénea (por ejemplo $T(n)=5T(n-1)-6T(n-2)$) se resuelve con su **ecuación característica**: se sustituye $T(n-j)$ por $x^{k-j}$ en la ecuación pasada a $=0$.\n\n**Ejemplo resuelto.** $T(n)-5T(n-1)+6T(n-2)=0$ da $x^{2}-5x+6=0$, es decir $(x-2)(x-3)=0$. Las raíces son $2$ y $3$ (distintas), luego $T(n)=C_1\\,2^{n}+C_2\\,3^{n}$, de orden $\\Theta(3^{n})$.\n\n**Ahora tú.** Para cada recurrencia escribe la ecuación característica, sus raíces, la forma general de la solución y el orden (sin calcular constantes):\n- a) $T(n)=T(n-1)+2T(n-2)$\n- b) $T(n)=4T(n-1)-4T(n-2)$\n- c) $T(n)=6T(n-1)-11T(n-2)+6T(n-3)$",
+    "hint": "Pasa todo al lado izquierdo. Si una raíz aparece repetida $m$ veces, sus términos son $C\\,r^{n}$, $C\\,n\\,r^{n}$, ..., hasta $n^{m-1}r^{n}$.",
+    "solution": "**Paso 1. a).** $x^{2}-x-2=0\\Rightarrow(x-2)(x+1)=0$: raíces $2$ y $-1$. $T(n)=C_1\\,2^{n}+C_2(-1)^{n}\\in\\Theta(2^{n})$.\n\n**Paso 2. b).** $x^{2}-4x+4=(x-2)^{2}=0$: raíz doble $2$. $T(n)=(C_1+C_2n)\\,2^{n}\\in\\Theta(n\\,2^{n})$.\n\n**Paso 3. c).** $x^{3}-6x^{2}+11x-6=(x-1)(x-2)(x-3)=0$: raíces $1,2,3$. $T(n)=C_1+C_2\\,2^{n}+C_3\\,3^{n}\\in\\Theta(3^{n})$.\n\n**Paso 4. Criterio.** Manda la raíz de mayor valor absoluto (y, si se repite, el factor $n^{m-1}$ de más)."
+   },
+   {
+    "id": "peldanos#G05",
+    "n": "G05",
+    "title": "Hallar las constantes",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Resuelve $T(n)=5T(n-1)-6T(n-2)$ con $T(0)=1$ y $T(1)=4$.\n- a) Forma general de la solución.\n- b) Plantea y resuelve el sistema para las constantes con $T(0)$ y $T(1)$.\n- c) Comprueba con $T(2)$ y $T(3)$ calculados con la recurrencia.",
+    "hint": "Ya tienes la forma del ejemplo anterior: $C_1\\,2^{n}+C_2\\,3^{n}$. Evalúa en $n=0$ y $n=1$.",
+    "solution": "**Paso 1. Forma general.** a) $T(n)=C_1\\,2^{n}+C_2\\,3^{n}$.\n\n**Paso 2. Sistema.** b) $T(0)=C_1+C_2=1$ y $T(1)=2C_1+3C_2=4$. Restando dos veces la primera a la segunda: $C_2=2$, y entonces $C_1=-1$. $T(n)=2\\cdot3^{n}-2^{n}$.\n\n**Paso 3. Comprueba.** c) Con la recurrencia: $T(2)=5\\cdot4-6\\cdot1=14$ y $T(3)=5\\cdot14-6\\cdot4=46$. La fórmula da $18-4=14$ y $54-8=46$."
+   },
+   {
+    "id": "peldanos#G06",
+    "n": "G06",
+    "title": "Raíz doble",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Resuelve $T(n)=4T(n-1)-4T(n-2)$ con $T(0)=0$ y $T(1)=2$.\n- a) Forma general (raíz doble).\n- b) Constantes.\n- c) Comprueba con $T(2)$ y $T(3)$.",
+    "hint": "La ecuación característica es $(x-2)^{2}=0$. Con una raíz doble, la solución lleva $C_1\\,2^{n}+C_2\\,n\\,2^{n}$.",
+    "solution": "**Paso 1. Forma general.** a) $T(n)=(C_1+C_2n)\\,2^{n}$.\n\n**Paso 2. Constantes.** b) $T(0)=C_1=0$. $T(1)=(C_1+C_2)\\cdot2=2\\Rightarrow C_2=1$. Por tanto $T(n)=n\\,2^{n}$.\n\n**Paso 3. Comprueba.** c) $T(2)=4\\cdot2-4\\cdot0=8=2\\cdot4$ y $T(3)=4\\cdot8-4\\cdot2=24=3\\cdot8$. Orden $\\Theta(n\\,2^{n})$."
+   },
+   {
+    "id": "peldanos#G07",
+    "n": "G07",
+    "title": "Raíces distintas, tipo Fibonacci",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Resuelve $T(n)=T(n-1)+2T(n-2)$ con $T(0)=0$ y $T(1)=1$.\n- a) Ecuación característica y raíces.\n- b) Constantes.\n- c) Comprueba con $T(2),T(3),T(4)$.\n- d) ¿Qué pasa con el término de la raíz negativa cuando $n$ crece?",
+    "hint": "Las raíces son $2$ y $-1$. Evalúa $C_1\\,2^{n}+C_2(-1)^{n}$ en $n=0$ y $n=1$.",
+    "solution": "**Paso 1. Raíces.** a) $x^{2}-x-2=(x-2)(x+1)$, raíces $2$ y $-1$: $T(n)=C_1\\,2^{n}+C_2(-1)^{n}$.\n\n**Paso 2. Constantes.** b) $T(0)=C_1+C_2=0$ y $T(1)=2C_1-C_2=1$. Sumando: $3C_1=1$, $C_1=\\frac13$ y $C_2=-\\frac13$. $T(n)=\\dfrac{2^{n}-(-1)^{n}}{3}$.\n\n**Paso 3. Comprueba.** c) La recurrencia da $T(2)=1$, $T(3)=1+2=3$, $T(4)=3+2=5$. La fórmula: $\\frac{4-1}{3}=1$, $\\frac{8+1}{3}=3$, $\\frac{16-1}{3}=5$.\n\n**Paso 4. Orden.** d) $(-1)^{n}$ solo vale $\\pm1$, y no pesa frente a $2^{n}$: $T(n)\\in\\Theta(2^{n})$."
+   },
+   {
+    "id": "peldanos#G08",
+    "n": "G08",
+    "title": "Recurrencias no homogéneas: el polinomio característico",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Si la parte derecha no es $0$, se escribe cada término como (polinomio)$\\cdot b^{n}$ y cada uno añade un factor $(x-b)^{d+1}$, con $d$ el grado del polinomio. El polinomio característico es el de la parte izquierda por esos factores.\n\n**Ejemplo resuelto.** $T(n)-T(n-1)=2^{n}$: izquierda $(x-1)$; derecha $1\\cdot2^{n}$, grado $0$, factor $(x-2)^{1}$. Polinomio: $(x-1)(x-2)$, solución $C_1+C_2\\,2^{n}\\in\\Theta(2^{n})$.\n\n**Ahora tú.** Da el polinomio característico, la forma de la solución y el orden:\n- a) $T(n)-2T(n-1)=3^{n}$\n- b) $T(n)-T(n-1)=n$\n- c) $T(n)-3T(n-1)=n\\cdot2^{n}$\n- d) $T(n)-2T(n-1)=2^{n}$",
+    "hint": "En b), $n=n\\cdot1^{n}$, con $b=1$ y grado $1$. En d), la base de la parte derecha coincide con la raíz de la izquierda: sale un factor repetido.",
+    "solution": "**Paso 1. a).** $(x-2)(x-3)$: $C_1\\,2^{n}+C_2\\,3^{n}\\in\\Theta(3^{n})$.\n\n**Paso 2. b).** Izquierda $(x-1)$; derecha $n\\cdot1^{n}$, factor $(x-1)^{2}$. Polinomio $(x-1)^{3}$: $C_1+C_2n+C_3n^{2}\\in\\Theta(n^{2})$.\n\n**Paso 3. c).** Izquierda $(x-3)$; derecha $n\\cdot2^{n}$, grado $1$, factor $(x-2)^{2}$. Polinomio $(x-3)(x-2)^{2}$: $C_1\\,3^{n}+(C_2+C_3n)\\,2^{n}\\in\\Theta(3^{n})$.\n\n**Paso 4. d).** Izquierda $(x-2)$; derecha $2^{n}$, factor $(x-2)$. Polinomio $(x-2)^{2}$: $(C_1+C_2n)\\,2^{n}\\in\\Theta(n\\,2^{n})$."
+   },
+   {
+    "id": "peldanos#G09",
+    "n": "G09",
+    "title": "Constantes de una recurrencia no homogénea",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Resuelve $T(n)=T(n-1)+n$ con $T(0)=0$.\n- a) Polinomio característico y forma de la solución.\n- b) Calcula $T(1),T(2)$ con la recurrencia y plantea el sistema para las constantes con $T(0),T(1),T(2)$.\n- c) Resuelve y compara con lo que sabes de la suma de los $n$ primeros números.",
+    "hint": "Pasa a $T(n)-T(n-1)=n\\cdot1^{n}$: el polinomio es $(x-1)^{3}$, así que hay tres constantes y necesitas tres ecuaciones.",
+    "solution": "**Paso 1. Forma.** a) $T(n)=C_1+C_2n+C_3n^{2}$.\n\n**Paso 2. Sistema.** b) $T(1)=1$ y $T(2)=3$. Entonces $C_1=0$; $C_2+C_3=1$; $2C_2+4C_3=3$.\n\n**Paso 3. Resuelve.** c) De la segunda $C_2=1-C_3$; en la tercera, $2-2C_3+4C_3=3$, luego $C_3=\\frac12$ y $C_2=\\frac12$. $T(n)=\\dfrac{n^{2}+n}{2}=\\dfrac{n(n+1)}{2}$: la suma de Gauss, como se esperaba."
+   },
+   {
+    "id": "peldanos#G10",
+    "n": "G10",
+    "title": "Varios términos a la derecha",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Da el polinomio característico y el orden (sin constantes) de:\n- a) $T(n)=T(n-1)+2^{n}+n$\n- b) $T(n)=2T(n-1)-T(n-2)+1$\n- c) $T(n)=3T(n-1)-2T(n-2)+n$",
+    "hint": "Pasa los $T$ a la izquierda y saca la parte izquierda como polinomio en $x$. Después añade un factor $(x-b)^{d+1}$ por cada término de la derecha: $2^{n}$ da $(x-2)$; $n$ da $(x-1)^{2}$; la constante $1$ da $(x-1)$.",
+    "solution": "**Paso 1. a).** Izquierda $(x-1)$. Derecha: $2^{n}$ aporta $(x-2)$ y $n\\cdot1^{n}$ aporta $(x-1)^{2}$. Polinomio $(x-1)^{3}(x-2)$: la raíz $2$ manda, $\\Theta(2^{n})$.\n\n**Paso 2. b).** Izquierda $x^{2}-2x+1=(x-1)^{2}$. Derecha: $1$, factor $(x-1)$. Polinomio $(x-1)^{3}$: $C_1+C_2n+C_3n^{2}$, $\\Theta(n^{2})$.\n\n**Paso 3. c).** Izquierda $x^{2}-3x+2=(x-1)(x-2)$. Derecha: $n$, factor $(x-1)^{2}$. Polinomio $(x-1)^{3}(x-2)$: $\\Theta(2^{n})$."
+   },
+   {
+    "id": "peldanos#G11",
+    "n": "G11",
+    "title": "Una recurrencia que salta de dos en dos",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Resuelve $T(n)=T(n-2)+3$ con $T(0)=1$, $T(1)=1$.\n- a) Polinomio característico: pasa la recurrencia a $T(n)-T(n-2)=3\\cdot1^{n}$.\n- b) Forma de la solución. ¿Qué raíz inesperada aparece?\n- c) Calcula $T(2)$ y resuelve el sistema con $T(0),T(1),T(2)$.\n- d) Comprueba con $T(3)$ y $T(4)$.",
+    "hint": "Izquierda: $x^{2}-1=(x-1)(x+1)$. Derecha: $3\\cdot1^{n}$, grado $0$, factor $(x-1)$. La raíz $-1$ da el término $(-1)^{n}$.",
+    "solution": "**Paso 1. Polinomio.** a) $(x^{2}-1)(x-1)=(x-1)^{2}(x+1)$.\n\n**Paso 2. Forma.** b) $T(n)=C_1+C_2n+C_3(-1)^{n}$. La raíz $-1$ aparece porque la recurrencia salta de dos en dos: los índices pares y los impares van por separado.\n\n**Paso 3. Sistema.** c) $T(2)=T(0)+3=4$. Entonces: $C_1+C_3=1$; $C_1+C_2-C_3=1$; $C_1+2C_2+C_3=4$. Restando la primera de la tercera: $2C_2=3$, $C_2=\\frac32$. Después, sumando la primera y la segunda: $2C_1+C_2=2$, $C_1=\\frac14$, y $C_3=\\frac34$. $T(n)=\\dfrac14+\\dfrac{3n}{2}+\\dfrac34(-1)^{n}\\in\\Theta(n)$.\n\n**Paso 4. Comprueba.** d) $T(3)=T(1)+3=4$ y la fórmula da $\\frac14+\\frac92-\\frac34=4$. $T(4)=T(2)+3=7$ y la fórmula da $\\frac14+6+\\frac34=7$."
+   },
+   {
+    "id": "peldanos#G12",
+    "n": "G12",
+    "title": "Con constantes, como en el examen",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Resuelve $T(n)=2T(n-1)+n$ con $T(0)=1$, hallando las constantes.\n- a) Polinomio característico y forma de la solución.\n- b) Calcula $T(1),T(2)$ y plantea el sistema de $3$ ecuaciones.\n- c) Resuélvelo y comprueba con $T(3)$ y $T(4)$.",
+    "hint": "Izquierda $(x-2)$. Derecha $n\\cdot1^{n}$: factor $(x-1)^{2}$. Polinomio $(x-2)(x-1)^{2}$, solución $C_1\\,2^{n}+C_2+C_3n$.",
+    "solution": "**Paso 1. Forma.** a) $T(n)=C_1\\,2^{n}+C_2+C_3n$.\n\n**Paso 2. Sistema.** b) $T(1)=3$ y $T(2)=8$. Entonces: $C_1+C_2=1$; $2C_1+C_2+C_3=3$; $4C_1+C_2+2C_3=8$.\n\n**Paso 3. Resuelve.** c) De la primera $C_2=1-C_1$. En la segunda: $C_1+C_3=2$. En la tercera: $3C_1+2C_3=7$. Con $C_3=2-C_1$ queda $C_1+4=7$, luego $C_1=3$, $C_3=-1$, $C_2=-2$. $T(n)=3\\cdot2^{n}-n-2$.\n\n**Paso 4. Comprueba.** $T(3)=2\\cdot8+3=19$ y la fórmula da $24-3-2=19$. $T(4)=2\\cdot19+4=42$ y la fórmula da $48-4-2=42$. Orden $\\Theta(2^{n})$."
+   },
+   {
+    "id": "peldanos#G13",
+    "n": "G13",
+    "title": "Pasar a la variable k",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Para recurrencias con $n/2$ (o $n/3$...) se hace el cambio $n=2^{k}$ y se define $t(k)=T(2^{k})$. Lo importante es sustituir también el trabajo de fuera.\n\n**Ejemplo resuelto.** $T(n)=4T(n/2)+n$ con $n=2^{k}$: $T(2^{k})=4T(2^{k-1})+2^{k}$, es decir $t(k)=4t(k-1)+2^{k}$. El $n$ de fuera se convierte en $2^{k}$, no en $k$.\n\n**Ahora tú.** Escribe la recurrencia para $t(k)$ con el cambio indicado:\n- a) $T(n)=T(n/2)+n$, con $n=2^{k}$\n- b) $T(n)=2T(n/2)+n^{2}$, con $n=2^{k}$\n- c) $T(n)=9T(n/3)+n$, con $n=3^{k}$\n- d) $T(n)=T(n/2)+1$, con $n=2^{k}$",
+    "hint": "$T(n/2)=T(2^{k-1})=t(k-1)$. Y $n^{2}=(2^{k})^{2}=4^{k}$.",
+    "solution": "**Paso 1. a).** $t(k)=t(k-1)+2^{k}$.\n\n**Paso 2. b).** $n^{2}=4^{k}$: $t(k)=2t(k-1)+4^{k}$.\n\n**Paso 3. c).** $T(n/3)=T(3^{k-1})=t(k-1)$ y $n=3^{k}$: $t(k)=9t(k-1)+3^{k}$.\n\n**Paso 4. d).** $t(k)=t(k-1)+1$."
+   },
+   {
+    "id": "peldanos#G14",
+    "n": "G14",
+    "title": "Resolver con el cambio de variable",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Resuelve $T(n)=T(n/2)+n$ con $T(1)=1$ y $n$ potencia de $2$.\n- a) Escribe $t(k)$ y su polinomio característico.\n- b) Forma general de $t(k)$ y constantes con $t(0)$ y $t(1)$.\n- c) Deshaz el cambio para dar $T(n)$ y comprueba con $T(4)$ y $T(8)$.",
+    "hint": "De G13: $t(k)=t(k-1)+2^{k}$. Izquierda $(x-1)$, derecha $2^{k}$ aporta $(x-2)$. $t(0)=T(1)=1$ y $t(1)=T(2)=T(1)+2=3$.",
+    "solution": "**Paso 1. Recurrencia en $k$.** a) $t(k)-t(k-1)=2^{k}$. Polinomio $(x-1)(x-2)$.\n\n**Paso 2. Constantes.** b) $t(k)=C_1+C_2\\,2^{k}$. $t(0)=C_1+C_2=1$ y $t(1)=C_1+2C_2=3$: $C_2=2$, $C_1=-1$. $t(k)=2\\cdot2^{k}-1$.\n\n**Paso 3. Deshaz el cambio.** c) Con $2^{k}=n$: $T(n)=2n-1\\in\\Theta(n)$. Comprobación: $T(2)=3$, $T(4)=3+4=7=2\\cdot4-1$, $T(8)=7+8=15=2\\cdot8-1$."
+   },
+   {
+    "id": "peldanos#G15",
+    "n": "G15",
+    "title": "Preparar la parte derecha",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Para el polinomio característico, cada término de la derecha tiene que ser (polinomio)$\\cdot b^{k}$. Escribe el polinomio característico de:\n- a) $t(k)-t(k-1)=3^{2k}$\n- b) $t(k)-2t(k-1)=1+k+2^{k}$\n- c) $t(k)-3t(k-1)=4^{k+1}$\n\nY, para (b) y (c), traduce el orden a $n$ si $n=2^{k}$.",
+    "hint": "En a) $3^{2k}=(3^{2})^{k}=9^{k}$. En c) $4^{k+1}=4\\cdot4^{k}$. En b) agrupa: $(1+k)\\cdot1^{k}+1\\cdot2^{k}$.",
+    "solution": "**Paso 1. a).** La derecha es $9^{k}$: grado $0$, factor $(x-9)$. Polinomio $(x-1)(x-9)$, solución $C_1+C_2\\,9^{k}\\in\\Theta(9^{k})$.\n\n**Paso 2. b).** Izquierda $(x-2)$. Derecha: $(1+k)\\cdot1^{k}$, grado $1$, factor $(x-1)^{2}$; y $1\\cdot2^{k}$, factor $(x-2)$. Polinomio $(x-2)^{2}(x-1)^{2}$, solución $(C_1+C_2k)\\,2^{k}+C_3+C_4k\\in\\Theta(k\\,2^{k})$. Con $n=2^{k}$: $k\\,2^{k}=n\\log_2n$.\n\n**Paso 3. c).** Izquierda $(x-3)$. Derecha $4\\cdot4^{k}$, factor $(x-4)$. Polinomio $(x-3)(x-4)$, solución $C_1\\,3^{k}+C_2\\,4^{k}\\in\\Theta(4^{k})$. Con $n=2^{k}$: $4^{k}=n^{2}$."
+   },
+   {
+    "id": "peldanos#G16",
+    "n": "G16",
+    "title": "La pila de llamadas",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.4,
+    "steps": true,
+    "statement": "El espacio de una función recursiva es, sobre todo, el de la pila: cuántas llamadas hay activas *a la vez* (profundidad máxima), multiplicado por lo que ocupa cada una.\n```python\ndef fact(n):\n    if n == 0: return 1\n    return n * fact(n - 1)\n\ndef pot2(b, e):\n    if e == 0: return 1\n    if e % 2 == 0: return pot2(b * b, e // 2)\n    return b * pot2(b * b, e // 2)\n\ndef fib(n):\n    if n <= 1: return n\n    return fib(n - 1) + fib(n - 2)\n```\n- a) ¿Cuántas llamadas hay activas como máximo en `fact(5)`? ¿Y en general, con `fact(n)`?\n- b) Lo mismo para `pot2(2, 8)` y para `pot2(b, e)` con $e=2^{k}$.\n- c) Lo mismo para `fib(5)`. ¿De qué orden es la pila de `fib(n)`, aunque el tiempo sea exponencial?",
+    "hint": "Una llamada queda activa hasta que termina. Dibuja la cadena de llamadas hasta el caso base: esa es la profundidad. La pila solo guarda un camino de la raíz a una hoja, no todo el árbol.",
+    "solution": "**Paso 1. a).** `fact(5)`$\\to$`fact(4)`$\\to\\cdots\\to$`fact(0)`: $6$ llamadas activas a la vez. En general $n+1$: espacio $\\Theta(n)$.\n\n**Paso 2. b).** `pot2(2, 8)`$\\to$`pot2(4, 4)`$\\to$`pot2(16, 2)`$\\to$`pot2(256, 1)`$\\to$`pot2(65536, 0)`: $5$. Con $e=2^{k}$ son $k+2$: espacio $\\Theta(\\log e)$.\n\n**Paso 3. c).** En `fib(5)` la rama más larga es `fib(5)`$\\to$`fib(4)`$\\to$`fib(3)`$\\to$`fib(2)`$\\to$`fib(1)`: $5$ llamadas. En general $n$: espacio $\\Theta(n)$. El tiempo es exponencial porque hay muchísimas llamadas, pero no están activas a la vez: cuando una termina, libera su sitio en la pila."
+   },
+   {
     "id": "peldanos#S01",
     "n": "S01",
     "title": "Potencias",
@@ -6933,6 +7419,64 @@ window.LADDER = {
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.8",
     "peldanos/peldanos#B10",
     "peldanos/peldanos#B11"
+   ]
+  },
+  "expansion": {
+   "t32-expansion": [
+    "peldanos/peldanos#E01",
+    "peldanos/peldanos#E02",
+    "peldanos/peldanos#E03",
+    "peldanos/peldanos#E04",
+    "peldanos/peldanos#E05",
+    "peldanos/peldanos#E06",
+    "peldanos/peldanos#E07",
+    "peldanos/peldanos#E08",
+    "peldanos/peldanos#E09",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.10",
+    "peldanos/peldanos#E10",
+    "peldanos/peldanos#E11",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.12",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.13",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.10",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.13"
+   ]
+  },
+  "general": {
+   "t32-maestro": [
+    "peldanos/peldanos#G01",
+    "peldanos/peldanos#G02",
+    "peldanos/peldanos#G03"
+   ],
+   "t32-homogeneas": [
+    "peldanos/peldanos#G04",
+    "peldanos/peldanos#G05",
+    "peldanos/peldanos#G06",
+    "peldanos/peldanos#G07"
+   ],
+   "t32-no-homogeneas": [
+    "peldanos/peldanos#G08",
+    "peldanos/peldanos#G09",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.14",
+    "peldanos/peldanos#G10",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.15",
+    "peldanos/peldanos#G11",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.8",
+    "peldanos/peldanos#G12",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.11",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.12"
+   ],
+   "t32-cambio": [
+    "peldanos/peldanos#G13",
+    "peldanos/peldanos#G14",
+    "peldanos/peldanos#G15",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.17",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.11",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.16",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.15",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.18"
+   ],
+   "t32-espacio": [
+    "peldanos/peldanos#G16"
    ]
   },
   "sumatorios": {

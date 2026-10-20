@@ -193,6 +193,87 @@ const T = {
     const total = n => { let c = 0; for (let i = 0; i < n; i++) for (let j = i + 1; j <= n; j++) for (let k = 0; k < j; k++) c++; return c; };
     for (let n = 1; n <= 40; n++) ok(total(n) === n * (n + 1) * (2 * n + 1) / 6, 'B11 n=' + n);
     ok(total(2) === 5 && total(3) === 14, 'B11 values');
+  },
+  /* ---- Recurrencias: se calculan con la definición y se comparan con la fórmula ---- */
+  E01: () => {
+    const T = (base0, f) => { const t = [base0]; return n => { while (t.length <= n) t.push(f(t.length, t)); return t[n]; }; };
+    const a = T(2, (n, t) => t[n - 1] + 4); ok([1, 2, 3, 4].map(a).join() === '6,10,14,18' && [0, 1, 2, 3, 4, 5, 6].every(n => a(n) === 4 * n + 2), 'E01 a');
+    const b = T(0, (n, t) => t[n - 1] + n); ok([2, 3, 4, 5].map(b).join() === '3,6,10,15' && [1, 2, 3, 4, 5, 6, 30].every(n => b(n) === n * (n + 1) / 2), 'E01 b');
+    const c = T(0, (n, t) => 2 * t[n - 1] + 1); ok([2, 3, 4, 5].map(c).join() === '3,7,15,31' && [1, 2, 3, 4, 5, 20].every(n => c(n) === 2 ** n - 1), 'E01 c');
+  },
+  E02: () => {
+    const suma = n => n === 0 ? 2 : 2 + suma(n - 1), bits = n => n === 1 ? 2 : 2 + bits(n / 2);
+    ok([0, 1, 2, 3].map(suma).join() === '2,4,6,8', 'E02 values'); for (let n = 0; n < 40; n++) ok(suma(n) === 2 * n + 2, 'E02 b');
+    for (let k = 0; k <= 12; k++) ok(bits(2 ** k) === 2 * k + 2, 'E02 c k=' + k); ok(bits(8) === 8, 'E02 c n=8');
+  },
+  E03: () => { const T = n => n === 0 ? 1 : T(n - 1) + 3; for (let n = 0; n < 40; n++) ok(T(n) === 3 * n + 1, 'E03'); ok([1, 2, 3].map(T).join() === '4,7,10', 'E03 values'); },
+  E04: () => { const T = n => n === 1 ? 1 : T(n / 2) + 5; for (let k = 0; k <= 14; k++) ok(T(2 ** k) === 5 * k + 1, 'E04 k=' + k); ok(T(8) === 16, 'E04 n=8'); },
+  E05: () => { const T = n => n === 0 ? 0 : T(n - 1) + 2 * n + 1; for (let n = 0; n < 40; n++) { ok(T(n) === n * n + 2 * n, 'E05 n=' + n); for (let i = 0; i <= n; i++) { let sm = 0; for (let j = 0; j < i; j++) sm += 2 * (n - j) + 1; ok(sm === 2 * n * i - i * i + 2 * i, 'E05 pattern'); } } ok(T(1) === 3 && T(2) === 8, 'E05 values'); },
+  E06: () => { const T = n => n === 0 ? 2 : T(n - 1) + 3; ok([0, 1, 2, 3, 4, 5].every(n => T(n) === 3 * n + 2), 'E06 a'); ok(T(0) !== 3 && T(0) !== 3 * (0 - 1) + 2, 'E06 b,c fail the base'); },
+  E07: () => { const T = n => n === 1 ? 1 : 2 * T(n / 2) + 1; for (let k = 0; k <= 14; k++) ok(T(2 ** k) === 2 * 2 ** k - 1, 'E07 k=' + k); ok([2, 4, 8].map(T).join() === '3,7,15', 'E07 values'); },
+  E08: () => { const T = n => n === 1 ? 1 : 2 * T(n / 2) + n; for (let k = 0; k <= 14; k++) ok(T(2 ** k) === 2 ** k * k + 2 ** k, 'E08 k=' + k); ok([2, 4, 8].map(T).join() === '4,12,32', 'E08 values'); },
+  E09: () => {
+    // (a) 2T(n-1)+c grows like 2^n; (b) T(n/2)+n like n; (c) 3T(n/3)+c like n; (d) T(n-1)+T(n-2)+c like phi^n
+    const ratio = (f, g) => [f(20) / g(20), f(40) / g(40)]; const memo = f => { const m = {}; return n => m[n] ?? (m[n] = f(n)); };
+    const Ta = memo(n => n <= 1 ? 1 : 2 * Ta(n - 1) + 1), Tb = memo(n => n <= 1 ? 1 : Tb(Math.floor(n / 2)) + n), Tc = memo(n => n <= 1 ? 1 : 3 * Tc(Math.floor(n / 3)) + 1), Td = memo(n => n <= 1 ? 1 : Td(n - 1) + Td(n - 2) + 1);
+    ok(Math.abs(Ta(40) / Ta(39) - 2) < 0.001, 'E09 a'); ok(Tb(1e6) / 1e6 < 2.1 && Tb(1e6) / 1e6 > 1, 'E09 b is about 2n'); ok(Tc(3 ** 12) / 3 ** 12 < 2, 'E09 c linear'); ok(Math.abs(Td(60) / Td(59) - (1 + Math.sqrt(5)) / 2) < 1e-6, 'E09 d golden ratio');
+    let s = 0; for (let n = 1; n <= 1024; n *= 2) s += n; ok(s === 2047, 'E09 b geometric');
+  },
+  E10: () => { const T = n => n === 0 ? 1 : 2 * T(n - 1) + 3; for (let n = 0; n < 40; n++) ok(T(n) === 2 ** (n + 2) - 3, 'E10 n=' + n); ok(T(1) === 5 && T(2) === 13, 'E10 values'); },
+  E11: () => { const t = [1]; for (let n = 1; n <= 30; n++) { let sm = 0; for (let j = 0; j < n; j++) sm += t[j]; t.push(2 + sm); } ok(t.slice(1, 5).join() === '3,6,12,24', 'E11 values'); for (let n = 2; n <= 30; n++) ok(t[n] - t[n - 1] === t[n - 1] && t[n] === 2 * t[n - 1], 'E11 difference n=' + n); for (let n = 1; n <= 30; n++) ok(t[n] === 3 * 2 ** (n - 1), 'E11 closed n=' + n); },
+  /* ---- Método general y teorema maestro ---- */
+  G01: () => {
+    const ratioOk = (f, g, b) => { const r = [10, 14, 18].map(k => f(b ** k) / g(b ** k)); return r.every(x => x > 0.01 && x < 100) && Math.max(...r) / Math.min(...r) < 1.5; };
+    const rec = (a, b, w) => { const T = n => n <= 1 ? 1 : a * T(n / b) + w(n); return T; };
+    const cases = [[2, 2, n => n, n => n * Math.log2(n)], [4, 2, n => n, n => n * n], [3, 3, () => 1, n => n], [1, 2, () => 1, n => Math.log2(n)], [8, 2, n => n * n, n => n ** 3], [2, 2, n => n * n, n => n * n], [1, 2, n => n, n => n]];
+    cases.forEach(([a, b, w, g], i) => ok(ratioOk(rec(a, b, w), g, b), 'G01 case ' + i));
+    ok(2 / 2 === 1 && 4 / 2 === 2 && 3 / 1 === 3 && 1 / 1 === 1 && 8 / 4 === 2 && 2 / 4 === 0.5, 'G01 ratios');
+  },
+  G02: () => {
+    const rec = (a, w) => { const T = n => n <= 1 ? 1 : a * T(n / 2) + w(n); return T; }, conv = (f, g) => { const r = [18, 22, 26].map(k => f(2 ** k) / g(2 ** k)); return r.every(x => x > 0.05 && x < 20) && Math.max(...r) / Math.min(...r) < 1.2; };
+    ok(conv(rec(2, n => n), n => n * Math.log2(n)), 'G02 a'); ok(conv(rec(1, () => 1), n => Math.log2(n)), 'G02 b'); ok(conv(rec(4, n => n), n => n * n), 'G02 c'); ok(conv(rec(3, n => n), n => n ** Math.log2(3)), 'G02 d');
+    ok(conv(rec(8, n => n * n), n => n ** 3), 'G02 e'); ok(conv(rec(7, n => n * n), n => n ** Math.log2(7)), 'G02 f'); ok(Math.abs(Math.log2(3) - 1.585) < 0.001 && Math.abs(Math.log2(7) - 2.807) < 0.001, 'G02 exponents');
+  },
+  G03: () => {
+    const Ta = n => n * (n + 1) / 2; let t = 0; for (let n = 1; n <= 50; n++) { t += n; ok(t === Ta(n), 'G03 a'); }
+    const Tb = n => n <= 1 ? 0 : 2 * Tb(n / 2) + n * Math.log2(n); for (let k = 0; k <= 16; k++) { const n = 2 ** k; ok(close(Tb(n), n * k * (k + 1) / 2), 'G03 b k=' + k); }
+    const Tc = n => n <= 1 ? 1 : 2 * Tc(n / 2) + Math.sqrt(n); const r = [20, 24, 28].map(k => Tc(2 ** k) / 2 ** k); ok(Math.max(...r) / Math.min(...r) < 1.001 && r[0] > 1, 'G03 c linear');
+  },
+  G04: () => {
+    // sequences satisfying each recurrence are annihilated by the operator of the characteristic polynomial; the solutions have the claimed form
+    const seq = (init, f, N) => { const s = init.map(BigInt); while (s.length < N) s.push(f(s)); return s; }, ann = (s, roots) => { roots.forEach(r => { const o = []; for (let i = 0; i + 1 < s.length; i++) o.push(s[i + 1] - BigInt(r) * s[i]); s = o; }); return s.every(v => v === 0n); };
+    ok(ann(seq([3, 7], s => s[s.length - 1] + 2n * s[s.length - 2], 30), [2, -1]), 'G04 a'); ok(ann(seq([3, 7], s => 4n * s[s.length - 1] - 4n * s[s.length - 2], 30), [2, 2]), 'G04 b');
+    ok(ann(seq([3, 7, 9], s => 6n * s[s.length - 1] - 11n * s[s.length - 2] + 6n * s[s.length - 3], 30), [1, 2, 3]), 'G04 c');
+  },
+  G05: () => { const T = n => n < 2 ? [1, 4][n] : 5 * T(n - 1) - 6 * T(n - 2); for (let n = 0; n < 25; n++) ok(T(n) === 2 * 3 ** n - 2 ** n, 'G05 n=' + n); ok(T(2) === 14 && T(3) === 46, 'G05 values'); },
+  G06: () => { const T = n => n < 2 ? [0, 2][n] : 4 * T(n - 1) - 4 * T(n - 2); for (let n = 0; n < 30; n++) ok(T(n) === n * 2 ** n, 'G06 n=' + n); ok(T(2) === 8 && T(3) === 24, 'G06 values'); },
+  G07: () => { const T = n => n < 2 ? [0, 1][n] : T(n - 1) + 2 * T(n - 2); for (let n = 0; n < 30; n++) ok(3 * T(n) === 2 ** n - (-1) ** n, 'G07 n=' + n); ok([2, 3, 4].map(T).join() === '1,3,5', 'G07 values'); },
+  G08: () => {
+    const seq = (init, f, N) => { const s = init.map(BigInt); while (s.length < N) s.push(f(s, s.length)); return s; }, ann = (s, roots) => { roots.forEach(r => { const o = []; for (let i = 0; i + 1 < s.length; i++) o.push(s[i + 1] - BigInt(r) * s[i]); s = o; }); return s.every(v => v === 0n); };
+    const L = s => s[s.length - 1];
+    ok(ann(seq([5], (s, n) => 2n * L(s) + 3n ** BigInt(n), 40), [2, 3]), 'G08 a'); ok(ann(seq([5], (s, n) => L(s) + BigInt(n), 40), [1, 1, 1]), 'G08 b');
+    ok(ann(seq([5], (s, n) => 3n * L(s) + BigInt(n) * 2n ** BigInt(n), 40), [3, 2, 2]), 'G08 c'); ok(ann(seq([5], (s, n) => 2n * L(s) + 2n ** BigInt(n), 40), [2, 2]), 'G08 d'); ok(ann(seq([5], (s, n) => L(s) + 2n ** BigInt(n), 40), [1, 2]), 'G08 example');
+  },
+  G09: () => { const T = n => n === 0 ? 0 : T(n - 1) + n; for (let n = 0; n < 40; n++) ok(T(n) === (n * n + n) / 2, 'G09 n=' + n); ok(T(1) === 1 && T(2) === 3, 'G09 values'); const C = [0, 0.5, 0.5]; ok(C[0] === 0 && C[0] + C[1] + C[2] === 1 && C[0] + 2 * C[1] + 4 * C[2] === 3, 'G09 system'); },
+  G10: () => {
+    const seq = (init, f, N) => { const s = init.map(BigInt); while (s.length < N) s.push(f(s, s.length)); return s; }, ann = (s, roots) => { roots.forEach(r => { const o = []; for (let i = 0; i + 1 < s.length; i++) o.push(s[i + 1] - BigInt(r) * s[i]); s = o; }); return s.every(v => v === 0n); }, L = s => s[s.length - 1], L2 = s => s[s.length - 2];
+    ok(ann(seq([4], (s, n) => L(s) + 2n ** BigInt(n) + BigInt(n), 40), [1, 1, 1, 2]), 'G10 a'); ok(ann(seq([4, 9], (s, n) => 2n * L(s) - L2(s) + 1n, 40), [1, 1, 1]), 'G10 b'); ok(ann(seq([4, 9], (s, n) => 3n * L(s) - 2n * L2(s) + BigInt(n), 40), [1, 1, 1, 2]), 'G10 c');
+  },
+  G11: () => { const T = n => n < 2 ? 1 : T(n - 2) + 3; for (let n = 0; n < 40; n++) ok(4 * T(n) === 1 + 6 * n + 3 * (-1) ** n, 'G11 n=' + n); ok(T(2) === 4 && T(3) === 4 && T(4) === 7, 'G11 values'); const C = [0.25, 1.5, 0.75]; ok(C[0] + C[2] === 1 && C[0] + C[1] - C[2] === 1 && C[0] + 2 * C[1] + C[2] === 4, 'G11 system'); },
+  G12: () => { const T = n => n === 0 ? 1 : 2 * T(n - 1) + n; for (let n = 0; n < 40; n++) ok(T(n) === 3 * 2 ** n - n - 2, 'G12 n=' + n); ok(T(1) === 3 && T(2) === 8 && T(3) === 19 && T(4) === 42, 'G12 values'); },
+  G13: () => { for (const [a, b, w, tw] of [[1, 2, n => n, k => 2 ** k], [2, 2, n => n * n, k => 4 ** k], [9, 3, n => n, k => 3 ** k], [1, 2, () => 1, () => 1]]) { const T = n => n <= 1 ? 1 : a * T(n / b) + w(n); for (let k = 1; k <= 12; k++) ok(T(b ** k) === a * T(b ** (k - 1)) + tw(k), 'G13 a=' + a + ' k=' + k); } },
+  G14: () => { const T = n => n === 1 ? 1 : T(n / 2) + n; for (let k = 0; k <= 20; k++) ok(T(2 ** k) === 2 * 2 ** k - 1, 'G14 k=' + k); ok(T(4) === 7 && T(8) === 15, 'G14 values'); },
+  G15: () => {
+    const seq = (init, f, N) => { const s = init.map(BigInt); while (s.length < N) s.push(f(s, s.length)); return s; }, ann = (s, roots) => { roots.forEach(r => { const o = []; for (let i = 0; i + 1 < s.length; i++) o.push(s[i + 1] - BigInt(r) * s[i]); s = o; }); return s.every(v => v === 0n); }, L = s => s[s.length - 1];
+    ok(ann(seq([2], (s, k) => L(s) + 9n ** BigInt(k), 30), [1, 9]), 'G15 a'); ok(ann(seq([2], (s, k) => 2n * L(s) + 1n + BigInt(k) + 2n ** BigInt(k), 30), [2, 2, 1, 1]), 'G15 b'); ok(ann(seq([2], (s, k) => 3n * L(s) + 4n ** BigInt(k + 1), 30), [3, 4]), 'G15 c');
+    ok(3 ** (2 * 5) === 9 ** 5 && 4 ** 6 === 4 * 4 ** 5 && 4 ** 7 === (2 ** 7) ** 2 && 7 * 2 ** 7 === 2 ** 7 * Math.log2(2 ** 7), 'G15 transformations');
+  },
+  G16: () => {
+    let d = 0, mx = 0; const enter = () => { d++; mx = Math.max(mx, d); }, leave = () => { d--; };
+    const fact = n => { enter(); const r = n === 0 ? 1 : n * fact(n - 1); leave(); return r; };
+    const pot2 = (b, e) => { enter(); let r; if (e === 0) r = 1; else if (e % 2 === 0) r = pot2(b * b % 1000003, e / 2); else r = b * pot2(b * b % 1000003, (e - 1) / 2); leave(); return r; };
+    const fib = n => { enter(); const r = n <= 1 ? n : fib(n - 1) + fib(n - 2); leave(); return r; };
+    fact(5); ok(mx === 6, 'G16 fact(5)'); mx = 0; fact(30); ok(mx === 31, 'G16 fact(30)'); mx = 0; pot2(2, 8); ok(mx === 5, 'G16 pot2(2,8)'); for (let k = 0; k <= 12; k++) { mx = 0; pot2(2, 2 ** k); ok(mx === k + 2, 'G16 pot2 k=' + k); } mx = 0; fib(5); ok(mx === 5, 'G16 fib(5)'); for (let n = 1; n <= 20; n++) { mx = 0; fib(n); ok(mx === n, 'G16 fib n=' + n); }
   }
 };
 Object.keys(T).forEach(id => { ok(byN[id], id + ' exists'); T[id](); });
