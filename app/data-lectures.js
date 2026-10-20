@@ -5653,6 +5653,384 @@ window.LADDER = {
   "durationMin": null,
   "exercises": [
    {
+    "id": "peldanos#A01",
+    "n": "A01",
+    "title": "Qué término manda",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.2,
+    "steps": true,
+    "statement": "Sea $T(n)=\\tfrac12n^{2}+2000n+50000$.\n- a) Calcula $T(n)/n^{2}$ para $n=10$, $n=100$, $n=10^{4}$ y $n=10^{6}$.\n- b) ¿A qué número parece acercarse ese cociente? ¿Qué término de $T$ explica ese número?\n- c) ¿A partir de qué $n$ el término $\\tfrac12n^{2}$ supera a $2000n+50000$?",
+    "hint": "En a) divide cada término entre $n^{2}$: $\\frac12+\\frac{2000}{n}+\\frac{50000}{n^{2}}$. En c) pasa todo a un lado y resuelve la ecuación de segundo grado.",
+    "solution": "**Paso 1. Calcula los cocientes.** $T(n)/n^{2}=\\tfrac12+\\tfrac{2000}{n}+\\tfrac{50000}{n^{2}}$ vale $700{,}5$ para $n=10$, $25{,}5$ para $n=100$, $0{,}7005$ para $n=10^{4}$ y $0{,}502$ para $n=10^{6}$.\n\n**Paso 2. Interpreta.** Se acerca a $\\tfrac12$: los términos con $\\frac{2000}{n}$ y $\\frac{50000}{n^{2}}$ se hacen despreciables. Manda el término cuadrático: $T(n)$ crece como $\\tfrac12n^{2}$.\n\n**Paso 3. El cruce.** $\\tfrac12n^{2}>2000n+50000\\iff n^{2}-4000n-100000>0$. La raíz positiva es $\\frac{4000+\\sqrt{16\\,400\\,000}}{2}\\approx4024{,}8$, así que desde $n=4025$ manda el cuadrático. Para $n$ pequeños mandan los otros términos, pero la notación asintótica solo mira $n$ grandes."
+   },
+   {
+    "id": "peldanos#A02",
+    "n": "A02",
+    "title": "Comparar con límites",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.3,
+    "steps": true,
+    "statement": "La regla: $f<g$ (asintóticamente) cuando $\\displaystyle\\lim_{n\\to\\infty}\\frac{f(n)}{g(n)}=0$; si el límite es una constante positiva, tienen el mismo orden. Compara cada pareja con $<$, $>$ o \"mismo orden\":\n- a) $n$ y $n^{2}$\n- b) $n\\log_2 n$ y $n$\n- c) $3n^{2}+n$ y $n^{2}$\n- d) $2^{n}$ y $n^{100}$\n- e) $\\log_2 n$ y $\\log_{10}n$",
+    "hint": "Calcula el límite del primero entre el segundo. Si te sale $\\infty/\\infty$, usa L'Hôpital o simplifica. En e) recuerda el cambio de base.",
+    "solution": "**Paso 1. a).** $\\frac{n}{n^{2}}=\\frac1n\\to0$: $n<n^{2}$.\n\n**Paso 2. b).** $\\frac{n\\log_2n}{n}=\\log_2n\\to\\infty$: $n\\log_2n>n$.\n\n**Paso 3. c).** $\\frac{3n^{2}+n}{n^{2}}=3+\\frac1n\\to3$: mismo orden.\n\n**Paso 4. d).** Es más cómodo el cociente al revés: $\\frac{n^{100}}{2^{n}}\\to0$ (L'Hôpital 100 veces, o recordando que un exponencial gana a cualquier polinomio). Por tanto $2^{n}>n^{100}$.\n\n**Paso 5. e).** $\\log_2n=\\frac{\\log_{10}n}{\\log_{10}2}$, así que el cociente vale la constante $\\frac{1}{\\log_{10}2}\\approx3{,}32$: mismo orden. La base de los logaritmos no importa."
+   },
+   {
+    "id": "peldanos#A03",
+    "n": "A03",
+    "title": "Ordenar funciones",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.3,
+    "steps": true,
+    "statement": "Ordena de menor a mayor orden de crecimiento:\n$$n\\log_2n,\\quad n^{2},\\quad 2^{n},\\quad \\log_2n,\\quad n,\\quad n!,\\quad n^{3},\\quad \\sqrt n$$",
+    "hint": "Si dudas entre dos, sustituye un $n$ grande, por ejemplo $n=32$ ($\\log_2 32=5$, $\\sqrt{32}\\approx5{,}7$), o calcula su cociente con un límite.",
+    "solution": "**Paso 1. Los pequeños.** $\\log_2n<\\sqrt n<n$. Con $n=32$: $5<5{,}7<32$. Un logaritmo crece más despacio que cualquier potencia $n^{a}$ con $a>0$.\n\n**Paso 2. Los polinómicos.** $n<n\\log_2n<n^{2}<n^{3}$. Con $n=32$: $32<160<1024<32768$.\n\n**Paso 3. Los que explotan.** $n^{3}<2^{n}<n!$. Con $n=32$: $32\\,768<4{,}29\\cdot10^{9}<2{,}6\\cdot10^{35}$.\n\n**Paso 4. Resultado.**\n$$\\log_2n<\\sqrt n<n<n\\log_2n<n^{2}<n^{3}<2^{n}<n!$$"
+   },
+   {
+    "id": "peldanos#A04",
+    "n": "A04",
+    "title": "Entre dos potencias",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.4,
+    "steps": true,
+    "statement": "Ordena de menor a mayor: $n^{2}\\log_2 n$, $n^{1{,}5}$, $n^{2{,}5}$, $n\\log_2n$, $n^{2}$.",
+    "hint": "La regla del tema: $n^{p}<n^{p}\\log n<n^{p+1}$. Un logaritmo crece más despacio que cualquier potencia positiva de $n$, así que multiplicar por $\\log n$ sube menos que multiplicar por $n^{0{,}5}$.",
+    "solution": "**Paso 1. Compara $n\\log_2 n$ con $n^{1{,}5}$.** Dividiendo por $n$: $\\log_2n$ frente a $n^{0{,}5}=\\sqrt n$. Gana la raíz, luego $n\\log_2n<n^{1{,}5}$.\n\n**Paso 2. Compara $n^{2}\\log_2 n$ con $n^{2}$ y $n^{2{,}5}$.** Es mayor que $n^{2}$, porque $\\log_2n$ crece. Y dividiendo por $n^{2}$, queda $\\log_2n$ frente a $n^{0{,}5}$: gana la raíz, luego $n^{2}\\log_2n<n^{2{,}5}$.\n\n**Paso 3. Resultado.**\n$$n\\log_2n<n^{1{,}5}<n^{2}<n^{2}\\log_2n<n^{2{,}5}$$"
+   },
+   {
+    "id": "peldanos#A05",
+    "n": "A05",
+    "title": "Leer la definición de O con números",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.3,
+    "steps": true,
+    "statement": "La definición: $f\\in O(g)$ si existen $c>0$ y $n_0$ tales que $f(n)\\le c\\,g(n)$ para todo $n\\ge n_0$. Toma $f(n)=3n+5$ y $g(n)=n$.\n- a) Con $c=4$, ¿desde qué $n$ se cumple $3n+5\\le4n$?\n- b) Con $c=3$, ¿se cumple alguna vez $3n+5\\le3n$? ¿Y si $c=3{,}5$?\n- c) Con $c=8$, ¿desde qué $n$ se cumple?\n- d) Escribe una pareja $(c,n_0)$ y concluye.",
+    "hint": "Pasa los términos con $n$ a un lado: $3n+5\\le4n\\iff5\\le n$.",
+    "solution": "**Paso 1. a).** $3n+5\\le4n\\iff5\\le n$. Se cumple desde $n_0=5$.\n\n**Paso 2. b).** $3n+5\\le3n$ es imposible ($5\\le0$): con $c=3$ nunca. Con $c=3{,}5$: $3n+5\\le3{,}5n\\iff10\\le n$, vale desde $n_0=10$. Hace falta una constante algo mayor que el coeficiente de $n$.\n\n**Paso 3. c).** $3n+5\\le8n\\iff5\\le5n\\iff n\\ge1$. Desde $n_0=1$.\n\n**Paso 4. Concluye.** d) Con $c=4$ y $n_0=5$ (o cualquier otra pareja anterior) se cumple la definición: $3n+5\\in O(n)$. Hay infinitas parejas válidas; basta una."
+   },
+   {
+    "id": "peldanos#A06",
+    "n": "A06",
+    "title": "Encontrar c y n₀",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.4,
+    "steps": true,
+    "statement": "Demuestra con la definición:\n- a) $2n+10\\in O(n)$\n- b) $2n+10\\in O(n^{2})$\n\nDa en cada caso una pareja $(c,n_0)$.",
+    "hint": "En a) prueba con una $c$ algo mayor que $2$, por ejemplo $c=3$. En b) prueba con $c=1$ y resuelve $n^{2}-2n-10\\ge0$.",
+    "solution": "**Paso 1. a).** Con $c=3$: $2n+10\\le3n\\iff10\\le n$. Pareja $(3,\\,10)$.\n\n**Paso 2. b), la inecuación.** Con $c=1$: $2n+10\\le n^{2}\\iff n^{2}-2n-10\\ge0$.\n\n**Paso 3. b), cuándo se cumple.** La parábola corta el eje en $1\\pm\\sqrt{11}$, es decir en $\\approx-2{,}3$ y $\\approx4{,}3$. Es positiva a la derecha de $4{,}3$, así que vale para $n\\ge5$ (comprobación: $n=5$ da $25-10-10=5\\ge0$; $n=4$ da $-2$). Pareja $(1,\\,5)$."
+   },
+   {
+    "id": "peldanos#A07",
+    "n": "A07",
+    "title": "Acotar término a término",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Demuestra con la definición:\n- a) $3n^{2}+4n\\in O(n^{2})$\n- b) $n^{2}+n\\log_2n+5\\in O(n^{2})$",
+    "hint": "Para $n\\ge1$ se cumple $n\\le n^{2}$, $1\\le n^{2}$ y $\\log_2n\\le n$. Sustituye cada término por algo mayor que sea múltiplo de $n^{2}$ y suma.",
+    "solution": "**Paso 1. a).** Para $n\\ge1$: $4n\\le4n^{2}$, luego $3n^{2}+4n\\le3n^{2}+4n^{2}=7n^{2}$.\n\n**Paso 2. b), cada término.** Para $n\\ge1$: $n\\log_2n\\le n\\cdot n=n^{2}$ y $5\\le5n^{2}$.\n\n**Paso 3. b), suma.** $n^{2}+n\\log_2n+5\\le n^{2}+n^{2}+5n^{2}=7n^{2}$.\n\n**Paso 4. Concluye.** En los dos casos, $c=7$ y $n_0=1$ cumplen la definición."
+   },
+   {
+    "id": "peldanos#A08",
+    "n": "A08",
+    "title": "Resolver la inecuación",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.55,
+    "steps": true,
+    "statement": "Demuestra que $n^{2}+3n\\in O(n^{2})$ resolviendo la inecuación de la definición.\n- a) Prueba con $c=2$: ¿desde qué $n$ se cumple $n^{2}+3n\\le2n^{2}$?\n- b) ¿Por qué no sirve $c=1$?\n- c) ¿Y con $c=4$, desde qué $n$?",
+    "hint": "$n^{2}+3n\\le2n^{2}\\iff3n\\le n^{2}\\iff3\\le n$ (dividiendo entre $n>0$).",
+    "solution": "**Paso 1. a).** $n^{2}+3n\\le2n^{2}\\iff3n\\le n^{2}\\iff n\\ge3$. Pareja $(2,\\,3)$.\n\n**Paso 2. b).** Con $c=1$ habría que cumplir $3n\\le0$, que es falso para todo $n>0$.\n\n**Paso 3. c).** $n^{2}+3n\\le4n^{2}\\iff3n\\le3n^{2}\\iff n\\ge1$. Pareja $(4,\\,1)$. Con una $c$ mayor, el $n_0$ baja."
+   },
+   {
+    "id": "peldanos#A09",
+    "n": "A09",
+    "title": "Un logaritmo está dentro de O(n)",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Demuestra que $\\log_2n\\in O(n)$.\n- a) Comprueba la desigualdad $\\log_2n\\le n$ para $n=1,2,4,8,16$.\n- b) Demuéstrala para todo $n\\ge1$ usando que $n<2^{n}$.\n- c) ¿Se cumple también $\\log_2n\\in\\Theta(n)$?",
+    "hint": "Si $n<2^{n}$, aplica $\\log_2$ a ambos lados (es creciente). Para c), mira el límite de $\\frac{\\log_2 n}{n}$.",
+    "solution": "**Paso 1. Prueba con números.** a) $0\\le1$, $1\\le2$, $2\\le4$, $3\\le8$, $4\\le16$. Se cumple con mucha holgura.\n\n**Paso 2. Demostración.** b) Para $n\\ge1$ se cumple $n<2^{n}$. Como $\\log_2$ es creciente, $\\log_2n<\\log_2 2^{n}=n$. Con $c=1$ y $n_0=1$, $\\log_2n\\in O(n)$.\n\n**Paso 3. Θ.** c) No. $\\lim\\frac{\\log_2n}{n}=0$ (L'Hôpital: $\\frac{1/(n\\ln 2)}{1}\\to0$); para $\\Theta$ el límite tendría que ser una constante positiva. Es $\\log_2n\\in O(n)$ pero no $\\Omega(n)$."
+   },
+   {
+    "id": "peldanos#A10",
+    "n": "A10",
+    "title": "Decidir con límites",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Si $\\displaystyle\\lim_{n\\to\\infty}\\frac{f(n)}{g(n)}$ es una constante finita, entonces $f\\in O(g)$; si es $\\infty$, entonces $f\\notin O(g)$. Decide:\n- a) $n^{2}+5n\\in O(n^{2})$\n- b) $n\\log_2n\\in O(n^{2})$\n- c) $n^{2}\\in O(n\\log_2n)$\n- d) $5\\cdot2^{n}\\in O(3^{n})$",
+    "hint": "En b) simplifica antes: $\\frac{n\\log_2 n}{n^{2}}=\\frac{\\log_2n}{n}$. En d), $\\frac{5\\cdot2^{n}}{3^{n}}=5\\left(\\frac23\\right)^{n}$.",
+    "solution": "**Paso 1. a).** $\\frac{n^{2}+5n}{n^{2}}=1+\\frac5n\\to1$, finito: sí.\n\n**Paso 2. b).** $\\frac{\\log_2 n}{n}\\to0$ (L'Hôpital), finito: sí.\n\n**Paso 3. c).** $\\frac{n^{2}}{n\\log_2n}=\\frac{n}{\\log_2n}\\to\\infty$: no.\n\n**Paso 4. d).** $5\\left(\\frac23\\right)^{n}\\to0$: sí."
+   },
+   {
+    "id": "peldanos#A11",
+    "n": "A11",
+    "title": "Una cota inferior Ω",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Demuestra que $n^{2}-10n\\in\\Omega(n^{2})$. En $\\Omega$ hay que cumplir $c\\cdot g(n)\\le f(n)$.\n- a) Prueba con $c=\\tfrac12$: ¿desde qué $n$ se cumple $\\tfrac12n^{2}\\le n^{2}-10n$?\n- b) ¿Por qué no sirve $c=1$?",
+    "hint": "$\\tfrac12n^{2}\\le n^{2}-10n\\iff10n\\le\\tfrac12n^{2}$. Divide entre $n$.",
+    "solution": "**Paso 1. a).** $\\tfrac12n^{2}\\le n^{2}-10n\\iff10n\\le\\tfrac12n^{2}\\iff20\\le n$. Pareja $(\\tfrac12,\\,20)$. Comprobación: $n=20$ da $200\\ge200$ y $n=19$ da $171<180{,}5$.\n\n**Paso 2. b).** Con $c=1$ habría que cumplir $n^{2}\\le n^{2}-10n$, es decir $10n\\le0$: imposible."
+   },
+   {
+    "id": "peldanos#A12",
+    "n": "A12",
+    "title": "Demostrar que NO se cumple",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Para demostrar $f\\notin O(g)$ hay que ver que, sea cual sea $c$, la desigualdad $f(n)\\le c\\,g(n)$ falla para $n$ tan grandes como se quiera. Demuestra:\n- a) $n^{3}\\notin O(n^{2})$\n- b) $2n^{2}+5\\notin O(n)$",
+    "hint": "Supón que existen $c$ y $n_0$. Simplifica la desigualdad hasta que quede \"$n\\le$ algo\". Eso solo puede valer para $n$ pequeños.",
+    "solution": "**Paso 1. a), suposición.** Supón $n^{3}\\le c\\,n^{2}$ para todo $n\\ge n_0$. Dividiendo entre $n^{2}$: $n\\le c$.\n\n**Paso 2. a), contradicción.** Pero eso es falso para $n>c$, y siempre hay $n\\ge n_0$ con $n>c$. Luego no existe ninguna pareja y $n^{3}\\notin O(n^{2})$.\n\n**Paso 3. b).** Supón $2n^{2}+5\\le c\\,n$ para todo $n\\ge n_0$. Como $2n^{2}\\le2n^{2}+5\\le cn$, se tiene $2n\\le c$, es decir $n\\le c/2$, falso para $n>c/2$. Luego $2n^{2}+5\\notin O(n)$."
+   },
+   {
+    "id": "peldanos#A13",
+    "n": "A13",
+    "title": "Una cota Θ con constantes",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Demuestra con la definición que $2n^{2}+3n\\in\\Theta(n^{2})$ dando $c_1$, $c_2$ y $n_0$ con\n$$c_1n^{2}\\le2n^{2}+3n\\le c_2n^{2}\\quad\\text{para todo }n\\ge n_0.$$",
+    "hint": "La parte izquierda es fácil: tira el término $3n$ (que es positivo). Para la derecha usa $3n\\le3n^{2}$ si $n\\ge1$.",
+    "solution": "**Paso 1. Cota inferior.** Como $3n\\ge0$, se tiene $2n^{2}\\le2n^{2}+3n$ para todo $n$. Vale $c_1=2$.\n\n**Paso 2. Cota superior.** Para $n\\ge1$: $3n\\le3n^{2}$, así que $2n^{2}+3n\\le5n^{2}$. Vale $c_2=5$.\n\n**Paso 3. Juntas.** Con $c_1=2$, $c_2=5$, $n_0=1$ se cumple la definición. Comprobación con $n=1$: $2\\le5\\le5$."
+   },
+   {
+    "id": "peldanos#A14",
+    "n": "A14",
+    "title": "Simplificar con dos parámetros",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Simplifica (quita constantes y términos dominados):\n- a) $\\Theta(5m^{2}+3mn+n)$\n- b) $\\Theta(m\\log_2n+n\\log_2m+mn)$\n- c) $\\Theta(m^{3}+m^{2}n+n^{2})$ (¿se puede quitar algún término?)\n\nSuponemos $m,n\\ge2$.",
+    "hint": "Un término se puede quitar si otro siempre es mayor o igual (salvo una constante), para cualquier valor de $m$ y $n$. Compara por parejas.",
+    "solution": "**Paso 1. a).** Quita constantes: $m^{2}+mn+n$. Como $n\\le mn$ para $m\\ge1$, el término $n$ sobra: $\\Theta(m^{2}+mn)$. Ni $m^{2}$ ni $mn$ dominan al otro ($m^{2}\\le mn$ solo si $m\\le n$).\n\n**Paso 2. b).** $\\log_2n\\le n$ y $\\log_2m\\le m$, luego $m\\log_2n\\le mn$ y $n\\log_2m\\le mn$. Quedan dominados: $\\Theta(mn)$.\n\n**Paso 3. c).** Ninguno sobra. $m^{3}$ gana a $m^{2}n$ si $m>n$, pero pierde si $n>m$; $m^{2}n$ gana a $n^{2}$ si $m^{2}>n$, pero pierde si $n>m^{2}$; $m^{3}$ y $n^{2}$ tampoco son comparables. La expresión se queda como está."
+   },
+   {
+    "id": "peldanos#A15",
+    "n": "A15",
+    "title": "Verdadero o falso",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Decide si es verdadero y razona:\n- a) $2^{n+1}\\in\\Theta(2^{n})$\n- b) $2^{2n}\\in\\Theta(2^{n})$\n- c) $\\log_2n\\in\\Theta(\\log_{10}n)$\n- d) $n^{2}+n\\log_2n\\in\\Theta(n^{2})$\n- e) $(n+1)!\\in\\Theta(n!)$\n- f) $\\sqrt n\\in O(\\log_2n)$",
+    "hint": "Una constante multiplicativa no cambia el orden; una función que se multiplica por algo que crece, sí. Pasa cada caso a un cociente.",
+    "solution": "**Paso 1. a) y c).** Verdaderos: $2^{n+1}=2\\cdot2^{n}$ y $\\log_2n=\\log_{10}n/\\log_{10}2$. Solo cambian en una constante.\n\n**Paso 2. b).** Falso: $2^{2n}=4^{n}=2^{n}\\cdot2^{n}$, y el cociente $2^{n}$ no está acotado. No es solo una constante.\n\n**Paso 3. d).** Verdadero: $n\\log_2n\\le n^{2}$ para $n\\ge1$, y $n^{2}$ manda. El cociente tiende a $1$.\n\n**Paso 4. e).** Falso: $(n+1)!=(n+1)\\,n!$, cociente $n+1\\to\\infty$.\n\n**Paso 5. f).** Falso: $\\frac{\\sqrt n}{\\log_2n}\\to\\infty$. Es al revés, $\\log_2n\\in O(\\sqrt n)$."
+   },
+   {
+    "id": "peldanos#A16",
+    "n": "A16",
+    "title": "Errores frecuentes",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Di si cada afirmación es correcta y por qué:\n- a) \"Si $T(n)\\in O(n^{2})$, el algoritmo tarda al menos $n^{2}$.\"\n- b) \"$T(n)\\in\\Theta(n)$ implica $T(n)\\in O(n^{2})$.\"\n- c) \"$T(n)\\in O(n)$ y $T(n)\\in\\Omega(n)$ implican $T(n)\\in\\Theta(n)$.\"\n- d) \"Si $f\\in O(g)$ y $g\\in O(h)$, entonces $f\\in O(h)$.\"\n- e) \"Un algoritmo que tarda $\\Theta(n^{2})$ con alguna entrada tarda $\\Theta(n^{2})$ con todas.\"",
+    "hint": "$O$ es una cota superior (\"como mucho\"), $\\Omega$ una inferior (\"al menos\") y $\\Theta$ las dos a la vez. Y una cota siempre se refiere a un tipo de entrada.",
+    "solution": "**Paso 1. a).** Incorrecta. $O(n^{2})$ dice que tarda como mucho del orden de $n^{2}$. Puede tardar mucho menos.\n\n**Paso 2. b).** Correcta: $\\Theta(n)$ incluye $O(n)$, y $O(n)\\subseteq O(n^{2})$.\n\n**Paso 3. c).** Correcta. Es la definición de $\\Theta$ como cota superior e inferior a la vez.\n\n**Paso 4. d).** Correcta: es transitiva. $f\\le c_1g$ y $g\\le c_2h$ dan $f\\le c_1c_2h$ para $n$ grandes.\n\n**Paso 5. e).** Incorrecta. El coste depende de la entrada (mejor, peor y caso medio pueden tener órdenes distintos). Una cota solo vale para el caso al que se refiere."
+   },
+   {
+    "id": "peldanos#A17",
+    "n": "A17",
+    "title": "Simular counting-sort",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Ordena con counting-sort el vector $A=[3,1,3,0,2]$ (valores en $[0,3]$, así que $k=3$).\n- a) Calcula el vector de cuentas $C[0..3]$.\n- b) Calcula las sumas acumuladas de $C$.\n- c) Da el vector ordenado.\n- d) ¿De qué orden es el coste en función de $n$ y $k$? ¿Qué pasa si $k=n^{2}$?",
+    "hint": "$C[v]$ cuenta cuántas veces aparece $v$ en $A$. Las sumas acumuladas dicen cuántos elementos son menores o iguales que $v$.",
+    "solution": "**Paso 1. Cuentas.** a) $0$ aparece 1 vez, $1$ una, $2$ una y $3$ dos: $C=[1,1,1,2]$.\n\n**Paso 2. Acumuladas.** b) $C=[1,2,3,5]$: hay 1 elemento $\\le0$, 2 $\\le1$, 3 $\\le2$ y 5 $\\le3$.\n\n**Paso 3. Salida.** c) $B=[0,1,2,3,3]$.\n\n**Paso 4. Coste.** d) Hay dos bucles de tamaño $k$ y dos de tamaño $n$: $\\Theta(n+k)$. Si $k\\in O(n)$ es lineal. Con $k=n^{2}$ sería $\\Theta(n^{2})$, peor que una ordenación por comparaciones."
+   },
+   {
+    "id": "peldanos#A18",
+    "n": "A18",
+    "title": "Árbol de decisión",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Un algoritmo de ordenación por comparaciones se puede ver como un árbol binario cuyas hojas son los posibles resultados (las ordenaciones). Hay $n!$ hojas, y un árbol binario de altura $h$ tiene como mucho $2^{h}$ hojas.\n- a) Para $n=3$, ¿cuántas hojas hay y cuántas comparaciones hacen falta como mínimo en el peor caso?\n- b) Lo mismo para $n=4$, $n=5$ y $n=8$.\n- c) ¿Qué cota general se deduce?",
+    "hint": "Hace falta $2^{h}\\ge n!$, es decir, $h\\ge\\log_2(n!)$. Redondea hacia arriba.",
+    "solution": "**Paso 1. $n=3$.** $3!=6$ hojas. $2^{2}=4<6\\le8=2^{3}$, luego $h\\ge3$.\n\n**Paso 2. Más casos.** $n=4$: $24$ hojas, $2^{4}=16<24\\le32$, $h\\ge5$. $n=5$: $120$ hojas, $2^{6}=64<120\\le128$, $h\\ge7$. $n=8$: $40320$ hojas, $2^{15}=32768<40320\\le65536$, $h\\ge16$.\n\n**Paso 3. Cota general.** Todo algoritmo de ordenación por comparaciones necesita al menos $\\lceil\\log_2(n!)\\rceil$ comparaciones en el peor caso, y $\\log_2(n!)\\in\\Theta(n\\log n)$: cota $\\Omega(n\\log n)$."
+   },
+   {
+    "id": "peldanos#A19",
+    "n": "A19",
+    "title": "log n! entre dos cotas",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Prueba que $\\log_2(n!)\\in\\Theta(n\\log_2n)$ acotando $n!$ por los dos lados (con $n$ par).\n- a) Cota superior: $n!\\le n^{n}$. ¿Qué cota de $\\log_2(n!)$ sale?\n- b) Cota inferior: en $n!=n\\cdot(n-1)\\cdots1$, los $\\tfrac n2$ factores más grandes valen al menos $\\tfrac n2$. ¿Qué cota de $n!$ sale, y de $\\log_2(n!)$?\n- c) Concluye y comprueba con $n=8$.",
+    "hint": "Los primeros $n/2$ factores ($n,n-1,\\dots,\\frac n2+1$) son todos mayores que $\\frac n2$. Los demás factores valen al menos $1$.",
+    "solution": "**Paso 1. Cota superior.** a) Cada factor es $\\le n$, hay $n$ factores: $n!\\le n^{n}$, luego $\\log_2(n!)\\le n\\log_2n$.\n\n**Paso 2. Cota inferior.** b) $n!\\ge\\left(\\tfrac n2\\right)^{n/2}\\cdot1$, luego $\\log_2(n!)\\ge\\tfrac n2\\log_2\\tfrac n2=\\tfrac n2(\\log_2n-1)$.\n\n**Paso 3. Orden.** El término dominante de la cota inferior es $\\tfrac n2\\log_2n$, que es $\\Theta(n\\log_2n)$, igual que la superior. Por tanto $\\log_2(n!)\\in\\Theta(n\\log_2n)$.\n\n**Paso 4. Comprueba.** c) $n=8$: $\\log_2 40320\\approx15{,}3$; cota inferior $\\tfrac82(3-1)=8$; cota superior $8\\cdot3=24$. Se cumple $8\\le15{,}3\\le24$."
+   },
+   {
+    "id": "peldanos#A20",
+    "n": "A20",
+    "title": "Ordenar con logaritmos",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Ordena de menor a mayor orden de crecimiento:\n$$n^{3},\\quad 2^{n},\\quad n^{\\log_2n},\\quad 3^{n/2},\\quad n!$$",
+    "hint": "Compara los logaritmos (en base $2$) de las funciones: como $\\log$ es creciente, el orden se conserva. Los logaritmos son $3\\log_2n$, $n$, $(\\log_2n)^{2}$, $\\tfrac n2\\log_23$ y $\\approx n\\log_2n$.",
+    "solution": "**Paso 1. Toma $\\log_2$ de cada una.** $n^{3}\\to3\\log_2n$. $2^{n}\\to n$. $n^{\\log_2n}\\to(\\log_2n)^{2}$. $3^{n/2}\\to\\tfrac n2\\log_23\\approx0{,}79\\,n$. $n!\\to\\log_2(n!)\\in\\Theta(n\\log_2n)$.\n\n**Paso 2. Ordena esos logaritmos.** $3\\log_2n<(\\log_2n)^{2}<0{,}79\\,n<n<n\\log_2n$ (para $n$ grande: un logaritmo al cuadrado crece más despacio que $n$).\n\n**Paso 3. Vuelve a las funciones.**\n$$n^{3}<n^{\\log_2n}<3^{n/2}<2^{n}<n!$$\n\n**Paso 4. Comentario.** $n^{\\log_2n}$ gana a todo polinomio pero pierde con cualquier exponencial. Y $3^{n/2}=(\\sqrt3)^{n}\\approx1{,}73^{n}$ tiene base menor que $2$."
+   },
+   {
+    "id": "peldanos#A21",
+    "n": "A21",
+    "title": "Cotas con exponenciales",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.9,
+    "steps": true,
+    "statement": "Decide y demuestra con la definición:\n- a) $2^{n+1}\\in O(2^{n})$\n- b) $3^{n}\\notin O(2^{n})$\n- c) $n\\cdot2^{n}\\notin O(2^{n})$",
+    "hint": "En a) saca el factor: $2^{n+1}=2\\cdot2^{n}$. En b) y c) supón que existe $c$ y divide entre $2^{n}$.",
+    "solution": "**Paso 1. a).** $2^{n+1}=2\\cdot2^{n}\\le2\\cdot2^{n}$. Pareja $(2,\\,1)$.\n\n**Paso 2. b).** Supón $3^{n}\\le c\\,2^{n}$ para todo $n\\ge n_0$. Dividiendo entre $2^{n}$: $\\left(\\tfrac32\\right)^{n}\\le c$. Pero $\\left(\\tfrac32\\right)^{n}$ crece sin cota, así que supera a cualquier $c$ para $n$ grande. Contradicción.\n\n**Paso 3. c).** Supón $n\\,2^{n}\\le c\\,2^{n}$. Dividiendo entre $2^{n}$: $n\\le c$, falso para $n>c$. Luego $n\\,2^{n}\\notin O(2^{n})$."
+   },
+   {
     "id": "peldanos#S01",
     "n": "S01",
     "title": "Potencias",
@@ -6286,6 +6664,58 @@ window.LADDER = {
   "kind": "adic"
  },
  "order": {
+  "asintotica": {
+   "t22-por-que": [
+    "peldanos/peldanos#A01",
+    "peldanos/peldanos#A02"
+   ],
+   "t22-ordenes": [
+    "peldanos/peldanos#A03",
+    "peldanos/peldanos#A04",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.1"
+   ],
+   "t22-cota-sup": [
+    "peldanos/peldanos#A05",
+    "peldanos/peldanos#A06"
+   ],
+   "t22-verificar-o": [
+    "peldanos/peldanos#A07",
+    "peldanos/peldanos#A08",
+    "peldanos/peldanos#A09",
+    "peldanos/peldanos#A10",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.1",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.5",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.3"
+   ],
+   "t22-omega": [
+    "peldanos/peldanos#A11",
+    "peldanos/peldanos#A12"
+   ],
+   "t22-theta": [
+    "peldanos/peldanos#A13",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.4",
+    "peldanos/peldanos#A14",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.2",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.3"
+   ],
+   "t22-aspectos": [
+    "peldanos/peldanos#A15",
+    "peldanos/peldanos#A16"
+   ],
+   "t22-lineal": [
+    "peldanos/peldanos#A17"
+   ],
+   "t22-comparacion": [
+    "peldanos/peldanos#A18"
+   ],
+   "t22-cota-orden": [
+    "peldanos/peldanos#A19",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.2",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.14",
+    "peldanos/peldanos#A20",
+    "peldanos/peldanos#A21"
+   ]
+  },
   "sumatorios": {
    "t21-potencias-logs": [
     "peldanos/peldanos#S01",

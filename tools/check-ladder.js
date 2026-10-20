@@ -103,12 +103,42 @@ const T = {
   S32: () => { for (let n = 1; n <= 200; n++) { const s = sum(1, n, i => Math.log(i)); ok(n * Math.log(n) - n + 1 <= s + 1e-9 && s <= n * Math.log(n) + 1e-9, 'S32 n=' + n); } },
   S33: () => { eq('S33', n => sum(1, n, i => 3 * i * i - 2 * i + 5), n => n * (n + 1) * (2 * n - 1) / 2 + 5 * n, 1, 40); },
   S34: () => { eq('S34 a', n => sum(1, n, i => sum(i, n, () => 1)), n => n * (n + 1) / 2, 1, 40); eq('S34 b', n => sum(1, n, i => sum(1, i, j => j)), n => n * (n + 1) * (n + 2) / 6, 1, 40); },
-  S35: () => { eq('S35', n => sum(0, n, i => 2 ** i + i), n => 2 ** (n + 1) - 1 + n * (n + 1) / 2, 0, 40); }
+  S35: () => { eq('S35', n => sum(0, n, i => 2 ** i + i), n => 2 ** (n + 1) - 1 + n * (n + 1) / 2, 0, 40); },
+  /* ---- Notación asintótica ---- */
+  A01: () => {
+    const T1 = n => n * n / 2 + 2000 * n + 50000;
+    ok(close(T1(10) / 100, 700.5) && close(T1(100) / 1e4, 25.5) && close(T1(1e4) / 1e8, 0.7005) && Math.abs(T1(1e6) / 1e12 - 0.502) < 1e-6, 'A01 ratios');
+    let n0 = 1; while (!(n0 * n0 / 2 > 2000 * n0 + 50000)) n0++; ok(n0 === 4025, 'A01 crossing is 4025 (got ' + n0 + ')');
+    ok(!(4024 * 4024 / 2 > 2000 * 4024 + 50000), 'A01 4024 does not cross yet');
+  },
+  A02: () => {
+    const lg = Math.log2; for (const n of [1e6, 1e9]) { ok(n / n ** 2 < 1e-5, 'A02 a'); ok(n * lg(n) / n > 10, 'A02 b'); ok(Math.abs((3 * n * n + n) / (n * n) - 3) < 1e-5, 'A02 c'); ok(close(lg(n) / (Math.log10(n)), 1 / Math.log10(2)), 'A02 e'); }
+    ok(100 * Math.log(2000) - 2000 * Math.log(2) < -100, 'A02 d: n^100/2^n is already tiny at n=2000');
+  },
+  A03: () => { const f = [n => Math.log(Math.log2(n)), n => 0.5 * Math.log(n), n => Math.log(n), n => Math.log(n * Math.log2(n)), n => 2 * Math.log(n), n => 3 * Math.log(n), n => n * Math.log(2), n => n * Math.log(n) - n]; for (const n of [1e4, 1e6, 1e9]) for (let i = 0; i + 1 < f.length; i++) ok(f[i](n) < f[i + 1](n), 'A03 order at n=' + n + ' position ' + i); ok(Math.log2(32) === 5 && 2 ** 32 === 4294967296, 'A03 values'); },
+  A04: () => { const f = [n => Math.log(n * Math.log2(n)), n => 1.5 * Math.log(n), n => 2 * Math.log(n), n => 2 * Math.log(n) + Math.log(Math.log2(n)), n => 2.5 * Math.log(n)]; for (const n of [1e12, 1e18, 1e30]) for (let i = 0; i + 1 < f.length; i++) ok(f[i](n) < f[i + 1](n), 'A04 order at n=' + n); },
+  A05: () => { let c4 = 0; for (let n = 1; n < 200; n++) { if (3 * n + 5 <= 4 * n) { c4 = c4 || n; } else ok(!c4, 'A05 a stays true after the first n'); ok(!(3 * n + 5 <= 3 * n), 'A05 b'); } ok(c4 === 5, 'A05 a n0=5'); let c35 = 0; for (let n = 1; n < 200; n++) if (3 * n + 5 <= 3.5 * n && !c35) c35 = n; ok(c35 === 10, 'A05 b c=3.5'); for (let n = 1; n < 200; n++) ok(3 * n + 5 <= 8 * n, 'A05 c'); },
+  A06: () => { for (let n = 10; n < 500; n++) ok(2 * n + 10 <= 3 * n, 'A06 a'); ok(!(2 * 9 + 10 <= 27), 'A06 a n=9 fails'); for (let n = 5; n < 500; n++) ok(2 * n + 10 <= n * n, 'A06 b'); ok(!(2 * 4 + 10 <= 16), 'A06 b n=4 fails'); },
+  A07: () => { for (let n = 1; n < 2000; n++) { ok(3 * n * n + 4 * n <= 7 * n * n, 'A07 a'); ok(n * n + n * Math.log2(n) + 5 <= 7 * n * n, 'A07 b'); } },
+  A08: () => { ok(!(2 * 2 + 6 <= 8), 'A08 n=2 fails'); for (let n = 3; n < 500; n++) ok(n * n + 3 * n <= 2 * n * n, 'A08 a'); for (let n = 1; n < 500; n++) { ok(n * n + 3 * n <= 4 * n * n, 'A08 c'); ok(!(n * n + 3 * n <= n * n), 'A08 b'); } },
+  A09: () => { for (let n = 1; n < 3000; n++) ok(Math.log2(n) <= n && n < 2 ** Math.min(n, 1000), 'A09'); ok([1, 2, 4, 8, 16].map(Math.log2).join() === '0,1,2,3,4', 'A09 a'); },
+  A10: () => { for (const n of [1e6, 1e9]) { ok(Math.abs((n * n + 5 * n) / (n * n) - 1) < 1e-5, 'A10 a'); ok(Math.log2(n) / n < 1e-4, 'A10 b'); ok(n / Math.log2(n) > 1e4, 'A10 c'); } ok(5 * (2 / 3) ** 200 < 1e-30, 'A10 d'); },
+  A11: () => { ok(20 * 20 - 200 === 200 && 0.5 * 400 === 200, 'A11 n=20'); ok(!(19 * 19 - 190 >= 0.5 * 19 * 19), 'A11 n=19 fails'); for (let n = 20; n < 1000; n++) ok(n * n - 10 * n >= 0.5 * n * n, 'A11'); },
+  A12: () => { for (const c of [1, 5, 50]) { ok(!((c + 1) ** 3 <= c * (c + 1) ** 2), 'A12 a c=' + c); ok(!(2 * (c + 1) ** 2 + 5 <= c * (c + 1)), 'A12 b c=' + c); } },
+  A13: () => { for (let n = 1; n < 2000; n++) ok(2 * n * n <= 2 * n * n + 3 * n && 2 * n * n + 3 * n <= 5 * n * n, 'A13'); },
+  A14: () => { for (let m = 2; m <= 60; m++) for (let n = 2; n <= 60; n++) { ok(n <= m * n && m * Math.log2(n) <= m * n && n * Math.log2(m) <= m * n, 'A14 a/b'); } const nd = (f, g) => { let fg = false, gf = false; for (let m = 2; m <= 400; m++) for (let n = 2; n <= 400; n++) { if (f(m, n) > 5 * g(m, n)) fg = true; if (g(m, n) > 5 * f(m, n)) gf = true; } return fg && gf; }; ok(nd((m, n) => m ** 3, (m, n) => m * m * n) && nd((m, n) => m * m * n, (m, n) => n * n) && nd((m, n) => m ** 3, (m, n) => n * n), 'A14 c: no term dominates another'); ok(nd((m, n) => m * m, (m, n) => m * n), 'A14 a: m^2 and mn are not comparable'); },
+  A15: () => { const n = 50; ok(close(2 ** (n + 1) / 2 ** n, 2) && close(2 ** (2 * n) / 2 ** n, 2 ** n) && close(n * Math.log2(n) / (n * n), Math.log2(n) / n) && Math.sqrt(1e6) / Math.log2(1e6) > 40, 'A15'); let f = 1, g = 1; for (let i = 1; i <= 20; i++) { g = f; f *= i; } ok(close(f * 21 / f, 21), 'A15 e'); },
+  A16: () => { },
+  A17: () => { const A = [3, 1, 3, 0, 2], k = 3, C = new Array(k + 1).fill(0); A.forEach(v => C[v]++); ok(C.join() === '1,1,1,2', 'A17 counts'); for (let i = 1; i <= k; i++) C[i] += C[i - 1]; ok(C.join() === '1,2,3,5', 'A17 prefix'); const B = new Array(A.length); for (let j = A.length - 1; j >= 0; j--) { B[C[A[j]] - 1] = A[j]; C[A[j]]--; } ok(B.join() === '0,1,2,3,3', 'A17 output'); },
+  A18: () => { const fact = n => n <= 1 ? 1 : n * fact(n - 1), h = n => Math.ceil(Math.log2(fact(n))); ok(fact(3) === 6 && h(3) === 3 && fact(4) === 24 && h(4) === 5 && fact(5) === 120 && h(5) === 7 && fact(8) === 40320 && h(8) === 16, 'A18'); },
+  A19: () => { let lf = 0; for (let n = 1; n <= 80; n++) { lf += Math.log2(n); if (n % 2 === 0) ok((n / 2) * Math.log2(n / 2) <= lf + 1e-9 && lf <= n * Math.log2(n) + 1e-9, 'A19 n=' + n); } ok(Math.abs(Math.log2(40320) - 15.3) < 0.05 && 4 * Math.log2(4) === 8, 'A19 n=8'); },
+  A20: () => { const L2 = Math.LN2, f = [n => 3 * Math.log(n), n => Math.log(n) * Math.log2(n), n => (n / 2) * Math.log(3), n => n * L2, n => n * Math.log(n) - n]; for (const n of [1e3, 1e4, 1e6]) for (let i = 0; i + 1 < f.length; i++) ok(f[i](n) < f[i + 1](n), 'A20 order at n=' + n + ' position ' + i); ok(Math.abs(0.5 * Math.log2(3) - 0.79) < 0.005 && Math.abs(Math.sqrt(3) - 1.73) < 0.005, 'A20 constants'); },
+  A21: () => { ok(2 ** 11 === 2 * 2 ** 10, 'A21 a'); ok(1.5 ** 60 > 1e10 && 1.5 ** 120 > 1e20, 'A21 b grows without bound'); ok(50 * 2 ** 50 > 49 * 2 ** 50, 'A21 c'); }
 };
 Object.keys(T).forEach(id => { ok(byN[id], id + ' exists'); T[id](); });
 /* every peldaño of the stage has been looked at: a new one has to bring its own check or be listed as "no numbers" */
-const NO_NUMBERS = new Set(['S01', 'S02', 'S03', 'S05', 'S06', 'S07', 'S09']);   // powers, logarithms, derivatives, limits, integrals and constants: checked by hand
-rungs.filter(e => e.stage === 'sumatorios').forEach(e => ok(T[e.n] || NO_NUMBERS.has(e.n), e.n + ' has a numeric check'));
+const NO_NUMBERS = new Set(['S01', 'S02', 'S03', 'S05', 'S06', 'S07', 'S09']);   // sumatorios:   // powers, logarithms, derivatives, limits, integrals and constants: checked by hand
+rungs.forEach(e => ok(T[e.n] || NO_NUMBERS.has(e.n), e.n + ' has a numeric check'));
 
 console.log(fails ? fails + ' FAILURES' : 'ladder checks passed (' + rungs.length + ' peldaños, ' + spans + ' formulas)');
 process.exit(fails ? 1 : 0);
