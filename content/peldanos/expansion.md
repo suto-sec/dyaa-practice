@@ -2,7 +2,7 @@
 stage: expansion
 
 ## Orden
-- t32-expansion: E01 E02 E03 E04 E05 E06 E07 E08 E09 1.10 E10 E11 1.12 1.13 2.10 2.13
+- t32-expansion: E01 E02 E03 E04 E05 E06 E07 E08 E09 E10 E11 1.12 1.13 2.10 2.13 1.10
 
 ### E01 · Calcular valores y ver el patrón
 nivel: 0.2

@@ -8,10 +8,9 @@ stage: asintotica
 - t22-verificar-o: A07 A08 A09 A10 2.1 2.5 1.3
 - t22-omega: A11 A12
 - t22-theta: A13 2.4 A14 2.2 2.3
-- t22-aspectos: A15 A16
+- t22-aspectos: A15
 - t22-lineal: A17
-- t22-comparacion: A18
-- t22-cota-orden: A19 1.2 2.14 A20 A21
+- t22-cota-orden: A19 A20 A21 1.2 2.14
 
 ### A01 · Qué término manda
 nivel: 0.2
@@ -299,30 +298,6 @@ Una constante multiplicativa no cambia el orden; una función que se multiplica 
 
 **Paso 5. f).** Falso: $\frac{\sqrt n}{\log_2n}\to\infty$. Es al revés, $\log_2n\in O(\sqrt n)$.
 
-### A16 · Errores frecuentes
-nivel: 0.65
-
-Di si cada afirmación es correcta y por qué:
-- a) "Si $T(n)\in O(n^{2})$, el algoritmo tarda al menos $n^{2}$."
-- b) "$T(n)\in\Theta(n)$ implica $T(n)\in O(n^{2})$."
-- c) "$T(n)\in O(n)$ y $T(n)\in\Omega(n)$ implican $T(n)\in\Theta(n)$."
-- d) "Si $f\in O(g)$ y $g\in O(h)$, entonces $f\in O(h)$."
-- e) "Un algoritmo que tarda $\Theta(n^{2})$ con alguna entrada tarda $\Theta(n^{2})$ con todas."
-
-#### Pista
-$O$ es una cota superior ("como mucho"), $\Omega$ una inferior ("al menos") y $\Theta$ las dos a la vez. Y una cota siempre se refiere a un tipo de entrada.
-
-#### Solución
-**Paso 1. a).** Incorrecta. $O(n^{2})$ dice que tarda como mucho del orden de $n^{2}$. Puede tardar mucho menos.
-
-**Paso 2. b).** Correcta: $\Theta(n)$ incluye $O(n)$, y $O(n)\subseteq O(n^{2})$.
-
-**Paso 3. c).** Correcta. Es la definición de $\Theta$ como cota superior e inferior a la vez.
-
-**Paso 4. d).** Correcta: es transitiva. $f\le c_1g$ y $g\le c_2h$ dan $f\le c_1c_2h$ para $n$ grandes.
-
-**Paso 5. e).** Incorrecta. El coste depende de la entrada (mejor, peor y caso medio pueden tener órdenes distintos). Una cota solo vale para el caso al que se refiere.
-
 ### A17 · Simular counting-sort
 nivel: 0.5
 
@@ -343,24 +318,6 @@ $C[v]$ cuenta cuántas veces aparece $v$ en $A$. Las sumas acumuladas dicen cuá
 **Paso 3. Salida.** c) $B=[0,1,2,3,3]$.
 
 **Paso 4. Coste.** d) Hay dos bucles de tamaño $k$ y dos de tamaño $n$: $\Theta(n+k)$. Si $k\in O(n)$ es lineal. Con $k=n^{2}$ sería $\Theta(n^{2})$, peor que una ordenación por comparaciones.
-
-### A18 · Árbol de decisión
-nivel: 0.6
-
-Un algoritmo de ordenación por comparaciones se puede ver como un árbol binario cuyas hojas son los posibles resultados (las ordenaciones). Hay $n!$ hojas, y un árbol binario de altura $h$ tiene como mucho $2^{h}$ hojas.
-- a) Para $n=3$, ¿cuántas hojas hay y cuántas comparaciones hacen falta como mínimo en el peor caso?
-- b) Lo mismo para $n=4$, $n=5$ y $n=8$.
-- c) ¿Qué cota general se deduce?
-
-#### Pista
-Hace falta $2^{h}\ge n!$, es decir, $h\ge\log_2(n!)$. Redondea hacia arriba.
-
-#### Solución
-**Paso 1. $n=3$.** $3!=6$ hojas. $2^{2}=4<6\le8=2^{3}$, luego $h\ge3$.
-
-**Paso 2. Más casos.** $n=4$: $24$ hojas, $2^{4}=16<24\le32$, $h\ge5$. $n=5$: $120$ hojas, $2^{6}=64<120\le128$, $h\ge7$. $n=8$: $40320$ hojas, $2^{15}=32768<40320\le65536$, $h\ge16$.
-
-**Paso 3. Cota general.** Todo algoritmo de ordenación por comparaciones necesita al menos $\lceil\log_2(n!)\rceil$ comparaciones en el peor caso, y $\log_2(n!)\in\Theta(n\log n)$: cota $\Omega(n\log n)$.
 
 ### A19 · log n! entre dos cotas
 nivel: 0.8

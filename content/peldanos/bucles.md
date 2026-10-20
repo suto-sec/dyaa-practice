@@ -3,7 +3,7 @@ stage: bucles
 
 ## Orden
 - t31-insert: B01 B02 B03 B04 B05
-- t31-general: B06 2.9 B07 B08 2.6 2.7 B09 2.8 B10 B11
+- t31-general: B06 2.9 B07 B08 2.6 2.7 B09 2.8 B11
 
 ### B01 · Cuántas veces se ejecuta el cuerpo
 nivel: 0.2
@@ -272,31 +272,6 @@ El mejor caso es el que sale de los bucles lo antes posible. El peor es el que n
 **Paso 2. b), mejor caso.** `a[0] == a[1]`: una comparación, $\Theta(1)$.
 
 **Paso 3. b), peor caso.** Todos distintos: se comparan todas las parejas. Para cada $i$ hay $n-1-i$ comparaciones: $\sum_{i=0}^{n-1}(n-1-i)=\dfrac{n(n-1)}{2}$. Con $n=5$: $10$. Orden $\Theta(n^{2})$.
-
-### B10 · Un bucle cuyo tamaño se divide por dos
-nivel: 0.8
-
-```python
-m = n
-while m >= 1:
-    for i in range(m):
-        trabajo()
-    m = m // 2
-```
-Con $n$ potencia de $2$:
-- a) ¿Cuántas veces se llama a `trabajo()` si $n=8$?
-- b) ¿Y para $n$ general? Usa una serie geométrica.
-- c) ¿Cuál es el orden? ¿Por qué no es $n\log n$, si el `while` da $\log_2n+1$ vueltas?
-
-#### Pista
-En cada vuelta del `while` el `for` hace $m$ iteraciones, y $m$ vale $n,\frac n2,\frac n4,\dots,1$.
-
-#### Solución
-**Paso 1. Caso $n=8$.** a) $m=8,4,2,1$: $8+4+2+1=15$ llamadas.
-
-**Paso 2. Caso general.** b) $\sum_{k=0}^{\log_2n}\dfrac{n}{2^{k}}=n\sum_{k=0}^{\log_2n}\left(\tfrac12\right)^{k}=n\left(2-\dfrac{1}{n}\right)=2n-1$. Con $n=8$ da $15$.
-
-**Paso 3. Orden.** c) $\Theta(n)$. El `for` solo hace $n$ vueltas la primera vez; después la mitad, la cuarta parte... Las vueltas del `while` son $\log_2n$, pero cada una trabaja menos que la anterior, así que el producto $n\log n$ sobreestima. Si el `for` hiciera siempre $n$ vueltas, sí saldría $\Theta(n\log n)$.
 
 ### B11 · Tres bucles: cambiar el orden de la suma
 nivel: 0.9

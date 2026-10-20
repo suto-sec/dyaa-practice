@@ -5,11 +5,9 @@ stage: sumatorios
 - t21-potencias-logs: S01 S02 S03 S04
 - t21-calculo: S05 S06 S07
 - t21-sumas-basicas: S08 S09 1.4 S10 S11 S12 S13 S14 1.5 S15 S16 1.7
-- t21-cuadrados-cubos: S17 S18 S19 1.6
-- t21-telescopicas: S20 S21 S22
+- t21-cuadrados-cubos: S17 S18 1.6
 - t21-geometricas: S23 S24 S25 S26 S27 S28 1.9
 - t21-integrales: S29 S30 S31 S32 S33 S34 S35
-
 ### S01 · Potencias
 nivel: 0.2
 
@@ -393,79 +391,6 @@ En c) desarrolla el cuadrado: $(2i-1)^{2}=4i^{2}-4i+1$. Luego usa linealidad y l
 **Paso 2. Separa y usa dos fórmulas.** b) $\dfrac{n(n+1)(2n+1)}{6}+\dfrac{n(n+1)}{2}=\dfrac{n(n+1)(2n+4)}{6}=\dfrac{n(n+1)(n+2)}{3}$. Con $n=3$: $2+6+12=20$ y $\frac{3\cdot4\cdot5}{3}=20$.
 
 **Paso 3. Desarrolla el cuadrado.** c) $4\sum i^{2}-4\sum i+\sum1=\dfrac{2n(n+1)(2n+1)}{3}-2n(n+1)+n=\dfrac{4n^{3}-n}{3}=\dfrac{n(4n^{2}-1)}{3}$. Con $n=3$: $1+9+25=35$ y $\frac{3\cdot35}{3}=35$.
-
-### S19 · Cubos
-nivel: 0.55
-
-- a) Calcula $1^{3}+2^{3}+3^{3}+4^{3}+5^{3}$ y compárala con $(1+2+3+4+5)^{2}$.
-- b) La fórmula es $\displaystyle\sum_{i=1}^{n}i^{3}=\left(\frac{n(n+1)}{2}\right)^{2}$. Úsala para $n=20$.
-- c) Halla una fórmula para $\displaystyle\sum_{i=1}^{n}(i^{3}-i)$.
-
-#### Pista
-Para c), cada sumatorio por separado ya lo conoces: $\sum i^{3}$ y $\sum i$. Factoriza al final.
-
-#### Solución
-**Paso 1. Calcula y compara.** a) $1+8+27+64+125=225=15^{2}=(1+2+3+4+5)^{2}$.
-
-**Paso 2. Usa la fórmula.** b) $\left(\dfrac{20\cdot21}{2}\right)^{2}=210^{2}=44100$.
-
-**Paso 3. Resta y factoriza.** c) $\dfrac{n^{2}(n+1)^{2}}{4}-\dfrac{n(n+1)}{2}=\dfrac{n(n+1)\,[\,n(n+1)-2\,]}{4}=\dfrac{(n-1)\,n\,(n+1)\,(n+2)}{4}$. Con $n=3$: $0+6+24=30$ y $\frac{2\cdot3\cdot4\cdot5}{4}=30$.
-
-### S20 · Sumas telescópicas
-nivel: 0.5
-
-**Ejemplo resuelto.** $\displaystyle\sum_{i=1}^{n}\bigl(i-(i-1)\bigr)=(1-0)+(2-1)+\cdots+(n-(n-1))=n-0=n$: casi todo se cancela y solo sobran el último y el primero.
-
-**Ahora tú.**
-- a) Calcula $\displaystyle\sum_{i=1}^{n}\bigl(i^{2}-(i-1)^{2}\bigr)$.
-- b) Desarrolla $i^{2}-(i-1)^{2}$ y deduce el valor de $\displaystyle\sum_{i=1}^{n}(2i-1)$.
-- c) Calcula $\displaystyle\sum_{i=1}^{n}\bigl(2^{i}-2^{i-1}\bigr)$.
-
-#### Pista
-Escribe los primeros términos y los últimos y fíjate en qué se cancela. Es de la forma $\sum(a_i-a_{i-1})=a_n-a_0$.
-
-#### Solución
-**Paso 1. Identifica $a_i$.** a) Aquí $a_i=i^{2}$, así que la suma vale $a_n-a_0=n^{2}-0=n^{2}$.
-
-**Paso 2. Desarrolla.** b) $i^{2}-(i-1)^{2}=2i-1$. Por lo tanto $\sum_{i=1}^{n}(2i-1)=n^{2}$: es la suma de los impares que ya conocías.
-
-**Paso 3. Otra sucesión.** c) $a_i=2^{i}$, luego $a_n-a_0=2^{n}-1$.
-
-### S21 · Una suma de fracciones que se cancela
-nivel: 0.6
-
-Calcula $\displaystyle\sum_{i=2}^{n}\frac{1}{i(i-1)}$.
-- a) Comprueba que $\dfrac{1}{i(i-1)}=\dfrac{1}{i-1}-\dfrac1i$.
-- b) Escribe los primeros y últimos términos y cancela.
-- c) Comprueba el resultado con $n=3$.
-
-#### Pista
-Pon el lado derecho de a) con denominador común $i(i-1)$ y verás que sale $\frac{1}{i(i-1)}$.
-
-#### Solución
-**Paso 1. Descomposición.** a) $\dfrac{1}{i-1}-\dfrac1i=\dfrac{i-(i-1)}{i(i-1)}=\dfrac1{i(i-1)}$.
-
-**Paso 2. Escribe y cancela.** b) $\left(1-\tfrac12\right)+\left(\tfrac12-\tfrac13\right)+\cdots+\left(\tfrac1{n-1}-\tfrac1n\right)=1-\dfrac1n$.
-
-**Paso 3. Comprueba.** c) $n=3$: $\tfrac12+\tfrac16=\tfrac23$ y $1-\tfrac13=\tfrac23$.
-
-### S22 · Telescópica con salto de dos
-nivel: 0.75
-
-Calcula $\displaystyle\sum_{i=1}^{n}\frac{1}{i(i+2)}$.
-- a) Comprueba que $\dfrac{1}{i(i+2)}=\dfrac12\left(\dfrac1i-\dfrac1{i+2}\right)$.
-- b) Escribe los primeros términos de la suma y ve cuáles se cancelan y cuáles sobreviven.
-- c) Da el resultado y comprueba con $n=2$.
-
-#### Pista
-Ahora el término que se resta es $\frac1{i+2}$, no $\frac1{i+1}$, así que se cancela con el que viene dos pasos después. No todo desaparece: quedan dos términos al principio y dos al final.
-
-#### Solución
-**Paso 1. Descomposición.** a) $\dfrac12\cdot\dfrac{(i+2)-i}{i(i+2)}=\dfrac12\cdot\dfrac{2}{i(i+2)}=\dfrac1{i(i+2)}$.
-
-**Paso 2. Qué sobrevive.** b) $\tfrac12\left[\left(1-\tfrac13\right)+\left(\tfrac12-\tfrac14\right)+\left(\tfrac13-\tfrac15\right)+\cdots+\left(\tfrac1{n-1}-\tfrac1{n+1}\right)+\left(\tfrac1n-\tfrac1{n+2}\right)\right]$. Se cancelan todos los términos salvo $1$ y $\tfrac12$ del principio, y $-\tfrac1{n+1}$ y $-\tfrac1{n+2}$ del final.
-
-**Paso 3. Resultado.** c) $\dfrac12\left(\dfrac32-\dfrac1{n+1}-\dfrac1{n+2}\right)$. Para $n=2$: $\tfrac13+\tfrac18=\tfrac{11}{24}$ y $\tfrac12\left(\tfrac32-\tfrac13-\tfrac14\right)=\tfrac12\cdot\tfrac{11}{12}=\tfrac{11}{24}$.
 
 ### S23 · Series geométricas, el truco
 nivel: 0.4

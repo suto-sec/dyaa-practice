@@ -6,8 +6,6 @@ stage: general
 - t32-homogeneas: G04 G05 G06 G07
 - t32-no-homogeneas: G08 G09 1.14 G10 2.15 G11 1.8 G12 1.11 2.12
 - t32-cambio: G13 G14 G15 1.17 2.11 1.16 1.15 1.18
-- t32-espacio: G16
-
 ### G01 · Qué caso del teorema maestro es
 nivel: 0.3
 
@@ -320,35 +318,3 @@ En a) $3^{2k}=(3^{2})^{k}=9^{k}$. En c) $4^{k+1}=4\cdot4^{k}$. En b) agrupa: $(1
 **Paso 2. b).** Izquierda $(x-2)$. Derecha: $(1+k)\cdot1^{k}$, grado $1$, factor $(x-1)^{2}$; y $1\cdot2^{k}$, factor $(x-2)$. Polinomio $(x-2)^{2}(x-1)^{2}$, solución $(C_1+C_2k)\,2^{k}+C_3+C_4k\in\Theta(k\,2^{k})$. Con $n=2^{k}$: $k\,2^{k}=n\log_2n$.
 
 **Paso 3. c).** Izquierda $(x-3)$. Derecha $4\cdot4^{k}$, factor $(x-4)$. Polinomio $(x-3)(x-4)$, solución $C_1\,3^{k}+C_2\,4^{k}\in\Theta(4^{k})$. Con $n=2^{k}$: $4^{k}=n^{2}$.
-
-### G16 · La pila de llamadas
-nivel: 0.4
-
-El espacio de una función recursiva es, sobre todo, el de la pila: cuántas llamadas hay activas *a la vez* (profundidad máxima), multiplicado por lo que ocupa cada una.
-```python
-def fact(n):
-    if n == 0: return 1
-    return n * fact(n - 1)
-
-def pot2(b, e):
-    if e == 0: return 1
-    if e % 2 == 0: return pot2(b * b, e // 2)
-    return b * pot2(b * b, e // 2)
-
-def fib(n):
-    if n <= 1: return n
-    return fib(n - 1) + fib(n - 2)
-```
-- a) ¿Cuántas llamadas hay activas como máximo en `fact(5)`? ¿Y en general, con `fact(n)`?
-- b) Lo mismo para `pot2(2, 8)` y para `pot2(b, e)` con $e=2^{k}$.
-- c) Lo mismo para `fib(5)`. ¿De qué orden es la pila de `fib(n)`, aunque el tiempo sea exponencial?
-
-#### Pista
-Una llamada queda activa hasta que termina. Dibuja la cadena de llamadas hasta el caso base: esa es la profundidad. La pila solo guarda un camino de la raíz a una hoja, no todo el árbol.
-
-#### Solución
-**Paso 1. a).** `fact(5)`$\to$`fact(4)`$\to\cdots\to$`fact(0)`: $6$ llamadas activas a la vez. En general $n+1$: espacio $\Theta(n)$.
-
-**Paso 2. b).** `pot2(2, 8)`$\to$`pot2(4, 4)`$\to$`pot2(16, 2)`$\to$`pot2(256, 1)`$\to$`pot2(65536, 0)`: $5$. Con $e=2^{k}$ son $k+2$: espacio $\Theta(\log e)$.
-
-**Paso 3. c).** En `fib(5)` la rama más larga es `fib(5)`$\to$`fib(4)`$\to$`fib(3)`$\to$`fib(2)`$\to$`fib(1)`: $5$ llamadas. En general $n$: espacio $\Theta(n)$. El tiempo es exponencial porque hay muchísimas llamadas, pero no están activas a la vez: cuando una termina, libera su sitio en la pila.

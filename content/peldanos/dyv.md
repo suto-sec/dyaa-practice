@@ -3,13 +3,11 @@ stage: dyv
 
 ## Orden
 - t5-intro: D01
-- t5-transforma: D02
 - t5-newton: D03
 - t5-dyv: D04 D05 6.1 6.2 6.3
 - t5-ordenacion: D06 D07 D08
-- t5-quick: D09 D10
 - t5-multiplicacion: D11 D12 6.5 6.7 6.8 6.4 6.6
-- t5-otros: D13 D14
+- t5-otros: D14
 
 ### D01 · Qué estrategia es
 nivel: 0.2
@@ -35,31 +33,6 @@ Cuenta las llamadas recursivas del caso recursivo. Si no hay recursión sino que
 **Paso 2. Dos llamadas.** b) Dos llamadas con las mitades: divide y vencerás. d) Dos llamadas con las partes, y combinar es trivial: divide y vencerás.
 
 **Paso 3. Se transforma en otro problema.** c) La mediana se reduce a ordenar. f) La raíz se reduce a hallar un cero de una función. Ambos son transforma y vencerás.
-
-### D02 · La mediana por transformación
-nivel: 0.3
-
-La mediana de una lista de $n$ números es el elemento central de la lista ordenada si $n$ es impar, y la media de los dos centrales si $n$ es par.
-- a) Calcula a mano la mediana de $[9,1,8,2,7,3]$ y de $[5,3,9,1,7]$.
-- b) Escribe `mediana(v)` en Python transformando el problema en ordenar.
-- c) ¿Cuál es el coste en tiempo?
-
-#### Pista
-Ordena una copia con `sorted`. Para $n$ par hay dos centrales, de índices `n//2 - 1` y `n//2`.
-
-#### Solución
-**Paso 1. A mano.** a) $[1,2,3,7,8,9]$: $n=6$ es par, la mediana es $\frac{3+7}{2}=5$. $[1,3,5,7,9]$: $n=5$ es impar, la mediana es $5$.
-
-**Paso 2. Código.** b)
-```python
-def mediana(v):
-    w = sorted(v)
-    n = len(w)
-    if n % 2 == 1:
-        return w[n // 2]
-    return (w[n // 2 - 1] + w[n // 2]) / 2
-```
-**Paso 3. Coste.** c) Dominado por la ordenación: $\Theta(n\log n)$. Es la transformación más sencilla, no la más eficiente: con quickselect baja a $O(n)$ en media.
 
 ### D03 · Newton-Raphson para una raíz cuadrada
 nivel: 0.4
@@ -209,46 +182,6 @@ def inserta_en_lista_ordenada(a, x):
 
 **Paso 4. Coste del insert-sort.** $T(n)=T(n-1)+n$ (ordenar los $n-1$ primeros e insertar el último): $\Theta(n^{2})$.
 
-### D09 · La partición de Hoare, a mano
-nivel: 0.5
-
-Aplica `particion_Hoare(a, 0, 6)` (el código de los apuntes: el pivote es el elemento central, que se pasa a la posición `ini`) a $a=[7,3,9,2,8,1,5]$.
-- a) ¿Qué pivote se elige y cómo queda la lista antes de empezar a recorrer?
-- b) Sigue `izqa` y `dcha` y anota los intercambios.
-- c) ¿Cómo queda la lista al final y qué índice devuelve?
-
-#### Pista
-El central es `a[(0 + 6) // 2] = a[3]`. Se cambia con `a[0]`. Luego `izqa` empieza en `1` y avanza mientras `a[izqa] <= pivote`; `dcha` empieza en `6` y retrocede mientras `a[dcha] > pivote`.
-
-#### Solución
-**Paso 1. Pivote.** a) `a[3]` $=2$. Se intercambia con `a[0]`: $[2,3,9,7,8,1,5]$.
-
-**Paso 2. Primera ronda.** b) `izqa` $=1$ (porque $3>2$ ya no avanza). `dcha` baja de $6$ a $5$ (porque $5>2$; $1\not>2$). Como `izqa < dcha`, se intercambian `a[1]` y `a[5]`: $[2,1,9,7,8,3,5]$.
-
-**Paso 3. Segunda ronda.** `izqa` avanza a $2$ ($1\le2$; $9>2$ para). `dcha` baja a $1$ ($3,8,7,9>2$; $1\not>2$). Ahora `izqa > dcha`: termina.
-
-**Paso 4. Final.** c) `a[ini] = a[dcha]` pone el $1$ en la posición $0$, y `a[dcha] = pivote` pone el $2$ en la posición $1$: $[1,2,9,7,8,3,5]$. Devuelve `1`. A la izquierda del pivote solo hay números menores o iguales, a la derecha solo mayores.
-
-### D10 · Quickselect, a mano
-nivel: 0.65
-
-Con el `quickselect` de los apuntes, busca el tercer elemento más pequeño ($k=3$) de $a=[2,6,1,3,4,5]$ llamando a `quickselect(a, 0, 5, 3)`.
-- a) Primera partición: pivote, lista después y índice devuelto.
-- b) ¿Qué hace `quickselect` con ese índice? ¿Por qué lado sigue?
-- c) Segunda partición y respuesta final.
-
-#### Pista
-Compara el índice del pivote con `k - 1 = 2`. Si es menor, sigue por la derecha; si es mayor, por la izquierda; si es igual, ya está.
-
-#### Solución
-**Paso 1. Primera partición.** a) Central: `a[2] = 1`. Pasa a la posición $0$ y el $2$ a la $2$: $[1,6,2,3,4,5]$. `izqa=1` ($6>1$, no avanza); `dcha` baja hasta $0$. Termina; devuelve $0$. Lista: $[1,6,2,3,4,5]$.
-
-**Paso 2. Decisión.** b) El índice $0$ es menor que `k-1 = 2`: el tercer elemento más pequeño está a la derecha. Sigue con `quickselect(a, 1, 5, 3)`.
-
-**Paso 3. Segunda partición.** c) Central: `a[(1+5)//2] = a[3] = 3`. Pasa a la posición $1$ y el $6$ a la $3$: $[1,3,2,6,4,5]$. `izqa` avanza a $3$ ($2\le3$; $6>3$ para) y `dcha` baja a $2$ ($5,4,6>3$; $2\not>3$). Termina; cierra con `a[1]=a[2]` y `a[2]=3`: $[1,2,3,6,4,5]$. Devuelve $2=$`k-1`.
-
-**Paso 4. Respuesta.** Devuelve `a[2] = 3`. Solo hicieron falta dos particiones, no ordenar la lista.
-
 ### D11 · Karatsuba con números pequeños
 nivel: 0.4
 
@@ -287,24 +220,6 @@ Cada vez que $n$ se divide por $2$ el número de productos se multiplica por $8$
 **Paso 2. Strassen.** b) $S(2)=7$, $S(4)=49$, $S(8)=343$. $S(n)=7^{k}=n^{\log_27}\approx n^{2{,}807}$.
 
 **Paso 3. Cociente.** c) $S/M=(7/8)^{k}$: $k=5$ da $0{,}513$, $k=6$ da $0{,}449<0{,}5$. Hace falta $n=2^{6}=64$. Por eso Strassen solo compensa con matrices grandes (y además hace más sumas).
-
-### D13 · Embaldosar con triominós
-nivel: 0.5
-
-Para cubrir un tablero $n\times n$, con $n=2^{k}$, que tiene una casilla vacía, con triominós en forma de L ($3$ casillas cada uno) se coloca un triominó en el centro y se resuelven $4$ subtableros de lado $n/2$.
-- a) ¿Cuántos triominós hacen falta para $n=2$, $4$ y $8$? (Cuenta casillas.)
-- b) Plantea la recurrencia $T(n)$ del número de triominós y comprueba los valores.
-- c) Resuélvela con el teorema maestro.
-
-#### Pista
-Hay $n^{2}-1$ casillas por cubrir y cada triominó cubre $3$. Y la recurrencia es: cuatro llamadas con $n/2$, más el triominó del centro.
-
-#### Solución
-**Paso 1. Cuenta casillas.** a) $\frac{n^{2}-1}{3}$: $n=2$: $1$. $n=4$: $5$. $n=8$: $21$.
-
-**Paso 2. Recurrencia.** b) $T(n)=4T(n/2)+1$ con $T(2)=1$. $T(4)=4\cdot1+1=5$ ✓. $T(8)=4\cdot5+1=21$ ✓.
-
-**Paso 3. Maestro.** c) $a=4$, $b=2$, $k=0$: $\frac{a}{b^{k}}=4>1$, luego $\Theta(n^{\log_24})=\Theta(n^{2})$. Concuerda con $\frac{n^{2}-1}{3}$.
 
 ### D14 · Inversión de bits
 nivel: 0.6

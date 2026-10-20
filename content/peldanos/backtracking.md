@@ -3,8 +3,8 @@ stage: backtracking
 
 ## Orden
 - t6-binario: K01 K02
-- t6-subconjuntos: K03 7.1
-- t6-permutaciones: K04 K05 7.3 7.6
+- t6-subconjuntos: K03 K15 7.1
+- t6-permutaciones: K04 K05 7.3 K16 7.6
 - t6-reinas: K06 K07 7.4
 - t6-suma-caballo: K08 K09 7.5
 - t6-otros: K10 K11 7.2 7.7
@@ -276,3 +276,50 @@ La primera hoja (`000`) deja `v_opt = 0`. Después `001` da $5$. Para decidir si
 **Paso 2. Llamadas.** b) $10$ llamadas, dos menos que en K10.
 
 **Paso 3. El orden.** c) La poda por valor es más eficaz cuanto antes se encuentre una solución buena: con un `v_opt` alto, muchas ramas con `max_v` bajo se cortan pronto. Por eso suele ordenarse los objetos por valor (o valor por peso) antes de empezar.
+
+### K15 · Subconjuntos con suma s, un subconjunto por nodo
+nivel: 0.45
+
+Con el esquema de K03 (un subconjunto en cada nodo, índices crecientes) se quieren los subconjuntos de $L=[3,2,4,1]$ cuyos elementos suman $s=5$. Completa el código:
+```python
+def subconjuntos_suma(i, j, sol, suma_parcial, L, s):
+    if suma_parcial == s:
+        imprime_subconjunto_alt(sol, i, L)
+    if suma_parcial >= s:
+        return
+    for k in range(________, len(L)):
+        if ________:                       # poda: no pasarse de s
+            sol[i] = k
+            subconjuntos_suma(________, k, sol, suma_parcial + L[k], L, s)
+```
+- a) Rellena los tres huecos.
+- b) Escribe los subconjuntos que se imprimen, en orden, y cuántas llamadas se hacen (con la raíz).
+
+#### Pista
+Los candidatos de un nodo son los índices mayores que `j` (el último incluido). Un candidato `k` solo vale si `suma_parcial + L[k] <= s`. Al bajar un nivel, `i` aumenta en $1$.
+
+#### Solución
+**Paso 1. Huecos.** a) `range(j + 1, len(L))`; `if suma_parcial + L[k] <= s:`; y la llamada con `i + 1`.
+
+**Paso 2. Recorrido.** b) Desde la raíz `{}` (suma $0$): `{3}` (3) $\to$ `{3,2}` (5): se imprime; `{3,4}` se poda ($7>5$); `{3,1}` (4) no llega a $5$. `{2}` (2) $\to$ `{2,4}` (6) se poda; `{2,1}` (3). `{4}` (4) $\to$ `{4,1}` (5): se imprime. `{1}` (1).
+
+**Paso 3. Resultado.** Se imprimen $\{3,2\}$ y $\{4,1\}$, y hay $9$ llamadas.
+
+### K16 · Ruta de coste mínimo con poda por coste parcial
+nivel: 0.65
+
+Cuatro ciudades $0,1,2,3$ con distancias $d_{01}=10$, $d_{02}=15$, $d_{03}=20$, $d_{12}=35$, $d_{13}=25$, $d_{23}=30$. Se busca el recorrido más corto que sale de la $0$, pasa por todas las demás una vez y vuelve a la $0$. Las rutas son permutaciones de $1,2,3$; se prueban en orden lexicográfico.
+- a) Calcula el coste de cada una de las $6$ rutas (incluyendo la vuelta a $0$) y la mejor.
+- b) Ahora con poda: no se sigue por una rama si el coste parcial (sin contar la vuelta) ya es **mayor o igual** que el mejor coste encontrado. Anota qué ramas se podan.
+- c) ¿Cuántas llamadas se hacen con poda y cuántas sin ella?
+
+#### Pista
+El coste parcial de la ruta $0,3,1$ es $d_{03}+d_{31}=45$; si luego va a la $2$ se suma $d_{12}$. El mejor coste empieza en $\infty$ y se actualiza cuando una ruta completa mejora.
+
+#### Solución
+**Paso 1. Todas las rutas.** a) $0123$: $10+35+30+20=95$. $0132$: $10+25+30+15=80$. $0213$: $15+35+25+20=95$. $0231$: $15+30+25+10=80$. $0312$: $20+25+35+15=95$. $0321$: $20+30+35+10=95$. La mejor cuesta $80$ (hay dos rutas, una es la inversa de la otra).
+
+**Paso 2. Con poda.** b) Se recorren $0123$ (mejor $=95$) y $0132$ (mejor $=80$), luego $0213$ ($95$, no mejora) y $0231$ ($80$, no mejora: se exige estrictamente menos). Después, con la ruta $0,3,1$ y la ciudad $2$ el coste parcial es $20+25+35=80\ge80$: **se poda** (sin la vuelta ya no puede mejorar). Con $0,3,2$ y la ciudad $1$: $20+30+35=85\ge80$: **se poda**.
+
+**Paso 3. Llamadas.** c) Con poda $14$; sin poda $1+3+6+6=16$. Con muchas ciudades el ahorro es enorme. La poda es válida porque las distancias no son negativas: un coste parcial nunca baja.
+

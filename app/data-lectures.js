@@ -5923,24 +5923,6 @@ window.LADDER = {
     "solution": "**Paso 1. a) y c).** Verdaderos: $2^{n+1}=2\\cdot2^{n}$ y $\\log_2n=\\log_{10}n/\\log_{10}2$. Solo cambian en una constante.\n\n**Paso 2. b).** Falso: $2^{2n}=4^{n}=2^{n}\\cdot2^{n}$, y el cociente $2^{n}$ no está acotado. No es solo una constante.\n\n**Paso 3. d).** Verdadero: $n\\log_2n\\le n^{2}$ para $n\\ge1$, y $n^{2}$ manda. El cociente tiende a $1$.\n\n**Paso 4. e).** Falso: $(n+1)!=(n+1)\\,n!$, cociente $n+1\\to\\infty$.\n\n**Paso 5. f).** Falso: $\\frac{\\sqrt n}{\\log_2n}\\to\\infty$. Es al revés, $\\log_2n\\in O(\\sqrt n)$."
    },
    {
-    "id": "peldanos#A16",
-    "n": "A16",
-    "title": "Errores frecuentes",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "asint-definiciones"
-    ],
-    "stage": "asintotica",
-    "src": "adic",
-    "diff": 0.65,
-    "steps": true,
-    "statement": "Di si cada afirmación es correcta y por qué:\n- a) \"Si $T(n)\\in O(n^{2})$, el algoritmo tarda al menos $n^{2}$.\"\n- b) \"$T(n)\\in\\Theta(n)$ implica $T(n)\\in O(n^{2})$.\"\n- c) \"$T(n)\\in O(n)$ y $T(n)\\in\\Omega(n)$ implican $T(n)\\in\\Theta(n)$.\"\n- d) \"Si $f\\in O(g)$ y $g\\in O(h)$, entonces $f\\in O(h)$.\"\n- e) \"Un algoritmo que tarda $\\Theta(n^{2})$ con alguna entrada tarda $\\Theta(n^{2})$ con todas.\"",
-    "hint": "$O$ es una cota superior (\"como mucho\"), $\\Omega$ una inferior (\"al menos\") y $\\Theta$ las dos a la vez. Y una cota siempre se refiere a un tipo de entrada.",
-    "solution": "**Paso 1. a).** Incorrecta. $O(n^{2})$ dice que tarda como mucho del orden de $n^{2}$. Puede tardar mucho menos.\n\n**Paso 2. b).** Correcta: $\\Theta(n)$ incluye $O(n)$, y $O(n)\\subseteq O(n^{2})$.\n\n**Paso 3. c).** Correcta. Es la definición de $\\Theta$ como cota superior e inferior a la vez.\n\n**Paso 4. d).** Correcta: es transitiva. $f\\le c_1g$ y $g\\le c_2h$ dan $f\\le c_1c_2h$ para $n$ grandes.\n\n**Paso 5. e).** Incorrecta. El coste depende de la entrada (mejor, peor y caso medio pueden tener órdenes distintos). Una cota solo vale para el caso al que se refiere."
-   },
-   {
     "id": "peldanos#A17",
     "n": "A17",
     "title": "Simular counting-sort",
@@ -5957,24 +5939,6 @@ window.LADDER = {
     "statement": "Ordena con counting-sort el vector $A=[3,1,3,0,2]$ (valores en $[0,3]$, así que $k=3$).\n- a) Calcula el vector de cuentas $C[0..3]$.\n- b) Calcula las sumas acumuladas de $C$.\n- c) Da el vector ordenado.\n- d) ¿De qué orden es el coste en función de $n$ y $k$? ¿Qué pasa si $k=n^{2}$?",
     "hint": "$C[v]$ cuenta cuántas veces aparece $v$ en $A$. Las sumas acumuladas dicen cuántos elementos son menores o iguales que $v$.",
     "solution": "**Paso 1. Cuentas.** a) $0$ aparece 1 vez, $1$ una, $2$ una y $3$ dos: $C=[1,1,1,2]$.\n\n**Paso 2. Acumuladas.** b) $C=[1,2,3,5]$: hay 1 elemento $\\le0$, 2 $\\le1$, 3 $\\le2$ y 5 $\\le3$.\n\n**Paso 3. Salida.** c) $B=[0,1,2,3,3]$.\n\n**Paso 4. Coste.** d) Hay dos bucles de tamaño $k$ y dos de tamaño $n$: $\\Theta(n+k)$. Si $k\\in O(n)$ es lineal. Con $k=n^{2}$ sería $\\Theta(n^{2})$, peor que una ordenación por comparaciones."
-   },
-   {
-    "id": "peldanos#A18",
-    "n": "A18",
-    "title": "Árbol de decisión",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "asint-definiciones"
-    ],
-    "stage": "asintotica",
-    "src": "adic",
-    "diff": 0.6,
-    "steps": true,
-    "statement": "Un algoritmo de ordenación por comparaciones se puede ver como un árbol binario cuyas hojas son los posibles resultados (las ordenaciones). Hay $n!$ hojas, y un árbol binario de altura $h$ tiene como mucho $2^{h}$ hojas.\n- a) Para $n=3$, ¿cuántas hojas hay y cuántas comparaciones hacen falta como mínimo en el peor caso?\n- b) Lo mismo para $n=4$, $n=5$ y $n=8$.\n- c) ¿Qué cota general se deduce?",
-    "hint": "Hace falta $2^{h}\\ge n!$, es decir, $h\\ge\\log_2(n!)$. Redondea hacia arriba.",
-    "solution": "**Paso 1. $n=3$.** $3!=6$ hojas. $2^{2}=4<6\\le8=2^{3}$, luego $h\\ge3$.\n\n**Paso 2. Más casos.** $n=4$: $24$ hojas, $2^{4}=16<24\\le32$, $h\\ge5$. $n=5$: $120$ hojas, $2^{6}=64<120\\le128$, $h\\ge7$. $n=8$: $40320$ hojas, $2^{15}=32768<40320\\le65536$, $h\\ge16$.\n\n**Paso 3. Cota general.** Todo algoritmo de ordenación por comparaciones necesita al menos $\\lceil\\log_2(n!)\\rceil$ comparaciones en el peor caso, y $\\log_2(n!)\\in\\Theta(n\\log n)$: cota $\\Omega(n\\log n)$."
    },
    {
     "id": "peldanos#A19",
@@ -6247,6 +6211,42 @@ window.LADDER = {
     "solution": "**Paso 1. Recorrido.** a) Hoja `000` ($v_{opt}=0$) y hoja `001` ($v_{opt}=5$). En `01`, no incluir el objeto $3$ da `max_v` $=12-3-5=4$ (no se incluyó el objeto $1$ ni el $3$): $4\\le5$, se poda por valor. En `01`, incluirlo no cabe, se poda por capacidad. En `10`, no incluir el objeto $3$ da `max_v` $=12-4-5=3\\le5$: se poda por valor, e incluirlo tampoco cabe. Por último, la hoja `110` mejora a $v_{opt}=7$.\n\n**Paso 2. Llamadas.** b) $10$ llamadas, dos menos que en K10.\n\n**Paso 3. El orden.** c) La poda por valor es más eficaz cuanto antes se encuentre una solución buena: con un `v_opt` alto, muchas ramas con `max_v` bajo se cortan pronto. Por eso suele ordenarse los objetos por valor (o valor por peso) antes de empezar."
    },
    {
+    "id": "peldanos#K15",
+    "n": "K15",
+    "title": "Subconjuntos con suma s, un subconjunto por nodo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.45,
+    "steps": true,
+    "statement": "Con el esquema de K03 (un subconjunto en cada nodo, índices crecientes) se quieren los subconjuntos de $L=[3,2,4,1]$ cuyos elementos suman $s=5$. Completa el código:\n```python\ndef subconjuntos_suma(i, j, sol, suma_parcial, L, s):\n    if suma_parcial == s:\n        imprime_subconjunto_alt(sol, i, L)\n    if suma_parcial >= s:\n        return\n    for k in range(________, len(L)):\n        if ________:                       # poda: no pasarse de s\n            sol[i] = k\n            subconjuntos_suma(________, k, sol, suma_parcial + L[k], L, s)\n```\n- a) Rellena los tres huecos.\n- b) Escribe los subconjuntos que se imprimen, en orden, y cuántas llamadas se hacen (con la raíz).",
+    "hint": "Los candidatos de un nodo son los índices mayores que `j` (el último incluido). Un candidato `k` solo vale si `suma_parcial + L[k] <= s`. Al bajar un nivel, `i` aumenta en $1$.",
+    "solution": "**Paso 1. Huecos.** a) `range(j + 1, len(L))`; `if suma_parcial + L[k] <= s:`; y la llamada con `i + 1`.\n\n**Paso 2. Recorrido.** b) Desde la raíz `{}` (suma $0$): `{3}` (3) $\\to$ `{3,2}` (5): se imprime; `{3,4}` se poda ($7>5$); `{3,1}` (4) no llega a $5$. `{2}` (2) $\\to$ `{2,4}` (6) se poda; `{2,1}` (3). `{4}` (4) $\\to$ `{4,1}` (5): se imprime. `{1}` (1).\n\n**Paso 3. Resultado.** Se imprimen $\\{3,2\\}$ y $\\{4,1\\}$, y hay $9$ llamadas."
+   },
+   {
+    "id": "peldanos#K16",
+    "n": "K16",
+    "title": "Ruta de coste mínimo con poda por coste parcial",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Cuatro ciudades $0,1,2,3$ con distancias $d_{01}=10$, $d_{02}=15$, $d_{03}=20$, $d_{12}=35$, $d_{13}=25$, $d_{23}=30$. Se busca el recorrido más corto que sale de la $0$, pasa por todas las demás una vez y vuelve a la $0$. Las rutas son permutaciones de $1,2,3$; se prueban en orden lexicográfico.\n- a) Calcula el coste de cada una de las $6$ rutas (incluyendo la vuelta a $0$) y la mejor.\n- b) Ahora con poda: no se sigue por una rama si el coste parcial (sin contar la vuelta) ya es **mayor o igual** que el mejor coste encontrado. Anota qué ramas se podan.\n- c) ¿Cuántas llamadas se hacen con poda y cuántas sin ella?",
+    "hint": "El coste parcial de la ruta $0,3,1$ es $d_{03}+d_{31}=45$; si luego va a la $2$ se suma $d_{12}$. El mejor coste empieza en $\\infty$ y se actualiza cuando una ruta completa mejora.",
+    "solution": "**Paso 1. Todas las rutas.** a) $0123$: $10+35+30+20=95$. $0132$: $10+25+30+15=80$. $0213$: $15+35+25+20=95$. $0231$: $15+30+25+10=80$. $0312$: $20+25+35+15=95$. $0321$: $20+30+35+10=95$. La mejor cuesta $80$ (hay dos rutas, una es la inversa de la otra).\n\n**Paso 2. Con poda.** b) Se recorren $0123$ (mejor $=95$) y $0132$ (mejor $=80$), luego $0213$ ($95$, no mejora) y $0231$ ($80$, no mejora: se exige estrictamente menos). Después, con la ruta $0,3,1$ y la ciudad $2$ el coste parcial es $20+25+35=80\\ge80$: **se poda** (sin la vuelta ya no puede mejorar). Con $0,3,2$ y la ciudad $1$: $20+30+35=85\\ge80$: **se poda**.\n\n**Paso 3. Llamadas.** c) Con poda $14$; sin poda $1+3+6+6=16$. Con muchas ciudades el ahorro es enorme. La poda es válida porque las distancias no son negativas: un coste parcial nunca baja."
+   },
+   {
     "id": "peldanos#B01",
     "n": "B01",
     "title": "Cuántas veces se ejecuta el cuerpo",
@@ -6409,24 +6409,6 @@ window.LADDER = {
     "solution": "**Paso 1. a).** Mejor caso: `x` es `a[0]` y se sale tras una comparación: $\\Theta(1)$. Peor caso: `x` no está y se recorre toda la lista: $\\Theta(n)$.\n\n**Paso 2. b), mejor caso.** `a[0] == a[1]`: una comparación, $\\Theta(1)$.\n\n**Paso 3. b), peor caso.** Todos distintos: se comparan todas las parejas. Para cada $i$ hay $n-1-i$ comparaciones: $\\sum_{i=0}^{n-1}(n-1-i)=\\dfrac{n(n-1)}{2}$. Con $n=5$: $10$. Orden $\\Theta(n^{2})$."
    },
    {
-    "id": "peldanos#B10",
-    "n": "B10",
-    "title": "Un bucle cuyo tamaño se divide por dos",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "contar-bucles"
-    ],
-    "stage": "bucles",
-    "src": "adic",
-    "diff": 0.8,
-    "steps": true,
-    "statement": "```python\nm = n\nwhile m >= 1:\n    for i in range(m):\n        trabajo()\n    m = m // 2\n```\nCon $n$ potencia de $2$:\n- a) ¿Cuántas veces se llama a `trabajo()` si $n=8$?\n- b) ¿Y para $n$ general? Usa una serie geométrica.\n- c) ¿Cuál es el orden? ¿Por qué no es $n\\log n$, si el `while` da $\\log_2n+1$ vueltas?",
-    "hint": "En cada vuelta del `while` el `for` hace $m$ iteraciones, y $m$ vale $n,\\frac n2,\\frac n4,\\dots,1$.",
-    "solution": "**Paso 1. Caso $n=8$.** a) $m=8,4,2,1$: $8+4+2+1=15$ llamadas.\n\n**Paso 2. Caso general.** b) $\\sum_{k=0}^{\\log_2n}\\dfrac{n}{2^{k}}=n\\sum_{k=0}^{\\log_2n}\\left(\\tfrac12\\right)^{k}=n\\left(2-\\dfrac{1}{n}\\right)=2n-1$. Con $n=8$ da $15$.\n\n**Paso 3. Orden.** c) $\\Theta(n)$. El `for` solo hace $n$ vueltas la primera vez; después la mitad, la cuarta parte... Las vueltas del `while` son $\\log_2n$, pero cada una trabaja menos que la anterior, así que el producto $n\\log n$ sobreestima. Si el `for` hiciera siempre $n$ vueltas, sí saldría $\\Theta(n\\log n)$."
-   },
-   {
     "id": "peldanos#B11",
     "n": "B11",
     "title": "Tres bucles: cambiar el orden de la suma",
@@ -6461,24 +6443,6 @@ window.LADDER = {
     "statement": "Según el número de llamadas recursivas del caso recursivo: ninguna (se reduce a *otro* problema) es **transforma y vencerás**; una sola, con un problema más pequeño, es **decrementa y vencerás**; dos o más es **divide y vencerás**.\n\n**Ejemplo resuelto.** `factorial(n) = n * factorial(n - 1)`: una llamada con $n-1$. Decrementa y vencerás.\n\n**Ahora tú.** Clasifica:\n- a) `pot(x, n) = pot(x, n // 2) ** 2` (para $n$ par)\n- b) `maximo(a) = max(maximo(a[:m]), maximo(a[m:]))`\n- c) La mediana de una lista, ordenándola y mirando el elemento central\n- d) Quicksort: partir según un pivote y ordenar las dos partes\n- e) Búsqueda binaria en una lista ordenada\n- f) $\\sqrt a$ buscando un cero de $x^{2}-a$ con Newton-Raphson",
     "hint": "Cuenta las llamadas recursivas del caso recursivo. Si no hay recursión sino que el problema se convierte en otro, es una transformación.",
     "solution": "**Paso 1. Una llamada.** a) Una llamada con $n/2$: decrementa y vencerás. e) Búsqueda binaria: una llamada con una de las mitades, decrementa y vencerás.\n\n**Paso 2. Dos llamadas.** b) Dos llamadas con las mitades: divide y vencerás. d) Dos llamadas con las partes, y combinar es trivial: divide y vencerás.\n\n**Paso 3. Se transforma en otro problema.** c) La mediana se reduce a ordenar. f) La raíz se reduce a hallar un cero de una función. Ambos son transforma y vencerás."
-   },
-   {
-    "id": "peldanos#D02",
-    "n": "D02",
-    "title": "La mediana por transformación",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "divide-y-venceras"
-    ],
-    "stage": "dyv",
-    "src": "adic",
-    "diff": 0.3,
-    "steps": true,
-    "statement": "La mediana de una lista de $n$ números es el elemento central de la lista ordenada si $n$ es impar, y la media de los dos centrales si $n$ es par.\n- a) Calcula a mano la mediana de $[9,1,8,2,7,3]$ y de $[5,3,9,1,7]$.\n- b) Escribe `mediana(v)` en Python transformando el problema en ordenar.\n- c) ¿Cuál es el coste en tiempo?",
-    "hint": "Ordena una copia con `sorted`. Para $n$ par hay dos centrales, de índices `n//2 - 1` y `n//2`.",
-    "solution": "**Paso 1. A mano.** a) $[1,2,3,7,8,9]$: $n=6$ es par, la mediana es $\\frac{3+7}{2}=5$. $[1,3,5,7,9]$: $n=5$ es impar, la mediana es $5$.\n\n**Paso 2. Código.** b)\n```python\ndef mediana(v):\n    w = sorted(v)\n    n = len(w)\n    if n % 2 == 1:\n        return w[n // 2]\n    return (w[n // 2 - 1] + w[n // 2]) / 2\n```\n**Paso 3. Coste.** c) Dominado por la ordenación: $\\Theta(n\\log n)$. Es la transformación más sencilla, no la más eficiente: con quickselect baja a $O(n)$ en media."
    },
    {
     "id": "peldanos#D03",
@@ -6589,42 +6553,6 @@ window.LADDER = {
     "solution": "**Paso 1. Código.** a)\n```python\ndef inserta_en_lista_ordenada(a, x):\n    if a == [] or x <= a[0]:\n        return [x] + a\n    return [a[0]] + inserta_en_lista_ordenada(a[1:], x)\n```\n**Paso 2. Pruebas.** b) `([1,3,5], 4)`: $1$ y $3$ se dejan, $4\\le5$ entra antes del $5$: `[1,3,4,5]`. `([], 7)`: `[7]`. `([2,2], 2)`: `2 <= 2`, va delante: `[2,2,2]`.\n\n**Paso 3. Coste de la inserción.** c) En el peor caso recorre toda la lista: $\\Theta(n)$ para una lista de $n$.\n\n**Paso 4. Coste del insert-sort.** $T(n)=T(n-1)+n$ (ordenar los $n-1$ primeros e insertar el último): $\\Theta(n^{2})$."
    },
    {
-    "id": "peldanos#D09",
-    "n": "D09",
-    "title": "La partición de Hoare, a mano",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "divide-y-venceras"
-    ],
-    "stage": "dyv",
-    "src": "adic",
-    "diff": 0.5,
-    "steps": true,
-    "statement": "Aplica `particion_Hoare(a, 0, 6)` (el código de los apuntes: el pivote es el elemento central, que se pasa a la posición `ini`) a $a=[7,3,9,2,8,1,5]$.\n- a) ¿Qué pivote se elige y cómo queda la lista antes de empezar a recorrer?\n- b) Sigue `izqa` y `dcha` y anota los intercambios.\n- c) ¿Cómo queda la lista al final y qué índice devuelve?",
-    "hint": "El central es `a[(0 + 6) // 2] = a[3]`. Se cambia con `a[0]`. Luego `izqa` empieza en `1` y avanza mientras `a[izqa] <= pivote`; `dcha` empieza en `6` y retrocede mientras `a[dcha] > pivote`.",
-    "solution": "**Paso 1. Pivote.** a) `a[3]` $=2$. Se intercambia con `a[0]`: $[2,3,9,7,8,1,5]$.\n\n**Paso 2. Primera ronda.** b) `izqa` $=1$ (porque $3>2$ ya no avanza). `dcha` baja de $6$ a $5$ (porque $5>2$; $1\\not>2$). Como `izqa < dcha`, se intercambian `a[1]` y `a[5]`: $[2,1,9,7,8,3,5]$.\n\n**Paso 3. Segunda ronda.** `izqa` avanza a $2$ ($1\\le2$; $9>2$ para). `dcha` baja a $1$ ($3,8,7,9>2$; $1\\not>2$). Ahora `izqa > dcha`: termina.\n\n**Paso 4. Final.** c) `a[ini] = a[dcha]` pone el $1$ en la posición $0$, y `a[dcha] = pivote` pone el $2$ en la posición $1$: $[1,2,9,7,8,3,5]$. Devuelve `1`. A la izquierda del pivote solo hay números menores o iguales, a la derecha solo mayores."
-   },
-   {
-    "id": "peldanos#D10",
-    "n": "D10",
-    "title": "Quickselect, a mano",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "divide-y-venceras"
-    ],
-    "stage": "dyv",
-    "src": "adic",
-    "diff": 0.65,
-    "steps": true,
-    "statement": "Con el `quickselect` de los apuntes, busca el tercer elemento más pequeño ($k=3$) de $a=[2,6,1,3,4,5]$ llamando a `quickselect(a, 0, 5, 3)`.\n- a) Primera partición: pivote, lista después y índice devuelto.\n- b) ¿Qué hace `quickselect` con ese índice? ¿Por qué lado sigue?\n- c) Segunda partición y respuesta final.",
-    "hint": "Compara el índice del pivote con `k - 1 = 2`. Si es menor, sigue por la derecha; si es mayor, por la izquierda; si es igual, ya está.",
-    "solution": "**Paso 1. Primera partición.** a) Central: `a[2] = 1`. Pasa a la posición $0$ y el $2$ a la $2$: $[1,6,2,3,4,5]$. `izqa=1` ($6>1$, no avanza); `dcha` baja hasta $0$. Termina; devuelve $0$. Lista: $[1,6,2,3,4,5]$.\n\n**Paso 2. Decisión.** b) El índice $0$ es menor que `k-1 = 2`: el tercer elemento más pequeño está a la derecha. Sigue con `quickselect(a, 1, 5, 3)`.\n\n**Paso 3. Segunda partición.** c) Central: `a[(1+5)//2] = a[3] = 3`. Pasa a la posición $1$ y el $6$ a la $3$: $[1,3,2,6,4,5]$. `izqa` avanza a $3$ ($2\\le3$; $6>3$ para) y `dcha` baja a $2$ ($5,4,6>3$; $2\\not>3$). Termina; cierra con `a[1]=a[2]` y `a[2]=3`: $[1,2,3,6,4,5]$. Devuelve $2=$`k-1`.\n\n**Paso 4. Respuesta.** Devuelve `a[2] = 3`. Solo hicieron falta dos particiones, no ordenar la lista."
-   },
-   {
     "id": "peldanos#D11",
     "n": "D11",
     "title": "Karatsuba con números pequeños",
@@ -6659,24 +6587,6 @@ window.LADDER = {
     "statement": "Cuenta las multiplicaciones (escalares) para matrices $n\\times n$ con $n=2^{k}$:\n- a) Con la descomposición en bloques de $8$ productos, $M(n)=8M(n/2)$, $M(1)=1$: calcula $M(2),M(4),M(8)$ y da la fórmula.\n- b) Con Strassen, $S(n)=7S(n/2)$, $S(1)=1$: calcula $S(2),S(4),S(8)$ y la fórmula.\n- c) ¿Con qué $n$ (potencia de $2$) Strassen usa menos de la mitad de multiplicaciones?",
     "hint": "Cada vez que $n$ se divide por $2$ el número de productos se multiplica por $8$ (o por $7$). Con $k$ divisiones: $8^{k}$ y $7^{k}$. El cociente es $(7/8)^{k}$.",
     "solution": "**Paso 1. Ingenuo.** a) $M(2)=8$, $M(4)=64$, $M(8)=512$. $M(n)=8^{k}=n^{3}$.\n\n**Paso 2. Strassen.** b) $S(2)=7$, $S(4)=49$, $S(8)=343$. $S(n)=7^{k}=n^{\\log_27}\\approx n^{2{,}807}$.\n\n**Paso 3. Cociente.** c) $S/M=(7/8)^{k}$: $k=5$ da $0{,}513$, $k=6$ da $0{,}449<0{,}5$. Hace falta $n=2^{6}=64$. Por eso Strassen solo compensa con matrices grandes (y además hace más sumas)."
-   },
-   {
-    "id": "peldanos#D13",
-    "n": "D13",
-    "title": "Embaldosar con triominós",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "divide-y-venceras"
-    ],
-    "stage": "dyv",
-    "src": "adic",
-    "diff": 0.5,
-    "steps": true,
-    "statement": "Para cubrir un tablero $n\\times n$, con $n=2^{k}$, que tiene una casilla vacía, con triominós en forma de L ($3$ casillas cada uno) se coloca un triominó en el centro y se resuelven $4$ subtableros de lado $n/2$.\n- a) ¿Cuántos triominós hacen falta para $n=2$, $4$ y $8$? (Cuenta casillas.)\n- b) Plantea la recurrencia $T(n)$ del número de triominós y comprueba los valores.\n- c) Resuélvela con el teorema maestro.",
-    "hint": "Hay $n^{2}-1$ casillas por cubrir y cada triominó cubre $3$. Y la recurrencia es: cuatro llamadas con $n/2$, más el triominó del centro.",
-    "solution": "**Paso 1. Cuenta casillas.** a) $\\frac{n^{2}-1}{3}$: $n=2$: $1$. $n=4$: $5$. $n=8$: $21$.\n\n**Paso 2. Recurrencia.** b) $T(n)=4T(n/2)+1$ con $T(2)=1$. $T(4)=4\\cdot1+1=5$ ✓. $T(8)=4\\cdot5+1=21$ ✓.\n\n**Paso 3. Maestro.** c) $a=4$, $b=2$, $k=0$: $\\frac{a}{b^{k}}=4>1$, luego $\\Theta(n^{\\log_24})=\\Theta(n^{2})$. Concuerda con $\\frac{n^{2}-1}{3}$."
    },
    {
     "id": "peldanos#D14",
@@ -7165,24 +7075,6 @@ window.LADDER = {
     "solution": "**Paso 1. a).** La derecha es $9^{k}$: grado $0$, factor $(x-9)$. Polinomio $(x-1)(x-9)$, solución $C_1+C_2\\,9^{k}\\in\\Theta(9^{k})$.\n\n**Paso 2. b).** Izquierda $(x-2)$. Derecha: $(1+k)\\cdot1^{k}$, grado $1$, factor $(x-1)^{2}$; y $1\\cdot2^{k}$, factor $(x-2)$. Polinomio $(x-2)^{2}(x-1)^{2}$, solución $(C_1+C_2k)\\,2^{k}+C_3+C_4k\\in\\Theta(k\\,2^{k})$. Con $n=2^{k}$: $k\\,2^{k}=n\\log_2n$.\n\n**Paso 3. c).** Izquierda $(x-3)$. Derecha $4\\cdot4^{k}$, factor $(x-4)$. Polinomio $(x-3)(x-4)$, solución $C_1\\,3^{k}+C_2\\,4^{k}\\in\\Theta(4^{k})$. Con $n=2^{k}$: $4^{k}=n^{2}$."
    },
    {
-    "id": "peldanos#G16",
-    "n": "G16",
-    "title": "La pila de llamadas",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "rec-general"
-    ],
-    "stage": "general",
-    "src": "adic",
-    "diff": 0.4,
-    "steps": true,
-    "statement": "El espacio de una función recursiva es, sobre todo, el de la pila: cuántas llamadas hay activas *a la vez* (profundidad máxima), multiplicado por lo que ocupa cada una.\n```python\ndef fact(n):\n    if n == 0: return 1\n    return n * fact(n - 1)\n\ndef pot2(b, e):\n    if e == 0: return 1\n    if e % 2 == 0: return pot2(b * b, e // 2)\n    return b * pot2(b * b, e // 2)\n\ndef fib(n):\n    if n <= 1: return n\n    return fib(n - 1) + fib(n - 2)\n```\n- a) ¿Cuántas llamadas hay activas como máximo en `fact(5)`? ¿Y en general, con `fact(n)`?\n- b) Lo mismo para `pot2(2, 8)` y para `pot2(b, e)` con $e=2^{k}$.\n- c) Lo mismo para `fib(5)`. ¿De qué orden es la pila de `fib(n)`, aunque el tiempo sea exponencial?",
-    "hint": "Una llamada queda activa hasta que termina. Dibuja la cadena de llamadas hasta el caso base: esa es la profundidad. La pila solo guarda un camino de la raíz a una hoja, no todo el árbol.",
-    "solution": "**Paso 1. a).** `fact(5)`$\\to$`fact(4)`$\\to\\cdots\\to$`fact(0)`: $6$ llamadas activas a la vez. En general $n+1$: espacio $\\Theta(n)$.\n\n**Paso 2. b).** `pot2(2, 8)`$\\to$`pot2(4, 4)`$\\to$`pot2(16, 2)`$\\to$`pot2(256, 1)`$\\to$`pot2(65536, 0)`: $5$. Con $e=2^{k}$ son $k+2$: espacio $\\Theta(\\log e)$.\n\n**Paso 3. c).** En `fib(5)` la rama más larga es `fib(5)`$\\to$`fib(4)`$\\to$`fib(3)`$\\to$`fib(2)`$\\to$`fib(1)`: $5$ llamadas. En general $n$: espacio $\\Theta(n)$. El tiempo es exponencial porque hay muchísimas llamadas, pero no están activas a la vez: cuando una termina, libera su sitio en la pila."
-   },
-   {
     "id": "peldanos#S01",
     "n": "S01",
     "title": "Potencias",
@@ -7507,78 +7399,6 @@ window.LADDER = {
     "solution": "**Paso 1. Sustituye $n=10$.** a) $\\dfrac{10\\cdot11\\cdot21}{6}=385$.\n\n**Paso 2. Separa y usa dos fórmulas.** b) $\\dfrac{n(n+1)(2n+1)}{6}+\\dfrac{n(n+1)}{2}=\\dfrac{n(n+1)(2n+4)}{6}=\\dfrac{n(n+1)(n+2)}{3}$. Con $n=3$: $2+6+12=20$ y $\\frac{3\\cdot4\\cdot5}{3}=20$.\n\n**Paso 3. Desarrolla el cuadrado.** c) $4\\sum i^{2}-4\\sum i+\\sum1=\\dfrac{2n(n+1)(2n+1)}{3}-2n(n+1)+n=\\dfrac{4n^{3}-n}{3}=\\dfrac{n(4n^{2}-1)}{3}$. Con $n=3$: $1+9+25=35$ y $\\frac{3\\cdot35}{3}=35$."
    },
    {
-    "id": "peldanos#S19",
-    "n": "S19",
-    "title": "Cubos",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "sumatorios"
-    ],
-    "stage": "sumatorios",
-    "src": "adic",
-    "diff": 0.55,
-    "steps": true,
-    "statement": "- a) Calcula $1^{3}+2^{3}+3^{3}+4^{3}+5^{3}$ y compárala con $(1+2+3+4+5)^{2}$.\n- b) La fórmula es $\\displaystyle\\sum_{i=1}^{n}i^{3}=\\left(\\frac{n(n+1)}{2}\\right)^{2}$. Úsala para $n=20$.\n- c) Halla una fórmula para $\\displaystyle\\sum_{i=1}^{n}(i^{3}-i)$.",
-    "hint": "Para c), cada sumatorio por separado ya lo conoces: $\\sum i^{3}$ y $\\sum i$. Factoriza al final.",
-    "solution": "**Paso 1. Calcula y compara.** a) $1+8+27+64+125=225=15^{2}=(1+2+3+4+5)^{2}$.\n\n**Paso 2. Usa la fórmula.** b) $\\left(\\dfrac{20\\cdot21}{2}\\right)^{2}=210^{2}=44100$.\n\n**Paso 3. Resta y factoriza.** c) $\\dfrac{n^{2}(n+1)^{2}}{4}-\\dfrac{n(n+1)}{2}=\\dfrac{n(n+1)\\,[\\,n(n+1)-2\\,]}{4}=\\dfrac{(n-1)\\,n\\,(n+1)\\,(n+2)}{4}$. Con $n=3$: $0+6+24=30$ y $\\frac{2\\cdot3\\cdot4\\cdot5}{4}=30$."
-   },
-   {
-    "id": "peldanos#S20",
-    "n": "S20",
-    "title": "Sumas telescópicas",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "sumatorios"
-    ],
-    "stage": "sumatorios",
-    "src": "adic",
-    "diff": 0.5,
-    "steps": true,
-    "statement": "**Ejemplo resuelto.** $\\displaystyle\\sum_{i=1}^{n}\\bigl(i-(i-1)\\bigr)=(1-0)+(2-1)+\\cdots+(n-(n-1))=n-0=n$: casi todo se cancela y solo sobran el último y el primero.\n\n**Ahora tú.**\n- a) Calcula $\\displaystyle\\sum_{i=1}^{n}\\bigl(i^{2}-(i-1)^{2}\\bigr)$.\n- b) Desarrolla $i^{2}-(i-1)^{2}$ y deduce el valor de $\\displaystyle\\sum_{i=1}^{n}(2i-1)$.\n- c) Calcula $\\displaystyle\\sum_{i=1}^{n}\\bigl(2^{i}-2^{i-1}\\bigr)$.",
-    "hint": "Escribe los primeros términos y los últimos y fíjate en qué se cancela. Es de la forma $\\sum(a_i-a_{i-1})=a_n-a_0$.",
-    "solution": "**Paso 1. Identifica $a_i$.** a) Aquí $a_i=i^{2}$, así que la suma vale $a_n-a_0=n^{2}-0=n^{2}$.\n\n**Paso 2. Desarrolla.** b) $i^{2}-(i-1)^{2}=2i-1$. Por lo tanto $\\sum_{i=1}^{n}(2i-1)=n^{2}$: es la suma de los impares que ya conocías.\n\n**Paso 3. Otra sucesión.** c) $a_i=2^{i}$, luego $a_n-a_0=2^{n}-1$."
-   },
-   {
-    "id": "peldanos#S21",
-    "n": "S21",
-    "title": "Una suma de fracciones que se cancela",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "sumatorios"
-    ],
-    "stage": "sumatorios",
-    "src": "adic",
-    "diff": 0.6,
-    "steps": true,
-    "statement": "Calcula $\\displaystyle\\sum_{i=2}^{n}\\frac{1}{i(i-1)}$.\n- a) Comprueba que $\\dfrac{1}{i(i-1)}=\\dfrac{1}{i-1}-\\dfrac1i$.\n- b) Escribe los primeros y últimos términos y cancela.\n- c) Comprueba el resultado con $n=3$.",
-    "hint": "Pon el lado derecho de a) con denominador común $i(i-1)$ y verás que sale $\\frac{1}{i(i-1)}$.",
-    "solution": "**Paso 1. Descomposición.** a) $\\dfrac{1}{i-1}-\\dfrac1i=\\dfrac{i-(i-1)}{i(i-1)}=\\dfrac1{i(i-1)}$.\n\n**Paso 2. Escribe y cancela.** b) $\\left(1-\\tfrac12\\right)+\\left(\\tfrac12-\\tfrac13\\right)+\\cdots+\\left(\\tfrac1{n-1}-\\tfrac1n\\right)=1-\\dfrac1n$.\n\n**Paso 3. Comprueba.** c) $n=3$: $\\tfrac12+\\tfrac16=\\tfrac23$ y $1-\\tfrac13=\\tfrac23$."
-   },
-   {
-    "id": "peldanos#S22",
-    "n": "S22",
-    "title": "Telescópica con salto de dos",
-    "points": null,
-    "durationMin": null,
-    "kind": "ejs",
-    "skills": [
-     "sumatorios"
-    ],
-    "stage": "sumatorios",
-    "src": "adic",
-    "diff": 0.75,
-    "steps": true,
-    "statement": "Calcula $\\displaystyle\\sum_{i=1}^{n}\\frac{1}{i(i+2)}$.\n- a) Comprueba que $\\dfrac{1}{i(i+2)}=\\dfrac12\\left(\\dfrac1i-\\dfrac1{i+2}\\right)$.\n- b) Escribe los primeros términos de la suma y ve cuáles se cancelan y cuáles sobreviven.\n- c) Da el resultado y comprueba con $n=2$.",
-    "hint": "Ahora el término que se resta es $\\frac1{i+2}$, no $\\frac1{i+1}$, así que se cancela con el que viene dos pasos después. No todo desaparece: quedan dos términos al principio y dos al final.",
-    "solution": "**Paso 1. Descomposición.** a) $\\dfrac12\\cdot\\dfrac{(i+2)-i}{i(i+2)}=\\dfrac12\\cdot\\dfrac{2}{i(i+2)}=\\dfrac1{i(i+2)}$.\n\n**Paso 2. Qué sobrevive.** b) $\\tfrac12\\left[\\left(1-\\tfrac13\\right)+\\left(\\tfrac12-\\tfrac14\\right)+\\left(\\tfrac13-\\tfrac15\\right)+\\cdots+\\left(\\tfrac1{n-1}-\\tfrac1{n+1}\\right)+\\left(\\tfrac1n-\\tfrac1{n+2}\\right)\\right]$. Se cancelan todos los términos salvo $1$ y $\\tfrac12$ del principio, y $-\\tfrac1{n+1}$ y $-\\tfrac1{n+2}$ del final.\n\n**Paso 3. Resultado.** c) $\\dfrac12\\left(\\dfrac32-\\dfrac1{n+1}-\\dfrac1{n+2}\\right)$. Para $n=2$: $\\tfrac13+\\tfrac18=\\tfrac{11}{24}$ y $\\tfrac12\\left(\\tfrac32-\\tfrac13-\\tfrac14\\right)=\\tfrac12\\cdot\\tfrac{11}{12}=\\tfrac{11}{24}$."
-   },
-   {
     "id": "peldanos#S23",
     "n": "S23",
     "title": "Series geométricas, el truco",
@@ -7811,6 +7631,222 @@ window.LADDER = {
     "statement": "Calcula $\\displaystyle\\sum_{i=0}^{n}\\left(2^{i}+i\\right)$ en forma cerrada y di su orden $\\Theta$. Comprueba con $n=2$.",
     "hint": "Separa en dos sumatorios: uno geométrico y otro de naturales (cuidado con que el índice empieza en $0$; el término $i=0$ de la segunda suma es $0$).",
     "solution": "**Paso 1. Separa.** $\\sum_{i=0}^{n}2^{i}+\\sum_{i=0}^{n}i$.\n\n**Paso 2. Cada una.** $\\sum_{i=0}^{n}2^{i}=2^{n+1}-1$ y $\\sum_{i=0}^{n}i=\\dfrac{n(n+1)}{2}$.\n\n**Paso 3. Suma.** Total $=2^{n+1}-1+\\dfrac{n(n+1)}{2}$.\n\n**Paso 4. Orden.** El exponencial domina al polinomio: $\\Theta(2^{n})$.\n\n**Paso 5. Comprueba.** $n=2$: $(1+0)+(2+1)+(4+2)=10$ y $2^{3}-1+3=10$."
+   },
+   {
+    "id": "peldanos#V01",
+    "n": "V01",
+    "title": "Los elementos de un voraz, con el cambio de monedas",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.2,
+    "steps": true,
+    "statement": "Un algoritmo voraz tiene: un conjunto de **candidatos**, una **función de selección** (qué candidato se mira primero), una de **factibilidad** (si cabe en la solución), una **función objetivo** (lo que se optimiza) y una **función solución** (cuándo se ha terminado).\n\nSe quiere devolver $67$ céntimos con el menor número de monedas, con monedas de $50,20,10,5,2,1$ céntimos.\n- a) Identifica los cinco elementos.\n- b) Aplica el esquema paso a paso: moneda elegida y dinero que queda.\n- c) ¿Cuántas monedas salen?",
+    "hint": "La selección es la moneda de mayor valor que no se pase de lo que queda por devolver. Una moneda se puede repetir tantas veces como quepa.",
+    "solution": "**Paso 1. Elementos.** a) Candidatos: los tipos de moneda. Selección: la de mayor valor posible. Factibilidad: que la suma no supere $67$. Objetivo: minimizar el número de monedas. Solución: monedas que suman exactamente $67$.\n\n**Paso 2. Ejecución.** b) Quedan $67$: toma $50\\to17$. $20$ no cabe; toma $10\\to7$. $10$ no cabe; toma $5\\to2$. Toma $2\\to0$.\n\n**Paso 3. Resultado.** c) $50+10+5+2=67$ con $4$ monedas."
+   },
+   {
+    "id": "peldanos#V03",
+    "n": "V03",
+    "title": "Cambio de monedas: cuándo no es óptimo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.3,
+    "steps": true,
+    "statement": "- a) Con monedas de $1,2,5,10,20,50$ céntimos, devuelve $93$ céntimos con la estrategia voraz.\n- b) Con el sistema de monedas $\\{1,3,4\\}$, devuelve $6$ con la estrategia voraz. ¿Cuántas monedas salen?\n- c) ¿Hay una forma mejor con ese sistema? ¿Qué se concluye?",
+    "hint": "En b) la estrategia coge siempre la moneda mayor que quepa. Compara el resultado con probar combinaciones de $2$ monedas.",
+    "solution": "**Paso 1. a).** $50\\to43$; $20\\to23$; $20\\to3$; $2\\to1$; $1\\to0$. Son $5$ monedas: $50+20+20+2+1$.\n\n**Paso 2. b).** $4\\to2$; $1\\to1$; $1\\to0$. Son $3$ monedas: $4+1+1$.\n\n**Paso 3. c).** Con $3+3=6$ bastan $2$ monedas. La estrategia voraz no es óptima para cualquier sistema de monedas; sí lo es para el euro (y para $1,2,5,10,\\dots$), pero hay que demostrarlo y depende del sistema."
+   },
+   {
+    "id": "peldanos#V05",
+    "n": "V05",
+    "title": "Mezclar listas ordenadas con el menor coste",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.45,
+    "steps": true,
+    "statement": "Hay cuatro listas ordenadas de tamaños $6,2,8,4$. Mezclar dos listas de tamaños $p$ y $q$ cuesta $p+q$ operaciones, y el resultado es una lista de tamaño $p+q$.\n- a) Mézclalas en el orden en que están dadas ($6+2$, el resultado con la de $8$, y ese con la de $4$). ¿Cuánto cuesta en total?\n- b) Aplica la estrategia voraz: mezcla siempre las dos listas más pequeñas disponibles.\n- c) ¿Qué relación tiene con los códigos de Huffman?",
+    "hint": "Después de cada mezcla, la lista nueva vuelve al conjunto y se vuelven a buscar las dos más pequeñas.",
+    "solution": "**Paso 1. En orden.** a) $6+2=8$ (cuesta $8$); $8+8=16$ (cuesta $16$); $16+4=20$ (cuesta $20$). Total $44$.\n\n**Paso 2. Voraz.** b) Tamaños $\\{6,2,8,4\\}$. Las dos menores: $2+4=6$ (coste $6$) $\\to\\{6,8,6\\}$. Las dos menores: $6+6=12$ (coste $12$) $\\to\\{8,12\\}$. Finalmente $8+12=20$ (coste $20$). Total $6+12+20=38<44$.\n\n**Paso 3. Huffman.** c) Es la misma construcción: se juntan siempre los dos \"pesos\" más pequeños. En Huffman el peso es la frecuencia; aquí, el tamaño de la lista."
+   },
+   {
+    "id": "peldanos#V06",
+    "n": "V06",
+    "title": "Códigos de Huffman",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.45,
+    "steps": true,
+    "statement": "Seis caracteres con estas frecuencias (en %): $A=40$, $B=25$, $C=15$, $D=10$, $E=6$, $F=4$.\n- a) Construye el árbol de Huffman: ordena y fusiona los dos menores hasta tener uno. Anota las fusiones.\n- b) Escribe la longitud del código de cada carácter (sin el árbol, solo la profundidad de cada hoja).\n- c) Calcula el número medio de bits por carácter y compáralo con usar $3$ bits fijos.",
+    "hint": "Si hay empate al elegir las dos menores, cualquiera sirve: el coste final es el mismo. Para una hoja, la longitud del código es el número de fusiones que la separan de la raíz.",
+    "solution": "**Paso 1. Fusiones.** a) Ordenadas: $F4,E6,D10,C15,B25,A40$. $F+E=10$. Quedan $D10,(FE)10,C15,B25,A40$: $D+(FE)=20$. Quedan $C15,20,B25,A40$: $C+20=35$. Quedan $B25,35,A40$: $B+35=60$. Quedan $A40,60$: $A+60=100$.\n\n**Paso 2. Longitudes.** b) $A$: $1$. $B$: $2$. $C$: $3$. $D$: $4$. $E$ y $F$: $5$. Los menos frecuentes quedan más profundos.\n\n**Paso 3. Media.** c) $0{,}40\\cdot1+0{,}25\\cdot2+0{,}15\\cdot3+0{,}10\\cdot4+0{,}06\\cdot5+0{,}04\\cdot5=2{,}25$ bits por carácter, frente a $3$ con longitud fija: un $25\\%$ menos."
+   },
+   {
+    "id": "peldanos#V08",
+    "n": "V08",
+    "title": "La mochila con fracciones",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Mochila con capacidad $C=30$ y objetos de pesos $p=(6,10,12,20)$ y valores $v=(36,40,36,60)$. Los objetos se pueden partir.\n- a) Calcula el valor por unidad de peso de cada objeto.\n- b) Aplica la estrategia \"mayor valor por unidad de peso\" y calcula el valor total.\n- c) Aplica la estrategia \"mayor valor primero\" y compara.\n- d) Con los objetos $p=(10,20,30)$, $v=(60,100,120)$, $C=50$ y **sin** poder partir (mochila 0-1), ¿es óptima la estrategia del apartado b?",
+    "hint": "Para (b) mete objetos completos en orden de $v_i/p_i$ y, cuando el siguiente no quepa entero, mete la fracción que quede. En (d), compara el voraz con la combinación de los dos últimos objetos.",
+    "solution": "**Paso 1. Ratios.** a) $v_i/p_i=6,\\ 4,\\ 3,\\ 3$.\n\n**Paso 2. Voraz por ratio.** b) Entran el objeto $1$ (peso $6$, valor $36$), el $2$ (peso $10$, valor $40$) y el $3$ (peso $12$, valor $36$): peso $28$, valor $112$. Quedan $2$ unidades y se mete $\\frac{2}{20}$ del objeto $4$: valor $6$. Total $118$.\n\n**Paso 3. Mayor valor primero.** c) Primero el objeto $4$ (peso $20$, valor $60$), luego el $2$ (peso $10$, valor $40$): peso $30$, valor $100<118$. Esa selección no es óptima.\n\n**Paso 4. Mochila 0-1.** d) Los ratios son $6,5,4$: el voraz mete los objetos $1$ y $2$ (peso $30$, valor $160$). Pero los objetos $2$ y $3$ pesan $50$ y valen $220$. En la mochila 0-1 el voraz por ratio **no** es óptimo (el problema es NP-completo)."
+   },
+   {
+    "id": "peldanos#V09",
+    "n": "V09",
+    "title": "Kruskal y Prim en un grafo pequeño",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.45,
+    "steps": true,
+    "statement": "Grafo no dirigido con vértices $A,B,C,D,E$ y aristas:\n$$A\\!-\\!B:4,\\ A\\!-\\!C:2,\\ B\\!-\\!C:1,\\ B\\!-\\!D:5,\\ C\\!-\\!D:8,\\ C\\!-\\!E:10,\\ D\\!-\\!E:3.$$\n- a) Kruskal: ordena las aristas y elige en orden las que no formen ciclo, hasta tener $|V|-1$.\n- b) Prim desde $A$: en cada paso, la arista más barata que une el conjunto ya alcanzado con un vértice nuevo.\n- c) Compara los costes.",
+    "hint": "Kruskal rechaza una arista si sus dos extremos ya están conectados entre sí. Prim solo mira aristas con un extremo dentro y otro fuera.",
+    "solution": "**Paso 1. Kruskal.** a) Orden: $B\\!-\\!C(1),\\ A\\!-\\!C(2),\\ D\\!-\\!E(3),\\ A\\!-\\!B(4),\\ B\\!-\\!D(5),\\dots$ Se aceptan $B\\!-\\!C$, $A\\!-\\!C$, $D\\!-\\!E$. $A\\!-\\!B$ cerraría el ciclo $A,B,C$ y se rechaza. $B\\!-\\!D$ conecta $\\{A,B,C\\}$ con $\\{D,E\\}$: se acepta. Ya hay $4$ aristas.\n\n**Paso 2. Prim.** b) Alcanzado $\\{A\\}$: la menor es $A\\!-\\!C(2)$. Alcanzado $\\{A,C\\}$: la menor es $B\\!-\\!C(1)$. Alcanzado $\\{A,B,C\\}$: la menor es $B\\!-\\!D(5)$. Alcanzado $\\{A,B,C,D\\}$: queda $D\\!-\\!E(3)$.\n\n**Paso 3. Costes.** c) Ambos: $1+2+3+5=11$, con las mismas aristas elegidas en distinto orden."
+   },
+   {
+    "id": "peldanos#V10",
+    "n": "V10",
+    "title": "Dijkstra paso a paso",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.55,
+    "steps": true,
+    "statement": "Grafo no dirigido con vértices $s,a,b,c,t$ y aristas:\n$$s\\!-\\!a:2,\\ s\\!-\\!b:5,\\ a\\!-\\!b:1,\\ a\\!-\\!c:6,\\ b\\!-\\!c:2,\\ b\\!-\\!t:7,\\ c\\!-\\!t:1.$$\n- a) Aplica Dijkstra desde $s$: en cada paso, el vértice con menor distancia entre los que faltan, y actualización de sus vecinos.\n- b) ¿Cuáles son las distancias mínimas desde $s$ y el camino hasta $t$?\n- c) ¿En qué se diferencia de Prim?",
+    "hint": "Anota una tabla de distancias. Al fijar un vértice $v$, para cada vecino $x$: $d_x=\\min(d_x,\\,d_v+w(v,x))$.",
+    "solution": "**Paso 1. Inicio.** a) $d_s=0$; $d_a=2$, $d_b=5$, $d_c=d_t=\\infty$.\n\n**Paso 2. Se fija $a$ (2).** $d_b=\\min(5,2+1)=3$; $d_c=2+6=8$.\n\n**Paso 3. Se fija $b$ (3).** $d_c=\\min(8,3+2)=5$; $d_t=3+7=10$.\n\n**Paso 4. Se fija $c$ (5).** $d_t=\\min(10,5+1)=6$. Se fija $t$ (6).\n\n**Paso 5. Resultado.** b) $d_a=2$, $d_b=3$, $d_c=5$, $d_t=6$. Camino a $t$: $s,a,b,c,t$ ($2+1+2+1$).\n\n**Paso 6. Prim.** c) Prim elige la arista más barata hacia fuera, sin mirar el camino acumulado. Dijkstra elige por la distancia total desde $s$, y por eso recalcula las distancias tras cada paso."
+   },
+   {
+    "id": "peldanos#V13",
+    "n": "V13",
+    "title": "¿Qué función de selección? Selección de actividades",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Actividades (intervalos $[c_i,f_i)$, compatibles si no se solapan): $A=[0,10)$, $X=[0,5)$, $Y=[4,6)$, $Z=[5,10)$. Se quiere el mayor número de actividades compatibles. Se prueban tres funciones de selección (siempre que sea factible con lo ya elegido):\n- a) la que **empieza antes** (si empatan, la primera de la lista $A,X,Y,Z$);\n- b) la de **menor duración**;\n- c) la que **termina antes**.\n\nAplica cada una y compara con el óptimo.",
+    "hint": "Después de elegir una actividad, descarta las que se solapan con ella. Dos actividades $[c_1,f_1)$ y $[c_2,f_2)$ son compatibles si $c_2\\ge f_1$ o $c_1\\ge f_2$.",
+    "solution": "**Paso 1. Empieza antes.** a) Elige $A$ ($[0,10)$): solapa con todas. Total $1$.\n\n**Paso 2. Menor duración.** b) Duraciones: $A=10$, $X=5$, $Y=2$, $Z=5$. Elige $Y$ ($[4,6)$), que solapa con $X$ y con $Z$. Total $1$.\n\n**Paso 3. Termina antes.** c) Terminan en $10,5,6,10$: elige $X$ ($f=5$). Compatibles con $X$: $Z$ ($5\\ge5$). $Y$ y $A$ solapan. Elige $Z$. Total $2$: $\\{X,Z\\}$.\n\n**Paso 4. Conclusión.** El máximo es $2$ y solo \"termina antes\" lo consigue. Las otras dos tienen contraejemplos. (Para demostrar que \"termina antes\" es óptima, se razona que dejar libre el mayor tiempo posible nunca empeora.)"
+   },
+   {
+    "id": "peldanos#V14",
+    "n": "V14",
+    "title": "El cambio de monedas, en código",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Completa la función que devuelve las monedas (de mayor a menor valor) para pagar una cantidad `x` en céntimos, con `monedas = [200, 100, 50, 20, 10, 5, 2, 1]` ordenadas de mayor a menor:\n```python\ndef cambio(x, monedas):\n    resultado = []\n    for m in monedas:\n        n = ________            # cuántas monedas de valor m caben en x\n        resultado += [m] * n\n        x = ________            # lo que queda por devolver\n    return resultado\n```\n- a) Rellena los dos huecos.\n- b) Ejecútala a mano para `x = 534` (5,34 €). ¿Cuántas monedas salen?\n- c) ¿Qué cambia si `monedas` no está ordenada de mayor a menor?",
+    "hint": "`x // m` es el número entero de veces que cabe `m`, y `x % m` lo que sobra.",
+    "solution": "**Paso 1. Huecos.** a) `n = x // m` y `x = x % m` (o `x - n * m`).\n\n**Paso 2. Ejecución.** b) $534$: con $200$ caben $2$ (quedan $134$); con $100$, $1$ (quedan $34$); con $50$, $0$; con $20$, $1$ (quedan $14$); con $10$, $1$ (quedan $4$); con $5$, $0$; con $2$, $2$ (quedan $0$); con $1$, $0$. Resultado: $[200,200,100,20,10,2,2]$, $7$ monedas.\n\n**Paso 3. El orden.** c) La función de selección es \"la mayor moneda que quepa\". Si no están ordenadas, se puede coger una moneda pequeña antes de las grandes y salen más monedas de las necesarias."
+   },
+   {
+    "id": "peldanos#V15",
+    "n": "V15",
+    "title": "Mezclar con el menor coste, en código",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "La estrategia de V05 (mezclar siempre las dos listas más pequeñas) se programa con un montículo de mínimos (`heapq`): se sacan las dos menores, se suma su coste y se vuelve a insertar la lista resultante. Completa:\n```python\nimport heapq\n\ndef coste_minimo(tamanos):\n    heapq.heapify(tamanos)\n    total = 0\n    while len(tamanos) > 1:\n        a = heapq.heappop(tamanos)\n        b = ________\n        total += ________\n        heapq.heappush(tamanos, ________)\n    return total\n```\n- a) Rellena los huecos.\n- b) Ejecútala con `[3, 9, 4, 5, 2]` anotando cada mezcla.\n- c) ¿Qué coste tiene con $n$ listas?",
+    "hint": "Cada mezcla de listas de tamaños $a$ y $b$ cuesta $a+b$ y produce una lista de tamaño $a+b$. Un montículo da el mínimo en $O(1)$ y lo extrae en $O(\\log n)$.",
+    "solution": "**Paso 1. Huecos.** a) `b = heapq.heappop(tamanos)`; `total += a + b`; `heapq.heappush(tamanos, a + b)`.\n\n**Paso 2. Ejecución.** b) $\\{2,3,4,5,9\\}$: $2+3=5$ (coste $5$) $\\to\\{4,5,5,9\\}$; $4+5=9$ (coste $9$) $\\to\\{5,9,9\\}$; $5+9=14$ (coste $14$) $\\to\\{9,14\\}$; $9+14=23$ (coste $23$). Total $5+9+14+23=51$.\n\n**Paso 3. Coste.** c) $n-1$ mezclas, cada una con dos extracciones y una inserción: $O(n\\log n)$. Es el mismo esquema que Huffman, donde en vez de sumar tamaños se unen árboles."
+   },
+   {
+    "id": "peldanos#V16",
+    "n": "V16",
+    "title": "Kruskal: la pieza del ciclo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Para saber si una arista cierra un ciclo, Kruskal mantiene cada vértice en un grupo con un representante (`p[x]`). Completa:\n```python\ndef find(p, x):\n    while p[x] != x:\n        x = ________\n    return x\n\ndef kruskal(n, aristas):                 # aristas = [(peso, u, v), ...]\n    p = list(range(n))\n    arm = []\n    for peso, u, v in sorted(aristas):\n        ru, rv = find(p, u), find(p, v)\n        if ________:                      # no cierra ciclo\n            p[ru] = ________              # une los dos grupos\n            arm.append((u, v, peso))\n    return arm\n```\n- a) Rellena los huecos.\n- b) Ejecútala con los vértices $A,B,C,D,E=0..4$ y las aristas de V09: $(4,A,B),(2,A,C),(1,B,C),(5,B,D),(8,C,D),(10,C,E),(3,D,E)$. Anota `p` tras cada arista aceptada.",
+    "hint": "Dos vértices están en el mismo grupo si `find` devuelve el mismo representante. Aceptar una arista es unir los dos grupos.",
+    "solution": "**Paso 1. Huecos.** a) `x = p[x]`; `if ru != rv:`; `p[ru] = rv`.\n\n**Paso 2. Ejecución.** b) Orden: $(1,B,C)$: acepta, `p = [0,2,2,3,4]`. $(2,A,C)$: `find(A)=0`, `find(C)=2`, acepta: `p = [2,2,2,3,4]`. $(3,D,E)$: acepta: `p = [2,2,2,4,4]`. $(4,A,B)$: `find(A)=2` y `find(B)=2`, mismo grupo: **se rechaza**. $(5,B,D)$: `find(B)=2`, `find(D)=4`, acepta: `p = [2,2,4,4,4]`.\n\n**Paso 3. Resultado.** El árbol tiene las aristas $B\\!-\\!C$, $A\\!-\\!C$, $D\\!-\\!E$, $B\\!-\\!D$, de coste $11$. El resto de aristas se rechazan porque ya están todos en el mismo grupo."
+   },
+   {
+    "id": "peldanos#V17",
+    "n": "V17",
+    "title": "Dijkstra en código",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Completa Dijkstra con una lista de distancias (sin montículo) para el grafo de V10 con $s,a,b,c,t=0..4$. Las aristas son `ady[u] = [(v, peso), ...]`:\n```python\ndef dijkstra(ady, s):\n    n = len(ady)\n    d = [float('inf')] * n\n    d[s] = 0\n    fijo = [False] * n\n    for _ in range(n):\n        # el vértice sin fijar con menor distancia\n        u = min((x for x in range(n) if not fijo[x]), key=lambda x: d[x])\n        fijo[u] = True\n        for v, w in ady[u]:\n            if ________:                     # mejora el camino a v pasando por u\n                d[v] = ________\n    return d\n```\n- a) Rellena los huecos.\n- b) Ejecútala y anota `d` tras fijar cada vértice.\n- c) ¿Qué coste tiene con $n$ vértices?",
+    "hint": "Se mejora $v$ si $d[u]+w<d[v]$, y entonces $d[v]=d[u]+w$. El vértice que se fija en cada paso es el de menor distancia entre los no fijos.",
+    "solution": "**Paso 1. Huecos.** a) `if d[u] + w < d[v]:` y `d[v] = d[u] + w`.\n\n**Paso 2. Ejecución.** b) Con $(s,a,b,c,t)$: al empezar `d = [0,∞,∞,∞,∞]`. Se fija $s$: `d = [0,2,5,∞,∞]`. Se fija $a$ (2): `d = [0,2,3,8,∞]`. Se fija $b$ (3): `d = [0,2,3,5,10]`. Se fija $c$ (5): `d = [0,2,3,5,6]`. Se fija $t$ (6): sin cambios. Resultado: `[0,2,3,5,6]`.\n\n**Paso 3. Coste.** c) $n$ vueltas, cada una con una búsqueda del mínimo en $O(n)$ y la revisión de sus aristas: $\\Theta(n^{2})$. Con un montículo baja a $O((n+m)\\log n)$."
    }
   ],
   "kind": "adic"
@@ -7851,21 +7887,17 @@ window.LADDER = {
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.3"
    ],
    "t22-aspectos": [
-    "peldanos/peldanos#A15",
-    "peldanos/peldanos#A16"
+    "peldanos/peldanos#A15"
    ],
    "t22-lineal": [
     "peldanos/peldanos#A17"
    ],
-   "t22-comparacion": [
-    "peldanos/peldanos#A18"
-   ],
    "t22-cota-orden": [
     "peldanos/peldanos#A19",
-    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.2",
-    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.14",
     "peldanos/peldanos#A20",
-    "peldanos/peldanos#A21"
+    "peldanos/peldanos#A21",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.2",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.14"
    ]
   },
   "backtracking": {
@@ -7875,12 +7907,14 @@ window.LADDER = {
    ],
    "t6-subconjuntos": [
     "peldanos/peldanos#K03",
+    "peldanos/peldanos#K15",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.1"
    ],
    "t6-permutaciones": [
     "peldanos/peldanos#K04",
     "peldanos/peldanos#K05",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.3",
+    "peldanos/peldanos#K16",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.6"
    ],
    "t6-reinas": [
@@ -7921,16 +7955,12 @@ window.LADDER = {
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.7",
     "peldanos/peldanos#B09",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.8",
-    "peldanos/peldanos#B10",
     "peldanos/peldanos#B11"
    ]
   },
   "dyv": {
    "t5-intro": [
     "peldanos/peldanos#D01"
-   ],
-   "t5-transforma": [
-    "peldanos/peldanos#D02"
    ],
    "t5-newton": [
     "peldanos/peldanos#D03"
@@ -7947,10 +7977,6 @@ window.LADDER = {
     "peldanos/peldanos#D07",
     "peldanos/peldanos#D08"
    ],
-   "t5-quick": [
-    "peldanos/peldanos#D09",
-    "peldanos/peldanos#D10"
-   ],
    "t5-multiplicacion": [
     "peldanos/peldanos#D11",
     "peldanos/peldanos#D12",
@@ -7961,7 +7987,6 @@ window.LADDER = {
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.6"
    ],
    "t5-otros": [
-    "peldanos/peldanos#D13",
     "peldanos/peldanos#D14"
    ]
   },
@@ -7976,13 +8001,13 @@ window.LADDER = {
     "peldanos/peldanos#E07",
     "peldanos/peldanos#E08",
     "peldanos/peldanos#E09",
-    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.10",
     "peldanos/peldanos#E10",
     "peldanos/peldanos#E11",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.12",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.13",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.10",
-    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.13"
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.13",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.10"
    ]
   },
   "general": {
@@ -8018,9 +8043,46 @@ window.LADDER = {
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.16",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.15",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.18"
+   ]
+  },
+  "recursion": {
+   "t4-intro": [
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.6",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.1",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.2",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.1",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.9",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.4"
    ],
-   "t32-espacio": [
-    "peldanos/peldanos#G16"
+   "t4-paradigma": [
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.5",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.3",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.10"
+   ],
+   "t4-listas": [
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.7",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.8",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.13",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.4"
+   ],
+   "t4-secuencias": [
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.12",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.4",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.1",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.3",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.2",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.6",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.8"
+   ],
+   "t4-binaria": [
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.15",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.6",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.17",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.5",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.7",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.8",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.5",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.3"
    ]
   },
   "sumatorios": {
@@ -8052,13 +8114,7 @@ window.LADDER = {
    "t21-cuadrados-cubos": [
     "peldanos/peldanos#S17",
     "peldanos/peldanos#S18",
-    "peldanos/peldanos#S19",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.6"
-   ],
-   "t21-telescopicas": [
-    "peldanos/peldanos#S20",
-    "peldanos/peldanos#S21",
-    "peldanos/peldanos#S22"
    ],
    "t21-geometricas": [
     "peldanos/peldanos#S23",
@@ -8077,6 +8133,43 @@ window.LADDER = {
     "peldanos/peldanos#S33",
     "peldanos/peldanos#S34",
     "peldanos/peldanos#S35"
+   ]
+  },
+  "voraz": {
+   "t7-esquema": [
+    "peldanos/peldanos#V01"
+   ],
+   "t7-monedas": [
+    "peldanos/peldanos#V03",
+    "peldanos/peldanos#V14",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.3"
+   ],
+   "t7-tiempo-mezcla": [
+    "peldanos/peldanos#V05",
+    "peldanos/peldanos#V15",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.4",
+    "peldanos/peldanos#V13",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.1"
+   ],
+   "t7-huffman": [
+    "peldanos/peldanos#V06",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.5"
+   ],
+   "t7-mochila-3": [
+    "peldanos/peldanos#V08",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.2"
+   ],
+   "t7-arm": [
+    "peldanos/peldanos#V09",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.6",
+    "peldanos/peldanos#V16",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.7",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.8"
+   ],
+   "t7-dijkstra": [
+    "peldanos/peldanos#V10",
+    "peldanos/peldanos#V17",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.9"
    ]
   }
  }
