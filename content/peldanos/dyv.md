@@ -4,9 +4,9 @@ stage: dyv
 ## Orden
 - t5-intro: D01
 - t5-newton: D03
-- t5-dyv: D04 D05 6.1 6.2 6.3
+- t5-dyv: D04 D05 6.1 D15 6.2 D17 6.3
 - t5-ordenacion: D06 D07 D08
-- t5-multiplicacion: D11 D12 6.5 6.7 6.8 6.4 6.6
+- t5-multiplicacion: D11 D12 6.5 6.7 6.8 6.4 6.6 D16
 - t5-otros: D14
 
 ### D01 · Qué estrategia es
@@ -238,3 +238,73 @@ Escribe $i$ con $p$ bits, dale la vuelta y vuelve a pasarlo a decimal. Las posic
 **Paso 2. $p=4$.** b) $j$ para $i=0..15$: $0,8,4,12,2,10,6,14,1,9,5,13,3,11,7,15$.
 
 **Paso 3. Fijas.** c) Las que cumplen $j=i$: $0000$, $0110$, $1001$, $1111$, es decir $0,6,9,15$: son $4=2^{p/2}$.
+
+### D15 · Un divide y vencerás con una pieza en el medio
+nivel: 0.8
+
+Diseña `difs(a)` con divide y vencerás que devuelva la lista de diferencias entre elementos consecutivos, `[a[1]-a[0], a[2]-a[1], ...]`. Para `[3, 5, -2, 8]` devuelve `[2, -7, 10]`. Se asume `len(a) >= 1` (con un elemento, lista vacía).
+- a) Si partes `a` en dos mitades, ¿qué diferencia no está en ninguna de las dos listas de resultados?
+- b) Esquema y código.
+- c) Prueba con el ejemplo y da el coste.
+
+#### Pista
+Las diferencias de la mitad izquierda y de la derecha dejan fuera la pareja formada por el último de la izquierda y el primero de la derecha: hay que añadirla al combinar.
+
+#### Solución
+**Paso 1. La pieza que falta.** a) La diferencia `a[mitad] - a[mitad - 1]`.
+
+**Paso 2. Esquema y código.** b) Tamaño: `len(a)`. Caso base: un elemento, `[]`. Descomposición: `a[:mitad]` y `a[mitad:]`. Combinación: `izquierda + [a[mitad] - a[mitad-1]] + derecha`.
+```python
+def difs(a):
+    n = len(a)
+    if n == 1:
+        return []
+    mitad = n // 2
+    return difs(a[:mitad]) + [a[mitad] - a[mitad - 1]] + difs(a[mitad:])
+```
+**Paso 3. Prueba y coste.** c) `[3,5,-2,8]`: mitades `[3,5]` y `[-2,8]`; `difs([3,5])=[2]`, `difs([-2,8])=[10]`, pieza central $-2-5=-7$: `[2,-7,10]`. El coste es $T(n)=2T(n/2)+n$ por las copias y concatenaciones: $\Theta(n\log n)$.
+
+### D16 · Evaluar un polinomio dividiendo los coeficientes
+nivel: 0.85
+
+Un polinomio $P(x)=c_0+c_1x+c_2x^{2}+\cdots+c_{n-1}x^{n-1}$ se guarda como la lista de coeficientes `c`. Se quiere evaluarlo con divide y vencerás.
+- a) Si `mitad = n // 2`, escribe $P(x)$ en función de $P_{bajo}$ (con `c[:mitad]`) y $P_{alto}$ (con `c[mitad:]`).
+- b) Evalúa a mano $P=4-3x+2x^{2}+x^{3}$ en $x=2$ con esa descomposición.
+- c) Escribe `evalua(c, x)` y da la recurrencia de su coste.
+
+#### Pista
+$P_{alto}$ tiene los coeficientes de $x^{mitad}$ en adelante; para evaluarlo como un polinomio normal hay que sacar factor común $x^{mitad}$.
+
+#### Solución
+**Paso 1. Descomposición.** a) $P(x)=P_{bajo}(x)+x^{mitad}\,P_{alto}(x)$, donde $P_{bajo}$ usa `c[:mitad]` y $P_{alto}$ usa `c[mitad:]` evaluados como polinomios desde $x^{0}$.
+
+**Paso 2. A mano.** b) `c = [4,-3,2,1]`, `mitad = 2`: $P_{bajo}=4-3x\to4-6=-2$; $P_{alto}=2+x\to4$; $P(2)=-2+2^{2}\cdot4=14$. Comprobación directa: $4-6+8+8=14$.
+
+**Paso 3. Código y coste.** c)
+```python
+def evalua(c, x):
+    n = len(c)
+    if n == 1:
+        return c[0]
+    mitad = n // 2
+    return evalua(c[:mitad], x) + x ** mitad * evalua(c[mitad:], x)
+```
+Dos llamadas con tamaño $n/2$ más el cálculo de $x^{mitad}$: $T(n)=2T(n/2)+c\in\Theta(n)$ (si se calcula $x^{mitad}$ en tiempo constante).
+
+### D17 · La sublista de suma máxima
+nivel: 0.9
+
+Para la lista $[-1,4,-2,5,-3]$, la sublista contigua de suma máxima se busca con divide y vencerás: la mejor está en la mitad izquierda, en la derecha, o **cruza** la mitad.
+- a) Divide en `[-1,4]` y `[-2,5,-3]`. ¿Cuál es la mejor suma de cada mitad?
+- b) Calcula la mejor sublista que cruza: la mejor "terminando en el último de la izquierda" más la mejor "empezando en el primero de la derecha".
+- c) ¿Cuál es la respuesta y qué sublista es? Escribe el esquema.
+
+#### Pista
+La mejor que acaba en el último de la izquierda se halla recorriendo hacia atrás y acumulando; la mejor que empieza en el primero de la derecha, hacia delante. Cada una se elige entre todos los puntos de corte.
+
+#### Solución
+**Paso 1. Mitades.** a) Izquierda `[-1,4]`: la mejor es $[4]$ con suma $4$. Derecha `[-2,5,-3]`: la mejor es $[5]$ con suma $5$.
+
+**Paso 2. Cruzando.** b) Terminando en $4$ (hacia atrás): $4$, $4-1=3$; la mejor es $4$. Empezando en $-2$ (hacia delante): $-2$, $-2+5=3$, $3-3=0$; la mejor es $3$. Cruzando: $4+3=7$ (la sublista $[4,-2,5]$).
+
+**Paso 3. Esquema.** c) Respuesta: $\max\{4,\,5,\,7\}=7$ con $[4,-2,5]$. Caso base: un elemento, esa suma. Descomposición: mitades. Combinación: máximo de las tres. Las dos búsquedas de la parte cruzada cuestan $\Theta(n)$ en total: $T(n)=2T(n/2)+n\in\Theta(n\log n)$.

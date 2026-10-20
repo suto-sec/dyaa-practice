@@ -6,8 +6,8 @@ stage: sumatorios
 - t21-calculo: S05 S06 S07
 - t21-sumas-basicas: S08 S09 1.4 S10 S11 S12 S13 S14 1.5 S15 S16 1.7
 - t21-cuadrados-cubos: S17 S18 1.6
-- t21-geometricas: S23 S24 S25 S26 S27 S28 1.9
-- t21-integrales: S29 S30 S31 S32 S33 S34 S35
+- t21-geometricas: S23 S24 S25 S26 S27 S28 S41 1.9
+- t21-integrales: S29 S30 S31 S32 S33 S42 S39 S34 S40 S35
 ### S01 · Potencias
 nivel: 0.2
 
@@ -641,3 +641,73 @@ Separa en dos sumatorios: uno geométrico y otro de naturales (cuidado con que e
 **Paso 4. Orden.** El exponencial domina al polinomio: $\Theta(2^{n})$.
 
 **Paso 5. Comprueba.** $n=2$: $(1+0)+(2+1)+(4+2)=10$ y $2^{3}-1+3=10$.
+
+### S39 · Un sumatorio con varias partes, como en el examen
+nivel: 0.95
+
+Simplifica (sin sumatorios) $\displaystyle\sum_{i=1}^{j}\left(2-j+3i+ni+2^{i}\right)$ y comprueba con $j=2$, $n=1$.
+
+#### Pista
+Los términos $2$ y $-j$ no dependen de $i$ (solo hay que multiplicar por el número de términos, $j$); $3i+ni=(3+n)\,i$ es de la forma "constante por $i$"; y $2^{i}$ es una serie geométrica que empieza en $i=1$. El resultado puede depender de $j$ y de $n$.
+
+#### Solución
+**Paso 1. Separa en cuatro sumatorios.** $\sum_{i=1}^{j}2+\sum_{i=1}^{j}(-j)+(3+n)\sum_{i=1}^{j}i+\sum_{i=1}^{j}2^{i}$.
+
+**Paso 2. Resuelve cada uno.** $2j$; $-j\cdot j=-j^{2}$; $(3+n)\dfrac{j(j+1)}{2}$; y la geométrica $\dfrac{2^{j+1}-2^{1}}{2-1}=2^{j+1}-2$.
+
+**Paso 3. Suma.** $2j-j^{2}+\dfrac{(3+n)\,j(j+1)}{2}+2^{j+1}-2$.
+
+**Paso 4. Comprueba.** Con $j=2$, $n=1$: los términos son $6$ ($i=1$) y $12$ ($i=2$), suma $18$. La fórmula da $4-4+\frac{4\cdot2\cdot3}{2}+8-2=18$.
+
+### S40 · Cotas de $\sum i\,e^{i}$ con una primitiva dada
+nivel: 1.0
+
+Acota $\displaystyle\sum_{i=1}^{n}i\,e^{i}$ por arriba y por abajo con integrales, sabiendo que $\displaystyle\int x\,e^{x}\,dx=(x-1)\,e^{x}$.
+- a) ¿Es $f(x)=x\,e^{x}$ creciente para $x\ge0$? ¿Qué desigualdades hay que usar?
+- b) Calcula las dos integrales.
+- c) Comprueba con $n=3$.
+
+#### Pista
+Para $f$ creciente: $\int_{m-1}^{n}f\le\sum_{i=m}^{n}f(i)\le\int_{m}^{n+1}f$, aquí con $m=1$.
+
+#### Solución
+**Paso 1. Crecimiento.** a) $f'(x)=e^{x}(1+x)>0$ para $x\ge0$: es creciente. Sirven $\int_{0}^{n}f\le\sum\le\int_{1}^{n+1}f$.
+
+**Paso 2. Integrales.** b) $\int_{1}^{n+1}f=\bigl[(x-1)e^{x}\bigr]_{1}^{n+1}=n\,e^{n+1}-0$. $\int_{0}^{n}f=(n-1)e^{n}-(-1)=(n-1)e^{n}+1$. Es decir, $(n-1)e^{n}+1\le\sum_{i=1}^{n}i\,e^{i}\le n\,e^{n+1}$.
+
+**Paso 3. Comprueba.** c) $n=3$: la suma vale $e+2e^{2}+3e^{3}\approx77{,}7$. Cota inferior: $2e^{3}+1\approx41{,}2$. Cota superior: $3e^{4}\approx163{,}8$. Ambas son del orden de $n\,e^{n}$ salvo constantes.
+
+### S41 · Un sumatorio con $(n-i)$ y una potencia
+nivel: 1.05
+
+Simplifica $\displaystyle\sum_{i=0}^{n-1}(n-i)\,3^{i}$ y comprueba con $n=2$ y $n=3$.
+
+#### Pista
+Separa $n\sum 3^{i}-\sum i\,3^{i}$. La primera es una geométrica; la segunda es la suma $\sum i\,r^{i}$ con $r=3$ (el término $i=0$ vale $0$, así que es $\sum_{i=1}^{n-1}$).
+
+#### Solución
+**Paso 1. Separa.** $n\displaystyle\sum_{i=0}^{n-1}3^{i}-\sum_{i=1}^{n-1}i\,3^{i}$.
+
+**Paso 2. Cada parte.** La geométrica: $\dfrac{3^{n}-1}{2}$. La otra, con la fórmula $\sum_{i=1}^{N}i\,r^{i}=\dfrac{r+r^{N+1}(Nr-N-1)}{(r-1)^{2}}$, $N=n-1$ y $r=3$: $\dfrac{3+3^{n}(2n-3)}{4}$.
+
+**Paso 3. Resta.** $\dfrac{n(3^{n}-1)}{2}-\dfrac{3+3^{n}(2n-3)}{4}=\dfrac{2n\,3^{n}-2n-3-(2n-3)3^{n}}{4}=\dfrac{3^{n+1}-2n-3}{4}$.
+
+**Paso 4. Comprueba.** $n=2$: $2\cdot1+1\cdot3=5$ y $\frac{27-4-3}{4}=5$. $n=3$: $3+6+9=18$ y $\frac{81-6-3}{4}=18$.
+
+### S42 · Cota inferior y superior de una serie geométrica
+nivel: 0.95
+
+Halla una cota inferior y una superior de $\displaystyle\sum_{j=0}^{n-1}3^{j}$ de dos formas:
+- a) Con integrales (la función es creciente).
+- b) Con la fórmula exacta de la serie geométrica.
+- c) Comprueba con $n=3$ y da el orden.
+
+#### Pista
+Con $m=0$: $\int_{-1}^{n-1}3^{x}dx\le\sum_{j=0}^{n-1}3^{j}\le\int_{0}^{n}3^{x}dx$, y $\int a^{x}dx=\frac{a^{x}}{\ln a}$.
+
+#### Solución
+**Paso 1. Con integrales.** a) $\dfrac{3^{n-1}-3^{-1}}{\ln3}\le\sum_{j=0}^{n-1}3^{j}\le\dfrac{3^{n}-1}{\ln3}$.
+
+**Paso 2. Exacta.** b) Es una geométrica: $\dfrac{3^{n}-1}{3-1}=\dfrac{3^{n}-1}{2}$. No hace falta acotar.
+
+**Paso 3. Comprueba.** c) $n=3$: la suma vale $1+3+9=13$. Integrales: $\frac{9-0{,}33}{1{,}0986}\approx7{,}9\le13\le\frac{26}{1{,}0986}\approx23{,}7$. El orden es $\Theta(3^{n})$.

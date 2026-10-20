@@ -3,14 +3,14 @@ stage: asintotica
 
 ## Orden
 - t22-por-que: A01 A02
-- t22-ordenes: A03 A04 1.1
+- t22-ordenes: A03 A04 A26 1.1
 - t22-cota-sup: A05 A06
 - t22-verificar-o: A07 A08 A09 A10 2.1 2.5 1.3
 - t22-omega: A11 A12
-- t22-theta: A13 2.4 A14 2.2 2.3
-- t22-aspectos: A15
+- t22-theta: A13 2.4 A22 A14 2.2 2.3
+- t22-aspectos: A15 A23 A24
 - t22-lineal: A17
-- t22-cota-orden: A19 A20 A21 1.2 2.14
+- t22-cota-orden: A19 A25 A20 A21 1.2 2.14
 
 ### A01 · Qué término manda
 nivel: 0.2
@@ -375,3 +375,97 @@ En a) saca el factor: $2^{n+1}=2\cdot2^{n}$. En b) y c) supón que existe $c$ y 
 **Paso 2. b).** Supón $3^{n}\le c\,2^{n}$ para todo $n\ge n_0$. Dividiendo entre $2^{n}$: $\left(\tfrac32\right)^{n}\le c$. Pero $\left(\tfrac32\right)^{n}$ crece sin cota, así que supera a cualquier $c$ para $n$ grande. Contradicción.
 
 **Paso 3. c).** Supón $n\,2^{n}\le c\,2^{n}$. Dividiendo entre $2^{n}$: $n\le c$, falso para $n>c$. Luego $n\,2^{n}\notin O(2^{n})$.
+
+### A22 · Cambio de base con la definición de Θ
+nivel: 0.7
+
+Demuestra con la definición que $\log_5 n\in\Theta(\log_2 n)$, dando $c_1$, $c_2$ y $n_0$.
+- a) Escribe $\log_5 n$ en función de $\log_2 n$.
+- b) Elige $c_1$ y $c_2$ (con $c_1\le$ la constante $\le c_2$) y comprueba la doble desigualdad.
+
+#### Pista
+$\log_5 n=\dfrac{\log_2 n}{\log_2 5}$. La constante $\dfrac1{\log_25}$ vale aproximadamente $0{,}43$.
+
+#### Solución
+**Paso 1. Cambio de base.** a) $\log_5 n=\dfrac{1}{\log_2 5}\log_2 n\approx0{,}4307\,\log_2 n$.
+
+**Paso 2. Constantes.** b) Con $c_1=0{,}4$ y $c_2=0{,}5$: $0{,}4\log_2 n\le0{,}4307\log_2n\le0{,}5\log_2n$ para todo $n\ge1$ (donde $\log_2n\ge0$). Por tanto $n_0=1$.
+
+**Paso 3. Conclusión.** $\log_5n\in\Theta(\log_2n)$. Vale para cualquier base: la base solo cambia una constante.
+
+### A23 · Potencias con un logaritmo en el exponente
+nivel: 0.75
+
+Simplifica a una potencia de $n$ y decide si está en $O(n^{2})$ y en $\Theta(n^{2})$:
+- a) $3^{\log_2 n}$
+- b) $2^{\ln n}$
+- c) $2^{\log_4 n}$
+- d) $4^{\log_2 n}$
+
+#### Pista
+Usa $b^{\log_c n}=n^{\log_c b}$ (se prueba escribiendo $b=c^{\log_c b}$). Para $2^{\ln n}$ conviene pasar a base $e$: $2^{\ln n}=n^{\ln 2}$.
+
+#### Solución
+**Paso 1. a).** $3^{\log_2n}=n^{\log_23}\approx n^{1{,}585}$. Está en $O(n^{2})$, pero no en $\Theta(n^{2})$ porque el exponente es menor.
+
+**Paso 2. b).** $2^{\ln n}=n^{\ln2}\approx n^{0{,}693}$. En $O(n^{2})$, no en $\Theta(n^{2})$ (tampoco en $\Theta(n)$).
+
+**Paso 3. c).** $2^{\log_4n}=n^{\log_42}=n^{1/2}=\sqrt n$. En $O(n^{2})$, no en $\Theta(n^{2})$.
+
+**Paso 4. d).** $4^{\log_2n}=n^{\log_24}=n^{2}$. En $O(n^{2})$ y en $\Theta(n^{2})$.
+
+### A24 · Factoriales y exponenciales con la definición
+nivel: 0.8
+
+Decide con la definición de $O$, con $c$ y $n_0$ o demostrando que no existen:
+- a) $(n-1)!\in O(n!)$
+- b) $(n+1)!\in O(n!)$
+- c) $2^{n}\in O(3^{n})$
+- d) $3^{n}\in O(2^{n})$
+
+#### Pista
+Escribe $(n+1)!=(n+1)\cdot n!$ y $n!=n\cdot(n-1)!$. Divide la desigualdad $f\le c\,g$ entre $g$ y mira si el cociente queda acotado.
+
+#### Solución
+**Paso 1. a).** $(n-1)!=\dfrac{n!}{n}\le n!$ para $n\ge1$. Sí, con $c=1$ y $n_0=1$.
+
+**Paso 2. b).** Supón $(n+1)!\le c\,n!$ para todo $n\ge n_0$. Dividiendo entre $n!$: $n+1\le c$, falso para $n\ge c$. No existe $c$: $(n+1)!\notin O(n!)$.
+
+**Paso 3. c).** $2^{n}\le3^{n}$ para todo $n\ge0$. Sí, con $c=1$ y $n_0=1$.
+
+**Paso 4. d).** Supón $3^{n}\le c\,2^{n}$. Dividiendo entre $2^{n}$: $\left(\tfrac32\right)^{n}\le c$, falso para $n$ grande porque crece sin cota. No: $3^{n}\notin O(2^{n})$.
+
+### A25 · Dos demostraciones de examen: $O$ con logaritmo y $\Omega$ con resta
+nivel: 0.8
+
+Con la definición (sin límites):
+- a) $5n\in O(n\log_2 n)$
+- b) $n^{2}-3n+1\in\Omega(n^{2})$
+
+Da $c$ y $n_0$ en cada caso.
+
+#### Pista
+En a), para $n\ge2$ se tiene $\log_2n\ge1$. En b), prueba con $c=\tfrac14$ y resuelve la desigualdad $\tfrac34n^{2}-3n+1\ge0$.
+
+#### Solución
+**Paso 1. a).** Con $c=5$: $5n\le5\,n\log_2n\iff1\le\log_2n\iff n\ge2$. Pareja $(5,\,2)$.
+
+**Paso 2. b), planteamiento.** Queremos $n^{2}-3n+1\ge\tfrac14n^{2}\iff\tfrac34n^{2}-3n+1\ge0\iff3n^{2}-12n+4\ge0$.
+
+**Paso 3. b), resolución.** Las raíces de $3n^{2}-12n+4$ son $\dfrac{12\pm\sqrt{96}}{6}\approx0{,}37$ y $3{,}63$. La parábola es positiva a la derecha de $3{,}63$: sirve $n_0=4$ (con $n=4$: $16-12+1=5\ge4$; con $n=3$: $1<2{,}25$). Pareja $(\tfrac14,\,4)$.
+
+### A26 · Ordenar funciones con complejidades iguales
+nivel: 0.5
+
+Ordena de menor a mayor orden de complejidad y agrupa las que tienen la misma:
+$$7n+\log n,\quad n\log_2 n,\quad 3\log n,\quad \log(n^{3}),\quad n^{2},\quad n^{1{,}5},\quad n\log_{10}n,\quad (\log n)^{2}$$
+
+#### Pista
+Quita constantes y términos menores. $\log(n^{3})=3\log n$ y la base del logaritmo no cambia el orden. Un logaritmo al cuadrado sigue creciendo más despacio que $n$.
+
+#### Solución
+**Paso 1. Simplifica.** $7n+\log n\to n$. $3\log n\to\log n$. $\log(n^{3})=3\log n\to\log n$. $n\log_{10}n$ y $n\log_2n$ son $n\log n$.
+
+**Paso 2. Ordena.** $\log n=3\log n=\log(n^{3})<(\log n)^{2}<n\;(=7n+\log n)<n\log n\;(=n\log_2n=n\log_{10}n)<n^{1{,}5}<n^{2}$.
+
+**Paso 3. Grupos.** Mismo orden: $\{3\log n,\ \log(n^{3})\}$ y $\{n\log_2n,\ n\log_{10}n\}$. Las demás están solas.

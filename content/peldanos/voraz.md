@@ -4,7 +4,7 @@ stage: voraz
 ## Orden
 - t7-esquema: V01
 - t7-monedas: V03 V14 8.3
-- t7-tiempo-mezcla: V05 V15 8.4 V13 8.1
+- t7-tiempo-mezcla: V05 V15 8.4 V13 V18 8.1
 - t7-huffman: V06 8.5
 - t7-mochila-3: V08 8.2
 - t7-arm: V09 8.6 V16 8.7 8.8
@@ -293,3 +293,20 @@ Se mejora $v$ si $d[u]+w<d[v]$, y entonces $d[v]=d[u]+w$. El vértice que se fij
 
 **Paso 3. Coste.** c) $n$ vueltas, cada una con una búsqueda del mínimo en $O(n)$ y la revisión de sus aristas: $\Theta(n^{2})$. Con un montículo baja a $O((n+m)\log n)$.
 
+### V18 · Emparejar para minimizar la mayor suma
+nivel: 0.7
+
+Un vector $v$ de $n$ enteros ($n$ par) se agrupa en $n/2$ parejas. Se calcula la suma de cada pareja y se toma la mayor. Se quiere que esa mayor suma sea la menor posible. Para $v=[3,9,1,5,4,8]$:
+- a) Prueba la estrategia "emparejar vecinos en el vector ordenado". ¿Qué sale?
+- b) Prueba "emparejar el menor con el mayor, el segundo menor con el segundo mayor...". ¿Qué sale?
+- c) ¿Cuál es el óptimo y por qué es razonable la segunda estrategia?
+
+#### Pista
+Ordena $v$: $[1,3,4,5,8,9]$. Para (c), piensa dónde acaba el elemento mayor: si se junta con otro grande, la suma crece mucho.
+
+#### Solución
+**Paso 1. Vecinos.** a) Parejas $(1,3),(4,5),(8,9)$ con sumas $4,9,17$: la mayor es $17$.
+
+**Paso 2. Extremos.** b) Parejas $(1,9),(3,8),(4,5)$ con sumas $10,11,9$: la mayor es $11$.
+
+**Paso 3. Óptimo.** c) Probando todas las formas de emparejar, el mínimo es $11$: la estrategia de los extremos es óptima. Razón: el mayor tiene que ir con alguien; lo mejor para no inflar la suma es unirlo con el menor, y el argumento se repite con el resto. Coste: ordenar, $\Theta(n\log n)$.

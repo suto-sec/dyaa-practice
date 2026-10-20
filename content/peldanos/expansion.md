@@ -2,7 +2,7 @@
 stage: expansion
 
 ## Orden
-- t32-expansion: E01 E02 E03 E04 E05 E06 E07 E08 E09 E10 E11 1.12 1.13 2.10 2.13 1.10
+- t32-expansion: E01 E02 E03 E04 E05 E06 E07 E08 E09 E10 E11 E12 E15 E14 E13 E16 1.12 1.13 2.10 2.13 1.10
 
 ### E01 · Calcular valores y ver el patrón
 nivel: 0.2
@@ -254,3 +254,93 @@ $T(n)$ y $T(n-1)$ tienen casi los mismos sumandos; al restarlos se cancelan todo
 **Paso 2. Resta.** b) $T(n)-T(n-1)=\Bigl(2+\sum_{j=0}^{n-1}T(j)\Bigr)-\Bigl(2+\sum_{j=0}^{n-2}T(j)\Bigr)=T(n-1)$. Por tanto $T(n)=2\,T(n-1)$ para $n\ge2$.
 
 **Paso 3. Expansión.** c) $T(n)=2T(n-1)=4T(n-2)=\cdots=2^{i}\,T(n-i)$. Se para en $T(1)=3$ cuando $i=n-1$: $T(n)=3\cdot2^{n-1}\in\Theta(2^{n})$. Con $n=4$: $3\cdot8=24$ ✓.
+
+### E12 · Expansión con un término cuadrático que se reduce
+nivel: 0.85
+
+Resuelve por expansión $T(n)=\begin{cases}1 & n=1\\ T(n/3)+n^{2} & n>1\end{cases}$ con $n=3^{k}$.
+- a) Patrón tras $i$ expansiones.
+- b) Resultado con una serie geométrica y orden.
+- c) Comprueba con $n=3$ y $n=9$.
+
+#### Pista
+Las cantidades que se acumulan son $n^{2},\ (n/3)^{2},\ (n/9)^{2},\dots=n^{2},\ \frac{n^{2}}9,\ \frac{n^{2}}{81},\dots$ Es una serie geométrica de razón $\frac19$.
+
+#### Solución
+**Paso 1. Patrón.** a) $T(n)=T(n/3^{i})+n^{2}\sum_{j=0}^{i-1}\left(\tfrac19\right)^{j}$.
+
+**Paso 2. Caso base.** b) Con $i=\log_3n=k$: $T(n)=1+n^{2}\dfrac{1-9^{-k}}{1-\frac19}=1+\dfrac98\left(n^{2}-1\right)=\dfrac{9n^{2}-1}{8}\in\Theta(n^{2})$, porque $9^{-k}n^{2}=1$.
+
+**Paso 3. Comprueba.** c) $T(3)=1+9=10$ y $\frac{81-1}{8}=10$. $T(9)=10+81=91$ y $\frac{729-1}{8}=91$. Manda el primer término ($n^{2}$): los siguientes son cada vez más pequeños.
+
+### E13 · Expansión con $\sqrt n$ y tres llamadas
+nivel: 0.9
+
+Resuelve por expansión $T(n)=\begin{cases}1 & n=1\\ 3T(n/9)+\sqrt n & n>1\end{cases}$ con $n=9^{k}$.
+- a) Patrón tras $i$ expansiones.
+- b) Resultado y orden.
+- c) Comprueba con $n=9$ y $n=81$.
+
+#### Pista
+En el paso $j$ hay $3^{j}$ subproblemas de tamaño $n/9^{j}$, y cada uno aporta $\sqrt{n/9^{j}}=\sqrt n/3^{j}$. Multiplica: sale $\sqrt n$ en cada nivel.
+
+#### Solución
+**Paso 1. Patrón.** a) $T(n)=3^{i}\,T(n/9^{i})+i\sqrt n$, porque cada nivel aporta $3^{j}\cdot\frac{\sqrt n}{3^{j}}=\sqrt n$.
+
+**Paso 2. Caso base.** b) Con $i=\log_9n$: $3^{i}=\sqrt n$ (porque $9^{i}=n$). $T(n)=\sqrt n+\sqrt n\log_9n=\sqrt n\,(1+\log_9n)\in\Theta(\sqrt n\log n)$.
+
+**Paso 3. Comprueba.** c) $T(9)=3+3=6$ y $3\,(1+1)=6$. $T(81)=3\cdot6+9=27$ y $9\,(1+2)=27$. Todos los niveles pesan lo mismo: caso $\frac{a}{b^{k}}=1$.
+
+### E14 · Expansión con un logaritmo
+nivel: 0.9
+
+Resuelve por expansión $T(n)=\begin{cases}0 & n=1\\ T(n/3)+\log_3n & n>1\end{cases}$ con $n=3^{k}$.
+- a) Patrón tras $i$ expansiones.
+- b) Resultado y orden.
+- c) Comprueba con $n=9$ y $n=27$.
+
+#### Pista
+Los logaritmos que se acumulan son $\log_3n,\ \log_3n-1,\ \log_3n-2,\dots,1$. Es la suma $1+2+\cdots+k$.
+
+#### Solución
+**Paso 1. Patrón.** a) $T(n)=T(n/3^{i})+\sum_{j=0}^{i-1}(\log_3n-j)$.
+
+**Paso 2. Caso base.** b) Con $i=k=\log_3n$: $T(n)=0+\sum_{m=1}^{k}m=\dfrac{k(k+1)}{2}=\dfrac{\log_3n\,(\log_3n+1)}{2}\in\Theta(\log^{2}n)$.
+
+**Paso 3. Comprueba.** c) $T(3)=1$, $T(9)=1+2=3$ y la fórmula da $\frac{2\cdot3}{2}=3$. $T(27)=3+3=6$ y $\frac{3\cdot4}{2}=6$.
+
+### E15 · Expansión con una suma de cuadrados
+nivel: 0.85
+
+Resuelve por expansión $T(n)=\begin{cases}0 & n=0\\ T(n-1)+n^{2}+n & n>0\end{cases}$
+- a) Patrón y sumatorio.
+- b) Resuélvelo con las fórmulas de $\sum k$ y $\sum k^{2}$.
+- c) Comprueba con $n=2$ y $n=3$.
+
+#### Pista
+Al llegar al caso base se acumula $\sum_{k=1}^{n}(k^{2}+k)$. Usa $\sum k^{2}=\frac{n(n+1)(2n+1)}{6}$ y $\sum k=\frac{n(n+1)}{2}$.
+
+#### Solución
+**Paso 1. Expande.** a) $T(n)=T(n-1)+n^{2}+n=T(n-2)+(n-1)^{2}+(n-1)+n^{2}+n=\cdots=T(0)+\sum_{k=1}^{n}(k^{2}+k)$.
+
+**Paso 2. Resuelve.** b) $\dfrac{n(n+1)(2n+1)}{6}+\dfrac{n(n+1)}{2}=\dfrac{n(n+1)(2n+4)}{6}=\dfrac{n(n+1)(n+2)}{3}\in\Theta(n^{3})$.
+
+**Paso 3. Comprueba.** c) $T(1)=2$, $T(2)=2+6=8$ y $\frac{2\cdot3\cdot4}{3}=8$. $T(3)=8+12=20$ y $\frac{3\cdot4\cdot5}{3}=20$.
+
+### E16 · Tres llamadas, como Karatsuba
+nivel: 0.95
+
+Resuelve por expansión $T(n)=\begin{cases}1 & n=1\\ 3T(n/2)+n & n>1\end{cases}$ con $n=2^{k}$.
+- a) Patrón tras $i$ expansiones.
+- b) Resultado y orden.
+- c) Comprueba con $n=2$ y $n=4$.
+
+#### Pista
+Tras $i$ pasos se acumula $n\left(1+\tfrac32+\left(\tfrac32\right)^{2}+\cdots\right)$. Y $3^{\log_2n}=n^{\log_23}$.
+
+#### Solución
+**Paso 1. Patrón.** a) $T(n)=3^{i}\,T(n/2^{i})+n\sum_{j=0}^{i-1}\left(\tfrac32\right)^{j}=3^{i}\,T(n/2^{i})+2n\left(\left(\tfrac32\right)^{i}-1\right)$.
+
+**Paso 2. Caso base.** b) Con $i=\log_2n$: $3^{i}=n^{\log_23}$ y $n\left(\tfrac32\right)^{i}=3^{i}$. $T(n)=3^{i}+2\cdot3^{i}-2n=3\,n^{\log_23}-2n\in\Theta(n^{\log_23})$.
+
+**Paso 3. Comprueba.** c) $T(2)=3+2=5$ y $3\cdot3-4=5$. $T(4)=15+4=19$ y $3\cdot9-8=19$.

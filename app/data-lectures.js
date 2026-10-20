@@ -5995,6 +5995,96 @@ window.LADDER = {
     "solution": "**Paso 1. a).** $2^{n+1}=2\\cdot2^{n}\\le2\\cdot2^{n}$. Pareja $(2,\\,1)$.\n\n**Paso 2. b).** Supón $3^{n}\\le c\\,2^{n}$ para todo $n\\ge n_0$. Dividiendo entre $2^{n}$: $\\left(\\tfrac32\\right)^{n}\\le c$. Pero $\\left(\\tfrac32\\right)^{n}$ crece sin cota, así que supera a cualquier $c$ para $n$ grande. Contradicción.\n\n**Paso 3. c).** Supón $n\\,2^{n}\\le c\\,2^{n}$. Dividiendo entre $2^{n}$: $n\\le c$, falso para $n>c$. Luego $n\\,2^{n}\\notin O(2^{n})$."
    },
    {
+    "id": "peldanos#A22",
+    "n": "A22",
+    "title": "Cambio de base con la definición de Θ",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Demuestra con la definición que $\\log_5 n\\in\\Theta(\\log_2 n)$, dando $c_1$, $c_2$ y $n_0$.\n- a) Escribe $\\log_5 n$ en función de $\\log_2 n$.\n- b) Elige $c_1$ y $c_2$ (con $c_1\\le$ la constante $\\le c_2$) y comprueba la doble desigualdad.",
+    "hint": "$\\log_5 n=\\dfrac{\\log_2 n}{\\log_2 5}$. La constante $\\dfrac1{\\log_25}$ vale aproximadamente $0{,}43$.",
+    "solution": "**Paso 1. Cambio de base.** a) $\\log_5 n=\\dfrac{1}{\\log_2 5}\\log_2 n\\approx0{,}4307\\,\\log_2 n$.\n\n**Paso 2. Constantes.** b) Con $c_1=0{,}4$ y $c_2=0{,}5$: $0{,}4\\log_2 n\\le0{,}4307\\log_2n\\le0{,}5\\log_2n$ para todo $n\\ge1$ (donde $\\log_2n\\ge0$). Por tanto $n_0=1$.\n\n**Paso 3. Conclusión.** $\\log_5n\\in\\Theta(\\log_2n)$. Vale para cualquier base: la base solo cambia una constante."
+   },
+   {
+    "id": "peldanos#A23",
+    "n": "A23",
+    "title": "Potencias con un logaritmo en el exponente",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.75,
+    "steps": true,
+    "statement": "Simplifica a una potencia de $n$ y decide si está en $O(n^{2})$ y en $\\Theta(n^{2})$:\n- a) $3^{\\log_2 n}$\n- b) $2^{\\ln n}$\n- c) $2^{\\log_4 n}$\n- d) $4^{\\log_2 n}$",
+    "hint": "Usa $b^{\\log_c n}=n^{\\log_c b}$ (se prueba escribiendo $b=c^{\\log_c b}$). Para $2^{\\ln n}$ conviene pasar a base $e$: $2^{\\ln n}=n^{\\ln 2}$.",
+    "solution": "**Paso 1. a).** $3^{\\log_2n}=n^{\\log_23}\\approx n^{1{,}585}$. Está en $O(n^{2})$, pero no en $\\Theta(n^{2})$ porque el exponente es menor.\n\n**Paso 2. b).** $2^{\\ln n}=n^{\\ln2}\\approx n^{0{,}693}$. En $O(n^{2})$, no en $\\Theta(n^{2})$ (tampoco en $\\Theta(n)$).\n\n**Paso 3. c).** $2^{\\log_4n}=n^{\\log_42}=n^{1/2}=\\sqrt n$. En $O(n^{2})$, no en $\\Theta(n^{2})$.\n\n**Paso 4. d).** $4^{\\log_2n}=n^{\\log_24}=n^{2}$. En $O(n^{2})$ y en $\\Theta(n^{2})$."
+   },
+   {
+    "id": "peldanos#A24",
+    "n": "A24",
+    "title": "Factoriales y exponenciales con la definición",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Decide con la definición de $O$, con $c$ y $n_0$ o demostrando que no existen:\n- a) $(n-1)!\\in O(n!)$\n- b) $(n+1)!\\in O(n!)$\n- c) $2^{n}\\in O(3^{n})$\n- d) $3^{n}\\in O(2^{n})$",
+    "hint": "Escribe $(n+1)!=(n+1)\\cdot n!$ y $n!=n\\cdot(n-1)!$. Divide la desigualdad $f\\le c\\,g$ entre $g$ y mira si el cociente queda acotado.",
+    "solution": "**Paso 1. a).** $(n-1)!=\\dfrac{n!}{n}\\le n!$ para $n\\ge1$. Sí, con $c=1$ y $n_0=1$.\n\n**Paso 2. b).** Supón $(n+1)!\\le c\\,n!$ para todo $n\\ge n_0$. Dividiendo entre $n!$: $n+1\\le c$, falso para $n\\ge c$. No existe $c$: $(n+1)!\\notin O(n!)$.\n\n**Paso 3. c).** $2^{n}\\le3^{n}$ para todo $n\\ge0$. Sí, con $c=1$ y $n_0=1$.\n\n**Paso 4. d).** Supón $3^{n}\\le c\\,2^{n}$. Dividiendo entre $2^{n}$: $\\left(\\tfrac32\\right)^{n}\\le c$, falso para $n$ grande porque crece sin cota. No: $3^{n}\\notin O(2^{n})$."
+   },
+   {
+    "id": "peldanos#A25",
+    "n": "A25",
+    "title": "Dos demostraciones de examen: $O$ con logaritmo y $\\Omega$ con resta",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Con la definición (sin límites):\n- a) $5n\\in O(n\\log_2 n)$\n- b) $n^{2}-3n+1\\in\\Omega(n^{2})$\n\nDa $c$ y $n_0$ en cada caso.",
+    "hint": "En a), para $n\\ge2$ se tiene $\\log_2n\\ge1$. En b), prueba con $c=\\tfrac14$ y resuelve la desigualdad $\\tfrac34n^{2}-3n+1\\ge0$.",
+    "solution": "**Paso 1. a).** Con $c=5$: $5n\\le5\\,n\\log_2n\\iff1\\le\\log_2n\\iff n\\ge2$. Pareja $(5,\\,2)$.\n\n**Paso 2. b), planteamiento.** Queremos $n^{2}-3n+1\\ge\\tfrac14n^{2}\\iff\\tfrac34n^{2}-3n+1\\ge0\\iff3n^{2}-12n+4\\ge0$.\n\n**Paso 3. b), resolución.** Las raíces de $3n^{2}-12n+4$ son $\\dfrac{12\\pm\\sqrt{96}}{6}\\approx0{,}37$ y $3{,}63$. La parábola es positiva a la derecha de $3{,}63$: sirve $n_0=4$ (con $n=4$: $16-12+1=5\\ge4$; con $n=3$: $1<2{,}25$). Pareja $(\\tfrac14,\\,4)$."
+   },
+   {
+    "id": "peldanos#A26",
+    "n": "A26",
+    "title": "Ordenar funciones con complejidades iguales",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "asint-definiciones"
+    ],
+    "stage": "asintotica",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "Ordena de menor a mayor orden de complejidad y agrupa las que tienen la misma:\n$$7n+\\log n,\\quad n\\log_2 n,\\quad 3\\log n,\\quad \\log(n^{3}),\\quad n^{2},\\quad n^{1{,}5},\\quad n\\log_{10}n,\\quad (\\log n)^{2}$$",
+    "hint": "Quita constantes y términos menores. $\\log(n^{3})=3\\log n$ y la base del logaritmo no cambia el orden. Un logaritmo al cuadrado sigue creciendo más despacio que $n$.",
+    "solution": "**Paso 1. Simplifica.** $7n+\\log n\\to n$. $3\\log n\\to\\log n$. $\\log(n^{3})=3\\log n\\to\\log n$. $n\\log_{10}n$ y $n\\log_2n$ son $n\\log n$.\n\n**Paso 2. Ordena.** $\\log n=3\\log n=\\log(n^{3})<(\\log n)^{2}<n\\;(=7n+\\log n)<n\\log n\\;(=n\\log_2n=n\\log_{10}n)<n^{1{,}5}<n^{2}$.\n\n**Paso 3. Grupos.** Mismo orden: $\\{3\\log n,\\ \\log(n^{3})\\}$ y $\\{n\\log_2n,\\ n\\log_{10}n\\}$. Las demás están solas."
+   },
+   {
     "id": "peldanos#K01",
     "n": "K01",
     "title": "Seguir el árbol binario de subconjuntos",
@@ -6247,6 +6337,168 @@ window.LADDER = {
     "solution": "**Paso 1. Todas las rutas.** a) $0123$: $10+35+30+20=95$. $0132$: $10+25+30+15=80$. $0213$: $15+35+25+20=95$. $0231$: $15+30+25+10=80$. $0312$: $20+25+35+15=95$. $0321$: $20+30+35+10=95$. La mejor cuesta $80$ (hay dos rutas, una es la inversa de la otra).\n\n**Paso 2. Con poda.** b) Se recorren $0123$ (mejor $=95$) y $0132$ (mejor $=80$), luego $0213$ ($95$, no mejora) y $0231$ ($80$, no mejora: se exige estrictamente menos). Después, con la ruta $0,3,1$ y la ciudad $2$ el coste parcial es $20+25+35=80\\ge80$: **se poda** (sin la vuelta ya no puede mejorar). Con $0,3,2$ y la ciudad $1$: $20+30+35=85\\ge80$: **se poda**.\n\n**Paso 3. Llamadas.** c) Con poda $14$; sin poda $1+3+6+6=16$. Con muchas ciudades el ahorro es enorme. La poda es válida porque las distancias no son negativas: un coste parcial nunca baja."
    },
    {
+    "id": "peldanos#K17",
+    "n": "K17",
+    "title": "Secuencias de paréntesis válidas",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Con $n$ parejas de paréntesis se quieren todas las secuencias bien formadas. Se construye la secuencia carácter a carácter con un árbol binario (abrir o cerrar), podando las ramas que no pueden llegar a ser válidas.\n- a) ¿Cuándo se puede añadir un `(`? ¿Y un `)`?\n- b) Lista las secuencias para $n=3$ en el orden en que se generan (primero se prueba `(`).\n- c) Para $n=2$, ¿cuántas llamadas se hacen con esas dos condiciones (contando la raíz)?",
+    "hint": "Hay que llevar el número de paréntesis abiertos y de cerrados. Un `)` solo es válido si hay algún `(` sin cerrar.",
+    "solution": "**Paso 1. Condiciones.** a) Se puede abrir si `abiertos < n`. Se puede cerrar si `cerrados < abiertos`.\n\n**Paso 2. $n=3$.** b) `((()))`, `(()())`, `(())()`, `()(())`, `()()()`: son $5$ (el número de Catalan $C_3$).\n\n**Paso 3. $n=2$.** c) Se generan `(())` y `()()`. El árbol podado tiene $8$ llamadas con la raíz. Sin poda serían $2^{5}-1=31$."
+   },
+   {
+    "id": "peldanos#K18",
+    "n": "K18",
+    "title": "Combinaciones con repetición",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.55,
+    "steps": true,
+    "statement": "Se quieren las secuencias de $m=2$ elementos de `['a','b','c']` en orden no decreciente de índice, **pudiendo repetir** elementos: `aa, ab, ac, bb, bc, cc`. Se usa el esquema de K03 (un resultado en cada hoja, índice mínimo `j`).\n- a) ¿Qué cambia respecto a las combinaciones sin repetición en el rango del bucle?\n- b) Escribe el código y las llamadas en orden.\n- c) ¿Cuántas hay en general?",
+    "hint": "Sin repetición, el candidato siguiente empieza en `j + 1`. Con repetición, un elemento ya usado se puede volver a usar.",
+    "solution": "**Paso 1. El bucle.** a) El rango empieza en `j` (no en `j + 1`): `for k in range(j, n)`.\n\n**Paso 2. Código.** b)\n```python\ndef combinaciones_rep(i, j, sol, a, m):\n    if i == m:\n        print(sol)\n    else:\n        for k in range(j, len(a)):\n            sol[i] = a[k]\n            combinaciones_rep(i + 1, k, sol, a, m)\n```\ncon llamada inicial `combinaciones_rep(0, 0, [None]*m, a, m)`. Imprime `aa, ab, ac, bb, bc, cc` (10 llamadas con la raíz).\n\n**Paso 3. Cuántas.** c) $\\binom{n+m-1}{m}$: con $n=3$, $m=2$, $\\binom42=6$."
+   },
+   {
+    "id": "peldanos#K19",
+    "n": "K19",
+    "title": "Permutaciones con elementos repetidos",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Se quieren las permutaciones de los elementos `x` (dos veces) e `y` (una vez): `xxy`, `xyx`, `yxx`. En vez de la lista `libres` (booleanos) se usa la lista `restantes = [2, 1]`, con las unidades que quedan de cada elemento.\n- a) ¿Qué condición se usa para elegir el candidato `k` en el nivel `i`?\n- b) ¿Qué hay que hacer antes y después de la llamada recursiva?\n- c) Traza y cuenta las permutaciones. ¿Cuántas habría sin repetidos y con la fórmula?",
+    "hint": "Un candidato vale si queda alguna unidad: `restantes[k] > 0`. Se gasta una unidad al colocarlo y se devuelve al volver.",
+    "solution": "**Paso 1. Condición.** a) `if restantes[k] > 0:`.\n\n**Paso 2. Actualizar.** b) `restantes[k] -= 1` antes de llamar y `restantes[k] += 1` al volver (igual que `libres[k] = False/True`).\n```python\ndef perm_rep(i, restantes, sol, a):\n    if i == len(sol):\n        print(sol)\n    else:\n        for k in range(len(a)):\n            if restantes[k] > 0:\n                sol[i] = a[k]\n                restantes[k] -= 1\n                perm_rep(i + 1, restantes, sol, a)\n                restantes[k] += 1\n```\n**Paso 3. Resultado.** c) Salen `xxy`, `xyx`, `yxx` (9 llamadas con la raíz). Sin repetidos serían $3!=6$. Con repetidos: $\\dfrac{3!}{2!\\,1!}=3$."
+   },
+   {
+    "id": "peldanos#K24",
+    "n": "K24",
+    "title": "Repartir elementos en grupos de tamaños dados",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Hay que contar de cuántas formas se reparten $n=4$ elementos en $m$ grupos con tamaños $a=[2,1,1]$ (el grupo $1$ con $2$ elementos, el $2$ con $1$ y el $3$ con $1$), siendo los grupos distinguibles.\n- a) Reformula el problema como asignar a cada elemento el número de su grupo. ¿Con qué esquema de backtracking se corresponde?\n- b) Cuenta los repartos para $a=[2,2]$ y para $a=[2,1,1]$ con la fórmula y con el esquema.",
+    "hint": "Cada elemento recibe una etiqueta de grupo, y la etiqueta $g$ debe usarse exactamente $a_g$ veces. Es como permutar un multiconjunto con `restantes = a`.",
+    "solution": "**Paso 1. Esquema.** a) El nivel $i$ asigna un grupo `g` al elemento $i$ si `restantes[g] > 0`, y gasta una unidad. Es el esquema de las permutaciones con repetidos (K19).\n\n**Paso 2. Cuentas.** b) $a=[2,2]$: $\\dfrac{4!}{2!\\,2!}=6$ repartos (19 llamadas con la raíz). $a=[2,1,1]$: $\\dfrac{4!}{2!\\,1!\\,1!}=12$ (35 llamadas). Con $C=\\{0,1,2,3,4\\}$ y $a=[2,1,2]$ son $\\dfrac{5!}{2!\\,1!\\,2!}=30$."
+   },
+   {
+    "id": "peldanos#K20",
+    "n": "K20",
+    "title": "Dividir una lista en dos con la misma suma",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Se quieren todas las formas de dividir $S=[1,2,3,4,6]$ en dos listas $A$ y $B$ con la misma suma.\n- a) ¿Cuánto debe sumar cada lista? ¿Puede haber solución si el total fuera impar?\n- b) Esquema: el elemento $i$ va a $A$ ($k=0$) o a $B$ ($k=1$). Para no contar cada división dos veces, ¿qué se fija?\n- c) ¿Qué poda se puede aplicar y qué solución sale?",
+    "hint": "Basta controlar la suma de $B$. La división $(A,B)$ y la $(B,A)$ son la misma salvo el nombre, así que se obliga a que el primer elemento esté en $A$.",
+    "solution": "**Paso 1. Suma objetivo.** a) El total es $16$, cada lista debe sumar $8$. Con total impar no hay solución.\n\n**Paso 2. Evitar duplicados.** b) Se fija el primer elemento ($1$) en $A$. Así cada división aparece una sola vez.\n\n**Paso 3. Poda y resultado.** c) Se poda si `suma_B > total / 2`. En una hoja es solución si `suma_B == total / 2`. Se hacen $24$ llamadas (con la raíz) y sale una única división: $A=[1,3,4]$ y $B=[2,6]$."
+   },
+   {
+    "id": "peldanos#K25",
+    "n": "K25",
+    "title": "Del laberinto a un grafo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Para hallar el camino **más corto** en un laberinto se puede transformar en un grafo y aplicar un algoritmo de caminos mínimos (en lugar de backtracking). Con el laberinto de K11:\n```\nE E E E\nE W W E\nE E W E\n```\n- a) ¿Cuántos nodos y cuántas aristas tiene el grafo (un nodo por celda vacía, una arista entre vacías adyacentes)?\n- b) ¿Qué longitud (nº de aristas) tiene el camino más corto de `(0,0)` a `(2,3)`?\n- c) ¿Por qué BFS (o Dijkstra con pesos $1$) lo resuelve?",
+    "hint": "Cuenta las celdas `E` y, para las aristas, revisa los pares horizontales y verticales. Para el camino, explora por niveles desde la entrada.",
+    "solution": "**Paso 1. Nodos y aristas.** a) Celdas vacías: $4+2+3=9$. Aristas horizontales: $3$ en la fila $0$, $1$ en la fila $2$; verticales: `(0,0)-(1,0)`, `(1,0)-(2,0)`, `(0,3)-(1,3)`, `(1,3)-(2,3)`. En total $9$ nodos y $8$ aristas.\n\n**Paso 2. Camino más corto.** b) `(0,0),(0,1),(0,2),(0,3),(1,3),(2,3)`: $5$ aristas. Es el único camino, porque el grafo no tiene ciclos.\n\n**Paso 3. Algoritmo.** c) Con todas las aristas de peso $1$, el camino más corto es el que tiene menos aristas: BFS lo encuentra por niveles, y Dijkstra da el mismo resultado. Es una transformación (transforma y vencerás), sin backtracking."
+   },
+   {
+    "id": "peldanos#K13",
+    "n": "K13",
+    "title": "Colorear un grafo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Grafo con aristas $0\\!-\\!1$, $0\\!-\\!2$, $1\\!-\\!2$, $2\\!-\\!3$ (matriz de adyacencia $A$). Se quiere saber si se puede colorear con $m$ colores sin que dos vértices adyacentes tengan el mismo.\n- a) Esquema: ¿qué es la solución parcial y qué candidatos hay en cada nivel? ¿Cuándo es válido un candidato?\n- b) Traza con $m=3$ hasta la primera coloración y cuenta cuántas hay en total.\n- c) ¿Y con $m=2$?",
+    "hint": "El nivel $i$ es el vértice $i$ y los candidatos son los colores $0,\\dots,m-1$. Un color vale si ningún vecino **ya coloreado** ($j<i$) lo tiene.",
+    "solution": "**Paso 1. Esquema.** a) `sol[i]` es el color del vértice `i`. Candidato `c` válido si para todo `j < i` con `A[i][j] == 1` se cumple `sol[j] != c`.\n```python\ndef valido(i, c, sol, A):\n    return all(not (A[i][j] == 1 and sol[j] == c) for j in range(i))\n```\n**Paso 2. Con 3 colores.** b) Primera coloración: `[0,1,2,0]` (el vértice $3$ solo es vecino del $2$, que tiene el $2$, así que le toca el $0$). En total hay $12$ coloraciones: $3\\cdot2\\cdot1$ para el triángulo y $2$ opciones para el vértice $3$. Si se buscan todas, son $28$ llamadas.\n\n**Paso 3. Con 2 colores.** c) No hay ninguna: el triángulo necesita $3$ colores. El árbol se corta en el vértice $2$ (5 llamadas)."
+   },
+   {
+    "id": "peldanos#K27",
+    "n": "K27",
+    "title": "Selección de actividades con backtracking",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Actividades $A=[0,10)$, $X=[0,5)$, $Y=[4,6)$, $Z=[5,10)$. Se decide para cada una, en ese orden, si se incluye (sí/no), y solo se puede incluir si es compatible con las ya elegidas.\n- a) ¿Cómo se comprueba la compatibilidad de una candidata?\n- b) Lista los subconjuntos que se llegan a formar y cuántas llamadas hay.\n- c) ¿Cuál es el óptimo?",
+    "hint": "Dos actividades $[c_1,f_1)$ y $[c_2,f_2)$ son compatibles si $c_2\\ge f_1$ o $c_1\\ge f_2$. Una candidata hay que compararla con todas las ya elegidas.",
+    "solution": "**Paso 1. Compatibilidad.** a) Con todas las elegidas `e`: `c_nueva >= f_e or c_e >= f_nueva`.\n\n**Paso 2. Subconjuntos.** b) Se forman $\\{\\}$, $\\{Z\\}$, $\\{Y\\}$, $\\{X\\}$, $\\{X,Z\\}$ y $\\{A\\}$. $\\{X,Y\\}$, $\\{Y,Z\\}$ y $\\{A,\\ast\\}$ se podan por solaparse. Son $16$ llamadas (con la raíz).\n\n**Paso 3. Óptimo.** c) $\\{X,Z\\}$, con $2$ actividades. Con backtracking se mira todo; con la estrategia voraz de V13 (\"termina antes\") se llega al mismo resultado sin explorar."
+   },
+   {
+    "id": "peldanos#K26",
+    "n": "K26",
+    "title": "Ciclo euleriano",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "backtracking"
+    ],
+    "stage": "backtracking",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Grafo con aristas $0\\!-\\!1$, $1\\!-\\!2$, $2\\!-\\!0$, $2\\!-\\!3$, $3\\!-\\!4$, $4\\!-\\!2$. Un ciclo euleriano recorre cada arista **una sola vez** y vuelve al vértice de partida ($0$).\n- a) ¿Qué es la solución parcial y cuándo es completa?\n- b) ¿Qué condición debe cumplir un candidato (vértice siguiente)?\n- c) Traza con vecinos en orden creciente hasta el primer ciclo.",
+    "hint": "Hay que recordar qué aristas se han usado (una matriz de booleanos simétrica). Con $6$ aristas, la secuencia tiene $7$ vértices.",
+    "solution": "**Paso 1. Solución.** a) La secuencia de vértices recorridos. Completa cuando se han usado todas las aristas ($6$) y el último vértice es el $0$.\n\n**Paso 2. Candidato.** b) Desde `v`, el vértice `w` vale si hay arista `v–w` y todavía no se ha usado. Al incluirlo se marca usada (en los dos sentidos), y al volver atrás se desmarca.\n\n**Paso 3. Traza.** c) $0\\to1\\to2$. Desde $2$ el primer vecino es $0$: se va ($2\\to0$), pero en $0$ no quedan aristas libres y no se han usado las $6$: callejón, vuelta atrás. Siguiente vecino de $2$: $3$, luego $3\\to4$, $4\\to2$ y por último $2\\to0$ ya con las $6$ aristas usadas. Ciclo: $\\langle0,1,2,3,4,2,0\\rangle$ (8 llamadas)."
+   },
+   {
     "id": "peldanos#B01",
     "n": "B01",
     "title": "Cuántas veces se ejecuta el cuerpo",
@@ -6427,6 +6679,60 @@ window.LADDER = {
     "solution": "**Paso 1. $n=2$ a mano.** a) $i=0$: $j=1$ da $1$ llamada, $j=2$ da $2$. $i=1$: $j=2$ da $2$. Total $5$.\n\n**Paso 2. Plantea el sumatorio.** b) La vuelta $(i,j)$ ejecuta el `for k` $j$ veces: $\\sum_{i=0}^{n-1}\\sum_{j=i+1}^{n}j$.\n\n**Paso 3. Cambia el orden.** c) El valor $j$ ($1\\le j\\le n$) aparece para $i=0,\\dots,j-1$, es decir, $j$ veces. El total es $\\sum_{j=1}^{n}j\\cdot j=\\sum_{j=1}^{n}j^{2}=\\dfrac{n(n+1)(2n+1)}{6}$. Con $n=2$: $\\frac{2\\cdot3\\cdot5}{6}=5$.\n\n**Paso 4. Comprueba y ordena.** d) $n=3$: $i=0$: $1+2+3=6$; $i=1$: $2+3=5$; $i=2$: $3$. Total $14$ y $\\frac{3\\cdot4\\cdot7}{6}=14$. Orden $\\Theta(n^{3})$."
    },
    {
+    "id": "peldanos#B12",
+    "n": "B12",
+    "title": "Un doble `while` triangular con operaciones",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Con la convención de B02 (inicialización, comparación e incremento cuestan $1$; `procesa` cuesta $3$), calcula $T(n)$ de\n```python\ni = 0\nwhile i < n:\n    j = 0\n    while j <= i:\n        procesa(i, j)        # 3 operaciones\n        j += 1\n    i += 1\n```\n- a) Coste del `while` interior para un $i$.\n- b) Coste total sumando sobre $i$.\n- c) Comprueba con $n=1$ y da el orden.",
+    "hint": "El interior ejecuta el cuerpo $i+1$ veces ($j=0,\\dots,i$). Cada vuelta cuesta $1+3+1=5$, y hay que sumar la inicialización de `j` y la última comparación.",
+    "solution": "**Paso 1. Interior.** a) $T_{\\text{int}}(i)=1+\\sum_{j=0}^{i}(1+3+1)+1=5(i+1)+2=5i+7$.\n\n**Paso 2. Exterior.** b) $T(n)=1+\\sum_{i=0}^{n-1}\\bigl(1+(5i+7)+1\\bigr)+1=2+\\sum_{i=0}^{n-1}(5i+9)=2+\\dfrac{5n(n-1)}{2}+9n=\\dfrac{5n^{2}+13n+4}{2}$.\n\n**Paso 3. Comprueba.** c) $n=1$: sólo $i=0$, el interior vale $7$ y el total $1+(1+7+1)+1=11$. La fórmula da $\\frac{5+13+4}{2}=11$. Orden $\\Theta(n^{2})$."
+   },
+   {
+    "id": "peldanos#B13",
+    "n": "B13",
+    "title": "Un `for` interior cuyo límite es $3i$",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Con la convención de B02 (`procesa` cuesta $1$), calcula $T(n)$ de\n```python\nfor i in range(1, n):\n    for j in range(0, 3 * i):\n        procesa(i, j)        # 1 operación\n```\n- a) Coste del bucle interior para un $i$.\n- b) Coste total.\n- c) Comprueba con $n=2$.",
+    "hint": "El interior hace $3i$ vueltas (de $j=0$ a $3i-1$). El exterior recorre $i=1,\\dots,n-1$.",
+    "solution": "**Paso 1. Interior.** a) $T_{\\text{int}}(i)=1+3i\\,(1+1+1)+1=9i+2$.\n\n**Paso 2. Exterior.** b) $T(n)=1+\\sum_{i=1}^{n-1}\\bigl(1+(9i+2)+1\\bigr)+1=2+\\sum_{i=1}^{n-1}(9i+4)=2+\\dfrac{9n(n-1)}{2}+4(n-1)=\\dfrac{9n^{2}-n-4}{2}$.\n\n**Paso 3. Comprueba.** c) $n=2$: sólo $i=1$; el interior hace $3$ vueltas y cuesta $1+9+1=11$. Total $1+(1+11+1)+1=15$ y la fórmula da $\\frac{36-2-4}{2}=15$."
+   },
+   {
+    "id": "peldanos#B14",
+    "n": "B14",
+    "title": "Un `if` dentro del bucle: mejor y peor caso",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Con la convención de B02 (la condición del `if` cuesta $1$, `procesa` cuesta $2$), calcula $T(n)$ en el mejor y en el peor caso:\n```python\nfor i in range(n):\n    if condicion(i):             # 1 operación\n        for j in range(i):\n            procesa(i, j)        # 2 operaciones\n```\n- a) Mejor caso: la condición nunca se cumple.\n- b) Peor caso: siempre se cumple.\n- c) Comprueba el peor caso con $n=1$ y da los órdenes.",
+    "hint": "En el peor caso el cuerpo del `for` externo cuesta $1$ (la condición) más el coste del `for` interior, que hace $i$ vueltas de $1+2+1$.",
+    "solution": "**Paso 1. Mejor caso.** a) El cuerpo cuesta $1$: $T(n)=1+n(1+1+1)+1=3n+2\\in\\Theta(n)$.\n\n**Paso 2. Peor caso, interior.** b) $T_{\\text{int}}(i)=1+4i+1=4i+2$, así que el cuerpo exterior cuesta $1+(4i+2)=4i+3$.\n\n**Paso 3. Peor caso, total.** $T(n)=1+\\sum_{i=0}^{n-1}\\bigl(1+(4i+3)+1\\bigr)+1=2+\\sum_{i=0}^{n-1}(4i+5)=2+2n(n-1)+5n=2n^{2}+3n+2$.\n\n**Paso 4. Comprueba.** c) $n=1$: el cuerpo cuesta $1+(1+0+1)=3$ y $T=1+(1+3+1)+1=7$; la fórmula da $2+3+2=7$. Órdenes: $\\Theta(n)$ en el mejor caso y $\\Theta(n^{2})$ en el peor."
+   },
+   {
     "id": "peldanos#D01",
     "n": "D01",
     "title": "Qué estrategia es",
@@ -6605,6 +6911,60 @@ window.LADDER = {
     "statement": "Para $n=2^{p}$ elementos, el elemento de la posición $i$ va a la posición $j$ cuyo número en binario es el de $i$ escrito al revés (con $p$ bits).\n- a) Con $p=3$ y $a=[10,20,30,40,50,60,70,80]$, ¿cómo queda la permutación?\n- b) Con $p=4$, calcula $j$ para $i=0,\\dots,15$.\n- c) ¿Qué posiciones no se mueven? ¿Cuántas son para $p=4$?",
     "hint": "Escribe $i$ con $p$ bits, dale la vuelta y vuelve a pasarlo a decimal. Las posiciones fijas son las que ya son iguales al revés (capicúas).",
     "solution": "**Paso 1. $p=3$.** a) $1=001_2\\leftrightarrow100_2=4$ y $3=011_2\\leftrightarrow110_2=6$; $0,2,5,7$ no se mueven. Resultado: $[10,50,30,70,20,60,40,80]$.\n\n**Paso 2. $p=4$.** b) $j$ para $i=0..15$: $0,8,4,12,2,10,6,14,1,9,5,13,3,11,7,15$.\n\n**Paso 3. Fijas.** c) Las que cumplen $j=i$: $0000$, $0110$, $1001$, $1111$, es decir $0,6,9,15$: son $4=2^{p/2}$."
+   },
+   {
+    "id": "peldanos#D15",
+    "n": "D15",
+    "title": "Un divide y vencerás con una pieza en el medio",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "divide-y-venceras"
+    ],
+    "stage": "dyv",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Diseña `difs(a)` con divide y vencerás que devuelva la lista de diferencias entre elementos consecutivos, `[a[1]-a[0], a[2]-a[1], ...]`. Para `[3, 5, -2, 8]` devuelve `[2, -7, 10]`. Se asume `len(a) >= 1` (con un elemento, lista vacía).\n- a) Si partes `a` en dos mitades, ¿qué diferencia no está en ninguna de las dos listas de resultados?\n- b) Esquema y código.\n- c) Prueba con el ejemplo y da el coste.",
+    "hint": "Las diferencias de la mitad izquierda y de la derecha dejan fuera la pareja formada por el último de la izquierda y el primero de la derecha: hay que añadirla al combinar.",
+    "solution": "**Paso 1. La pieza que falta.** a) La diferencia `a[mitad] - a[mitad - 1]`.\n\n**Paso 2. Esquema y código.** b) Tamaño: `len(a)`. Caso base: un elemento, `[]`. Descomposición: `a[:mitad]` y `a[mitad:]`. Combinación: `izquierda + [a[mitad] - a[mitad-1]] + derecha`.\n```python\ndef difs(a):\n    n = len(a)\n    if n == 1:\n        return []\n    mitad = n // 2\n    return difs(a[:mitad]) + [a[mitad] - a[mitad - 1]] + difs(a[mitad:])\n```\n**Paso 3. Prueba y coste.** c) `[3,5,-2,8]`: mitades `[3,5]` y `[-2,8]`; `difs([3,5])=[2]`, `difs([-2,8])=[10]`, pieza central $-2-5=-7$: `[2,-7,10]`. El coste es $T(n)=2T(n/2)+n$ por las copias y concatenaciones: $\\Theta(n\\log n)$."
+   },
+   {
+    "id": "peldanos#D16",
+    "n": "D16",
+    "title": "Evaluar un polinomio dividiendo los coeficientes",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "divide-y-venceras"
+    ],
+    "stage": "dyv",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Un polinomio $P(x)=c_0+c_1x+c_2x^{2}+\\cdots+c_{n-1}x^{n-1}$ se guarda como la lista de coeficientes `c`. Se quiere evaluarlo con divide y vencerás.\n- a) Si `mitad = n // 2`, escribe $P(x)$ en función de $P_{bajo}$ (con `c[:mitad]`) y $P_{alto}$ (con `c[mitad:]`).\n- b) Evalúa a mano $P=4-3x+2x^{2}+x^{3}$ en $x=2$ con esa descomposición.\n- c) Escribe `evalua(c, x)` y da la recurrencia de su coste.",
+    "hint": "$P_{alto}$ tiene los coeficientes de $x^{mitad}$ en adelante; para evaluarlo como un polinomio normal hay que sacar factor común $x^{mitad}$.",
+    "solution": "**Paso 1. Descomposición.** a) $P(x)=P_{bajo}(x)+x^{mitad}\\,P_{alto}(x)$, donde $P_{bajo}$ usa `c[:mitad]` y $P_{alto}$ usa `c[mitad:]` evaluados como polinomios desde $x^{0}$.\n\n**Paso 2. A mano.** b) `c = [4,-3,2,1]`, `mitad = 2`: $P_{bajo}=4-3x\\to4-6=-2$; $P_{alto}=2+x\\to4$; $P(2)=-2+2^{2}\\cdot4=14$. Comprobación directa: $4-6+8+8=14$.\n\n**Paso 3. Código y coste.** c)\n```python\ndef evalua(c, x):\n    n = len(c)\n    if n == 1:\n        return c[0]\n    mitad = n // 2\n    return evalua(c[:mitad], x) + x ** mitad * evalua(c[mitad:], x)\n```\nDos llamadas con tamaño $n/2$ más el cálculo de $x^{mitad}$: $T(n)=2T(n/2)+c\\in\\Theta(n)$ (si se calcula $x^{mitad}$ en tiempo constante)."
+   },
+   {
+    "id": "peldanos#D17",
+    "n": "D17",
+    "title": "La sublista de suma máxima",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "divide-y-venceras"
+    ],
+    "stage": "dyv",
+    "src": "adic",
+    "diff": 0.9,
+    "steps": true,
+    "statement": "Para la lista $[-1,4,-2,5,-3]$, la sublista contigua de suma máxima se busca con divide y vencerás: la mejor está en la mitad izquierda, en la derecha, o **cruza** la mitad.\n- a) Divide en `[-1,4]` y `[-2,5,-3]`. ¿Cuál es la mejor suma de cada mitad?\n- b) Calcula la mejor sublista que cruza: la mejor \"terminando en el último de la izquierda\" más la mejor \"empezando en el primero de la derecha\".\n- c) ¿Cuál es la respuesta y qué sublista es? Escribe el esquema.",
+    "hint": "La mejor que acaba en el último de la izquierda se halla recorriendo hacia atrás y acumulando; la mejor que empieza en el primero de la derecha, hacia delante. Cada una se elige entre todos los puntos de corte.",
+    "solution": "**Paso 1. Mitades.** a) Izquierda `[-1,4]`: la mejor es $[4]$ con suma $4$. Derecha `[-2,5,-3]`: la mejor es $[5]$ con suma $5$.\n\n**Paso 2. Cruzando.** b) Terminando en $4$ (hacia atrás): $4$, $4-1=3$; la mejor es $4$. Empezando en $-2$ (hacia delante): $-2$, $-2+5=3$, $3-3=0$; la mejor es $3$. Cruzando: $4+3=7$ (la sublista $[4,-2,5]$).\n\n**Paso 3. Esquema.** c) Respuesta: $\\max\\{4,\\,5,\\,7\\}=7$ con $[4,-2,5]$. Caso base: un elemento, esa suma. Descomposición: mitades. Combinación: máximo de las tres. Las dos búsquedas de la parte cruzada cuestan $\\Theta(n)$ en total: $T(n)=2T(n/2)+n\\in\\Theta(n\\log n)$."
    },
    {
     "id": "peldanos#E01",
@@ -6803,6 +7163,96 @@ window.LADDER = {
     "statement": "Sea $T(0)=1$ y $T(n)=2+\\displaystyle\\sum_{j=0}^{n-1}T(j)$ para $n>0$.\n- a) Calcula $T(1),\\dots,T(4)$.\n- b) Resta $T(n)$ y $T(n-1)$ (para $n\\ge2$) y simplifica. ¿Qué recurrencia más sencilla sale?\n- c) Resuélvela por expansión. Comprueba con $n=4$.",
     "hint": "$T(n)$ y $T(n-1)$ tienen casi los mismos sumandos; al restarlos se cancelan todos menos uno.",
     "solution": "**Paso 1. Valores.** a) $T(1)=2+1=3$, $T(2)=2+1+3=6$, $T(3)=2+1+3+6=12$, $T(4)=2+1+3+6+12=24$.\n\n**Paso 2. Resta.** b) $T(n)-T(n-1)=\\Bigl(2+\\sum_{j=0}^{n-1}T(j)\\Bigr)-\\Bigl(2+\\sum_{j=0}^{n-2}T(j)\\Bigr)=T(n-1)$. Por tanto $T(n)=2\\,T(n-1)$ para $n\\ge2$.\n\n**Paso 3. Expansión.** c) $T(n)=2T(n-1)=4T(n-2)=\\cdots=2^{i}\\,T(n-i)$. Se para en $T(1)=3$ cuando $i=n-1$: $T(n)=3\\cdot2^{n-1}\\in\\Theta(2^{n})$. Con $n=4$: $3\\cdot8=24$ ✓."
+   },
+   {
+    "id": "peldanos#E12",
+    "n": "E12",
+    "title": "Expansión con un término cuadrático que se reduce",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=1\\\\ T(n/3)+n^{2} & n>1\\end{cases}$ con $n=3^{k}$.\n- a) Patrón tras $i$ expansiones.\n- b) Resultado con una serie geométrica y orden.\n- c) Comprueba con $n=3$ y $n=9$.",
+    "hint": "Las cantidades que se acumulan son $n^{2},\\ (n/3)^{2},\\ (n/9)^{2},\\dots=n^{2},\\ \\frac{n^{2}}9,\\ \\frac{n^{2}}{81},\\dots$ Es una serie geométrica de razón $\\frac19$.",
+    "solution": "**Paso 1. Patrón.** a) $T(n)=T(n/3^{i})+n^{2}\\sum_{j=0}^{i-1}\\left(\\tfrac19\\right)^{j}$.\n\n**Paso 2. Caso base.** b) Con $i=\\log_3n=k$: $T(n)=1+n^{2}\\dfrac{1-9^{-k}}{1-\\frac19}=1+\\dfrac98\\left(n^{2}-1\\right)=\\dfrac{9n^{2}-1}{8}\\in\\Theta(n^{2})$, porque $9^{-k}n^{2}=1$.\n\n**Paso 3. Comprueba.** c) $T(3)=1+9=10$ y $\\frac{81-1}{8}=10$. $T(9)=10+81=91$ y $\\frac{729-1}{8}=91$. Manda el primer término ($n^{2}$): los siguientes son cada vez más pequeños."
+   },
+   {
+    "id": "peldanos#E13",
+    "n": "E13",
+    "title": "Expansión con $\\sqrt n$ y tres llamadas",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.9,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=1\\\\ 3T(n/9)+\\sqrt n & n>1\\end{cases}$ con $n=9^{k}$.\n- a) Patrón tras $i$ expansiones.\n- b) Resultado y orden.\n- c) Comprueba con $n=9$ y $n=81$.",
+    "hint": "En el paso $j$ hay $3^{j}$ subproblemas de tamaño $n/9^{j}$, y cada uno aporta $\\sqrt{n/9^{j}}=\\sqrt n/3^{j}$. Multiplica: sale $\\sqrt n$ en cada nivel.",
+    "solution": "**Paso 1. Patrón.** a) $T(n)=3^{i}\\,T(n/9^{i})+i\\sqrt n$, porque cada nivel aporta $3^{j}\\cdot\\frac{\\sqrt n}{3^{j}}=\\sqrt n$.\n\n**Paso 2. Caso base.** b) Con $i=\\log_9n$: $3^{i}=\\sqrt n$ (porque $9^{i}=n$). $T(n)=\\sqrt n+\\sqrt n\\log_9n=\\sqrt n\\,(1+\\log_9n)\\in\\Theta(\\sqrt n\\log n)$.\n\n**Paso 3. Comprueba.** c) $T(9)=3+3=6$ y $3\\,(1+1)=6$. $T(81)=3\\cdot6+9=27$ y $9\\,(1+2)=27$. Todos los niveles pesan lo mismo: caso $\\frac{a}{b^{k}}=1$."
+   },
+   {
+    "id": "peldanos#E14",
+    "n": "E14",
+    "title": "Expansión con un logaritmo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.9,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}0 & n=1\\\\ T(n/3)+\\log_3n & n>1\\end{cases}$ con $n=3^{k}$.\n- a) Patrón tras $i$ expansiones.\n- b) Resultado y orden.\n- c) Comprueba con $n=9$ y $n=27$.",
+    "hint": "Los logaritmos que se acumulan son $\\log_3n,\\ \\log_3n-1,\\ \\log_3n-2,\\dots,1$. Es la suma $1+2+\\cdots+k$.",
+    "solution": "**Paso 1. Patrón.** a) $T(n)=T(n/3^{i})+\\sum_{j=0}^{i-1}(\\log_3n-j)$.\n\n**Paso 2. Caso base.** b) Con $i=k=\\log_3n$: $T(n)=0+\\sum_{m=1}^{k}m=\\dfrac{k(k+1)}{2}=\\dfrac{\\log_3n\\,(\\log_3n+1)}{2}\\in\\Theta(\\log^{2}n)$.\n\n**Paso 3. Comprueba.** c) $T(3)=1$, $T(9)=1+2=3$ y la fórmula da $\\frac{2\\cdot3}{2}=3$. $T(27)=3+3=6$ y $\\frac{3\\cdot4}{2}=6$."
+   },
+   {
+    "id": "peldanos#E15",
+    "n": "E15",
+    "title": "Expansión con una suma de cuadrados",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}0 & n=0\\\\ T(n-1)+n^{2}+n & n>0\\end{cases}$\n- a) Patrón y sumatorio.\n- b) Resuélvelo con las fórmulas de $\\sum k$ y $\\sum k^{2}$.\n- c) Comprueba con $n=2$ y $n=3$.",
+    "hint": "Al llegar al caso base se acumula $\\sum_{k=1}^{n}(k^{2}+k)$. Usa $\\sum k^{2}=\\frac{n(n+1)(2n+1)}{6}$ y $\\sum k=\\frac{n(n+1)}{2}$.",
+    "solution": "**Paso 1. Expande.** a) $T(n)=T(n-1)+n^{2}+n=T(n-2)+(n-1)^{2}+(n-1)+n^{2}+n=\\cdots=T(0)+\\sum_{k=1}^{n}(k^{2}+k)$.\n\n**Paso 2. Resuelve.** b) $\\dfrac{n(n+1)(2n+1)}{6}+\\dfrac{n(n+1)}{2}=\\dfrac{n(n+1)(2n+4)}{6}=\\dfrac{n(n+1)(n+2)}{3}\\in\\Theta(n^{3})$.\n\n**Paso 3. Comprueba.** c) $T(1)=2$, $T(2)=2+6=8$ y $\\frac{2\\cdot3\\cdot4}{3}=8$. $T(3)=8+12=20$ y $\\frac{3\\cdot4\\cdot5}{3}=20$."
+   },
+   {
+    "id": "peldanos#E16",
+    "n": "E16",
+    "title": "Tres llamadas, como Karatsuba",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-expansion"
+    ],
+    "stage": "expansion",
+    "src": "adic",
+    "diff": 0.95,
+    "steps": true,
+    "statement": "Resuelve por expansión $T(n)=\\begin{cases}1 & n=1\\\\ 3T(n/2)+n & n>1\\end{cases}$ con $n=2^{k}$.\n- a) Patrón tras $i$ expansiones.\n- b) Resultado y orden.\n- c) Comprueba con $n=2$ y $n=4$.",
+    "hint": "Tras $i$ pasos se acumula $n\\left(1+\\tfrac32+\\left(\\tfrac32\\right)^{2}+\\cdots\\right)$. Y $3^{\\log_2n}=n^{\\log_23}$.",
+    "solution": "**Paso 1. Patrón.** a) $T(n)=3^{i}\\,T(n/2^{i})+n\\sum_{j=0}^{i-1}\\left(\\tfrac32\\right)^{j}=3^{i}\\,T(n/2^{i})+2n\\left(\\left(\\tfrac32\\right)^{i}-1\\right)$.\n\n**Paso 2. Caso base.** b) Con $i=\\log_2n$: $3^{i}=n^{\\log_23}$ y $n\\left(\\tfrac32\\right)^{i}=3^{i}$. $T(n)=3^{i}+2\\cdot3^{i}-2n=3\\,n^{\\log_23}-2n\\in\\Theta(n^{\\log_23})$.\n\n**Paso 3. Comprueba.** c) $T(2)=3+2=5$ y $3\\cdot3-4=5$. $T(4)=15+4=19$ y $3\\cdot9-8=19$."
    },
    {
     "id": "peldanos#G01",
@@ -7073,6 +7523,168 @@ window.LADDER = {
     "statement": "Para el polinomio característico, cada término de la derecha tiene que ser (polinomio)$\\cdot b^{k}$. Escribe el polinomio característico de:\n- a) $t(k)-t(k-1)=3^{2k}$\n- b) $t(k)-2t(k-1)=1+k+2^{k}$\n- c) $t(k)-3t(k-1)=4^{k+1}$\n\nY, para (b) y (c), traduce el orden a $n$ si $n=2^{k}$.",
     "hint": "En a) $3^{2k}=(3^{2})^{k}=9^{k}$. En c) $4^{k+1}=4\\cdot4^{k}$. En b) agrupa: $(1+k)\\cdot1^{k}+1\\cdot2^{k}$.",
     "solution": "**Paso 1. a).** La derecha es $9^{k}$: grado $0$, factor $(x-9)$. Polinomio $(x-1)(x-9)$, solución $C_1+C_2\\,9^{k}\\in\\Theta(9^{k})$.\n\n**Paso 2. b).** Izquierda $(x-2)$. Derecha: $(1+k)\\cdot1^{k}$, grado $1$, factor $(x-1)^{2}$; y $1\\cdot2^{k}$, factor $(x-2)$. Polinomio $(x-2)^{2}(x-1)^{2}$, solución $(C_1+C_2k)\\,2^{k}+C_3+C_4k\\in\\Theta(k\\,2^{k})$. Con $n=2^{k}$: $k\\,2^{k}=n\\log_2n$.\n\n**Paso 3. c).** Izquierda $(x-3)$. Derecha $4\\cdot4^{k}$, factor $(x-4)$. Polinomio $(x-3)(x-4)$, solución $C_1\\,3^{k}+C_2\\,4^{k}\\in\\Theta(4^{k})$. Con $n=2^{k}$: $4^{k}=n^{2}$."
+   },
+   {
+    "id": "peldanos#G17",
+    "n": "G17",
+    "title": "Cambio de variable con $n/3$ y un término $n^{2}$",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.75,
+    "steps": true,
+    "statement": "Resuelve con el método general $T(n)=\\begin{cases}1 & n=1\\\\ T(n/3)+n^{2} & n>1\\end{cases}$ con $n=3^{k}$.\n- a) Escribe $t(k)=T(3^{k})$ y su polinomio característico.\n- b) Forma de $t(k)$ y constantes con $t(0)$ y $t(1)$.\n- c) Deshaz el cambio y compara con E12.",
+    "hint": "$n^{2}=(3^{k})^{2}=9^{k}$. La recurrencia es $t(k)-t(k-1)=9^{k}$.",
+    "solution": "**Paso 1. Recurrencia.** a) $t(k)=t(k-1)+9^{k}$. Polinomio $(x-1)(x-9)$.\n\n**Paso 2. Constantes.** b) $t(k)=C_1+C_2\\,9^{k}$. $t(0)=T(1)=1$ y $t(1)=T(3)=1+9=10$: $C_1+C_2=1$, $C_1+9C_2=10$, luego $C_2=\\frac98$ y $C_1=-\\frac18$.\n\n**Paso 3. Deshaz.** c) $9^{k}=n^{2}$: $T(n)=\\dfrac{9n^{2}-1}{8}\\in\\Theta(n^{2})$, el mismo resultado de E12 por expansión."
+   },
+   {
+    "id": "peldanos#G18",
+    "n": "G18",
+    "title": "Cambio de variable con $\\sqrt n$ y tres llamadas",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Resuelve con el método general $T(n)=\\begin{cases}1 & n=1\\\\ 3T(n/9)+\\sqrt n & n>1\\end{cases}$ con $n=9^{k}$.\n- a) Escribe $t(k)=T(9^{k})$ y su polinomio característico.\n- b) Forma de $t(k)$ y constantes con $t(0)$ y $t(1)$.\n- c) Deshaz el cambio y compara con E13.",
+    "hint": "$\\sqrt n=\\sqrt{9^{k}}=3^{k}$. La recurrencia es $t(k)=3t(k-1)+3^{k}$, y la base de la derecha coincide con la raíz de la izquierda.",
+    "solution": "**Paso 1. Recurrencia.** a) $t(k)-3t(k-1)=3^{k}$. Polinomio $(x-3)(x-3)=(x-3)^{2}$.\n\n**Paso 2. Constantes.** b) $t(k)=(C_1+C_2k)\\,3^{k}$. $t(0)=1$ da $C_1=1$; $t(1)=T(9)=3+3=6=(1+C_2)\\cdot3$ da $C_2=1$. Así $t(k)=(1+k)\\,3^{k}$.\n\n**Paso 3. Deshaz.** c) $3^{k}=\\sqrt n$ y $k=\\log_9n$: $T(n)=\\sqrt n\\,(1+\\log_9n)\\in\\Theta(\\sqrt n\\log n)$, igual que en E13."
+   },
+   {
+    "id": "peldanos#G19",
+    "n": "G19",
+    "title": "Tres términos a la derecha y raíz doble",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.75,
+    "steps": true,
+    "statement": "Da el polinomio característico y el orden de $T(n)=4T(n-1)-4T(n-2)+n+2^{n}$.\n- a) Parte izquierda.\n- b) Factores de cada término de la derecha.\n- c) Polinomio completo, forma de la solución y orden.",
+    "hint": "Izquierda: $x^{2}-4x+4=(x-2)^{2}$. Derecha: $n=n\\cdot1^{n}$ y $2^{n}=1\\cdot2^{n}$.",
+    "solution": "**Paso 1. Izquierda.** a) $(x-2)^{2}$.\n\n**Paso 2. Derecha.** b) $n\\cdot1^{n}$: grado $1$, factor $(x-1)^{2}$. $2^{n}$: grado $0$, factor $(x-2)$.\n\n**Paso 3. Todo.** c) $(x-2)^{3}(x-1)^{2}$. Solución: $(C_1+C_2n+C_3n^{2})\\,2^{n}+C_4+C_5n$. Orden $\\Theta(n^{2}2^{n})$."
+   },
+   {
+    "id": "peldanos#G20",
+    "n": "G20",
+    "title": "Con constantes: $T(n)=T(n-1)+3^{n}+1$",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "rec-general"
+    ],
+    "stage": "general",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Resuelve $T(n)=T(n-1)+3^{n}+1$ con $T(0)=0$, hallando las constantes.\n- a) Polinomio característico y forma de la solución.\n- b) Calcula $T(1),T(2)$ y plantea el sistema.\n- c) Resuélvelo y comprueba con $T(3)$.",
+    "hint": "Izquierda $(x-1)$. Derecha: $3^{n}$ da $(x-3)$ y $1=1\\cdot1^{n}$ da $(x-1)$. Polinomio $(x-1)^{2}(x-3)$.",
+    "solution": "**Paso 1. Forma.** a) $T(n)=C_1\\,3^{n}+C_2+C_3n$.\n\n**Paso 2. Sistema.** b) $T(1)=4$ y $T(2)=14$. $C_1+C_2=0$; $3C_1+C_2+C_3=4$; $9C_1+C_2+2C_3=14$.\n\n**Paso 3. Resuelve.** c) De la primera $C_2=-C_1$. La segunda da $2C_1+C_3=4$ y la tercera $8C_1+2C_3=14$, es decir $4C_1+C_3=7$. Restando: $C_1=\\frac32$, $C_3=1$, $C_2=-\\frac32$. $T(n)=\\dfrac{3^{n+1}-3}{2}+n\\in\\Theta(3^{n})$.\n\n**Paso 4. Comprueba.** $T(3)=14+27+1=42$ y la fórmula da $\\frac{81-3}{2}+3=42$."
+   },
+   {
+    "id": "peldanos#R02",
+    "n": "R02",
+    "title": "Una lista de resultados sobre pares consecutivos",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "recursion-basica"
+    ],
+    "stage": "recursion",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Diseña una función recursiva `maximos_consecutivos(a)` que devuelva la lista de los máximos de cada pareja de elementos consecutivos: para `[1, 5, 10, -2, 1]` devuelve `[5, 10, 10, 1]`. Si la lista tiene menos de dos elementos, devuelve la lista vacía.\n- a) Tamaño, caso base, descomposición y combinación.\n- b) Código y prueba con el ejemplo.\n- c) ¿Cuál es el coste si se usan sublistas `a[1:]`? ¿Y si se pasa un índice en vez de cortar?",
+    "hint": "La primera pareja es `(a[0], a[1])`. El resto de parejas son las de la lista sin su primer elemento. Combinar es poner el primer resultado delante.",
+    "solution": "**Paso 1. Esquema.** a) Tamaño: `len(a)`. Caso base: menos de $2$ elementos, lista vacía. Descomposición: `a[1:]`, que tiene un elemento menos y cuyas parejas son todas las de `a` salvo la primera. Combinación: `[max(a[0], a[1])] + resultado`.\n\n**Paso 2. Código.** b)\n```python\ndef maximos_consecutivos(a):\n    if len(a) < 2:\n        return []\n    return [max(a[0], a[1])] + maximos_consecutivos(a[1:])\n```\nCon `[1,5,10,-2,1]`: `max(1,5)=5`, `max(5,10)=10`, `max(10,-2)=10`, `max(-2,1)=1`: `[5,10,10,1]`.\n\n**Paso 3. Coste.** c) Cada llamada copia la sublista (`a[1:]`) y la lista resultado: $T(n)=T(n-1)+n$, es decir $\\Theta(n^{2})$. Con un parámetro `i` (`maximos(a, i)`) no hay copias de la entrada y queda $T(n)=T(n-1)+c\\in\\Theta(n)$ (la concatenación del resultado se evita construyéndolo en una lista pasada como parámetro)."
+   },
+   {
+    "id": "peldanos#R01",
+    "n": "R01",
+    "title": "Devolver dos listas a la vez",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "recursion-basica"
+    ],
+    "stage": "recursion",
+    "src": "adic",
+    "diff": 0.9,
+    "steps": true,
+    "statement": "Diseña `separa_signo(a)`, recursiva, que devuelva una pareja de listas: los elementos positivos de `a` y el resto (en el mismo orden). Para `[3, -1, 0, 4, -2]` devuelve `([3, 4], [-1, 0, -2])`.\n- a) Esquema (tamaño, caso base, descomposición, combinación) y código.\n- b) Ahora una variante: `pares_impares(a)` devuelve los elementos de los **índices** pares y los de los índices impares. Para `[10, 20, 30, 40, 50]` devuelve `([10, 30, 50], [20, 40])`. ¿Qué cambia en la combinación?",
+    "hint": "En ambas, el resultado de `a[1:]` es una pareja de listas; solo hay que decidir a cuál de las dos añadir `a[0]`. En (b), lo que era el índice $0$ de `a[1:]` pasa a ser el índice $1$ de `a`.",
+    "solution": "**Paso 1. Esquema.** a) Tamaño: `len(a)`. Caso base: lista vacía, devuelve `([], [])`. Descomposición: `a[1:]`. Combinación: el primer elemento va a una de las dos listas según su signo.\n```python\ndef separa_signo(a):\n    if a == []:\n        return [], []\n    pos, resto = separa_signo(a[1:])\n    if a[0] > 0:\n        return [a[0]] + pos, resto\n    return pos, [a[0]] + resto\n```\n**Paso 2. Prueba.** `[3,-1,0,4,-2]`: `3` va a los positivos, `-1` y `0` al resto, `4` a positivos, `-2` al resto: `([3,4],[-1,0,-2])`.\n\n**Paso 3. Por posición.** b) `a[0]` siempre está en el índice $0$ (par), así que va a la lista de pares. Y los pares de `a[1:]` pasan a ser impares en `a`, y viceversa: se intercambian.\n```python\ndef pares_impares(a):\n    if a == []:\n        return [], []\n    pares, impares = pares_impares(a[1:])\n    return [a[0]] + impares, pares\n```\nCon `[10,20,30,40,50]` devuelve `([10,30,50],[20,40])`."
+   },
+   {
+    "id": "peldanos#R03",
+    "n": "R03",
+    "title": "La bisección recursiva",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "recursion-basica"
+    ],
+    "stage": "recursion",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "Para hallar $\\sqrt[3]{a}$ ($a>0$) se busca un cero de $f(x)=x^{3}-a$ en $[lo,hi]$ por bisección: se calcula el punto medio y se sigue en la mitad donde cambia el signo.\n```python\ndef raiz_cubica(a, lo, hi, eps):\n    if hi - lo < eps:\n        return (lo + hi) / 2\n    medio = (lo + hi) / 2\n    if medio ** 3 < a:\n        return raiz_cubica(a, medio, hi, eps)\n    return raiz_cubica(a, lo, medio, eps)\n```\n- a) Traza `raiz_cubica(10, 0, 10, 0.5)`: intervalo de cada llamada.\n- b) ¿Cuántas llamadas y qué devuelve? Compara con $\\sqrt[3]{10}\\approx2{,}154$.\n- c) ¿Cuántas llamadas hacen falta en general?",
+    "hint": "En cada llamada el intervalo se divide a la mitad. Se sigue por la derecha si $medio^{3}<a$ (el cero está más allá) y por la izquierda en otro caso. Se para cuando el ancho es menor que `eps`.",
+    "solution": "**Paso 1. Traza.** a) $[0,10]$: medio $5$, $125\\ge10$, sigue $[0,5]$. Medio $2{,}5$, $15{,}6\\ge10$, sigue $[0,2{,}5]$. Medio $1{,}25$, $1{,}95<10$, sigue $[1{,}25,2{,}5]$. Medio $1{,}875$, $6{,}6<10$, sigue $[1{,}875,2{,}5]$. Medio $2{,}1875$, $10{,}47\\ge10$, sigue $[1{,}875,2{,}1875]$, de ancho $0{,}3125<0{,}5$.\n\n**Paso 2. Resultado.** b) $6$ llamadas. Devuelve el punto medio $2{,}03125$ (error de unos $0{,}12$, menor que `eps`).\n\n**Paso 3. En general.** c) El ancho pasa de $hi-lo$ a $(hi-lo)/2^{k}$: hacen falta $\\approx\\log_2\\frac{hi-lo}{eps}$ llamadas. Es decrementa y vencerás con $T(k)=T(k-1)+c$ sobre $k=\\log_2$ del ancho relativo."
+   },
+   {
+    "id": "peldanos#R04",
+    "n": "R04",
+    "title": "Contar lo que aparece en un número",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "recursion-basica"
+    ],
+    "stage": "recursion",
+    "src": "adic",
+    "diff": 0.85,
+    "steps": true,
+    "statement": "Diseña `cuenta_digitos(n)`, recursiva, que devuelva una lista de $10$ posiciones con el número de veces que aparece cada dígito $0$–$9$ en el entero no negativo `n`. Por ejemplo, `cuenta_digitos(112358132)` devuelve `[0, 3, 2, 2, 0, 1, 0, 0, 1, 0]`.\n- a) Tamaño, caso base, descomposición y combinación.\n- b) Código y prueba.",
+    "hint": "La descomposición es quitar el último dígito: `n // 10`. El último dígito es `n % 10`. Combinar es sumar $1$ en la posición de ese dígito de la lista que ya tienes.",
+    "solution": "**Paso 1. Esquema.** a) Tamaño: número de dígitos. Caso base: `n < 10` (un solo dígito): una lista de ceros con un $1$ en la posición `n`. Descomposición: `n // 10`. Combinación: la lista de `n // 10` más $1$ en la posición `n % 10`.\n\n**Paso 2. Código.** b)\n```python\ndef cuenta_digitos(n):\n    if n < 10:\n        c = [0] * 10\n        c[n] = 1\n        return c\n    c = cuenta_digitos(n // 10)\n    c[n % 10] += 1\n    return c\n```\n**Paso 3. Prueba.** Los dígitos de $112358132$ son $1,1,2,3,5,8,1,3,2$: el $1$ aparece $3$ veces, el $2$ y el $3$, $2$ veces, el $5$ y el $8$, una vez: `[0,3,2,2,0,1,0,0,1,0]`. Coste: $\\Theta(\\log n)$ llamadas."
+   },
+   {
+    "id": "peldanos#R05",
+    "n": "R05",
+    "title": "Menores de una matriz y determinante por adjuntos",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "recursion-basica"
+    ],
+    "stage": "recursion",
+    "src": "adic",
+    "diff": 1.0,
+    "steps": true,
+    "statement": "El determinante de una matriz $n\\times n$ se puede definir recursivamente por la primera columna: $|A|=\\sum_{i=0}^{n-1}(-1)^{i}\\,a_{i,0}\\,|M_{i,0}|$, donde $M_{i,0}$ es la matriz que queda al quitar la fila $i$ y la columna $0$. Con $|A|=a_{0,0}$ si es $1\\times1$.\n- a) Escribe `menor(A, i, j)` que devuelva `A` sin la fila `i` ni la columna `j` (listas de listas).\n- b) Calcula a mano $|A|$ para $A=\\begin{pmatrix}2&0&1\\\\1&3&2\\\\1&1&4\\end{pmatrix}$.\n- c) Escribe `det(A)` recursiva y comprueba con ese ejemplo.",
+    "hint": "Para (a) basta con una lista por comprensión sobre las filas distintas de `i`, quedándote en cada una con los elementos de columnas distintas de `j`. Para (b), cada menor es una matriz $2\\times2$ con $|M|=ad-bc$.",
+    "solution": "**Paso 1. Menor.** a)\n```python\ndef menor(A, i, j):\n    return [[x for c, x in enumerate(fila) if c != j]\n            for r, fila in enumerate(A) if r != i]\n```\n**Paso 2. A mano.** b) $|A|=2\\begin{vmatrix}3&2\\\\1&4\\end{vmatrix}-1\\begin{vmatrix}0&1\\\\1&4\\end{vmatrix}+1\\begin{vmatrix}0&1\\\\3&2\\end{vmatrix}=2(12-2)-1(0-1)+1(0-3)=20+1-3=18$.\n\n**Paso 3. Recursiva.** c)\n```python\ndef det(A):\n    if len(A) == 1:\n        return A[0][0]\n    return sum((-1) ** i * A[i][0] * det(menor(A, i, 0)) for i in range(len(A)))\n```\n`det` del ejemplo da $18$. Cada llamada hace $n$ llamadas con tamaño $n-1$: $T(n)=nT(n-1)+\\cdots\\in\\Theta(n!)$, por eso no se usa así en la práctica."
    },
    {
     "id": "peldanos#S01",
@@ -7633,6 +8245,78 @@ window.LADDER = {
     "solution": "**Paso 1. Separa.** $\\sum_{i=0}^{n}2^{i}+\\sum_{i=0}^{n}i$.\n\n**Paso 2. Cada una.** $\\sum_{i=0}^{n}2^{i}=2^{n+1}-1$ y $\\sum_{i=0}^{n}i=\\dfrac{n(n+1)}{2}$.\n\n**Paso 3. Suma.** Total $=2^{n+1}-1+\\dfrac{n(n+1)}{2}$.\n\n**Paso 4. Orden.** El exponencial domina al polinomio: $\\Theta(2^{n})$.\n\n**Paso 5. Comprueba.** $n=2$: $(1+0)+(2+1)+(4+2)=10$ y $2^{3}-1+3=10$."
    },
    {
+    "id": "peldanos#S39",
+    "n": "S39",
+    "title": "Un sumatorio con varias partes, como en el examen",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "sumatorios"
+    ],
+    "stage": "sumatorios",
+    "src": "adic",
+    "diff": 0.95,
+    "steps": true,
+    "statement": "Simplifica (sin sumatorios) $\\displaystyle\\sum_{i=1}^{j}\\left(2-j+3i+ni+2^{i}\\right)$ y comprueba con $j=2$, $n=1$.",
+    "hint": "Los términos $2$ y $-j$ no dependen de $i$ (solo hay que multiplicar por el número de términos, $j$); $3i+ni=(3+n)\\,i$ es de la forma \"constante por $i$\"; y $2^{i}$ es una serie geométrica que empieza en $i=1$. El resultado puede depender de $j$ y de $n$.",
+    "solution": "**Paso 1. Separa en cuatro sumatorios.** $\\sum_{i=1}^{j}2+\\sum_{i=1}^{j}(-j)+(3+n)\\sum_{i=1}^{j}i+\\sum_{i=1}^{j}2^{i}$.\n\n**Paso 2. Resuelve cada uno.** $2j$; $-j\\cdot j=-j^{2}$; $(3+n)\\dfrac{j(j+1)}{2}$; y la geométrica $\\dfrac{2^{j+1}-2^{1}}{2-1}=2^{j+1}-2$.\n\n**Paso 3. Suma.** $2j-j^{2}+\\dfrac{(3+n)\\,j(j+1)}{2}+2^{j+1}-2$.\n\n**Paso 4. Comprueba.** Con $j=2$, $n=1$: los términos son $6$ ($i=1$) y $12$ ($i=2$), suma $18$. La fórmula da $4-4+\\frac{4\\cdot2\\cdot3}{2}+8-2=18$."
+   },
+   {
+    "id": "peldanos#S40",
+    "n": "S40",
+    "title": "Cotas de $\\sum i\\,e^{i}$ con una primitiva dada",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "sumatorios"
+    ],
+    "stage": "sumatorios",
+    "src": "adic",
+    "diff": 1.0,
+    "steps": true,
+    "statement": "Acota $\\displaystyle\\sum_{i=1}^{n}i\\,e^{i}$ por arriba y por abajo con integrales, sabiendo que $\\displaystyle\\int x\\,e^{x}\\,dx=(x-1)\\,e^{x}$.\n- a) ¿Es $f(x)=x\\,e^{x}$ creciente para $x\\ge0$? ¿Qué desigualdades hay que usar?\n- b) Calcula las dos integrales.\n- c) Comprueba con $n=3$.",
+    "hint": "Para $f$ creciente: $\\int_{m-1}^{n}f\\le\\sum_{i=m}^{n}f(i)\\le\\int_{m}^{n+1}f$, aquí con $m=1$.",
+    "solution": "**Paso 1. Crecimiento.** a) $f'(x)=e^{x}(1+x)>0$ para $x\\ge0$: es creciente. Sirven $\\int_{0}^{n}f\\le\\sum\\le\\int_{1}^{n+1}f$.\n\n**Paso 2. Integrales.** b) $\\int_{1}^{n+1}f=\\bigl[(x-1)e^{x}\\bigr]_{1}^{n+1}=n\\,e^{n+1}-0$. $\\int_{0}^{n}f=(n-1)e^{n}-(-1)=(n-1)e^{n}+1$. Es decir, $(n-1)e^{n}+1\\le\\sum_{i=1}^{n}i\\,e^{i}\\le n\\,e^{n+1}$.\n\n**Paso 3. Comprueba.** c) $n=3$: la suma vale $e+2e^{2}+3e^{3}\\approx77{,}7$. Cota inferior: $2e^{3}+1\\approx41{,}2$. Cota superior: $3e^{4}\\approx163{,}8$. Ambas son del orden de $n\\,e^{n}$ salvo constantes."
+   },
+   {
+    "id": "peldanos#S41",
+    "n": "S41",
+    "title": "Un sumatorio con $(n-i)$ y una potencia",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "sumatorios"
+    ],
+    "stage": "sumatorios",
+    "src": "adic",
+    "diff": 1.05,
+    "steps": true,
+    "statement": "Simplifica $\\displaystyle\\sum_{i=0}^{n-1}(n-i)\\,3^{i}$ y comprueba con $n=2$ y $n=3$.",
+    "hint": "Separa $n\\sum 3^{i}-\\sum i\\,3^{i}$. La primera es una geométrica; la segunda es la suma $\\sum i\\,r^{i}$ con $r=3$ (el término $i=0$ vale $0$, así que es $\\sum_{i=1}^{n-1}$).",
+    "solution": "**Paso 1. Separa.** $n\\displaystyle\\sum_{i=0}^{n-1}3^{i}-\\sum_{i=1}^{n-1}i\\,3^{i}$.\n\n**Paso 2. Cada parte.** La geométrica: $\\dfrac{3^{n}-1}{2}$. La otra, con la fórmula $\\sum_{i=1}^{N}i\\,r^{i}=\\dfrac{r+r^{N+1}(Nr-N-1)}{(r-1)^{2}}$, $N=n-1$ y $r=3$: $\\dfrac{3+3^{n}(2n-3)}{4}$.\n\n**Paso 3. Resta.** $\\dfrac{n(3^{n}-1)}{2}-\\dfrac{3+3^{n}(2n-3)}{4}=\\dfrac{2n\\,3^{n}-2n-3-(2n-3)3^{n}}{4}=\\dfrac{3^{n+1}-2n-3}{4}$.\n\n**Paso 4. Comprueba.** $n=2$: $2\\cdot1+1\\cdot3=5$ y $\\frac{27-4-3}{4}=5$. $n=3$: $3+6+9=18$ y $\\frac{81-6-3}{4}=18$."
+   },
+   {
+    "id": "peldanos#S42",
+    "n": "S42",
+    "title": "Cota inferior y superior de una serie geométrica",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "sumatorios"
+    ],
+    "stage": "sumatorios",
+    "src": "adic",
+    "diff": 0.95,
+    "steps": true,
+    "statement": "Halla una cota inferior y una superior de $\\displaystyle\\sum_{j=0}^{n-1}3^{j}$ de dos formas:\n- a) Con integrales (la función es creciente).\n- b) Con la fórmula exacta de la serie geométrica.\n- c) Comprueba con $n=3$ y da el orden.",
+    "hint": "Con $m=0$: $\\int_{-1}^{n-1}3^{x}dx\\le\\sum_{j=0}^{n-1}3^{j}\\le\\int_{0}^{n}3^{x}dx$, y $\\int a^{x}dx=\\frac{a^{x}}{\\ln a}$.",
+    "solution": "**Paso 1. Con integrales.** a) $\\dfrac{3^{n-1}-3^{-1}}{\\ln3}\\le\\sum_{j=0}^{n-1}3^{j}\\le\\dfrac{3^{n}-1}{\\ln3}$.\n\n**Paso 2. Exacta.** b) Es una geométrica: $\\dfrac{3^{n}-1}{3-1}=\\dfrac{3^{n}-1}{2}$. No hace falta acotar.\n\n**Paso 3. Comprueba.** c) $n=3$: la suma vale $1+3+9=13$. Integrales: $\\frac{9-0{,}33}{1{,}0986}\\approx7{,}9\\le13\\le\\frac{26}{1{,}0986}\\approx23{,}7$. El orden es $\\Theta(3^{n})$."
+   },
+   {
     "id": "peldanos#V01",
     "n": "V01",
     "title": "Los elementos de un voraz, con el cambio de monedas",
@@ -7847,6 +8531,24 @@ window.LADDER = {
     "statement": "Completa Dijkstra con una lista de distancias (sin montículo) para el grafo de V10 con $s,a,b,c,t=0..4$. Las aristas son `ady[u] = [(v, peso), ...]`:\n```python\ndef dijkstra(ady, s):\n    n = len(ady)\n    d = [float('inf')] * n\n    d[s] = 0\n    fijo = [False] * n\n    for _ in range(n):\n        # el vértice sin fijar con menor distancia\n        u = min((x for x in range(n) if not fijo[x]), key=lambda x: d[x])\n        fijo[u] = True\n        for v, w in ady[u]:\n            if ________:                     # mejora el camino a v pasando por u\n                d[v] = ________\n    return d\n```\n- a) Rellena los huecos.\n- b) Ejecútala y anota `d` tras fijar cada vértice.\n- c) ¿Qué coste tiene con $n$ vértices?",
     "hint": "Se mejora $v$ si $d[u]+w<d[v]$, y entonces $d[v]=d[u]+w$. El vértice que se fija en cada paso es el de menor distancia entre los no fijos.",
     "solution": "**Paso 1. Huecos.** a) `if d[u] + w < d[v]:` y `d[v] = d[u] + w`.\n\n**Paso 2. Ejecución.** b) Con $(s,a,b,c,t)$: al empezar `d = [0,∞,∞,∞,∞]`. Se fija $s$: `d = [0,2,5,∞,∞]`. Se fija $a$ (2): `d = [0,2,3,8,∞]`. Se fija $b$ (3): `d = [0,2,3,5,10]`. Se fija $c$ (5): `d = [0,2,3,5,6]`. Se fija $t$ (6): sin cambios. Resultado: `[0,2,3,5,6]`.\n\n**Paso 3. Coste.** c) $n$ vueltas, cada una con una búsqueda del mínimo en $O(n)$ y la revisión de sus aristas: $\\Theta(n^{2})$. Con un montículo baja a $O((n+m)\\log n)$."
+   },
+   {
+    "id": "peldanos#V18",
+    "n": "V18",
+    "title": "Emparejar para minimizar la mayor suma",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "voraz"
+    ],
+    "stage": "voraz",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Un vector $v$ de $n$ enteros ($n$ par) se agrupa en $n/2$ parejas. Se calcula la suma de cada pareja y se toma la mayor. Se quiere que esa mayor suma sea la menor posible. Para $v=[3,9,1,5,4,8]$:\n- a) Prueba la estrategia \"emparejar vecinos en el vector ordenado\". ¿Qué sale?\n- b) Prueba \"emparejar el menor con el mayor, el segundo menor con el segundo mayor...\". ¿Qué sale?\n- c) ¿Cuál es el óptimo y por qué es razonable la segunda estrategia?",
+    "hint": "Ordena $v$: $[1,3,4,5,8,9]$. Para (c), piensa dónde acaba el elemento mayor: si se junta con otro grande, la suma crece mucho.",
+    "solution": "**Paso 1. Vecinos.** a) Parejas $(1,3),(4,5),(8,9)$ con sumas $4,9,17$: la mayor es $17$.\n\n**Paso 2. Extremos.** b) Parejas $(1,9),(3,8),(4,5)$ con sumas $10,11,9$: la mayor es $11$.\n\n**Paso 3. Óptimo.** c) Probando todas las formas de emparejar, el mínimo es $11$: la estrategia de los extremos es óptima. Razón: el mayor tiene que ir con alguien; lo mejor para no inflar la suma es unirlo con el menor, y el argumento se repite con el resto. Coste: ordenar, $\\Theta(n\\log n)$."
    }
   ],
   "kind": "adic"
@@ -7860,6 +8562,7 @@ window.LADDER = {
    "t22-ordenes": [
     "peldanos/peldanos#A03",
     "peldanos/peldanos#A04",
+    "peldanos/peldanos#A26",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.1"
    ],
    "t22-cota-sup": [
@@ -7882,18 +8585,22 @@ window.LADDER = {
    "t22-theta": [
     "peldanos/peldanos#A13",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.4",
+    "peldanos/peldanos#A22",
     "peldanos/peldanos#A14",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.2",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.3"
    ],
    "t22-aspectos": [
-    "peldanos/peldanos#A15"
+    "peldanos/peldanos#A15",
+    "peldanos/peldanos#A23",
+    "peldanos/peldanos#A24"
    ],
    "t22-lineal": [
     "peldanos/peldanos#A17"
    ],
    "t22-cota-orden": [
     "peldanos/peldanos#A19",
+    "peldanos/peldanos#A25",
     "peldanos/peldanos#A20",
     "peldanos/peldanos#A21",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.2",
@@ -7903,16 +8610,20 @@ window.LADDER = {
   "backtracking": {
    "t6-binario": [
     "peldanos/peldanos#K01",
-    "peldanos/peldanos#K02"
+    "peldanos/peldanos#K02",
+    "peldanos/peldanos#K17"
    ],
    "t6-subconjuntos": [
     "peldanos/peldanos#K03",
     "peldanos/peldanos#K15",
+    "peldanos/peldanos#K18",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.1"
    ],
    "t6-permutaciones": [
     "peldanos/peldanos#K04",
     "peldanos/peldanos#K05",
+    "peldanos/peldanos#K19",
+    "peldanos/peldanos#K24",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.3",
     "peldanos/peldanos#K16",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.6"
@@ -7925,16 +8636,21 @@ window.LADDER = {
    "t6-suma-caballo": [
     "peldanos/peldanos#K08",
     "peldanos/peldanos#K09",
+    "peldanos/peldanos#K20",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.5"
    ],
    "t6-otros": [
     "peldanos/peldanos#K10",
     "peldanos/peldanos#K11",
+    "peldanos/peldanos#K25",
+    "peldanos/peldanos#K13",
+    "peldanos/peldanos#K27",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.2",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.7"
    ],
    "t6-poda": [
     "peldanos/peldanos#K12",
+    "peldanos/peldanos#K26",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#7.8"
    ]
   },
@@ -7948,13 +8664,16 @@ window.LADDER = {
    ],
    "t31-general": [
     "peldanos/peldanos#B06",
+    "peldanos/peldanos#B13",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.9",
     "peldanos/peldanos#B07",
     "peldanos/peldanos#B08",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.6",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.7",
     "peldanos/peldanos#B09",
+    "peldanos/peldanos#B14",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.8",
+    "peldanos/peldanos#B12",
     "peldanos/peldanos#B11"
    ]
   },
@@ -7969,7 +8688,9 @@ window.LADDER = {
     "peldanos/peldanos#D04",
     "peldanos/peldanos#D05",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.1",
+    "peldanos/peldanos#D15",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.2",
+    "peldanos/peldanos#D17",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.3"
    ],
    "t5-ordenacion": [
@@ -7984,7 +8705,8 @@ window.LADDER = {
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.7",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.8",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.4",
-    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.6"
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#6.6",
+    "peldanos/peldanos#D16"
    ],
    "t5-otros": [
     "peldanos/peldanos#D14"
@@ -8003,6 +8725,11 @@ window.LADDER = {
     "peldanos/peldanos#E09",
     "peldanos/peldanos#E10",
     "peldanos/peldanos#E11",
+    "peldanos/peldanos#E12",
+    "peldanos/peldanos#E15",
+    "peldanos/peldanos#E14",
+    "peldanos/peldanos#E13",
+    "peldanos/peldanos#E16",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.12",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.13",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.10",
@@ -8029,8 +8756,10 @@ window.LADDER = {
     "peldanos/peldanos#G10",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.15",
     "peldanos/peldanos#G11",
+    "peldanos/peldanos#G19",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.8",
     "peldanos/peldanos#G12",
+    "peldanos/peldanos#G20",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.11",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.12"
    ],
@@ -8038,6 +8767,8 @@ window.LADDER = {
     "peldanos/peldanos#G13",
     "peldanos/peldanos#G14",
     "peldanos/peldanos#G15",
+    "peldanos/peldanos#G17",
+    "peldanos/peldanos#G18",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.17",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.11",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.16",
@@ -8062,17 +8793,27 @@ window.LADDER = {
    "t4-listas": [
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.7",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#3.8",
+    "peldanos/peldanos#R02",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.13",
-    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.4"
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.4",
+    "peldanos/peldanos#R01",
+    "peldanos/peldanos#R05"
    ],
    "t4-secuencias": [
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.12",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.4",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.1",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.3",
+    "peldanos/peldanos#R04",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.2",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.6",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.8"
+   ],
+   "t4-manhattan": [
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.16",
+    "peldanos/peldanos#R03",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#5.9",
+    "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#9.7"
    ],
    "t4-binaria": [
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#4.15",
@@ -8123,6 +8864,7 @@ window.LADDER = {
     "peldanos/peldanos#S26",
     "peldanos/peldanos#S27",
     "peldanos/peldanos#S28",
+    "peldanos/peldanos#S41",
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.9"
    ],
    "t21-integrales": [
@@ -8131,7 +8873,10 @@ window.LADDER = {
     "peldanos/peldanos#S31",
     "peldanos/peldanos#S32",
     "peldanos/peldanos#S33",
+    "peldanos/peldanos#S42",
+    "peldanos/peldanos#S39",
     "peldanos/peldanos#S34",
+    "peldanos/peldanos#S40",
     "peldanos/peldanos#S35"
    ]
   },
@@ -8149,6 +8894,7 @@ window.LADDER = {
     "peldanos/peldanos#V15",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.4",
     "peldanos/peldanos#V13",
+    "peldanos/peldanos#V18",
     "ejercicios_adicionales_3-9/ejercicios_adicionales_3-9#8.1"
    ],
    "t7-huffman": [

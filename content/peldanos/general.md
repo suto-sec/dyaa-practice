@@ -4,8 +4,8 @@ stage: general
 ## Orden
 - t32-maestro: G01 G02 G03
 - t32-homogeneas: G04 G05 G06 G07
-- t32-no-homogeneas: G08 G09 1.14 G10 2.15 G11 1.8 G12 1.11 2.12
-- t32-cambio: G13 G14 G15 1.17 2.11 1.16 1.15 1.18
+- t32-no-homogeneas: G08 G09 1.14 G10 2.15 G11 G19 1.8 G12 G20 1.11 2.12
+- t32-cambio: G13 G14 G15 G17 G18 1.17 2.11 1.16 1.15 1.18
 ### G01 · Qué caso del teorema maestro es
 nivel: 0.3
 
@@ -318,3 +318,77 @@ En a) $3^{2k}=(3^{2})^{k}=9^{k}$. En c) $4^{k+1}=4\cdot4^{k}$. En b) agrupa: $(1
 **Paso 2. b).** Izquierda $(x-2)$. Derecha: $(1+k)\cdot1^{k}$, grado $1$, factor $(x-1)^{2}$; y $1\cdot2^{k}$, factor $(x-2)$. Polinomio $(x-2)^{2}(x-1)^{2}$, solución $(C_1+C_2k)\,2^{k}+C_3+C_4k\in\Theta(k\,2^{k})$. Con $n=2^{k}$: $k\,2^{k}=n\log_2n$.
 
 **Paso 3. c).** Izquierda $(x-3)$. Derecha $4\cdot4^{k}$, factor $(x-4)$. Polinomio $(x-3)(x-4)$, solución $C_1\,3^{k}+C_2\,4^{k}\in\Theta(4^{k})$. Con $n=2^{k}$: $4^{k}=n^{2}$.
+
+### G17 · Cambio de variable con $n/3$ y un término $n^{2}$
+nivel: 0.75
+
+Resuelve con el método general $T(n)=\begin{cases}1 & n=1\\ T(n/3)+n^{2} & n>1\end{cases}$ con $n=3^{k}$.
+- a) Escribe $t(k)=T(3^{k})$ y su polinomio característico.
+- b) Forma de $t(k)$ y constantes con $t(0)$ y $t(1)$.
+- c) Deshaz el cambio y compara con E12.
+
+#### Pista
+$n^{2}=(3^{k})^{2}=9^{k}$. La recurrencia es $t(k)-t(k-1)=9^{k}$.
+
+#### Solución
+**Paso 1. Recurrencia.** a) $t(k)=t(k-1)+9^{k}$. Polinomio $(x-1)(x-9)$.
+
+**Paso 2. Constantes.** b) $t(k)=C_1+C_2\,9^{k}$. $t(0)=T(1)=1$ y $t(1)=T(3)=1+9=10$: $C_1+C_2=1$, $C_1+9C_2=10$, luego $C_2=\frac98$ y $C_1=-\frac18$.
+
+**Paso 3. Deshaz.** c) $9^{k}=n^{2}$: $T(n)=\dfrac{9n^{2}-1}{8}\in\Theta(n^{2})$, el mismo resultado de E12 por expansión.
+
+### G18 · Cambio de variable con $\sqrt n$ y tres llamadas
+nivel: 0.8
+
+Resuelve con el método general $T(n)=\begin{cases}1 & n=1\\ 3T(n/9)+\sqrt n & n>1\end{cases}$ con $n=9^{k}$.
+- a) Escribe $t(k)=T(9^{k})$ y su polinomio característico.
+- b) Forma de $t(k)$ y constantes con $t(0)$ y $t(1)$.
+- c) Deshaz el cambio y compara con E13.
+
+#### Pista
+$\sqrt n=\sqrt{9^{k}}=3^{k}$. La recurrencia es $t(k)=3t(k-1)+3^{k}$, y la base de la derecha coincide con la raíz de la izquierda.
+
+#### Solución
+**Paso 1. Recurrencia.** a) $t(k)-3t(k-1)=3^{k}$. Polinomio $(x-3)(x-3)=(x-3)^{2}$.
+
+**Paso 2. Constantes.** b) $t(k)=(C_1+C_2k)\,3^{k}$. $t(0)=1$ da $C_1=1$; $t(1)=T(9)=3+3=6=(1+C_2)\cdot3$ da $C_2=1$. Así $t(k)=(1+k)\,3^{k}$.
+
+**Paso 3. Deshaz.** c) $3^{k}=\sqrt n$ y $k=\log_9n$: $T(n)=\sqrt n\,(1+\log_9n)\in\Theta(\sqrt n\log n)$, igual que en E13.
+
+### G19 · Tres términos a la derecha y raíz doble
+nivel: 0.75
+
+Da el polinomio característico y el orden de $T(n)=4T(n-1)-4T(n-2)+n+2^{n}$.
+- a) Parte izquierda.
+- b) Factores de cada término de la derecha.
+- c) Polinomio completo, forma de la solución y orden.
+
+#### Pista
+Izquierda: $x^{2}-4x+4=(x-2)^{2}$. Derecha: $n=n\cdot1^{n}$ y $2^{n}=1\cdot2^{n}$.
+
+#### Solución
+**Paso 1. Izquierda.** a) $(x-2)^{2}$.
+
+**Paso 2. Derecha.** b) $n\cdot1^{n}$: grado $1$, factor $(x-1)^{2}$. $2^{n}$: grado $0$, factor $(x-2)$.
+
+**Paso 3. Todo.** c) $(x-2)^{3}(x-1)^{2}$. Solución: $(C_1+C_2n+C_3n^{2})\,2^{n}+C_4+C_5n$. Orden $\Theta(n^{2}2^{n})$.
+
+### G20 · Con constantes: $T(n)=T(n-1)+3^{n}+1$
+nivel: 0.85
+
+Resuelve $T(n)=T(n-1)+3^{n}+1$ con $T(0)=0$, hallando las constantes.
+- a) Polinomio característico y forma de la solución.
+- b) Calcula $T(1),T(2)$ y plantea el sistema.
+- c) Resuélvelo y comprueba con $T(3)$.
+
+#### Pista
+Izquierda $(x-1)$. Derecha: $3^{n}$ da $(x-3)$ y $1=1\cdot1^{n}$ da $(x-1)$. Polinomio $(x-1)^{2}(x-3)$.
+
+#### Solución
+**Paso 1. Forma.** a) $T(n)=C_1\,3^{n}+C_2+C_3n$.
+
+**Paso 2. Sistema.** b) $T(1)=4$ y $T(2)=14$. $C_1+C_2=0$; $3C_1+C_2+C_3=4$; $9C_1+C_2+2C_3=14$.
+
+**Paso 3. Resuelve.** c) De la primera $C_2=-C_1$. La segunda da $2C_1+C_3=4$ y la tercera $8C_1+2C_3=14$, es decir $4C_1+C_3=7$. Restando: $C_1=\frac32$, $C_3=1$, $C_2=-\frac32$. $T(n)=\dfrac{3^{n+1}-3}{2}+n\in\Theta(3^{n})$.
+
+**Paso 4. Comprueba.** $T(3)=14+27+1=42$ y la fórmula da $\frac{81-3}{2}+3=42$.

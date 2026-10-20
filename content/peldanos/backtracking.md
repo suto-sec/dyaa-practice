@@ -2,13 +2,13 @@
 stage: backtracking
 
 ## Orden
-- t6-binario: K01 K02
-- t6-subconjuntos: K03 K15 7.1
-- t6-permutaciones: K04 K05 7.3 K16 7.6
+- t6-binario: K01 K02 K17
+- t6-subconjuntos: K03 K15 K18 7.1
+- t6-permutaciones: K04 K05 K19 K24 7.3 K16 7.6
 - t6-reinas: K06 K07 7.4
-- t6-suma-caballo: K08 K09 7.5
-- t6-otros: K10 K11 7.2 7.7
-- t6-poda: K12 7.8
+- t6-suma-caballo: K08 K09 K20 7.5
+- t6-otros: K10 K11 K25 K13 K27 7.2 7.7
+- t6-poda: K12 K26 7.8
 
 ### K01 · Seguir el árbol binario de subconjuntos
 nivel: 0.2
@@ -323,3 +323,190 @@ El coste parcial de la ruta $0,3,1$ es $d_{03}+d_{31}=45$; si luego va a la $2$ 
 
 **Paso 3. Llamadas.** c) Con poda $14$; sin poda $1+3+6+6=16$. Con muchas ciudades el ahorro es enorme. La poda es válida porque las distancias no son negativas: un coste parcial nunca baja.
 
+### K17 · Secuencias de paréntesis válidas
+nivel: 0.6
+
+Con $n$ parejas de paréntesis se quieren todas las secuencias bien formadas. Se construye la secuencia carácter a carácter con un árbol binario (abrir o cerrar), podando las ramas que no pueden llegar a ser válidas.
+- a) ¿Cuándo se puede añadir un `(`? ¿Y un `)`?
+- b) Lista las secuencias para $n=3$ en el orden en que se generan (primero se prueba `(`).
+- c) Para $n=2$, ¿cuántas llamadas se hacen con esas dos condiciones (contando la raíz)?
+
+#### Pista
+Hay que llevar el número de paréntesis abiertos y de cerrados. Un `)` solo es válido si hay algún `(` sin cerrar.
+
+#### Solución
+**Paso 1. Condiciones.** a) Se puede abrir si `abiertos < n`. Se puede cerrar si `cerrados < abiertos`.
+
+**Paso 2. $n=3$.** b) `((()))`, `(()())`, `(())()`, `()(())`, `()()()`: son $5$ (el número de Catalan $C_3$).
+
+**Paso 3. $n=2$.** c) Se generan `(())` y `()()`. El árbol podado tiene $8$ llamadas con la raíz. Sin poda serían $2^{5}-1=31$.
+
+### K18 · Combinaciones con repetición
+nivel: 0.55
+
+Se quieren las secuencias de $m=2$ elementos de `['a','b','c']` en orden no decreciente de índice, **pudiendo repetir** elementos: `aa, ab, ac, bb, bc, cc`. Se usa el esquema de K03 (un resultado en cada hoja, índice mínimo `j`).
+- a) ¿Qué cambia respecto a las combinaciones sin repetición en el rango del bucle?
+- b) Escribe el código y las llamadas en orden.
+- c) ¿Cuántas hay en general?
+
+#### Pista
+Sin repetición, el candidato siguiente empieza en `j + 1`. Con repetición, un elemento ya usado se puede volver a usar.
+
+#### Solución
+**Paso 1. El bucle.** a) El rango empieza en `j` (no en `j + 1`): `for k in range(j, n)`.
+
+**Paso 2. Código.** b)
+```python
+def combinaciones_rep(i, j, sol, a, m):
+    if i == m:
+        print(sol)
+    else:
+        for k in range(j, len(a)):
+            sol[i] = a[k]
+            combinaciones_rep(i + 1, k, sol, a, m)
+```
+con llamada inicial `combinaciones_rep(0, 0, [None]*m, a, m)`. Imprime `aa, ab, ac, bb, bc, cc` (10 llamadas con la raíz).
+
+**Paso 3. Cuántas.** c) $\binom{n+m-1}{m}$: con $n=3$, $m=2$, $\binom42=6$.
+
+### K19 · Permutaciones con elementos repetidos
+nivel: 0.6
+
+Se quieren las permutaciones de los elementos `x` (dos veces) e `y` (una vez): `xxy`, `xyx`, `yxx`. En vez de la lista `libres` (booleanos) se usa la lista `restantes = [2, 1]`, con las unidades que quedan de cada elemento.
+- a) ¿Qué condición se usa para elegir el candidato `k` en el nivel `i`?
+- b) ¿Qué hay que hacer antes y después de la llamada recursiva?
+- c) Traza y cuenta las permutaciones. ¿Cuántas habría sin repetidos y con la fórmula?
+
+#### Pista
+Un candidato vale si queda alguna unidad: `restantes[k] > 0`. Se gasta una unidad al colocarlo y se devuelve al volver.
+
+#### Solución
+**Paso 1. Condición.** a) `if restantes[k] > 0:`.
+
+**Paso 2. Actualizar.** b) `restantes[k] -= 1` antes de llamar y `restantes[k] += 1` al volver (igual que `libres[k] = False/True`).
+```python
+def perm_rep(i, restantes, sol, a):
+    if i == len(sol):
+        print(sol)
+    else:
+        for k in range(len(a)):
+            if restantes[k] > 0:
+                sol[i] = a[k]
+                restantes[k] -= 1
+                perm_rep(i + 1, restantes, sol, a)
+                restantes[k] += 1
+```
+**Paso 3. Resultado.** c) Salen `xxy`, `xyx`, `yxx` (9 llamadas con la raíz). Sin repetidos serían $3!=6$. Con repetidos: $\dfrac{3!}{2!\,1!}=3$.
+
+### K24 · Repartir elementos en grupos de tamaños dados
+nivel: 0.65
+
+Hay que contar de cuántas formas se reparten $n=4$ elementos en $m$ grupos con tamaños $a=[2,1,1]$ (el grupo $1$ con $2$ elementos, el $2$ con $1$ y el $3$ con $1$), siendo los grupos distinguibles.
+- a) Reformula el problema como asignar a cada elemento el número de su grupo. ¿Con qué esquema de backtracking se corresponde?
+- b) Cuenta los repartos para $a=[2,2]$ y para $a=[2,1,1]$ con la fórmula y con el esquema.
+
+#### Pista
+Cada elemento recibe una etiqueta de grupo, y la etiqueta $g$ debe usarse exactamente $a_g$ veces. Es como permutar un multiconjunto con `restantes = a`.
+
+#### Solución
+**Paso 1. Esquema.** a) El nivel $i$ asigna un grupo `g` al elemento $i$ si `restantes[g] > 0`, y gasta una unidad. Es el esquema de las permutaciones con repetidos (K19).
+
+**Paso 2. Cuentas.** b) $a=[2,2]$: $\dfrac{4!}{2!\,2!}=6$ repartos (19 llamadas con la raíz). $a=[2,1,1]$: $\dfrac{4!}{2!\,1!\,1!}=12$ (35 llamadas). Con $C=\{0,1,2,3,4\}$ y $a=[2,1,2]$ son $\dfrac{5!}{2!\,1!\,2!}=30$.
+
+### K20 · Dividir una lista en dos con la misma suma
+nivel: 0.6
+
+Se quieren todas las formas de dividir $S=[1,2,3,4,6]$ en dos listas $A$ y $B$ con la misma suma.
+- a) ¿Cuánto debe sumar cada lista? ¿Puede haber solución si el total fuera impar?
+- b) Esquema: el elemento $i$ va a $A$ ($k=0$) o a $B$ ($k=1$). Para no contar cada división dos veces, ¿qué se fija?
+- c) ¿Qué poda se puede aplicar y qué solución sale?
+
+#### Pista
+Basta controlar la suma de $B$. La división $(A,B)$ y la $(B,A)$ son la misma salvo el nombre, así que se obliga a que el primer elemento esté en $A$.
+
+#### Solución
+**Paso 1. Suma objetivo.** a) El total es $16$, cada lista debe sumar $8$. Con total impar no hay solución.
+
+**Paso 2. Evitar duplicados.** b) Se fija el primer elemento ($1$) en $A$. Así cada división aparece una sola vez.
+
+**Paso 3. Poda y resultado.** c) Se poda si `suma_B > total / 2`. En una hoja es solución si `suma_B == total / 2`. Se hacen $24$ llamadas (con la raíz) y sale una única división: $A=[1,3,4]$ y $B=[2,6]$.
+
+### K25 · Del laberinto a un grafo
+nivel: 0.6
+
+Para hallar el camino **más corto** en un laberinto se puede transformar en un grafo y aplicar un algoritmo de caminos mínimos (en lugar de backtracking). Con el laberinto de K11:
+```
+E E E E
+E W W E
+E E W E
+```
+- a) ¿Cuántos nodos y cuántas aristas tiene el grafo (un nodo por celda vacía, una arista entre vacías adyacentes)?
+- b) ¿Qué longitud (nº de aristas) tiene el camino más corto de `(0,0)` a `(2,3)`?
+- c) ¿Por qué BFS (o Dijkstra con pesos $1$) lo resuelve?
+
+#### Pista
+Cuenta las celdas `E` y, para las aristas, revisa los pares horizontales y verticales. Para el camino, explora por niveles desde la entrada.
+
+#### Solución
+**Paso 1. Nodos y aristas.** a) Celdas vacías: $4+2+3=9$. Aristas horizontales: $3$ en la fila $0$, $1$ en la fila $2$; verticales: `(0,0)-(1,0)`, `(1,0)-(2,0)`, `(0,3)-(1,3)`, `(1,3)-(2,3)`. En total $9$ nodos y $8$ aristas.
+
+**Paso 2. Camino más corto.** b) `(0,0),(0,1),(0,2),(0,3),(1,3),(2,3)`: $5$ aristas. Es el único camino, porque el grafo no tiene ciclos.
+
+**Paso 3. Algoritmo.** c) Con todas las aristas de peso $1$, el camino más corto es el que tiene menos aristas: BFS lo encuentra por niveles, y Dijkstra da el mismo resultado. Es una transformación (transforma y vencerás), sin backtracking.
+
+### K13 · Colorear un grafo
+nivel: 0.65
+
+Grafo con aristas $0\!-\!1$, $0\!-\!2$, $1\!-\!2$, $2\!-\!3$ (matriz de adyacencia $A$). Se quiere saber si se puede colorear con $m$ colores sin que dos vértices adyacentes tengan el mismo.
+- a) Esquema: ¿qué es la solución parcial y qué candidatos hay en cada nivel? ¿Cuándo es válido un candidato?
+- b) Traza con $m=3$ hasta la primera coloración y cuenta cuántas hay en total.
+- c) ¿Y con $m=2$?
+
+#### Pista
+El nivel $i$ es el vértice $i$ y los candidatos son los colores $0,\dots,m-1$. Un color vale si ningún vecino **ya coloreado** ($j<i$) lo tiene.
+
+#### Solución
+**Paso 1. Esquema.** a) `sol[i]` es el color del vértice `i`. Candidato `c` válido si para todo `j < i` con `A[i][j] == 1` se cumple `sol[j] != c`.
+```python
+def valido(i, c, sol, A):
+    return all(not (A[i][j] == 1 and sol[j] == c) for j in range(i))
+```
+**Paso 2. Con 3 colores.** b) Primera coloración: `[0,1,2,0]` (el vértice $3$ solo es vecino del $2$, que tiene el $2$, así que le toca el $0$). En total hay $12$ coloraciones: $3\cdot2\cdot1$ para el triángulo y $2$ opciones para el vértice $3$. Si se buscan todas, son $28$ llamadas.
+
+**Paso 3. Con 2 colores.** c) No hay ninguna: el triángulo necesita $3$ colores. El árbol se corta en el vértice $2$ (5 llamadas).
+
+### K27 · Selección de actividades con backtracking
+nivel: 0.65
+
+Actividades $A=[0,10)$, $X=[0,5)$, $Y=[4,6)$, $Z=[5,10)$. Se decide para cada una, en ese orden, si se incluye (sí/no), y solo se puede incluir si es compatible con las ya elegidas.
+- a) ¿Cómo se comprueba la compatibilidad de una candidata?
+- b) Lista los subconjuntos que se llegan a formar y cuántas llamadas hay.
+- c) ¿Cuál es el óptimo?
+
+#### Pista
+Dos actividades $[c_1,f_1)$ y $[c_2,f_2)$ son compatibles si $c_2\ge f_1$ o $c_1\ge f_2$. Una candidata hay que compararla con todas las ya elegidas.
+
+#### Solución
+**Paso 1. Compatibilidad.** a) Con todas las elegidas `e`: `c_nueva >= f_e or c_e >= f_nueva`.
+
+**Paso 2. Subconjuntos.** b) Se forman $\{\}$, $\{Z\}$, $\{Y\}$, $\{X\}$, $\{X,Z\}$ y $\{A\}$. $\{X,Y\}$, $\{Y,Z\}$ y $\{A,\ast\}$ se podan por solaparse. Son $16$ llamadas (con la raíz).
+
+**Paso 3. Óptimo.** c) $\{X,Z\}$, con $2$ actividades. Con backtracking se mira todo; con la estrategia voraz de V13 ("termina antes") se llega al mismo resultado sin explorar.
+
+### K26 · Ciclo euleriano
+nivel: 0.85
+
+Grafo con aristas $0\!-\!1$, $1\!-\!2$, $2\!-\!0$, $2\!-\!3$, $3\!-\!4$, $4\!-\!2$. Un ciclo euleriano recorre cada arista **una sola vez** y vuelve al vértice de partida ($0$).
+- a) ¿Qué es la solución parcial y cuándo es completa?
+- b) ¿Qué condición debe cumplir un candidato (vértice siguiente)?
+- c) Traza con vecinos en orden creciente hasta el primer ciclo.
+
+#### Pista
+Hay que recordar qué aristas se han usado (una matriz de booleanos simétrica). Con $6$ aristas, la secuencia tiene $7$ vértices.
+
+#### Solución
+**Paso 1. Solución.** a) La secuencia de vértices recorridos. Completa cuando se han usado todas las aristas ($6$) y el último vértice es el $0$.
+
+**Paso 2. Candidato.** b) Desde `v`, el vértice `w` vale si hay arista `v–w` y todavía no se ha usado. Al incluirlo se marca usada (en los dos sentidos), y al volver atrás se desmarca.
+
+**Paso 3. Traza.** c) $0\to1\to2$. Desde $2$ el primer vecino es $0$: se va ($2\to0$), pero en $0$ no quedan aristas libres y no se han usado las $6$: callejón, vuelta atrás. Siguiente vecino de $2$: $3$, luego $3\to4$, $4\to2$ y por último $2\to0$ ya con las $6$ aristas usadas. Ciclo: $\langle0,1,2,3,4,2,0\rangle$ (8 llamadas).

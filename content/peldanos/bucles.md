@@ -3,7 +3,7 @@ stage: bucles
 
 ## Orden
 - t31-insert: B01 B02 B03 B04 B05
-- t31-general: B06 2.9 B07 B08 2.6 2.7 B09 2.8 B11
+- t31-general: B06 B13 2.9 B07 B08 2.6 2.7 B09 B14 2.8 B12 B11
 
 ### B01 · Cuántas veces se ejecuta el cuerpo
 nivel: 0.2
@@ -298,3 +298,79 @@ En lugar de fijar $i$ y recorrer $j$, fija $j$ y pregunta: ¿para cuántos valor
 **Paso 3. Cambia el orden.** c) El valor $j$ ($1\le j\le n$) aparece para $i=0,\dots,j-1$, es decir, $j$ veces. El total es $\sum_{j=1}^{n}j\cdot j=\sum_{j=1}^{n}j^{2}=\dfrac{n(n+1)(2n+1)}{6}$. Con $n=2$: $\frac{2\cdot3\cdot5}{6}=5$.
 
 **Paso 4. Comprueba y ordena.** d) $n=3$: $i=0$: $1+2+3=6$; $i=1$: $2+3=5$; $i=2$: $3$. Total $14$ y $\frac{3\cdot4\cdot7}{6}=14$. Orden $\Theta(n^{3})$.
+
+### B12 · Un doble `while` triangular con operaciones
+nivel: 0.85
+
+Con la convención de B02 (inicialización, comparación e incremento cuestan $1$; `procesa` cuesta $3$), calcula $T(n)$ de
+```python
+i = 0
+while i < n:
+    j = 0
+    while j <= i:
+        procesa(i, j)        # 3 operaciones
+        j += 1
+    i += 1
+```
+- a) Coste del `while` interior para un $i$.
+- b) Coste total sumando sobre $i$.
+- c) Comprueba con $n=1$ y da el orden.
+
+#### Pista
+El interior ejecuta el cuerpo $i+1$ veces ($j=0,\dots,i$). Cada vuelta cuesta $1+3+1=5$, y hay que sumar la inicialización de `j` y la última comparación.
+
+#### Solución
+**Paso 1. Interior.** a) $T_{\text{int}}(i)=1+\sum_{j=0}^{i}(1+3+1)+1=5(i+1)+2=5i+7$.
+
+**Paso 2. Exterior.** b) $T(n)=1+\sum_{i=0}^{n-1}\bigl(1+(5i+7)+1\bigr)+1=2+\sum_{i=0}^{n-1}(5i+9)=2+\dfrac{5n(n-1)}{2}+9n=\dfrac{5n^{2}+13n+4}{2}$.
+
+**Paso 3. Comprueba.** c) $n=1$: sólo $i=0$, el interior vale $7$ y el total $1+(1+7+1)+1=11$. La fórmula da $\frac{5+13+4}{2}=11$. Orden $\Theta(n^{2})$.
+
+### B13 · Un `for` interior cuyo límite es $3i$
+nivel: 0.6
+
+Con la convención de B02 (`procesa` cuesta $1$), calcula $T(n)$ de
+```python
+for i in range(1, n):
+    for j in range(0, 3 * i):
+        procesa(i, j)        # 1 operación
+```
+- a) Coste del bucle interior para un $i$.
+- b) Coste total.
+- c) Comprueba con $n=2$.
+
+#### Pista
+El interior hace $3i$ vueltas (de $j=0$ a $3i-1$). El exterior recorre $i=1,\dots,n-1$.
+
+#### Solución
+**Paso 1. Interior.** a) $T_{\text{int}}(i)=1+3i\,(1+1+1)+1=9i+2$.
+
+**Paso 2. Exterior.** b) $T(n)=1+\sum_{i=1}^{n-1}\bigl(1+(9i+2)+1\bigr)+1=2+\sum_{i=1}^{n-1}(9i+4)=2+\dfrac{9n(n-1)}{2}+4(n-1)=\dfrac{9n^{2}-n-4}{2}$.
+
+**Paso 3. Comprueba.** c) $n=2$: sólo $i=1$; el interior hace $3$ vueltas y cuesta $1+9+1=11$. Total $1+(1+11+1)+1=15$ y la fórmula da $\frac{36-2-4}{2}=15$.
+
+### B14 · Un `if` dentro del bucle: mejor y peor caso
+nivel: 0.7
+
+Con la convención de B02 (la condición del `if` cuesta $1$, `procesa` cuesta $2$), calcula $T(n)$ en el mejor y en el peor caso:
+```python
+for i in range(n):
+    if condicion(i):             # 1 operación
+        for j in range(i):
+            procesa(i, j)        # 2 operaciones
+```
+- a) Mejor caso: la condición nunca se cumple.
+- b) Peor caso: siempre se cumple.
+- c) Comprueba el peor caso con $n=1$ y da los órdenes.
+
+#### Pista
+En el peor caso el cuerpo del `for` externo cuesta $1$ (la condición) más el coste del `for` interior, que hace $i$ vueltas de $1+2+1$.
+
+#### Solución
+**Paso 1. Mejor caso.** a) El cuerpo cuesta $1$: $T(n)=1+n(1+1+1)+1=3n+2\in\Theta(n)$.
+
+**Paso 2. Peor caso, interior.** b) $T_{\text{int}}(i)=1+4i+1=4i+2$, así que el cuerpo exterior cuesta $1+(4i+2)=4i+3$.
+
+**Paso 3. Peor caso, total.** $T(n)=1+\sum_{i=0}^{n-1}\bigl(1+(4i+3)+1\bigr)+1=2+\sum_{i=0}^{n-1}(4i+5)=2+2n(n-1)+5n=2n^{2}+3n+2$.
+
+**Paso 4. Comprueba.** c) $n=1$: el cuerpo cuesta $1+(1+0+1)=3$ y $T=1+(1+3+1)+1=7$; la fórmula da $2+3+2=7$. Órdenes: $\Theta(n)$ en el mejor caso y $\Theta(n^{2})$ en el peor.
