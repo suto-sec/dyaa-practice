@@ -3,6 +3,15 @@
 var L = window.DYAA, mdRender = window.mdRender;
 var LECT = window.LECTURES || [], SK = window.SKILLS || [], EXAMS = window.EXAMS || [];
 var STAGES = window.STAGES || [], WORLDS = window.WORLDS || {}, STAGE_EX = window.STAGE_EX || {}, STAGE_AT = window.STAGE_AT || {}, SUMM = window.SUMMARIES || {}, QUIZ = window.QUIZZES || {};
+/* Peldaños: short graded exercises written for the route (content/peldanos). They are exercises like the others, in a pseudo exam of their own. */
+var LADDER = window.LADDER || null;
+if (LADDER) {
+  EXAMS = EXAMS.concat([LADDER.exam]);
+  var rungKey = {}; LADDER.exam.exercises.forEach(function (e) { rungKey[LADDER.exam.id + '/' + e.id] = true; });
+  var merged = L.mergeLadder(STAGES, STAGE_EX, STAGE_AT, LADDER.order, function (k) { return !!rungKey[k]; });
+  STAGE_EX = merged.ex; STAGE_AT = merged.at;
+}
+function isRung(a) { return !!(a && a.exam && a.exam.id === 'peldanos'); }
 var KEY = 'dyaa-practice-v1';
 var RN = L.RN, RM = L.RM, BONUS = 15;
 var $ = function (s) { return document.querySelector(s); };
@@ -291,7 +300,7 @@ function stepRow(st, cur, inLesson) {
   var tags = '';
   if (st.type === 'ex') {
     var a = byKey[st.key];
-    tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution ? '<span class="tag">' + (a.e.own ? 'soluci&oacute;n propuesta' : 'con soluci&oacute;n') + '</span>' : '') + '<span class="tag">' + (a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>';
+    tags = (done ? status(st.key) : '') + dueTag(st.key) + (a.e.solution && !isRung(a) ? '<span class="tag">' + (a.e.own ? 'soluci&oacute;n propuesta' : 'con soluci&oacute;n') + '</span>' : '') + '<span class="tag">' + (isRung(a) ? 'peldaño' : a.e.src === 'adic' ? 'adicional' : 'examen') + '</span>';
   } else if (st.type === 'quiz' && S.quiz[st.id]) tags = '<span class="tag r' + (S.quiz[st.id].score === st.n ? 2 : S.quiz[st.id].score * 2 >= st.n ? 1 : 0) + '">' + S.quiz[st.id].score + '/' + st.n + '</span>';
   else if (S.skip[st.id]) tags = '<span class="tag">saltado</span>';
   tags += minTag(st.min);
@@ -407,13 +416,13 @@ function vDetail(key) {
     h += '<p class="muted">' + esc(gp.label) + ' &middot; ejercicio ' + (inG.indexOf(st) + 1) + ' de ' + inG.length + (inScope[st.id] ? '' : ' &middot; fuera de tu ruta (' + esc(SCOPE.title) + ')') + '</p>';
   }
   h += '<div class="card"><h2>' + exTitle(a) + '</h2>' +
-    '<div class="muted">' + esc(XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados' + tmBox() + '</div>' + mdRender(e.statement) + '</div>' + notebook(key);
+    '<div class="muted">' + esc(isRung(a) ? 'peldaño' : XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados' + tmBox() + '</div>' + mdRender(e.statement) + '</div>' + notebook(key);
   /* A proposed (unofficial) solution is written in steps ("**Paso 1.** ..."): they are shown one at a time. */
-  var pieces = e.own && hasSol ? String(sol).split(/\n(?=\*\*Paso \d+)/) : null;
-  if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> ' + skillHint(e) + sheetLink(gp) + '</div>';
+  var pieces = (e.own || e.steps) && hasSol ? String(sol).split(/\n(?=\*\*Paso \d+)/) : null;
+  if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> ' + (e.hint ? mdRender(e.hint) + '<p class="muted">' + skillHint(e) + '</p>' : skillHint(e)) + sheetLink(gp) + '</div>';
   if (pieces) {
     var shown = Math.min(Math.max(V.hints - 1, 0), pieces.length);
-    if (shown) h += '<div class="card"><b>Soluci&oacute;n propuesta, paso a paso.</b> <span class="muted">No es oficial: el ejercicio no trae soluci&oacute;n, as&iacute; que la he escrito yo. Comp&aacute;rala con tus apuntes.</span>' + mdRender(pieces.slice(0, shown).join('\n\n')) + (shown < pieces.length ? '<p class="muted">Quedan ' + (pieces.length - shown) + ' de ' + pieces.length + ' pasos.</p>' : '') + '</div>';
+    if (shown) h += '<div class="card"><b>' + (e.steps ? 'Soluci&oacute;n, paso a paso.' : 'Soluci&oacute;n propuesta, paso a paso.') + '</b>' + (e.steps ? '' : ' <span class="muted">No es oficial: el ejercicio no trae soluci&oacute;n, as&iacute; que la he escrito yo. Comp&aacute;rala con tus apuntes.</span>') + mdRender(pieces.slice(0, shown).join('\n\n')) + (shown < pieces.length ? '<p class="muted">Quedan ' + (pieces.length - shown) + ' de ' + pieces.length + ' pasos.</p>' : '') + '</div>';
   } else {
     if (V.hints >= 2 && hasSol) h += '<div class="card"><b>Pista 2.</b>' + mdRender(String(sol).split('\n').filter(function (l) { return l.trim(); }).slice(0, 3).join('\n')) + '</div>';
     if (V.hints >= 3) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';

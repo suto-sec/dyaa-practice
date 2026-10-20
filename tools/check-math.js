@@ -6,6 +6,7 @@ const texts = [];
 Object.entries(w.SUMMARIES||{}).forEach(([id,md])=>texts.push(['S:'+id, md]));
 Object.entries(w.QUIZZES||{}).forEach(([id,qs])=>qs.forEach((q,i)=>texts.push(['Q:'+id+'#'+i, [q.q,q.why].concat(q.options).join('\n')])));
 (w.EXAMS||[]).forEach(e=>e.exercises.forEach(x=>{texts.push(['E:'+x.id+' stmt',x.statement]); if(x.solution) texts.push(['E:'+x.id+' sol',x.solution]);}));
+((w.LADDER||{exam:{exercises:[]}}).exam.exercises).forEach(x=>{texts.push(['P:'+x.id+' stmt',x.statement]); texts.push(['P:'+x.id+' sol',x.solution]); if(x.hint) texts.push(['P:'+x.id+' hint',x.hint]);});
 let n=0, bad=[];
 for (const [id,t0] of texts) {
   const t = t0.replace(/```[\s\S]*?```/g,'').replace(/`[^`\n]*`/g,'');

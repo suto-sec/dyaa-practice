@@ -40,6 +40,12 @@ Licensing overview
    of the other practice (app/practice.js) are original code under the MIT
    License.
 
+   The graded exercises (content/peldanos/*.md, "peldanos") are short exercises
+   with worked solutions written for this project from the content of the
+   lecture notes (the proofs and formulas of the readings). They are licensed
+   under CC BY-SA 4.0 and copy nothing from item 4. Their order file also names
+   the extra exercises of item 4 by number, as tools/roadmap.json does.
+
    As required by ShareAlike, these adapted files are licensed under
    CC BY-SA 4.0 as well.
 

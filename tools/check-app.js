@@ -96,7 +96,7 @@ if (m) {
 if (hasExams) {
   // open the next exercise from the path, rate it, check XP and the "next in route" button
   const exams = win.EXAMS, stageEx = win.STAGE_EX;
-  const first = stageEx.sumatorios[0];
+  const first = win.LADDER ? win.LADDER.order.sumatorios['t21-potencias-logs'][0] : stageEx.sumatorios[0];   // the route starts with the first peldaño
   go('#/ejercicios/' + encodeURIComponent(first));
   ok(/Etapa 2\. /.test(app()) && /ejercicio 1 de/.test(app()), 'exercise shows its place in the stage');
   ok(!/id="tm"/.test(app()) && !/cron&oacute;metro/.test(app()), 'the exercise page has no stopwatch');
@@ -109,6 +109,23 @@ if (hasExams) {
   const S = JSON.parse(store['dyaa-practice-v1']);
   ok(S.ex[first] && S.ex[first].hist.length === 1 && S.xp >= 0, 'rating persisted');
   go('#/ruta'); ok(/chk">&#10003;/.test(app()), 'rated exercise shows as done in Ruta');
+  // peldaños: short graded exercises in front of the harder ones, with a hint of their own and the solution one step at a time
+  if (win.LADDER) {
+    const s16 = 'peldanos/peldanos#S16', k17 = 'ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.7', k14 = 'ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.4', s09 = 'peldanos/peldanos#S09';
+    go('#/ejercicios/' + encodeURIComponent(s16));
+    ok(/peldaño/.test(app()) && /Etapa 2\. /.test(app()) && /huecos/.test(app()), 'a peldaño opens like any exercise and says what it is');
+    click({ act: 'hint' }); ok(/Pista 1\./.test(app()) && /Sustituye en/.test(app()), 'its first hint is its own, not only the name of the skill');
+    click({ act: 'hint' }); ok(/Soluci&oacute;n, paso a paso/.test(app()) && /Paso 1\./.test(app()) && !/Paso 2\./.test(app()) && !/No es oficial/.test(app()), 'the solution is shown one step at a time and is not called unofficial');
+    for (let i = 0; i < 8 && /data-act="hint"/.test(app()); i++) click({ act: 'hint' });
+    ok(/Paso 5\./.test(app()) && /data-act="rate"/.test(app()), 'after the last step it can be rated');
+    click({ act: 'rate', r: '2' });
+    ok(app().indexOf(encodeURIComponent(k17)) >= 0 || app().indexOf(k17) >= 0, 'the route goes from the last peldaño of a reading to the exam exercise it prepares (1.7)');
+    if (hasExams) {
+      go('#/ejercicios/' + encodeURIComponent(s09)); for (let i = 0; i < 8 && /data-act="hint"/.test(app()); i++) click({ act: 'hint' }); click({ act: 'rate', r: '2' });
+      ok(app().indexOf(encodeURIComponent(k14)) >= 0 || app().indexOf(k14) >= 0, 'and an easy exercise leads to the next one in the route (S09 -> 1.4)');
+    }
+    go('#/ejercicios'); ok(/Pelda&ntilde;os|Peldaños/.test(app()) || /peldaño/.test(app()), 'the exercise list shows them');
+  }
   // Fallé schedules a review for tomorrow, which shows up in Hoy only when due; rated item is not due today
   const second = stageEx.sumatorios[1];
   go('#/ejercicios/' + encodeURIComponent(second));

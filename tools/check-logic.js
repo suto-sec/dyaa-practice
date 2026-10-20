@@ -307,5 +307,20 @@ const LG = require(path.join(APP, 'logo.js'));
   ok(L.orderPieces('**Paso 1.** a\n\n**Paso 2.** b') === null && L.orderPieces('una solución sin pasos') === null && L.orderPieces('') === null, 'fewer than three steps, or no steps: nothing to order');
   ok(L.orderScore([0, 1, 2]) === 3 && L.orderScore([1, 0, 2]) === 1 && L.orderScore([2, 1, 0]) === 1, 'how many steps are in place');
 }
+{
+  // peldaños and additional exercises, in the order written for each reading
+  const stg = [{ id: 'a', theory: [{ id: 'r0' }, { id: 'r1' }] }, { id: 'b', theory: [{ id: 'r2' }] }];
+  const isR = (k) => /^p\//.test(k);
+  const m = L.mergeLadder(stg, { a: ['x/1', 'x/2', 'x/3'], b: ['x/4'] }, { 'x/1': 0, 'x/3': 1, 'x/4': 0 },
+    { a: { r0: ['p/1', 'x/2', 'p/2'], r1: ['p/3', 'x/1', 'p/gone2', 'p/2'] }, b: { r2: ['p/4', 'x/9'] } }, (k) => isR(k) && k !== 'p/gone2');
+  ok(m.ex.a.join() === 'p/1,x/2,p/2,p/3,x/1,x/3', 'the named exercises come first, in the order written, each once; the rest keep their place after them (' + m.ex.a.join() + ')');
+  ok(m.at['p/1'] === 0 && m.at['x/2'] === 0 && m.at['p/3'] === 1 && m.at['x/1'] === 1 && m.at['x/3'] === 1, 'each named exercise goes after the reading it is listed under; the others keep theirs');
+  ok(m.ex.b.join() === 'p/4,x/4' && m.at['p/4'] === 0 && !('x/9' in m.at), 'an exercise that does not exist (exam data missing) is left out');
+  ok(L.mergeLadder(stg, {}, {}, { a: { r0: ['p/1', 'x/2'] } }, isR).ex.a.join() === 'p/1', 'without exam data the peldaños are still there');
+  const path2 = L.buildPath(stg, m.ex, [], m.at, {});
+  ok(path2.filter((s) => s.stage === 'a' && s.type === 'ex').map((s) => s.key).join() === 'p/1,x/2,p/2,p/3,x/1,x/3', 'the route follows that order');
+  const ri = (k) => path2.findIndex((s) => s.id === 'e:' + k), ti = (id) => path2.findIndex((s) => s.id === 't:' + id);
+  ok(ti('r0') < ri('p/1') && ri('p/2') < ti('r1') && ti('r1') < ri('p/3'), 'and each one comes after its reading, before the next');
+}
 console.log(fails ? fails + ' FAILURES' : 'logic checks passed');
 process.exit(fails ? 1 : 0);

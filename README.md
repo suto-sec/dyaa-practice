@@ -113,7 +113,7 @@ Re-run step 3 whenever you change the exam files. `app/data-exams.js` and `conte
 
 ## For developers
 
-Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-logic.js`, `node tools/check-app.js`, `node tools/check-practice.js` (the generators: every question has one right answer, checked against independent computations).
+Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-logic.js`, `node tools/check-app.js`, `node tools/check-practice.js` (the generators: every question has one right answer, checked against independent computations), `node tools/check-ladder.js` (the peldaños: structure, formulas render, every closed form they state is compared with the sum computed term by term).
 
 `python3 tools/build.py` regenerates `app/data-lectures.js` (committed) and `app/data-exams.js` (not committed) from `content/`. Edit `content/lectures/*.md` or `tools/roadmap.json` and run it again. Regenerating the slide figures needs `pdftoppm` and ImageMagick (`tools/figures.py`).
 
@@ -142,6 +142,7 @@ Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-lo
 - **Registro**: every reading, quick check, exercise, exam and skipped step with its day and time, its rating and XP, and how long it took when the stopwatch (gear menu → *Estudio*) was on. It can be filtered by type. Without the stopwatch each entry counts with its time estimate in the day totals.
 - **Settings that travel with the progress** (daily goal, stopwatch, exam realism) are saved inside the progress, so a [shared progress file](#share-it-between-profiles-and-computers) carries them to your other profiles. Resetting the progress keeps them. The gear-menu options (theme, accent, route, organisation) stay per browser profile.
 - **Resumen**: one sheet per etapa (per tema when organised by temas) with the formulas, schemes and typical mistakes to remember. It is a quick reference: it has its own tab, a row at the top of every block in **Ruta** and a link in the first hint of each exercise, and it is not a route step, so it does not count towards progress. The sheets live in `content/summaries/<stage id>.md`.
+- **Peldaños**: short graded exercises that lead from each reading into the harder exercises, so that no step of the route is a jump. They live in `content/peldanos/<stage id>.md`: `stage:` the etapa, an `## Orden` list that says, reading by reading, the order of the route (`- t21-sumas-basicas: S08 S09 1.4 S10 ...`; a number like `1.4` is an existing extra exercise), and one `### S08 · Title` block per exercise with an optional `nivel:` (difficulty, never going down inside a reading), the statement, an optional `#### Pista` and a `#### Solución` written in steps (`**Paso 1.** ...`), which the app reveals one at a time. They are exercises like the others (hints, rating, notebook, log) and work without the exam data. They are original and licensed CC BY-SA 4.0.
 - **Hints**: the first hint names the skill and links the theory and the summary. Exercises with an official solution then show its first lines and, last, the whole solution. For the extra exercises that come without one, `content/exams/soluciones/<exam id>.md` can hold a proposed solution written in steps (`**Paso 1.** ...`); the app reveals it one step at a time and labels it *no oficial*.
 - **Teoría**: the lecture notes, with deep links from hints and roadmap steps. Teoría and Resumen are browsed the same way: a picker (tema or etapa) at the top of the sidebar, a filter, the outline of the sections (it follows what you read), and previous/next at both ends of the text. The figures are cropped from the slides (`app/img/`, listed in `tools/figures.json`); `python3 tools/figures.py <folder with the slide PDFs>` regenerates them (needs `pdftoppm` and ImageMagick).
 
@@ -151,6 +152,7 @@ Checks (need Node 18 or newer): `node tools/check-math.js`, `node tools/check-lo
 content/lectures/   lecture notes (temas 1-7) converted from the slides (CC BY-SA 4.0)
 content/summaries/  one summary sheet per etapa: formulas and things to remember (CC BY-SA 4.0)
 content/quizzes/    the quick checks after each reading (CC BY-SA 4.0)
+content/peldanos/   the graded exercises that lead into the harder ones, per etapa (CC BY-SA 4.0)
 content/exams/      past exams and extra exercises, and soluciones/ with proposed solutions (NOT in git, see below)
 tools/build.py      Markdown -> app/data-lectures.js, app/data-exams.js
 tools/skills.json   skills, theory links, tagging patterns

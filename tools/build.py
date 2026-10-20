@@ -8,6 +8,7 @@ LEC = ROOT / "content" / "lectures"
 EXA = ROOT / "content" / "exams"
 OWN = EXA / "soluciones"   # proposed solutions for exercises that come without one: <exam id>.md with "### Ejercicio N.M" blocks
 APP = ROOT / "app"
+LADDER = ROOT / "content" / "peldanos"   # short graded exercises (peldaños) that lead into the harder ones, one file per stage
 SUMM = ROOT / "content" / "summaries"   # one sheet per etapa (formulas and things to remember), named <stage id>.md
 TOOLS = Path(__file__).resolve().parent
 FENCE = re.compile(r"^\s*```")
@@ -383,6 +384,91 @@ def parse_exam(path, skills, overrides, roadmap):
     return exam
 
 
+def adic_key(n):
+    """Key of an existing additional exercise ("1.4") in the route: <exam id>/<exercise id>."""
+    f = "ejercicios_adicionales_1-2" if int(n.split(".")[0]) <= 2 else "ejercicios_adicionales_3-9"
+    return "%s/%s#%s" % (f, f, n)
+
+
+def load_ladder(roadmap):
+    """Peldaños: {exam: a pseudo exam holding them, order: {stage: {reading: [keys]}}} or None.
+    A file has `stage: <id>`, an `## Orden` list (`- <reading id>: S01 S02 1.4 ...`, numbers like 1.4 are existing
+    additional exercises) and one `### S01 · Title` block per exercise: optional `nivel:`/`skills:` lines, the
+    statement, `#### Pista` (optional) and `#### Solución` (steps written as `**Paso 1.** ...`)."""
+    if not LADDER.is_dir():
+        return None
+    stages = {g["id"]: g for g in roadmap["stages"]}
+    exercises, order, seen = [], {}, set()
+    for path in sorted(LADDER.glob("*.md")):
+        stage, mode, cur, tiles, used = None, None, None, {}, []
+        def close():
+            nonlocal cur
+            if cur is None: return
+            for k in ("statement", "hint", "solution"):
+                cur[k] = "\n".join(cur.pop("_" + k)).strip()
+            if not cur["statement"] or not cur["solution"] or not re.search(r"\*\*Paso \d+", cur["solution"]):
+                warn("peldaño without statement or steps:", cur["n"])
+            if not cur["hint"]: del cur["hint"]
+            exercises.append(cur); cur = None
+        for line, infence in iter_lines(path.read_text(encoding="utf-8")):
+            m = None if infence else re.match(r"^(#{1,4})\s+(.*?)\s*$", line)
+            if m and len(m.group(1)) == 2:
+                close(); mode = "order" if m.group(2) == "Orden" else None
+                continue
+            if m and len(m.group(1)) == 3:
+                close()
+                mm = re.match(r"^(\w+)\s*·\s*(.+)$", m.group(2))
+                if not mm: warn("bad peldaño heading in", path.name, m.group(2)); mode = None; continue
+                rid = mm.group(1)
+                if rid in seen: warn("duplicate peldaño:", rid)
+                seen.add(rid)
+                sk = stages[stage]["skills"][:1] if stage in stages else []
+                cur = {"id": "peldanos#" + rid, "n": rid, "title": mm.group(2).strip(), "points": None, "durationMin": None,
+                       "kind": "ejs", "skills": sk, "stage": stage, "src": "adic", "diff": 0.5, "steps": True,
+                       "_statement": [], "_hint": [], "_solution": []}
+                mode, head = "statement", True
+                continue
+            if m and len(m.group(1)) == 4 and cur is not None and m.group(2) in ("Pista", "Solución"):
+                mode = "hint" if m.group(2) == "Pista" else "solution"
+                continue
+            if mode is None and cur is None:
+                ms = re.match(r"^stage:\s*(\S+)\s*$", line)
+                if ms:
+                    stage = ms.group(1)
+                    if stage not in stages: warn("peldaños of an unknown stage:", stage)
+                continue
+            if mode == "order":
+                mo = re.match(r"^-\s*([\w-]+):\s*(.+)$", line)
+                if mo:
+                    ids = mo.group(2).split()
+                    tiles[mo.group(1)] = [adic_key(t) if re.match(r"^\d+\.\d+$", t) else "peldanos/peldanos#" + t for t in ids]
+                    used += [t for t in ids if not re.match(r"^\d+\.\d+$", t)]
+                continue
+            if cur is None: continue
+            if mode == "statement" and head:
+                mk = re.match(r"^(nivel|skills):\s*(.+)$", line)
+                if mk:
+                    if mk.group(1) == "nivel": cur["diff"] = float(mk.group(2))
+                    else: cur["skills"] = [x.strip() for x in mk.group(2).split(",")]
+                    continue
+                if not line.strip(): continue
+                head = False
+            cur["_" + mode].append(line)
+        close()
+        have = [e["n"] for e in exercises if e["stage"] == stage]
+        for r in have:
+            if used.count(r) != 1: warn("peldaño %s appears %d times in the Orden of %s" % (r, used.count(r), path.name))
+        for r in set(used):
+            if r not in have: warn("Orden names an unknown peldaño:", r)
+        theory = {t["id"] for t in stages[stage]["theory"]} if stage in stages else set()
+        for t in tiles:
+            if t not in theory: warn("Orden names an unknown reading:", stage, t)
+        order[stage] = tiles
+    if not exercises:
+        return None
+    return {"exam": {"id": "peldanos", "title": "Peldaños", "durationMin": None, "exercises": exercises, "kind": "adic"}, "order": order}
+
+
 def main():
     lectures = [parse_lecture(p) for p in sorted(LEC.glob("*.md"))]
     skills = load_skills(lectures)
@@ -398,6 +484,8 @@ def main():
         f.write("window.STAGES = %s;\n" % json.dumps(roadmap["stages"], ensure_ascii=False, indent=1))
         f.write("window.SUMMARIES = %s;\n" % json.dumps(load_summaries(roadmap), ensure_ascii=False, indent=1))
         f.write("window.QUIZZES = %s;\n" % json.dumps(load_quizzes(roadmap), ensure_ascii=False, indent=1))
+        lad = load_ladder(roadmap)
+        if lad: f.write("window.LADDER = %s;\n" % json.dumps(lad, ensure_ascii=False, indent=1))
         f.write("window.LEGACY_THEORY = %s;\n" % json.dumps(roadmap.get("legacy_theory", {}), ensure_ascii=False))
     print("lectures: %d (%d sections)" % (len(lectures), sum(len(l["sections"]) for l in lectures)))
     if not EXA.is_dir():

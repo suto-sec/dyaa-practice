@@ -64,6 +64,24 @@ L.buildPath = function (stages, stageEx, lectures, at, quizzes) {
   });
   return path;
 };
+/* Puts the peldaños (short graded exercises, see content/peldanos) and the additional exercises in the order written for each reading.
+   order: {stage: {reading id: [keys]}}. Exercises that the lists do not name keep their place after the named ones. Keys that do not exist
+   (the exam data is not there) are left out. Returns the new per-stage lists and the reading each named exercise goes after. */
+L.mergeLadder = function (stages, stageEx, at, order, isRung) {
+  var ex = {}, at2 = {}, k;
+  for (k in at) at2[k] = at[k];
+  stages.forEach(function (g) {
+    var list = (stageEx[g.id] || []), tiles = (order && order[g.id]) || {}, front = [];
+    (g.theory || []).forEach(function (t, i) {
+      (tiles[t.id] || []).forEach(function (key) {
+        if (front.indexOf(key) >= 0 || !(isRung(key) || list.indexOf(key) >= 0)) return;
+        front.push(key); at2[key] = i;
+      });
+    });
+    ex[g.id] = front.concat(list.filter(function (key) { return front.indexOf(key) < 0; }));
+  });
+  return { ex: ex, at: at2 };
+};
 L.stepDone = function (step, S, exams) {
   if (S.skip && S.skip[step.id]) return true;
   if (step.type === 'theory') return !!(S.theory && S.theory[step.id]);
