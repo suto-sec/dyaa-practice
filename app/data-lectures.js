@@ -6031,6 +6031,204 @@ window.LADDER = {
     "solution": "**Paso 1. a).** $2^{n+1}=2\\cdot2^{n}\\le2\\cdot2^{n}$. Pareja $(2,\\,1)$.\n\n**Paso 2. b).** Supón $3^{n}\\le c\\,2^{n}$ para todo $n\\ge n_0$. Dividiendo entre $2^{n}$: $\\left(\\tfrac32\\right)^{n}\\le c$. Pero $\\left(\\tfrac32\\right)^{n}$ crece sin cota, así que supera a cualquier $c$ para $n$ grande. Contradicción.\n\n**Paso 3. c).** Supón $n\\,2^{n}\\le c\\,2^{n}$. Dividiendo entre $2^{n}$: $n\\le c$, falso para $n>c$. Luego $n\\,2^{n}\\notin O(2^{n})$."
    },
    {
+    "id": "peldanos#B01",
+    "n": "B01",
+    "title": "Cuántas veces se ejecuta el cuerpo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.2,
+    "steps": true,
+    "statement": "**Ejemplo resuelto.** `for i in range(5)` da a $i$ los valores $0,1,2,3,4$: el cuerpo se ejecuta $5$ veces. Con $n$ en lugar de $5$, $n$ veces.\n\n**Ahora tú.** ¿Cuántas veces se ejecuta el cuerpo?\n- a) `for i in range(n)`\n- b) `for i in range(1, n)`\n- c) `for i in range(2, n + 1)`\n- d) `for i in range(0, n, 2)`, con $n$ par\n- e) `i = 1` y `while i < n: i = i * 2`, con $n$ potencia de $2$",
+    "hint": "Escribe los valores que toma $i$ para un $n$ pequeño, por ejemplo $n=8$, y cuéntalos. Recuerda que `range(a, b)` llega hasta $b-1$.",
+    "solution": "**Paso 1. Escribe los valores con $n=8$.** a) $0,\\dots,7$: $8$. b) $1,\\dots,7$: $7$. c) $2,\\dots,8$: $7$. d) $0,2,4,6$: $4$. e) $i=1,2,4$ (cuando $i=8$ ya no se cumple $i<8$): $3$.\n\n**Paso 2. Generaliza.** a) $n$. b) $n-1$. c) $n-1$ (de $2$ a $n$ hay $n-2+1$). d) $n/2$ (se salta de dos en dos). e) $\\log_2n$: en cada vuelta $i$ se dobla, y hacen falta $\\log_2n$ dobles para llegar de $1$ a $n$."
+   },
+   {
+    "id": "peldanos#B02",
+    "n": "B02",
+    "title": "El coste de un bucle",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.3,
+    "steps": true,
+    "statement": "Para contar operaciones, la inicialización, cada comparación y cada incremento cuentan $1$. El coste de un bucle que se repite $n$ veces es\n$$T=1_{\\text{inic.}}+\\sum_{i=1}^{n}\\bigl(1_{\\text{comp.}}+T_{\\text{cuerpo}}+1_{\\text{incr.}}\\bigr)+1_{\\text{última comp.}}$$\n\n**Ejemplo resuelto.** `for i in range(n): x += 1` (el cuerpo es $1$ operación): $T=1+n(1+1+1)+1=3n+2$.\n\n**Ahora tú.** Calcula $T$ en función de $n$:\n- a) `for i in range(n)`, con un cuerpo de $2$ operaciones\n- b) `for i in range(1, n)`, con un cuerpo de $1$ operación\n- c) Comprueba (a) y (b) con $n=3$ contando una a una.",
+    "hint": "Primero cuenta las iteraciones (como en el ejercicio anterior); la fórmula es \"$1+$ iteraciones $\\times$ (qué cuesta una vuelta) $+\\,1$\".",
+    "solution": "**Paso 1. a).** $n$ iteraciones, cada una $1+2+1=4$: $T=1+4n+1=4n+2$.\n\n**Paso 2. b).** $n-1$ iteraciones, cada una $1+1+1=3$: $T=1+3(n-1)+1=3n-1$.\n\n**Paso 3. Comprueba con $n=3$.** a) $4\\cdot3+2=14$: inicio ($1$), tres vueltas de $4$ ($12$) y la última comparación ($1$). b) $3\\cdot3-1=8$: inicio ($1$), dos vueltas de $3$ ($6$) y la última comparación ($1$).\n\n**Paso 4. Orden.** Los dos son $\\Theta(n)$: las constantes no cambian el orden."
+   },
+   {
+    "id": "peldanos#B03",
+    "n": "B03",
+    "title": "Dos bucles anidados: contar",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.4,
+    "steps": true,
+    "statement": "Cuenta cuántas veces se ejecuta `c += 1`:\n```python\nfor i in range(n):            # (a)\n    for j in range(n):\n        c += 1\n\nfor i in range(n):            # (b)\n    for j in range(i):\n        c += 1\n\nfor i in range(n):            # (c)\n    for j in range(i, n):\n        c += 1\n```\n**Ejemplo resuelto para (b) con $n=4$.** $i=0$: $0$ veces; $i=1$: $1$; $i=2$: $2$; $i=3$: $3$. Total $6$.\n\n**Ahora tú.** Haz lo mismo para (a) y (c) con $n=4$, y da la fórmula en función de $n$ para los tres.",
+    "hint": "La vuelta $i$ del bucle exterior repite el cuerpo tantas veces como iteraciones tiene el interior para ese $i$. Después suma sobre $i$.",
+    "solution": "**Paso 1. Tabla con $n=4$.** (a) $4+4+4+4=16$. (b) $0+1+2+3=6$. (c) $4+3+2+1=10$.\n\n**Paso 2. Fórmulas.** (a) $\\sum_{i=0}^{n-1}n=n^{2}$. (b) $\\sum_{i=0}^{n-1}i=\\dfrac{n(n-1)}{2}$. (c) $\\sum_{i=0}^{n-1}(n-i)=\\dfrac{n(n+1)}{2}$.\n\n**Paso 3. Comprueba y ordena.** Con $n=4$: $16$, $\\frac{4\\cdot3}{2}=6$, $\\frac{4\\cdot5}{2}=10$. Los tres son $\\Theta(n^{2})$, aunque (b) hace la mitad de trabajo que (a)."
+   },
+   {
+    "id": "peldanos#B04",
+    "n": "B04",
+    "title": "Insertion-sort, a mano",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.5,
+    "steps": true,
+    "statement": "```python\ndef insert_sort(a):\n    for j in range(1, len(a)):\n        val = a[j]\n        i = j - 1\n        while i >= 0 and a[i] > val:\n            a[i + 1] = a[i]\n            i = i - 1\n        a[i + 1] = val\n```\nSea $t_j$ el número de veces que se ejecuta el cuerpo del `while` para un valor de $j$.\n- a) Aplícalo a $[2,5,1,4,3]$ y anota $t_1,t_2,t_3,t_4$.\n- b) ¿Qué vale $\\sum t_j$ si el vector ya está ordenado, como $[1,2,3,4,5]$?\n- c) ¿Y si está en orden inverso, $[5,4,3,2,1]$? Da la fórmula para $n$ elementos.",
+    "hint": "En cada $j$, el `while` desplaza a la derecha los elementos de la parte ordenada que son mayores que `val`. $t_j$ es cuántos desplaza.",
+    "solution": "**Paso 1. a), vuelta a vuelta.** $j=1$: `val`$=5$, no hay nada mayor delante: $t_1=0$. $j=2$: `val`$=1$ desplaza el $5$ y el $2$: $t_2=2$. Queda $[1,2,5,4,3]$. $j=3$: `val`$=4$ desplaza el $5$: $t_3=1$. Queda $[1,2,4,5,3]$. $j=4$: `val`$=3$ desplaza el $5$ y el $4$: $t_4=2$. Total $\\sum t_j=5$.\n\n**Paso 2. Mejor caso.** b) Ordenado: nadie se desplaza, $t_j=0$ para todo $j$ y $\\sum t_j=0$.\n\n**Paso 3. Peor caso.** c) Inverso: cada `val` es menor que todos los de delante, así que $t_j=j$. Para $n=5$: $1+2+3+4=10$. En general $\\sum_{j=1}^{n-1}j=\\dfrac{n(n-1)}{2}$."
+   },
+   {
+    "id": "peldanos#B05",
+    "n": "B05",
+    "title": "El coste de insertion-sort",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Con el mismo código de insertion-sort del ejercicio anterior, suponemos que **cada línea ejecutada cuesta $1$**. Las veces que se ejecuta cada línea son:\n\n| línea | veces |\n|---|---|\n| `for j ...` | $n$ |\n| `val = a[j]` | $n-1$ |\n| `i = j - 1` | $n-1$ |\n| `while ...` (la condición) | $\\sum_{j=1}^{n-1}(t_j+1)$ |\n| `a[i+1] = a[i]` | $\\sum_{j=1}^{n-1}t_j$ |\n| `i = i - 1` | $\\sum_{j=1}^{n-1}t_j$ |\n| `a[i+1] = val` | $n-1$ |\n\n- a) Calcula $T(n)$ en el mejor caso ($t_j=0$).\n- b) Calcula $T(n)$ en el peor caso ($t_j=j$).\n- c) Comprueba las dos fórmulas con $n=5$ y da el orden de cada una.",
+    "hint": "Suma todas las filas de la tabla. En el peor caso necesitas $\\sum_{j=1}^{n-1}j=\\frac{n(n-1)}{2}$ y $\\sum_{j=1}^{n-1}(j+1)=\\frac{n(n+1)}{2}-1$.",
+    "solution": "**Paso 1. Mejor caso.** a) $n+(n-1)+(n-1)+(n-1)+0+0+(n-1)=5n-4$. El `while` solo evalúa su condición una vez por vuelta.\n\n**Paso 2. Peor caso, las filas.** b) Condición: $\\frac{n(n+1)}{2}-1$. Cuerpo del `while`, dos líneas: $2\\cdot\\frac{n(n-1)}{2}=n(n-1)$. Las otras cuatro suman $n+3(n-1)=4n-3$.\n\n**Paso 3. Peor caso, el total.** $T(n)=4n-3+\\dfrac{n(n+1)}{2}-1+n(n-1)=\\dfrac{3n^{2}}{2}+\\dfrac{7n}{2}-4$.\n\n**Paso 4. Comprueba con $n=5$.** Mejor: $5\\cdot5-4=21$ (suma de la tabla: $5+4+4+4+4$). Peor: $\\frac{3\\cdot25}{2}+\\frac{35}{2}-4=51$ (suma de la tabla: $5+4+4+14+10+10+4$). Mejor caso $\\Theta(n)$, peor caso $\\Theta(n^{2})$."
+   },
+   {
+    "id": "peldanos#B06",
+    "n": "B06",
+    "title": "Un doble bucle triangular, con la fórmula",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.6,
+    "steps": true,
+    "statement": "Con la convención del ejercicio B02 (inicialización, comparación, incremento y cada operación del cuerpo cuentan $1$), calcula $T(n)$ de\n```python\nfor i in range(n):\n    for j in range(i):\n        x += 1\n```\n- a) Coste del bucle interior para un $i$ dado.\n- b) Coste del bucle exterior, sumando sobre $i$.\n- c) Comprueba con $n=2$ contando una a una.",
+    "hint": "El bucle interior hace $i$ vueltas de $1+1+1=3$ más $2$ (inicialización y última comparación). El exterior suma ese coste, más $2$ por vuelta, para $i=0,\\dots,n-1$.",
+    "solution": "**Paso 1. Bucle interior.** a) $T_{\\text{int}}(i)=1+3i+1=3i+2$.\n\n**Paso 2. Bucle exterior.** b) $T(n)=1+\\sum_{i=0}^{n-1}\\bigl(1+(3i+2)+1\\bigr)+1=2+\\sum_{i=0}^{n-1}(3i+4)$.\n\n**Paso 3. Resuelve las sumas.** $\\sum_{i=0}^{n-1}3i=\\dfrac{3n(n-1)}{2}$ y $\\sum_{i=0}^{n-1}4=4n$. Por tanto $T(n)=2+\\dfrac{3n(n-1)}{2}+4n=\\dfrac{3n^{2}+5n+4}{2}$.\n\n**Paso 4. Comprueba con $n=2$.** El interior cuesta $2$ para $i=0$ y $5$ para $i=1$. El exterior: $1+(1+2+1)+(1+5+1)+1=13$. La fórmula da $\\frac{12+10+4}{2}=13$. Orden: $\\Theta(n^{2})$."
+   },
+   {
+    "id": "peldanos#B07",
+    "n": "B07",
+    "title": "El orden de un bucle, sin contar todo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.65,
+    "steps": true,
+    "statement": "Da el orden $\\Theta$ del número de veces que se ejecuta `trabajo()` (una operación) en cada fragmento:\n```python\n# (a)\nfor i in range(n):\n    for j in range(n):\n        trabajo()\n# (b)\nfor i in range(n):\n    j = 1\n    while j < n:\n        trabajo()\n        j = j * 2\n# (c)\nfor i in range(n):\n    for j in range(n):\n        for k in range(n):\n            trabajo()\n# (d)\nfor i in range(n):\n    for j in range(i * i):\n        trabajo()\n# (e)\nfor i in range(n):\n    trabajo()\nfor i in range(n):\n    for j in range(n):\n        trabajo()\n# (f)\nfor i in range(n):\n    for j in range(5):\n        trabajo()\n```",
+    "hint": "Escribe, para cada fragmento, el sumatorio de las vueltas: \"bucle exterior $\\times$ vueltas del interior\". Un `while` que dobla `j` da $\\log_2n$ vueltas.",
+    "solution": "**Paso 1. (a), (c), (f).** (a) $\\sum_{i}\\sum_{j}1=n^{2}$: $\\Theta(n^{2})$. (c) $n^{3}$: $\\Theta(n^{3})$. (f) $5n$: $\\Theta(n)$.\n\n**Paso 2. (b).** El `while` da $\\log_2n$ vueltas en cada una de las $n$ del bucle exterior: $n\\log_2n$, $\\Theta(n\\log n)$.\n\n**Paso 3. (d).** $\\sum_{i=0}^{n-1}i^{2}=\\dfrac{(n-1)n(2n-1)}{6}\\in\\Theta(n^{3})$.\n\n**Paso 4. (e).** Dos bucles seguidos se suman: $n+n^{2}\\in\\Theta(n^{2})$. Manda el mayor."
+   },
+   {
+    "id": "peldanos#B08",
+    "n": "B08",
+    "title": "Burbuja: contar comparaciones",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "```python\ndef bubble_sort(a):\n    n = len(a)\n    for i in range(0, n - 1):\n        for j in range(n - 1, i, -1):\n            if a[j - 1] > a[j]:\n                a[j - 1], a[j] = a[j], a[j - 1]\n```\n- a) ¿Cuántas veces se evalúa la condición del `if` para cada $i$?\n- b) ¿Cuántas en total? Calcúlalo para $n=5$ y para $n$ general.\n- c) ¿Cuántos intercambios hace con $[1,2,3,4,5]$? ¿Y con $[5,4,3,2,1]$?\n- d) ¿De qué orden es el algoritmo en el mejor y en el peor caso?",
+    "hint": "Para un $i$, `j` va de $n-1$ hasta $i+1$ (bajando): son $n-1-i$ valores.",
+    "solution": "**Paso 1. Por cada $i$.** a) $n-1-i$ comparaciones.\n\n**Paso 2. Total.** b) $\\sum_{i=0}^{n-2}(n-1-i)=(n-1)+(n-2)+\\cdots+1=\\dfrac{n(n-1)}{2}$. Con $n=5$: $4+3+2+1=10$.\n\n**Paso 3. Intercambios.** c) Con el vector ordenado la condición nunca es cierta: $0$ intercambios. Con el vector inverso, cada comparación encuentra una pareja desordenada: $10$ intercambios para $n=5$.\n\n**Paso 4. Orden.** d) Las comparaciones no dependen de los datos: siempre $\\frac{n(n-1)}{2}$. En los dos casos el coste es $\\Theta(n^{2})$. Solo cambia el número de intercambios, que es una constante por cada comparación."
+   },
+   {
+    "id": "peldanos#B09",
+    "n": "B09",
+    "title": "Salir antes de tiempo",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.7,
+    "steps": true,
+    "statement": "Halla el orden $\\Theta$ en el mejor y en el peor caso:\n```python\ndef contiene(a, x):\n    for i in range(len(a)):\n        if a[i] == x:\n            return True\n    return False\n\ndef hay_repetidos(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if a[i] == a[j]:\n                return True\n    return False\n```\n- a) `contiene`, mejor y peor caso.\n- b) `hay_repetidos`, mejor y peor caso. En el peor, calcula el número de comparaciones para $n=5$ y para $n$ general.",
+    "hint": "El mejor caso es el que sale de los bucles lo antes posible. El peor es el que nunca encuentra lo que busca y recorre todo.",
+    "solution": "**Paso 1. a).** Mejor caso: `x` es `a[0]` y se sale tras una comparación: $\\Theta(1)$. Peor caso: `x` no está y se recorre toda la lista: $\\Theta(n)$.\n\n**Paso 2. b), mejor caso.** `a[0] == a[1]`: una comparación, $\\Theta(1)$.\n\n**Paso 3. b), peor caso.** Todos distintos: se comparan todas las parejas. Para cada $i$ hay $n-1-i$ comparaciones: $\\sum_{i=0}^{n-1}(n-1-i)=\\dfrac{n(n-1)}{2}$. Con $n=5$: $10$. Orden $\\Theta(n^{2})$."
+   },
+   {
+    "id": "peldanos#B10",
+    "n": "B10",
+    "title": "Un bucle cuyo tamaño se divide por dos",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.8,
+    "steps": true,
+    "statement": "```python\nm = n\nwhile m >= 1:\n    for i in range(m):\n        trabajo()\n    m = m // 2\n```\nCon $n$ potencia de $2$:\n- a) ¿Cuántas veces se llama a `trabajo()` si $n=8$?\n- b) ¿Y para $n$ general? Usa una serie geométrica.\n- c) ¿Cuál es el orden? ¿Por qué no es $n\\log n$, si el `while` da $\\log_2n+1$ vueltas?",
+    "hint": "En cada vuelta del `while` el `for` hace $m$ iteraciones, y $m$ vale $n,\\frac n2,\\frac n4,\\dots,1$.",
+    "solution": "**Paso 1. Caso $n=8$.** a) $m=8,4,2,1$: $8+4+2+1=15$ llamadas.\n\n**Paso 2. Caso general.** b) $\\sum_{k=0}^{\\log_2n}\\dfrac{n}{2^{k}}=n\\sum_{k=0}^{\\log_2n}\\left(\\tfrac12\\right)^{k}=n\\left(2-\\dfrac{1}{n}\\right)=2n-1$. Con $n=8$ da $15$.\n\n**Paso 3. Orden.** c) $\\Theta(n)$. El `for` solo hace $n$ vueltas la primera vez; después la mitad, la cuarta parte... Las vueltas del `while` son $\\log_2n$, pero cada una trabaja menos que la anterior, así que el producto $n\\log n$ sobreestima. Si el `for` hiciera siempre $n$ vueltas, sí saldría $\\Theta(n\\log n)$."
+   },
+   {
+    "id": "peldanos#B11",
+    "n": "B11",
+    "title": "Tres bucles: cambiar el orden de la suma",
+    "points": null,
+    "durationMin": null,
+    "kind": "ejs",
+    "skills": [
+     "contar-bucles"
+    ],
+    "stage": "bucles",
+    "src": "adic",
+    "diff": 0.9,
+    "steps": true,
+    "statement": "```python\nfor i in range(n):\n    for j in range(i + 1, n + 1):\n        for k in range(j):\n            trabajo()\n```\n- a) Cuenta a mano cuántas veces se llama a `trabajo()` con $n=2$.\n- b) Escribe el total como $\\displaystyle\\sum_{i=0}^{n-1}\\sum_{j=i+1}^{n}j$.\n- c) Cambia el orden de las sumas: ¿cuántas veces aparece cada valor de $j$ y cuánto vale el total?\n- d) Comprueba con $n=3$ y da el orden.",
+    "hint": "En lugar de fijar $i$ y recorrer $j$, fija $j$ y pregunta: ¿para cuántos valores de $i$ se cumple $i+1\\le j\\le n$? Es decir, $0\\le i\\le j-1$.",
+    "solution": "**Paso 1. $n=2$ a mano.** a) $i=0$: $j=1$ da $1$ llamada, $j=2$ da $2$. $i=1$: $j=2$ da $2$. Total $5$.\n\n**Paso 2. Plantea el sumatorio.** b) La vuelta $(i,j)$ ejecuta el `for k` $j$ veces: $\\sum_{i=0}^{n-1}\\sum_{j=i+1}^{n}j$.\n\n**Paso 3. Cambia el orden.** c) El valor $j$ ($1\\le j\\le n$) aparece para $i=0,\\dots,j-1$, es decir, $j$ veces. El total es $\\sum_{j=1}^{n}j\\cdot j=\\sum_{j=1}^{n}j^{2}=\\dfrac{n(n+1)(2n+1)}{6}$. Con $n=2$: $\\frac{2\\cdot3\\cdot5}{6}=5$.\n\n**Paso 4. Comprueba y ordena.** d) $n=3$: $i=0$: $1+2+3=6$; $i=1$: $2+3=5$; $i=2$: $3$. Total $14$ y $\\frac{3\\cdot4\\cdot7}{6}=14$. Orden $\\Theta(n^{3})$."
+   },
+   {
     "id": "peldanos#S01",
     "n": "S01",
     "title": "Potencias",
@@ -6714,6 +6912,27 @@ window.LADDER = {
     "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.14",
     "peldanos/peldanos#A20",
     "peldanos/peldanos#A21"
+   ]
+  },
+  "bucles": {
+   "t31-insert": [
+    "peldanos/peldanos#B01",
+    "peldanos/peldanos#B02",
+    "peldanos/peldanos#B03",
+    "peldanos/peldanos#B04",
+    "peldanos/peldanos#B05"
+   ],
+   "t31-general": [
+    "peldanos/peldanos#B06",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.9",
+    "peldanos/peldanos#B07",
+    "peldanos/peldanos#B08",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.6",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.7",
+    "peldanos/peldanos#B09",
+    "ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#2.8",
+    "peldanos/peldanos#B10",
+    "peldanos/peldanos#B11"
    ]
   },
   "sumatorios": {

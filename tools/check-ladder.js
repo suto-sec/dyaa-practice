@@ -133,7 +133,67 @@ const T = {
   A18: () => { const fact = n => n <= 1 ? 1 : n * fact(n - 1), h = n => Math.ceil(Math.log2(fact(n))); ok(fact(3) === 6 && h(3) === 3 && fact(4) === 24 && h(4) === 5 && fact(5) === 120 && h(5) === 7 && fact(8) === 40320 && h(8) === 16, 'A18'); },
   A19: () => { let lf = 0; for (let n = 1; n <= 80; n++) { lf += Math.log2(n); if (n % 2 === 0) ok((n / 2) * Math.log2(n / 2) <= lf + 1e-9 && lf <= n * Math.log2(n) + 1e-9, 'A19 n=' + n); } ok(Math.abs(Math.log2(40320) - 15.3) < 0.05 && 4 * Math.log2(4) === 8, 'A19 n=8'); },
   A20: () => { const L2 = Math.LN2, f = [n => 3 * Math.log(n), n => Math.log(n) * Math.log2(n), n => (n / 2) * Math.log(3), n => n * L2, n => n * Math.log(n) - n]; for (const n of [1e3, 1e4, 1e6]) for (let i = 0; i + 1 < f.length; i++) ok(f[i](n) < f[i + 1](n), 'A20 order at n=' + n + ' position ' + i); ok(Math.abs(0.5 * Math.log2(3) - 0.79) < 0.005 && Math.abs(Math.sqrt(3) - 1.73) < 0.005, 'A20 constants'); },
-  A21: () => { ok(2 ** 11 === 2 * 2 ** 10, 'A21 a'); ok(1.5 ** 60 > 1e10 && 1.5 ** 120 > 1e20, 'A21 b grows without bound'); ok(50 * 2 ** 50 > 49 * 2 ** 50, 'A21 c'); }
+  A21: () => { ok(2 ** 11 === 2 * 2 ** 10, 'A21 a'); ok(1.5 ** 60 > 1e10 && 1.5 ** 120 > 1e20, 'A21 b grows without bound'); ok(50 * 2 ** 50 > 49 * 2 ** 50, 'A21 c'); },
+  /* ---- Coste de algoritmos iterativos: los bucles se ejecutan de verdad ---- */
+  B01: () => {
+    const range = (a, b, st = 1) => { const r = []; for (let i = a; st > 0 ? i < b : i > b; i += st) r.push(i); return r; };
+    for (const n of [2, 4, 8, 16, 64]) {
+      let w = 0; for (let i = 1; i < n; i *= 2) w++;
+      ok(range(0, n).length === n && range(1, n).length === n - 1 && range(2, n + 1).length === n - 1 && range(0, n, 2).length === n / 2 && w === Math.log2(n), 'B01 n=' + n);
+    }
+    ok(range(0, 5).join() === '0,1,2,3,4' && range(1, 8).join() === '1,2,3,4,5,6,7' && range(2, 9).length === 7 && range(0, 8, 2).join() === '0,2,4,6', 'B01 n=8 lists');
+  },
+  B02: () => {
+    const cost = (iters, body) => 1 + iters * (1 + body + 1) + 1;
+    for (let n = 2; n < 50; n++) { ok(cost(n, 1) === 3 * n + 2 && cost(n, 2) === 4 * n + 2 && cost(n - 1, 1) === 3 * n - 1, 'B02 n=' + n); }
+    ok(cost(3, 2) === 14 && cost(2, 1) === 8, 'B02 n=3');
+  },
+  B03: () => {
+    for (let n = 1; n < 40; n++) {
+      let a = 0, b = 0, c = 0;
+      for (let i = 0; i < n; i++) { for (let j = 0; j < n; j++) a++; for (let j = 0; j < i; j++) b++; for (let j = i; j < n; j++) c++; }
+      ok(a === n * n && b === n * (n - 1) / 2 && c === n * (n + 1) / 2, 'B03 n=' + n);
+    }
+  },
+  B04: () => {
+    const tj = v => { const a = v.slice(), t = []; for (let j = 1; j < a.length; j++) { const val = a[j]; let i = j - 1, c = 0; while (i >= 0 && a[i] > val) { a[i + 1] = a[i]; i--; c++; } a[i + 1] = val; t.push(c); } return t; };
+    ok(tj([2, 5, 1, 4, 3]).join() === '0,2,1,2' && tj([1, 2, 3, 4, 5]).join() === '0,0,0,0' && tj([5, 4, 3, 2, 1]).join() === '1,2,3,4', 'B04 traces');
+  },
+  B05: () => {
+    const lines = v => { const a = v.slice(), n = a.length; let l1 = n, l2 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0; for (let j = 1; j < n; j++) { const val = a[j]; l2++; let i = j - 1; l4++; for (;;) { l5++; if (!(i >= 0 && a[i] > val)) break; a[i + 1] = a[i]; l6++; i--; l7++; } a[i + 1] = val; l8++; } return l1 + l2 + l4 + l5 + l6 + l7 + l8; };
+    for (let n = 1; n <= 30; n++) { const asc = Array.from({ length: n }, (_, i) => i), desc = asc.slice().reverse(); ok(lines(asc) === 5 * n - 4, 'B05 best n=' + n); ok(lines(desc) === 1.5 * n * n + 3.5 * n - 4, 'B05 worst n=' + n); }
+    ok(5 * 5 - 4 === 21 && 1.5 * 25 + 17.5 - 4 === 51 && 5 + 4 + 4 + 14 + 10 + 10 + 4 === 51, 'B05 n=5 values');
+  },
+  B06: () => {
+    for (let n = 1; n <= 40; n++) { let ops = 1; for (let i = 0; i < n; i++) { ops += 1; ops += 1; for (let j = 0; j < i; j++) ops += 3; ops += 1; ops += 1; } ops += 1; ok(ops === (3 * n * n + 5 * n + 4) / 2, 'B06 n=' + n + ' counted ' + ops); }
+  },
+  B07: () => {
+    const fits = (f, p) => { const r = [64, 128, 256, 512, 1024].map(n => f(n) / p(n)); return Math.max(...r) / Math.min(...r) < 1.6; };
+    const A = n => n * n, Bf = n => { let c = 0; for (let i = 0; i < n; i++) for (let j = 1; j < n; j *= 2) c++; return c; }, C = n => n ** 3, D = n => { let c = 0; for (let i = 0; i < n; i++) c += i * i; return c; }, E = n => n + n * n, F = n => 5 * n;
+    ok(fits(A, n => n * n) && fits(Bf, n => n * Math.log2(n)) && fits(C, n => n ** 3) && fits(D, n => n ** 3) && fits(E, n => n * n) && fits(F, n => n), 'B07 orders');
+    for (const n of [8, 16, 32]) { ok(Bf(n) === n * Math.log2(n), 'B07 b exact'); ok(D(n) === (n - 1) * n * (2 * n - 1) / 6, 'B07 d exact'); }
+  },
+  B08: () => {
+    const run = v => { const a = v.slice(), n = a.length; let cmp = 0, sw = 0; for (let i = 0; i < n - 1; i++) for (let j = n - 1; j > i; j--) { cmp++; if (a[j - 1] > a[j]) { [a[j - 1], a[j]] = [a[j], a[j - 1]]; sw++; } } return [cmp, sw]; };
+    for (let n = 2; n <= 25; n++) { const asc = Array.from({ length: n }, (_, i) => i), desc = asc.slice().reverse(); ok(run(asc)[0] === n * (n - 1) / 2 && run(asc)[1] === 0 && run(desc)[0] === n * (n - 1) / 2 && run(desc)[1] === n * (n - 1) / 2, 'B08 n=' + n); }
+    ok(run([1, 2, 3, 4, 5])[0] === 10 && run([5, 4, 3, 2, 1])[1] === 10, 'B08 n=5');
+  },
+  B09: () => {
+    const cont = (a, x) => { let c = 0; for (let i = 0; i < a.length; i++) { c++; if (a[i] === x) return c; } return c; };
+    const rep = a => { let c = 0; for (let i = 0; i < a.length; i++) for (let j = i + 1; j < a.length; j++) { c++; if (a[i] === a[j]) return c; } return c; };
+    for (let n = 2; n <= 30; n++) { const d = Array.from({ length: n }, (_, i) => i); ok(cont(d, 0) === 1 && cont(d, -1) === n && rep(d) === n * (n - 1) / 2 && rep([7, 7].concat(d.slice(2))) === 1, 'B09 n=' + n); }
+    ok(((n) => n * (n - 1) / 2)(5) === 10, 'B09 n=5');
+  },
+  B10: () => {
+    const total = n => { let c = 0, m = n; while (m >= 1) { for (let i = 0; i < m; i++) c++; m = Math.floor(m / 2); } return c; };
+    for (let k = 0; k <= 14; k++) ok(total(2 ** k) === 2 * 2 ** k - 1, 'B10 n=2^' + k);
+    ok(total(8) === 15, 'B10 n=8');
+  },
+  B11: () => {
+    const total = n => { let c = 0; for (let i = 0; i < n; i++) for (let j = i + 1; j <= n; j++) for (let k = 0; k < j; k++) c++; return c; };
+    for (let n = 1; n <= 40; n++) ok(total(n) === n * (n + 1) * (2 * n + 1) / 6, 'B11 n=' + n);
+    ok(total(2) === 5 && total(3) === 14, 'B11 values');
+  }
 };
 Object.keys(T).forEach(id => { ok(byN[id], id + ' exists'); T[id](); });
 /* every peldaño of the stage has been looked at: a new one has to bring its own check or be listed as "no numbers" */
