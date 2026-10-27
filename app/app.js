@@ -427,7 +427,7 @@ function vDetail(key) {
     if (V.hints >= 2 && hasSol) h += '<div class="card"><b>Pista 2.</b>' + mdRender(String(sol).split('\n').filter(function (l) { return l.trim(); }).slice(0, 3).join('\n')) + '</div>';
     if (V.hints >= 3) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';
   }
-  var maxH = pieces ? 1 + pieces.length : hasSol ? 3 : 1, canRate = hasSol ? V.hints >= maxH : V.self;
+  var maxH = pieces ? 1 + pieces.length : hasSol ? 3 : 1, canRate = V.self || (hasSol && V.hints >= maxH);
   if (V.done != null) {
     var nx = st ? L.nextAfter(PATH, S, EXAMS, st.id, keepScope) : null;
     h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' ' + flame('sm') + ' <b>' + doneWord() + '</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
@@ -438,6 +438,7 @@ function vDetail(key) {
     h += '<div class="row">';
     if (V.hints < maxH) h += '<button class="btn" data-act="hint">' + (pieces ? (V.hints === 0 ? 'Mostrar pista' : 'Mostrar el paso ' + V.hints + ' de ' + pieces.length) : 'Mostrar pista (' + (V.hints + 1) + '/' + maxH + ')') + '</button>';
     if (pieces && V.hints < maxH - 1) h += '<button class="btn" data-act="allsteps">Ver la soluci&oacute;n completa</button>';
+    if (hasSol) h += '<button class="btn pri" data-act="self">Lo resolv&iacute; sin ver la soluci&oacute;n</button>';
     if (!hasSol) h += '<span class="muted">Sin soluci&oacute;n oficial.</span>';
     if (!hasSol && V.hints >= 1) h += '<button class="btn pri" data-act="self">Ya lo comprob&eacute; por mi cuenta</button>';
     h += '</div>';
