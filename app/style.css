@@ -34,6 +34,7 @@ select,input[type=number]{font:inherit;padding:6px;border-radius:8px;border:1px 
 .md table{border-collapse:collapse;margin:10px 0;max-width:100%}   /* a real table, shown whole: cells wrap instead of the table scrolling */
 .md td,.md th{vertical-align:middle}
 .md th,.md td{border:1px solid var(--bd);padding:4px 10px}
+.md mark{background:color-mix(in srgb,var(--ac) 40%,transparent);color:inherit;border-radius:3px;padding:0 3px}   /* ==shaded== cell text (the processed bits of a figure) */
 .md .katex-display{overflow-x:auto;overflow-y:hidden}
 .md p{margin:.5em 0}
 .bar{height:10px;background:var(--code);border-radius:99px;overflow:hidden;min-width:120px;flex:1}

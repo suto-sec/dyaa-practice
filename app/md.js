@@ -21,7 +21,7 @@ function mdRender(src) {
   s = s.replace(/\$\$([\s\S]+?)\$\$/g, function (m, c) { return put(tex(c, true)); });
   s = s.replace(/\$([^$\n]+?)\$/g, function (m, c) { return put(tex(c, false)); });
   function inl(t) {
-    return esc(t).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g, '$1<em>$2</em>');
+    return esc(t).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g, '$1<em>$2</em>').replace(/==([^=\s]|[^=\s][^=]*[^=\s])==/g, '<mark>$1</mark>');
   }
   var L = s.split('\n'), out = [], para = [], i = 0;
   var LI = /^(\s*)([-*+]|\d+[.)])\s+(.*)$/;
