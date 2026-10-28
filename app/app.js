@@ -277,9 +277,11 @@ function nbInput(v) {
   clearTimeout(nbTimer);
   nbTimer = setTimeout(function () { var p = document.getElementById('nbp'); if (p) p.innerHTML = v.trim() ? mdRender(v) : ''; }, 250);
 }
+/* Text that may hold $math$ (an exercise title): rendered when it does, plain otherwise. */
+function mathText(t) { return t.indexOf('$') >= 0 ? inlineMd(t) : esc(t); }
 function exTitle(a) {
   var n = a.e.n != null ? a.e.n : a.e.id, t = a.e.title || '', same = !t || t === 'Ejercicio ' + n;
-  return esc(a.exam.title) + ' &middot; ' + (same ? 'ejercicio ' : '') + esc(n) + (same ? '' : ' ' + esc(t));
+  return esc(a.exam.title) + ' &middot; ' + (same ? 'ejercicio ' : '') + esc(n) + (same ? '' : ' ' + mathText(t));
 }
 function status(key) { var r = last(key); return r == null ? '<span class="tag">nuevo</span>' : '<span class="tag r' + r + '">' + RN[r] + '</span>'; }
 function dueTag(key) { var x = S.ex[key]; return x && x.due && x.due <= today() ? '<span class="tag due">repasar</span>' : ''; }
@@ -466,7 +468,7 @@ function examRow(ex, rec) {
   h += '<details class="exparts"><summary>Hacerlo por ejercicios <span class="muted">&middot; ' + done + '/' + n + ' hechos, con pistas y soluci&oacute;n como en Ejercicios</span></summary>';
   ex.exercises.forEach(function (e) {
     var key = ex.id + '/' + e.id, a = byKey[key], st = stepById['e:' + key];
-    h += '<a class="item" href="#/ejercicios/' + enc(key) + '"><span><b>' + esc((e.n != null ? e.n : e.id) + '. ' + (e.title && e.title !== 'Ejercicio ' + e.n ? e.title : 'Ejercicio')) + '</b> <span class="muted">' + pts(a) + ' pts</span></span><span>' + status(key) + dueTag(key) + minTag(st ? st.min : L.exMinutes(e, ex)) + '</span></a>';
+    h += '<a class="item" href="#/ejercicios/' + enc(key) + '"><span><b>' + esc((e.n != null ? e.n : e.id) + '. ') + mathText(e.title && e.title !== 'Ejercicio ' + e.n ? e.title : 'Ejercicio') + '</b> <span class="muted">' + pts(a) + ' pts</span></span><span>' + status(key) + dueTag(key) + minTag(st ? st.min : L.exMinutes(e, ex)) + '</span></a>';
   });
   return h + '</details></div>';
 }
@@ -820,7 +822,7 @@ function logRow(l) {
   if (l.help) tags += '<span class="tag" title="Pistas o soluciones usadas">con ayudas</span>';
   if (l.xp) tags += '<span class="tag">+' + l.xp + ' XP</span>';
   tags += l.sec > 0 ? '<span class="tag min" title="Tiempo medido con el cron&oacute;metro">&#9201; ' + dur(l.sec) + '</span>' : '';
-  return '<div class="item logrow"><span><span class="when">' + (l.at ? clock(l.at) : '&ndash;') + '</span> <span class="lty" title="' + ty + '">' + (LOGICON[ty] || '') + '</span> ' + esc(l.label) + '</span><span>' + tags + '</span></div>';
+  return '<div class="item logrow"><span><span class="when">' + (l.at ? clock(l.at) : '&ndash;') + '</span> <span class="lty" title="' + ty + '">' + (LOGICON[ty] || '') + '</span> ' + mathText(l.label) + '</span><span>' + tags + '</span></div>';
 }
 function vLog() {
   var h = '<h2>Registro</h2><p class="muted">Lo que has hecho, cu&aacute;ndo y cu&aacute;nto te llev&oacute;. El tiempo exacto solo se anota con el cron&oacute;metro activado en <button type="button" class="linkbtn" data-act="settings" data-open="study">Ajustes</button>; sin &eacute;l, cada tarea cuenta con su estimaci&oacute;n.</p>';
