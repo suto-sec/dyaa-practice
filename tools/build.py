@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LEC = ROOT / "content" / "lectures"
 EXA = ROOT / "content" / "exams"
-OWN = EXA / "soluciones"   # proposed solutions for exercises that come without one: <exam id>.md with "### Ejercicio N.M" blocks
+OWN = EXA / "soluciones"   # proposed solutions for exercises that come without one: <exam id>.md with "### Ejercicio N.M" (or "### Ejercicio N") blocks
 APP = ROOT / "app"
 LADDER = ROOT / "content" / "peldanos"   # short graded exercises (peldaños) that lead into the harder ones, one file per stage
 SUMM = ROOT / "content" / "summaries"   # one sheet per etapa (formulas and things to remember), named <stage id>.md
@@ -238,7 +238,7 @@ def load_own(stem):
         if n is not None:
             out[n] = "\n".join(buf).strip()
     for line, infence in iter_lines(path.read_text(encoding="utf-8")):
-        m = None if infence else re.match(r"^###\s+Ejercicio\s+(\d+\.\d+)\s*$", line)
+        m = None if infence else re.match(r"^###\s+Ejercicio\s+(\d+(?:\.\d+)?)\s*$", line)
         if m:
             flush(); n, buf = m.group(1), []
         elif n is not None:
