@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* Sanity checks for the roadmap data and pure logic. Run: node tools/check-logic.js
-   Needs app/data-lectures.js (always) and app/data-exams.js (local only; exam checks are skipped without it). */
+   Needs app/data-lectures.js (always) and app/data-exams.js (exam checks are skipped without it). */
 'use strict';
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const APP = path.join(__dirname, '..', 'app');

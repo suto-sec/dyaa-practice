@@ -302,7 +302,7 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   const cfgChange = (k, v) => change({ dataset: { cfg: k }, type: typeof v === 'boolean' ? 'checkbox' : 'number', checked: v, value: String(v) });
   // log
   ok(st().log.length > 0 && st().log.every(l => l.at > 0 && l.ty && l.t), 'every log entry has a time and a type');
-  ok(st().log.some(l => l.ty === 'theory') && st().log.some(l => l.ty === 'skip'), 'readings and skipped steps are logged too');
+  ok(st().log.some(l => l.ty === 'theory') && (!skipStep || st().log.some(l => l.ty === 'skip')), 'readings and skipped steps are logged too');
   go('#/registro'); ok(/<h2>Registro<\/h2>/.test(app()) && (app().match(/class="item logrow"/g) || []).length > 0 && /class="logday"/.test(app()), 'the log page lists what was done, by day');
   ok(/>Hoy</.test(app()) && /\d\d:\d\d/.test(app()), 'with the day and the time of each entry');
   click({ act: 'logty', v: 'theory' }); ok(!/title="skip"/.test(app()) && /title="theory"/.test(app()), 'the log can be filtered by type');
@@ -332,7 +332,7 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
   cfgChange('daily', 2); ok(st().cfg.daily === 30, 'an absurd goal falls back to the default');
   cfgChange('extimer', false); ok(/data-cfg="exauto" disabled/.test(popHtml()), 'the automatic end needs the clock'); cfgChange('extimer', true);
   // stopwatch on an exercise: shown only when on, and the time goes to the log
-  const unrated = win.EXAMS.length ? Object.keys(win.STAGE_EX).map(k => win.STAGE_EX[k]).reduce((a, b) => a.concat(b), []).find(k => !(st().ex[k] && st().ex[k].hist.length)) : null;
+  const unrated = (win.EXAMS || []).length ? Object.keys(win.STAGE_EX).map(k => win.STAGE_EX[k]).reduce((a, b) => a.concat(b), []).find(k => !(st().ex[k] && st().ex[k].hist.length)) : null;
   if (unrated) {
     const RealDate = ctx.Date; let now = 1.8e12;
     ctx.Date = class extends RealDate { constructor(...a) { super(...(a.length ? a : [now])); } static now() { return now; } };
