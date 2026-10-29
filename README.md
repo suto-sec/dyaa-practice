@@ -6,11 +6,13 @@ Static web app: no server, no installation and no build step to use it (open `ap
 
 > **Unofficial project.** Not affiliated with or endorsed by the Universidad Rey Juan Carlos or by the author of the course material. The lectures, exams and exercises are adapted from the material of Manuel Rubio Sánchez (URJC) under CC BY-SA. The conversion may contain errors, and the proposed solutions are **not** official: always check against the official material. Full details in [Legal notice and licensing](#legal-notice-and-licensing). *(Aviso legal en español al final.)*
 
+**Use it online, nothing to download: <https://suto-sec.github.io/dyaa-practice/>** (any recent browser, on a computer or a phone). It is always the latest version. If you prefer an offline copy, see [Install and open](#install-and-open).
+
 **What is inside:** 9 lecture notes (temas 1 to 7, 327 sections) with 48 figures, 10 study stages, 70 quick checks (257 questions), 10 summary sheets, 161 graded warm-up exercises (*peldaños*) with step-by-step solutions, 21 past exams plus the additional exercises (120 of their exercises have a proposed, unofficial solution), generated practice for when you only have a laptop, and an exam simulator. The app itself is in Spanish.
 
 ## Contents
 
-- [Install and open](#install-and-open): Linux, Windows, macOS
+- [Use it online](#use-it-online) or [install an offline copy](#install-and-open): Linux, Windows, macOS
 - [First minutes](#first-minutes)
 - [Your progress](#your-progress-read-this) (and [sharing it between profiles](#share-it-between-profiles-and-computers))
 - [Updating and removing](#updating-and-removing)
@@ -18,9 +20,13 @@ Static web app: no server, no installation and no build step to use it (open `ap
 - [How it works](#how-it-works), [Layout](#layout)
 - [Legal notice and licensing](#legal-notice-and-licensing)
 
+## Use it online
+
+Open <https://suto-sec.github.io/dyaa-practice/> and that is all: no account, no download. Bookmark it. It needs an internet connection to load (it is not an offline app unless you download a copy, below). Your progress is stored in your browser for that address, so see [Your progress](#your-progress-read-this): it is separate from any downloaded copy.
+
 ## Install and open
 
-There is nothing to install. The app is a folder of web files: you open one of them (`app/index.html`) in a browser. No account, no server, no internet connection needed (everything it uses, including the maths renderer, is in the folder). You need a recent browser (Firefox, Chrome, Chromium, Edge, Safari, Brave...). Python and Node are **not** needed to use it.
+Only needed for an **offline copy**. There is nothing to install. The app is a folder of web files: you open one of them (`app/index.html`) in a browser. No account, no server, no internet connection needed (everything it uses, including the maths renderer, is in the folder). You need a recent browser (Firefox, Chrome, Chromium, Edge, Safari, Brave...). Python and Node are **not** needed to use it.
 
 ### Step 1. Get the folder
 
@@ -56,7 +62,7 @@ Inside the folder there are folders called `app`, `content` and `tools`. **You o
 
 ### Step 3. Check that it works
 
-A browser tab opens. The address starts with `file://`: that is normal and expected. You should see:
+A browser tab opens. The address starts with `file://` (on the website it starts with `https://`): that is normal and expected. You should see:
 
 - a page titled **DyAA Practice** with a top bar: *Hoy · Ruta · Ejercicios · Examen · Sin papel · Teoría · Resumen · Registro · Progreso*, and a gear icon at the top right;
 - on **Ruta**, a list of stages with checkable steps; on **Teoría**, the lecture notes with the formulas drawn properly (not as `$...$` text).
@@ -79,6 +85,7 @@ Bookmark the page (Ctrl+D, or ⌘+D on macOS) so you can come back without searc
 
 Your progress lives **inside the browser**, not in the folder. So:
 
+- The website and a downloaded copy are **different places**: progress made in one does not appear in the other. To move it, use *Exportar JSON* in one and *Importar JSON* in the other (gear → *Datos y progreso compartido*).
 - It stays on that browser **profile** on that computer. Another browser, another Chrome profile, another computer, a private/incognito window, or clearing the site data starts from zero (unless you [share it through a file](#share-it-between-profiles-and-computers), below).
 - Some browsers (Firefox, for instance) tie it to the exact location of the file, so moving or renaming the folder can make it look empty. Move it back to see it again.
 - **Make a backup now and then**: gear → *Datos y progreso compartido* → *Exportar JSON*. It downloads a JSON file. *Importar JSON* in the same menu restores it, also on another computer.
@@ -101,10 +108,11 @@ From then on every change is written to the file, and the page reads it when it 
 
 ## Updating and removing
 
-**Update.** Updates change the files in the folder; your progress is not in the folder, so it is not lost.
+**Update.** Updates change the files, not your progress, which is stored in your browser.
 
-- If you used a **ZIP**: download the ZIP again, unzip it **next to** the old folder, and open its `app/index.html`. Some browsers tie your progress to the exact file location, so if the new copy looks empty, [export your progress](#your-progress-read-this) from the old copy (gear → *Datos y progreso compartido* → *Exportar JSON*) and import it in the new one (*Importar JSON*).
-- If you used **git**: in a terminal inside the folder run `git pull`, then reload the page with Ctrl+F5.
+- If you use the **website**: nothing to do. Reload the page (Ctrl+F5) to get the newest version, and your progress stays.
+- If you use an **offline copy from a ZIP**: download the ZIP again, unzip it **next to** the old folder, and open its `app/index.html`. Some browsers tie your progress to the exact file location, so if the new copy looks empty, [export your progress](#your-progress-read-this) from the old copy (gear → *Datos y progreso compartido* → *Exportar JSON*) and import it in the new one (*Importar JSON*).
+- If you use an **offline copy from git**: in a terminal inside the folder run `git pull`, then reload the page with Ctrl+F5.
 
 **Remove.** Delete the folder. Your progress stays in the browser's site data until you clear it (browser settings → site data → the `file://` entry), or press *Reiniciar progreso* in the gear menu before deleting.
 
