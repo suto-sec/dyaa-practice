@@ -719,7 +719,7 @@ function vSheet(gid) {
     nav: readerNav('resumen', list[gi - 1], list[gi + 1], nm),
     body: secs.map(function (sec, i) {
       var lv = Math.min(6, 3 + Math.max(0, (sec.level || 1) - 1));
-      return '<section class="sec" id="sec-' + i + '"><h' + lv + '>' + esc(sec.title) + '</h' + lv + '>' + mdRender(sec.md) + '</section>';
+      return '<section class="sec" id="sec-' + i + '"><h' + lv + '>' + mathText(sec.title) + '</h' + lv + '>' + mdRender(sec.md) + '</section>';
     }).join('') || '<p class="muted">Esta ' + (ORG === 'temas' ? 'tema' : 'etapa') + ' no tiene resumen.</p>'
   });
 }
@@ -746,7 +746,7 @@ function vTheory(lid, idx, stepId) {
       var done = L.stepDone(st, S, EXAMS);
       card = '<div class="card next row"><span>&#128214; Paso de la ruta (' + esc(groupOfStage[st.stage].label) + ') &middot; ' + mins(st.min) + ' de lectura: &iquest;lo has le&iacute;do?</span><button class="btn pri" data-act="theorydone" data-step="' + esc(st.id) + '">' + (done ? 'Continuar &rarr;' : 'Le&iacute;do, continuar &rarr;') + '</button></div>';
     }
-    return '<section class="sec" id="sec-' + i + '">' + (i === 0 && sec.title === cur.title ? '' : '<h' + lv + '>' + esc(sec.title) + '</h' + lv + '>') + mdRender(sec.md) + card + '</section>';
+    return '<section class="sec" id="sec-' + i + '">' + (i === 0 && sec.title === cur.title ? '' : '<h' + lv + '>' + mathText(sec.title) + '</h' + lv + '>') + mdRender(sec.md) + card + '</section>';
   }).join('');
   var short = function (l) { return l.title.replace(/^(Tema [\d.]+)\.?\s.*$/, '$1'); };
   return h + readerShell({
