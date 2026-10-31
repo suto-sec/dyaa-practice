@@ -114,7 +114,7 @@ if (hasExams) {
     const s16 = 'peldanos/peldanos#S16', k17 = 'ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.7', k14 = 'ejercicios_adicionales_1-2/ejercicios_adicionales_1-2#1.4', s09 = 'peldanos/peldanos#S09';
     go('#/ejercicios/' + encodeURIComponent(s16));
     ok(/peldaño/.test(app()) && /Etapa 2\. /.test(app()) && /huecos/.test(app()), 'a peldaño opens like any exercise and says what it is');
-    click({ act: 'hint' }); ok(/Pista 1\./.test(app()) && /Sustituye en/.test(app()), 'its first hint is its own, not only the name of the skill');
+    click({ act: 'hint' }); ok(/Pista\./.test(app()) && /Sustituye en/.test(app()), 'its first hint is its own, not only the name of the skill');
     click({ act: 'hint' }); ok(/Soluci&oacute;n, paso a paso/.test(app()) && /Paso 1\./.test(app()) && !/Paso 2\./.test(app()) && !/No es oficial/.test(app()), 'the solution is shown one step at a time and is not called unofficial');
     for (let i = 0; i < 8 && /data-act="hint"/.test(app()); i++) click({ act: 'hint' });
     ok(/Paso 5\./.test(app()) && /data-act="rate"/.test(app()), 'after the last step it can be rated');
@@ -367,6 +367,16 @@ click({ act: 'reset' }); ok(store['dyaa-practice-theme'] == null && store['dyaa-
     go('#/examen'); ok(/class="exparts"/.test(app()) && app().indexOf('href="#/ejercicios/' + encodeURIComponent(key) + '"') >= 0, 'each exam lists its exercises to do one by one');
     ok(/Hacer entero|Repetir entero/.test(app()) && /Realismo/.test(app()), 'and offers the whole exam, with the realism in force');
     go('#/ejercicios/' + encodeURIComponent(key)); ok(/data-act="hint"/.test(app()), 'an exercise of an exam has hints and solution like any other');
+    // every exercise of an exam has a hint of its own and the full solution, as two separate buttons
+    const noHint = []; win.EXAMS.forEach(e => e.exercises.forEach(x => { if (!x.hint || x.hint.length < 40) noHint.push(e.id + '#' + x.n); }));
+    ok(!noHint.length, 'every exam exercise has a real hint: ' + noHint.slice(0, 5).join(', '));
+    const off = win.EXAMS.find(e => e.exercises.some(x => x.solution && !x.own && !x.steps)), ox = off.exercises.find(x => x.solution && !x.own && !x.steps), okey = off.id + '/' + ox.id;
+    const mark = (t) => t.replace(/\$[^$]*\$/g, '').slice(0, 24);
+    go('#/ejercicios/' + encodeURIComponent(okey));
+    ok(/data-act="hint"/.test(app()) && /data-act="allsteps"/.test(app()), 'official solution: a hint button and a separate full-solution button from the start');
+    click({ act: 'hint' }); ok(/Pista\./.test(app()) && !/Soluci&oacute;n\./.test(app()) && /data-act="allsteps"/.test(app()), 'the hint alone does not show the solution');
+    click({ act: 'allsteps' }); ok(/Soluci&oacute;n\./.test(app()) && /data-act="rate"/.test(app()), 'the full-solution button shows the solution and lets you rate');
+    go('#/ejercicios/' + encodeURIComponent(key)); go('#/ejercicios/' + encodeURIComponent(okey)); click({ act: 'allsteps' }); ok(/Soluci&oacute;n\./.test(app()) && !/Pista\./.test(app()), 'the full solution can be opened without the hint');
     // default realism: no help while sitting
     click({ act: 'exstart', id: ex.id }); go('#/examen');
     ok(/id="tm"/.test(app()) && !/data-act="exhint"/.test(app()) && !/data-act="exsol"/.test(app()), 'by default there is a clock and no help during the exam');

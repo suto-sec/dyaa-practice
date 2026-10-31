@@ -409,7 +409,7 @@ function vList() {
 function vDetail(key) {
   var a = byKey[key];
   if (!a) return '<p>Ejercicio no encontrado. <a href="#/ejercicios">Volver</a></p>';
-  if (V.key !== key) V = { key: key, hints: 0, self: false, done: null };
+  if (V.key !== key) V = { key: key, hints: 0, sol: false, self: false, done: null };
   if (S.cfg.timer) tmStart(key);
   var e = a.e, sol = e.solution, hasSol = sol != null && String(sol).trim() !== '', st = stepById['e:' + key], gp = st && groupOfStage[st.stage];
   var h = '<p><a href="#/ruta">&larr; Ruta</a> &middot; <a href="#/ejercicios">Ejercicios</a>' + (e.src === 'adic' ? '' : ' &middot; <a href="#/examen">Ex&aacute;menes</a>') + '</p>';
@@ -421,15 +421,14 @@ function vDetail(key) {
     '<div class="muted">' + esc(isRung(a) ? 'peldaño' : XKIND[e.kind] || e.kind) + (e.points != null ? ' &middot; ' + e.points + ' pts' : '') + ' &middot; ' + mins(st ? st.min : L.exMinutes(e, a.exam)) + ' estimados' + tmBox() + '</div>' + mdRender(e.statement) + '</div>' + notebook(key);
   /* A proposed (unofficial) solution is written in steps ("**Paso 1.** ..."): they are shown one at a time. */
   var pieces = (e.own || e.steps) && hasSol ? String(sol).split(/\n(?=\*\*Paso \d+)/) : null;
-  if (V.hints >= 1) h += '<div class="card"><b>Pista 1.</b> ' + (e.hint ? mdRender(e.hint) + '<p class="muted">' + skillHint(e) + '</p>' : skillHint(e)) + sheetLink(gp) + '</div>';
+  if (V.hints >= 1) h += '<div class="card"><b>Pista.</b> ' + (e.hint ? mdRender(e.hint) + '<p class="muted">' + skillHint(e) + '</p>' : skillHint(e)) + sheetLink(gp) + '</div>';
   if (pieces) {
     var shown = Math.min(Math.max(V.hints - 1, 0), pieces.length);
     if (shown) h += '<div class="card"><b>' + (e.steps ? 'Soluci&oacute;n, paso a paso.' : 'Soluci&oacute;n propuesta, paso a paso.') + '</b>' + (e.steps ? '' : ' <span class="muted">No es oficial: el ejercicio no trae soluci&oacute;n, as&iacute; que la he escrito yo. Comp&aacute;rala con tus apuntes.</span>') + mdRender(pieces.slice(0, shown).join('\n\n')) + (shown < pieces.length ? '<p class="muted">Quedan ' + (pieces.length - shown) + ' de ' + pieces.length + ' pasos.</p>' : '') + '</div>';
   } else {
-    if (V.hints === 2 && hasSol) h += '<div class="card"><b>Pista 2 (el arranque de la soluci&oacute;n).</b>' + mdRender(String(sol).split('\n').filter(function (l) { return l.trim(); }).slice(0, 3).join('\n')) + '</div>';
-    if (V.hints >= 3) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';
+    if (V.sol) h += hasSol ? '<div class="card"><b>Soluci&oacute;n.</b>' + mdRender(sol) + '</div>' : '<div class="warnbox">Sin soluci&oacute;n oficial: compara con tus apuntes o con la teor&iacute;a.</div>';
   }
-  var maxH = pieces ? 1 + pieces.length : hasSol ? 3 : 1, canRate = V.self || (hasSol && V.hints >= maxH);
+  var maxH = pieces ? 1 + pieces.length : hasSol ? 2 : 1, canRate = V.self || (hasSol && (pieces ? V.hints >= maxH : V.sol));
   if (V.done != null) {
     var nx = st ? L.nextAfter(PATH, S, EXAMS, st.id, keepScope) : null;
     h += '<div class="card">Registrado: <b>+' + V.done.xp + ' XP</b>.' + (V.done.bonus ? ' ' + flame('sm') + ' <b>' + doneWord() + '</b> ' + esc(V.done.bonus.title) + ' (+' + BONUS + ' XP extra)' : '') + '</div>';
@@ -438,8 +437,8 @@ function vDetail(key) {
     h += '<div class="card row">&iquest;C&oacute;mo te fue? ' + RN.map(function (n, i) { return '<button class="btn ' + ['bad', 'warn', 'ok'][i] + '" data-act="rate" data-r="' + i + '">' + n + '</button>'; }).join('') + '</div>';
   } else {
     h += '<div class="row">';
-    if (V.hints < maxH) h += '<button class="btn" data-act="hint">' + (pieces ? (V.hints === 0 ? 'Mostrar pista' : 'Mostrar el paso ' + V.hints + ' de ' + pieces.length) : hasSol && V.hints === 2 ? 'Ver la soluci&oacute;n completa' : 'Mostrar pista (' + (V.hints + 1) + '/' + maxH + ')') + '</button>';
-    if (hasSol && V.hints < (pieces ? maxH - 1 : 2)) h += '<button class="btn" data-act="allsteps">Ver la soluci&oacute;n completa</button>';
+    if (pieces ? V.hints < maxH : V.hints < 1) h += '<button class="btn" data-act="hint">' + (pieces && V.hints > 0 ? 'Mostrar el paso ' + V.hints + ' de ' + pieces.length : 'Mostrar pista') + '</button>';
+    if (hasSol && (pieces ? V.hints < maxH - 1 : !V.sol)) h += '<button class="btn" data-act="allsteps">Ver la soluci&oacute;n completa</button>';
     if (hasSol) h += '<button class="btn pri" data-act="self">Lo resolv&iacute; sin ver la soluci&oacute;n</button>';
     if (!hasSol) h += '<span class="muted">Sin soluci&oacute;n oficial.</span>';
     if (!hasSol && V.hints >= 1) h += '<button class="btn pri" data-act="self">Ya lo comprob&eacute; por mi cuenta</button>';
@@ -496,7 +495,7 @@ function vExam() {
       var hp = X.help[e.id] || {}, hasSol = e.solution != null && String(e.solution).trim() !== '';
       hh += '<div class="card"><b>' + esc(e.n != null ? e.n : e.id) + '. ' + esc(e.title || '') + '</b> <span class="muted">' + X.p[e.id].toFixed(1) + ' pts</span>' + mdRender(e.statement);
       if (C.exhints || C.exans) {
-        if (hp.hint) hh += '<div class="help"><b>Pista.</b> ' + skillHint(e) + '</div>';
+        if (hp.hint) hh += '<div class="help"><b>Pista.</b> ' + (e.hint ? mdRender(e.hint) + '<p class="muted">' + skillHint(e) + '</p>' : skillHint(e)) + '</div>';
         if (hp.sol) hh += hasSol ? '<div class="help"><b>Soluci&oacute;n.</b>' + mdRender(e.solution) + '</div>' : '<div class="help">Sin soluci&oacute;n oficial.</div>';
         hh += '<div class="row">' + (C.exhints && !hp.hint ? '<button class="btn" data-act="exhint" data-id="' + esc(e.id) + '">Pista <span class="muted">(&minus;25 % de XP)</span></button>' : '') + (C.exans && !hp.sol ? '<button class="btn" data-act="exsol" data-id="' + esc(e.id) + '">Ver la soluci&oacute;n <span class="muted">(&minus;75 % de XP)</span></button>' : '') + '</div>';
       }
@@ -1016,9 +1015,9 @@ document.addEventListener('click', function (ev) {
   if (act === 'accent-set') { if (TH) TH.setAccent(b.dataset.c); renderPop(); return; }
   if (act === 'accent-reset') { if (TH) TH.setAccent(null); renderPop(); return; }
   if (act === 'hint') { V.hints++; rerender(); }
-  else if (act === 'allsteps') { V.hints = 1e3; rerender(); }
+  else if (act === 'allsteps') { var ae = (byKey[V.key] || {}).e || {}; if (ae.own || ae.steps) V.hints = 1e3; else V.sol = true; rerender(); }
   else if (act === 'self') { V.self = true; rerender(); }
-  else if (act === 'rate') { V.done = rate(V.key, +b.dataset.r, Math.min(3, V.hints)); rerender(); }
+  else if (act === 'rate') { V.done = rate(V.key, +b.dataset.r, Math.min(3, V.sol ? 3 : V.hints)); rerender(); }
   else if (act === 'qpick') { var qp = qstate(); if (qp && qp.pick[+b.dataset.q] == null) { qp.pick[+b.dataset.q] = +b.dataset.o; rerender(); } }
   else if (act === 'quizdone') {
     var qid = b.dataset.step, qst = stepById[qid], qs2 = QUIZ[qst.tile], sc = 0;

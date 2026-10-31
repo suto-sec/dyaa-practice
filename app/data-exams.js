@@ -18,7 +18,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "exam",
-    "diff": 4.37
+    "diff": 4.37,
+    "hint": "Busca una pareja $c>0$, $n_0>0$ con $n^2-3n+1\\ge c\\,n^2$. Elige una $c$ pequeña (menor que 1) para que, al pasar todo a un lado, quede una parábola convexa $an^2-3n+1\\ge0$, y encuentra a partir de qué $n$ es positiva."
    },
    {
     "id": "2014-15_analisis_mayo_sol#2",
@@ -34,7 +35,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "exam",
-    "diff": 4.9
+    "diff": 4.9,
+    "hint": "Es una recurrencia lineal no homogénea: pasa los términos con $T$ a la izquierda y escribe el resto como polinomio por potencia $^n$. El polinomio característico es el producto del de la parte homogénea y el de $(x-r)^{g+1}$ por cada término. Factoriza con Ruffini y quédate con el término de mayor orden."
    },
    {
     "id": "2014-15_analisis_mayo_sol#3",
@@ -50,7 +52,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "exam",
-    "diff": 6.5
+    "diff": 6.5,
+    "hint": "Descompón el código de dentro hacia fuera: calcula primero el coste del `while` (depende de $j$), luego el del `for` de $j$ (depende de $i$) y por último el del `for` de $i$. Con sumatorios que empiezan en $i$ usa $\\sum_{j=i}^{n}=\\sum_{j=1}^{n}-\\sum_{j=1}^{i-1}$."
    },
    {
     "id": "2014-15_analisis_mayo_sol#4",
@@ -66,7 +69,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "exam",
-    "diff": 6.02
+    "diff": 6.02,
+    "hint": "Expande unas cuatro veces seguidas sin simplificar de más, y busca el patrón del término $i$-ésimo: $2^iT(n/2^i)+\\dots$. El caso base se alcanza cuando $n/2^i=1$, es decir, $i=\\log_2 n$."
    },
    {
     "id": "2014-15_analisis_mayo_sol#5",
@@ -82,7 +86,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "exam",
-    "diff": 6.03
+    "diff": 6.03,
+    "hint": "Haz el cambio de variable $n=2^k$ y después $t(k)=T(2^k)$. La parte no homogénea es $2^k$, que coincide con la raíz de la homogénea: eso da una raíz doble. Necesitas dos casos base ($t(0)$ y $t(1)$) para fijar las constantes."
    },
    {
     "id": "2014-15_analisis_mayo_sol#6",
@@ -98,7 +103,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "exam",
-    "diff": 5.41
+    "diff": 5.41,
+    "hint": "Escribe $T(n)$ y $T(n-1)$ con la misma fórmula y réstalas: el sumatorio casi desaparece y queda una recurrencia sencilla entre $T(n)$ y $T(n-1)$. Después expándela."
    }
   ],
   "kind": "analisis"
@@ -123,7 +129,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "exam",
     "diff": 6.21,
-    "own": true
+    "own": true,
+    "hint": "Piensa en lo que hace una división entera entre la base $b$: el resto es la cifra menos significativa y el cociente es el número sin esa cifra. ¿Cuándo no queda nada que convertir? Construye el resultado del número a partir del resultado del cociente."
    },
    {
     "id": "2014-15_diseno_junio#2",
@@ -140,7 +147,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "exam",
     "diff": 5.59,
-    "own": true
+    "own": true,
+    "hint": "Parte las **tres** dimensiones por la mitad (filas de $A$, columnas de $A$ = filas de $B$, columnas de $B$) para que los bloques cuadren aunque no sean cuadradas. Necesitas funciones auxiliares para trocear, sumar y recomponer. Caso base: cuando alguna dimensión es 1, multiplica directamente."
    },
    {
     "id": "2014-15_diseno_junio#3",
@@ -157,7 +165,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "exam",
     "diff": 5.65,
-    "own": true
+    "own": true,
+    "hint": "Coloca una torre por nivel (una por fila) y decide solo en qué columna. La única restricción que queda es que no se repitan columnas: lleva un vector de columnas usadas, márcala antes de bajar y desmárcala al volver. Al llegar a la última fila, imprime."
    }
   ],
   "kind": "diseno"
@@ -181,7 +190,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "exam",
-    "diff": 3.61
+    "diff": 3.61,
+    "hint": "Recuerda la definición de $O$ y busca $c>0$, $n_0>0$ con $5n\\le c\\,n\\log n$. Prueba con $c=5$: queda $\\log n\\ge1$, que se cumple a partir de $n_0$ igual a la base del logaritmo."
    },
    {
     "id": "2015-16_analisis_mayo_sol#2",
@@ -197,7 +207,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "exam",
-    "diff": 4.69
+    "diff": 4.69,
+    "hint": "Sigue la fórmula del enunciado de fuera hacia dentro: el `while` interno cuesta $2+3\\cdot(\\text{iteraciones})$, y sus iteraciones son $n-i+1$. Sustitúyelo en el externo y resuelve el sumatorio en $i$ con $\\sum i=\\frac{n(n-1)}{2}$."
    },
    {
     "id": "2015-16_analisis_mayo_sol#3",
@@ -213,7 +224,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "exam",
-    "diff": 4.52
+    "diff": 4.52,
+    "hint": "Expande $T(n)$ tres o cuatro veces y fíjate en dos cosas: el factor de $T$ (que se multiplica por 4) y la suma de términos lineales, que forma una serie geométrica de razón 2. El caso base ocurre cuando $n=2^i$, y entonces $4^i=n^2$."
    },
    {
     "id": "2015-16_analisis_mayo_sol#4",
@@ -229,7 +241,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "exam",
-    "diff": 4.53
+    "diff": 4.53,
+    "hint": "Cambio de variable $n=2^k$ y $t(k)=T(2^k)$: queda $t(k)=t(k-1)+k$. El término $k$ es un polinomio de grado 1 por $1^k$, así que la raíz $1$ aparece con multiplicidad $1+2$. Calcula $T(2)$ y $T(4)$ como casos base extra."
    }
   ],
   "kind": "analisis"
@@ -254,7 +267,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "exam",
     "diff": 4.6,
-    "own": true
+    "own": true,
+    "hint": "Define el tamaño como el número de cifras. ¿Qué te dice la última cifra ($n\\%10$, o la paridad de $n$)? ¿Qué subproblema queda al quitarla ($n/10$)? El caso base es un número de una sola cifra."
    },
    {
     "id": "2015-16_diseno_mayo#2",
@@ -271,7 +285,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "exam",
     "diff": 5.56,
-    "own": true
+    "own": true,
+    "hint": "Los pares van antes que los impares, así que \"es par\" es verdadero y luego falso: una búsqueda binaria sobre el índice. Mira el elemento central: si es par, el último par está ahí o a su derecha; si es impar, está a su izquierda. Cuidado en Java con `-15 % 2`."
    },
    {
     "id": "2015-16_diseno_mayo#3",
@@ -288,7 +303,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "exam",
     "diff": 4.32,
-    "solutionFrom": "2016-17_diseno_mayo_sol#1"
+    "solutionFrom": "2016-17_diseno_mayo_sol#1",
+    "hint": "Un laberinto es un grafo en disguise: ¿qué serían los nodos y las aristas? Una vez transformado, el camino más corto en un grafo sin pesos distintos lo da un algoritmo voraz que ya conoces."
    },
    {
     "id": "2015-16_diseno_mayo#4",
@@ -305,7 +321,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "exam",
     "diff": 7.0,
-    "own": true
+    "own": true,
+    "hint": "Construye la permutación posición a posición, probando solo elementos no usados. La poda: como $f$ no disminuye al ampliar, si el valor de la solución parcial ya no mejora al mejor conocido, no sigas por esa rama. Pasa el mejor valor como parámetro (por ejemplo, en un vector de un elemento) en vez de usar variables globales."
    }
   ],
   "kind": "diseno"
@@ -330,7 +347,8 @@ window.EXAMS = [
     "stage": "asintotica",
     "src": "exam",
     "diff": 4.09,
-    "own": true
+    "own": true,
+    "hint": "Reescribe $2^{\\ln n}$ con la base $e$ para dejarlo como una potencia de $n$: $2^{\\ln n}=n^{\\ln 2}$. Compara el exponente con 1 y busca $c$ y $n_0$."
    },
    {
     "id": "2016-17_analisis_junio#2",
@@ -347,7 +365,8 @@ window.EXAMS = [
     "stage": "bucles",
     "src": "exam",
     "diff": 5.71,
-    "own": true
+    "own": true,
+    "hint": "Piensa en el peor caso: la condición se cumple siempre. Calcula de dentro hacia fuera: bucle en $k$ (depende de $j$), bucle en $j$ (depende de $i$), bucle en $i$. Cada nivel suma 1 operación de inicialización, 1 de última comparación y, por iteración, comparación e incremento."
    },
    {
     "id": "2016-17_analisis_junio#3",
@@ -364,7 +383,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "exam",
     "diff": 5.26,
-    "own": true
+    "own": true,
+    "hint": "Expande $T(n)$ varias veces y observa qué se acumula: en cada paso aparece un término $2^{n-j}$ y un $1$. Llega hasta $T(0)=0$ y suma una serie geométrica más $n$ unos."
    }
   ],
   "kind": "analisis"
@@ -389,7 +409,8 @@ window.EXAMS = [
     "stage": "asintotica",
     "src": "exam",
     "diff": 4.19,
-    "own": true
+    "own": true,
+    "hint": "Escribe la desigualdad que exige la definición de $O$. En a), usa $(n+1)!=(n+1)\\,n!$ y divide por $n!$: ¿puede una constante acotar a $n+1$ para todo $n$? En b), compara $2^n$ con $3^n$ directamente."
    },
    {
     "id": "2016-17_analisis_mayo#2",
@@ -406,7 +427,8 @@ window.EXAMS = [
     "stage": "sumatorios",
     "src": "exam",
     "diff": 4.78,
-    "own": true
+    "own": true,
+    "hint": "Separa cada sumatorio en sumas conocidas. En a): $\\sum i$ y $\\sum 1$. En b): reparte $(n-i)2^i$ y necesitarás una suma geométrica y otra del tipo $\\sum i\\,2^i$, que se resuelve por inducción o derivando. Comprueba con $n=1,2,3$."
    },
    {
     "id": "2016-17_analisis_mayo#3",
@@ -423,7 +445,8 @@ window.EXAMS = [
     "stage": "expansion",
     "src": "exam",
     "diff": 4.83,
-    "own": true
+    "own": true,
+    "hint": "Expande tres o cuatro pasos con $n=2^k$. El término que se añade en el nivel $j$ vale $n(\\log n-j)$ (la suma del nivel completo), así que acabarás sumando una progresión aritmética hasta $j=\\log n$."
    },
    {
     "id": "2016-17_analisis_mayo#4",
@@ -440,7 +463,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "exam",
     "diff": 4.84,
-    "own": true
+    "own": true,
+    "hint": "Cambio de variable $n=2^k$ y $t_k=T(2^k)$: queda $t_k=2t_{k-1}+k2^k$. El término $k2^k$ (polinomio de grado 1 por $2^k$) coincide con la raíz de la parte homogénea, así que $x=2$ sale con multiplicidad 3. Necesitas tres casos base."
    }
   ],
   "kind": "analisis"
@@ -465,7 +489,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "exam",
     "diff": 5.8,
-    "own": true
+    "own": true,
+    "hint": "Cada número tiene su propio conjunto de dígitos (10 booleanos). Los dígitos comunes a dos listas son los que están en ambas: una operación elemento a elemento. Parte la lista por la mitad, resuelve cada mitad y combina. El caso base es una lista de un solo número."
    },
    {
     "id": "2016-17_diseno_junio#2",
@@ -482,7 +507,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "exam",
     "diff": 4.91,
-    "own": true
+    "own": true,
+    "hint": "Piensa en qué elemento es más problemático: el mayor, que sumado a cualquiera dará un valor grande. ¿Con quién conviene emparejarlo para que la suma sea lo menor posible? Ordena y repite la idea con los extremos que quedan; para justificarlo, intercambia parejas."
    },
    {
     "id": "2016-17_diseno_junio#3",
@@ -499,7 +525,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "exam",
     "diff": 5.85,
-    "own": true
+    "own": true,
+    "hint": "Si las dos sumas han de ser iguales, cada una debe ser la mitad de la total (y si esa mitad no es entera, no hay solución). Genera subconjuntos con un árbol binario (el elemento va a $A$ o a $B$). Con números negativos la poda no es \"me pasé del objetivo\": precalcula cuánto pueden aportar aún los positivos y los negativos que quedan."
    }
   ],
   "kind": "diseno"
@@ -523,7 +550,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 4.02
+    "diff": 4.02,
+    "hint": "Un laberinto se puede ver como un grafo: ¿qué serían los nodos y qué las aristas? Una vez transformado, \"camino más corto\" es un problema con un algoritmo voraz conocido."
    },
    {
     "id": "2016-17_diseno_mayo_sol#2",
@@ -539,7 +567,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 4.33
+    "diff": 4.33,
+    "hint": "El dígito menos significativo es `a % 10`. Compara con `x`: si `x` es mayor o igual que ese dígito, va al final. Si no, ese dígito se queda y `x` se inserta en `a // 10`; recompón el número."
    },
    {
     "id": "2016-17_diseno_mayo_sol#3",
@@ -555,7 +584,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 4.67
+    "diff": 4.67,
+    "hint": "Con valores enteros distintos y ordenados, $a[i]-i$ no decrece. Mira el elemento central `m`: si `a[m] > m`, todo lo de la derecha también tiene `a[i] > i`; si `a[m] < m`, lo de la izquierda... Descarta una mitad en cada llamada (búsqueda binaria)."
    },
    {
     "id": "2016-17_diseno_mayo_sol#4",
@@ -571,7 +601,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 6.17
+    "diff": 6.17,
+    "hint": "Genera subconjuntos con el esquema binario (cada elemento entra o no). Lleva la suma parcial y la cardinalidad parcial. Poda si la suma ya pasa de `s` (los números no son negativos) o si la cardinalidad ya no puede mejorar la mejor encontrada. Solo actualiza la mejor al llegar al final con suma exactamente `s`."
    }
   ],
   "kind": "diseno"
@@ -595,7 +626,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "exam",
-    "diff": 3.47
+    "diff": 3.47,
+    "hint": "Simplifica primero lo que sea igual (constantes y bases de logaritmos no cuentan; $\\log n^2=2\\log n$). Luego ordena por familias: logarítmicas, lineales, $n\\log n$, $n^{1+a}$ con $0<a<1$, cuadráticas. ¿Dónde cae $n^{1+a}$ respecto a $n\\log n$ y a $n^2$?"
    },
    {
     "id": "2018-19_mostoles_mayo_sol#2",
@@ -611,7 +643,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "exam",
-    "diff": 4.72
+    "diff": 4.72,
+    "hint": "Descompón de fuera a dentro con la fórmula de los bucles. La clave está en el `if`: cuesta 1 si no se cumple y 1 más el bucle de $k$ si se cumple, así que hay mejor y peor caso. Los sumatorios de $j$ empiezan en $i+1$."
    },
    {
     "id": "2018-19_mostoles_mayo_sol#3",
@@ -627,7 +660,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "exam",
-    "diff": 4.45
+    "diff": 4.45,
+    "hint": "Cambio de variable $n=4^k$ (así $n^2=16^k$) y $t(k)=T(4^k)$: queda $t(k)=t(k-1)+16^k$. Las raíces características son $1$ y $16$. Necesitas un segundo caso base, $T(4)$, para fijar las dos constantes."
    },
    {
     "id": "2018-19_mostoles_mayo_sol#4",
@@ -643,7 +677,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "exam",
-    "diff": 4.43
+    "diff": 4.43,
+    "hint": "Expande el mismo $T(n)=T(n/4)+n^2$ tres o cuatro pasos. Verás que lo que se acumula delante de $n^2$ es una serie geométrica de razón $1/16$. Termina cuando $n/4^i=1$."
    },
    {
     "id": "2018-19_mostoles_mayo_sol#5",
@@ -659,7 +694,8 @@ window.EXAMS = [
     ],
     "stage": "dyv",
     "src": "exam",
-    "diff": 5.78
+    "diff": 5.78,
+    "hint": "Divide la lista en dos mitades. La mejor sublista está en la izquierda, en la derecha, o **cruza** el punto medio. Para la que cruza, calcula con dos bucles la mejor suma que termina en `mitad-1` hacia la izquierda y la mejor que empieza en `mitad` hacia la derecha, y súmalas."
    },
    {
     "id": "2018-19_mostoles_mayo_sol#6",
@@ -675,7 +711,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 7.2
+    "diff": 7.2,
+    "hint": "Genera subconjuntos de actividades con el árbol binario (la actividad $i$ entra o no). Antes de incluirla, comprueba que no solape con las ya elegidas: esa es la poda. Al llegar al final, compara su cardinalidad con la mejor."
    }
   ],
   "kind": "mixto"
@@ -699,7 +736,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "exam",
-    "diff": 3.91
+    "diff": 3.91,
+    "hint": "En ambos casos escribe la desigualdad de la definición. En a), $2^{n+1}=2\\cdot2^n$: ¿qué constante sirve? En b), $2^{2n}=(2^n)^2$ y compara con $c\\cdot2^n$: ¿puede una constante acotar a $2^n$ para todo $n$?"
    },
    {
     "id": "2018-19_vicalvaro_mayo_sol#2",
@@ -715,7 +753,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "exam",
-    "diff": 4.13
+    "diff": 4.13,
+    "hint": "Los bucles son dependientes ($j$ arranca en $i$). Calcula el interno con la fórmula: $2+4\\cdot$(iteraciones), con $n-i+1$ iteraciones. Sustitúyelo en el externo y resuelve la suma con $\\sum i=\\frac{n(n+1)}{2}$."
    },
    {
     "id": "2018-19_vicalvaro_mayo_sol#3",
@@ -731,7 +770,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "exam",
-    "diff": 4.46
+    "diff": 4.46,
+    "hint": "Reescribe $\\log_{10}(n^2)=2\\log_{10}n$. Cambio de variable $n=10^k$, y luego $t(k)=T(10^k)$: queda $t(k)=t(k-1)+2k$. El término $2k$ es un polinomio de grado 1 por $1^k$, así que la raíz $1$ sale con multiplicidad 3. Necesitas tres casos base."
    },
    {
     "id": "2018-19_vicalvaro_mayo_sol#4",
@@ -747,7 +787,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "exam",
-    "diff": 4.45
+    "diff": 4.45,
+    "hint": "Simplifica primero $\\log_{10}(n^2)=2\\log_{10}n$ y expande varias veces. Los términos de cada paso son $2\\log_{10}(n/10^j)=2\\log_{10}n-2j$: aparecerá una suma de enteros consecutivos. Termina cuando $n=10^i$."
    },
    {
     "id": "2018-19_vicalvaro_mayo_sol#5",
@@ -763,7 +804,8 @@ window.EXAMS = [
     ],
     "stage": "dyv",
     "src": "exam",
-    "diff": 5.87
+    "diff": 5.87,
+    "hint": "Parte la matriz por la fila y la columna centrales en cuatro submatrices y comprueba cada una de forma recursiva. Falta lo que cruza esos cortes: las dos filas centrales y las dos columnas centrales también deben estar ordenadas. Cuida el caso de matrices de una sola fila o columna."
    },
    {
     "id": "2018-19_vicalvaro_mayo_sol#6",
@@ -779,7 +821,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 6.85
+    "diff": 6.85,
+    "hint": "Asigna un color a cada vértice, uno por nivel, probando los $m$ colores. Un color es válido para el vértice $i$ si ningún vecino ya coloreado (de los vértices anteriores) lo tiene. Es un problema de decisión: corta en cuanto encuentres una coloración completa."
    }
   ],
   "kind": "mixto"
@@ -803,7 +846,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "exam",
-    "diff": 3.31
+    "diff": 3.31,
+    "hint": "$\\Theta$ exige cota superior e inferior. Pasa $\\log_4 n$ a base 2 con el cambio de base: es $\\log_2 n$ dividido por una constante. Después busca dos constantes $C_1$, $C_2$ que acoten por abajo y por arriba."
    },
    {
     "id": "2019-20_analisis_junio_sol#2",
@@ -819,7 +863,8 @@ window.EXAMS = [
     ],
     "stage": "sumatorios",
     "src": "exam",
-    "diff": 3.9
+    "diff": 3.9,
+    "hint": "Separa el sumatorio en términos independientes. Los que no dependen de $i$ (como $1$, $j$, $nj$) se multiplican por $j$; saca fuera las constantes y usa $\\sum i$, $\\sum i^2$ y la suma geométrica $\\sum 4^i$. Reagrupa al final."
    },
    {
     "id": "2019-20_analisis_junio_sol#3",
@@ -836,7 +881,8 @@ window.EXAMS = [
     ],
     "stage": "sumatorios",
     "src": "exam",
-    "diff": 3.31
+    "diff": 3.31,
+    "hint": "La función $e^x$ es creciente, así que puedes acotar la suma por integrales: la integral entre $m-1$ y $n$ es cota inferior y la de $m$ a $n+1$ es cota superior (ajusta los límites a $j=0..n-1$). También sirve la serie geométrica."
    },
    {
     "id": "2019-20_analisis_junio_sol#4",
@@ -852,7 +898,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "exam",
-    "diff": 4.45
+    "diff": 4.45,
+    "hint": "Cambio de variable $n=4^k$ (entonces $\\log_2 n=2k$) y $t(k)=T(4^k)$: queda $t(k)=2t(k-1)+2k$. El polinomio característico es $(x-2)(x-1)^2$. Necesitas tres casos base: $T(1)$, $T(4)$ y $T(16)$."
    },
    {
     "id": "2019-20_analisis_junio_sol#5",
@@ -868,7 +915,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "exam",
-    "diff": 4.44
+    "diff": 4.44,
+    "hint": "Expande y verás que el factor de $T$ crece como $2^i$ mientras el argumento se divide por $4^i$, y que en cada paso se añade un $\\sqrt n$. Termina cuando $n=4^i$ y observa que $2^i=\\sqrt n$."
    }
   ],
   "kind": "analisis"
@@ -892,7 +940,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 4.31
+    "diff": 4.31,
+    "hint": "Resuelve el subproblema \"todo menos el último elemento\" y añade el último a la lista que le corresponda según la paridad de su índice (que es la longitud de la lista menos 1). Casos base: lista vacía y lista de un elemento."
    },
    {
     "id": "2019-20_diseno_mostoles_junio_sol#2",
@@ -908,7 +957,8 @@ window.EXAMS = [
     ],
     "stage": "dyv",
     "src": "exam",
-    "diff": 5.4
+    "diff": 5.4,
+    "hint": "Divide los coeficientes en pares e impares: $P(x)=P_{par}(x^2)+x\\,P_{impar}(x^2)$. Piensa por qué: cada coeficiente par mantiene el exponente $2k$ y cada impar el $2k+1$. Cada subpolinomio se evalúa en $x^2$ con la misma función."
    },
    {
     "id": "2019-20_diseno_mostoles_junio_sol#3",
@@ -924,7 +974,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 6.88
+    "diff": 6.88,
+    "hint": "Es la generación de permutaciones normal, pero en lugar de un booleano \"libre/usado\" lleva un contador por elemento: cuántas veces puede usarse aún. Un elemento es candidato si su contador es mayor que 0; decrementa antes de bajar y restaura al volver. Cuenta las soluciones completas."
    }
   ],
   "kind": "diseno"
@@ -948,7 +999,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 5.64
+    "diff": 5.64,
+    "hint": "Resuelve primero la lista sin su primer elemento (llamada recursiva). Luego decide qué hacer con ese primer elemento: busca si ya está en la lista de distintos (con la función de búsqueda dada); si está, incrementa su contador, y si no, añádelo con contador 1."
    },
    {
     "id": "2019-20_diseno_vicalvaro_junio_sol#2",
@@ -964,7 +1016,8 @@ window.EXAMS = [
     ],
     "stage": "dyv",
     "src": "exam",
-    "diff": 4.61
+    "diff": 4.61,
+    "hint": "Parte los coeficientes en dos mitades y evalúa cada mitad como un polinomio por separado. La mitad alta representa potencias desplazadas: hay que multiplicarla por $x^m$, siendo $m$ la longitud de la primera mitad. Suma ambos resultados."
    },
    {
     "id": "2019-20_diseno_vicalvaro_junio_sol#3",
@@ -980,7 +1033,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 6.83
+    "diff": 6.83,
+    "hint": "Es como el esquema de subconjuntos de tamaño fijo. La clave para no generar la misma combinación en distinto orden: si en la posición $i$ pones $a_j$, en la siguiente solo puedes poner $a_j, a_{j+1},\\dots$ (pásale $j$ como parámetro). Cuenta cada solución completa."
    }
   ],
   "kind": "diseno"
@@ -1005,7 +1059,8 @@ window.EXAMS = [
     "stage": "asintotica",
     "src": "exam",
     "diff": 4.13,
-    "own": true
+    "own": true,
+    "hint": "Simplifica $2^{\\log_3 n}$ a una potencia de $n$ (toma $\\log_3$ de ambos lados): queda $n^a$ con $a=\\log_3 2$. Compara $a$ con 1 y mira las **dos** cotas que exige $\\Theta$ con una constante: ¿se cumple la superior? ¿y la inferior? Si falla una, la afirmación es falsa."
    },
    {
     "id": "2020-21_analisis_enero#2",
@@ -1022,7 +1077,8 @@ window.EXAMS = [
     "stage": "bucles",
     "src": "exam",
     "diff": 4.55,
-    "own": true
+    "own": true,
+    "hint": "Calcula de dentro hacia fuera. El bucle interno va de $n$ a $i+1$ decreciendo, así que hace $n-i$ iteraciones (cada una cuesta $1+2+1$). Sustitúyelo en el externo y suma con $\\sum_{i=0}^{n-1}(n-i)=\\frac{n(n+1)}{2}$."
    },
    {
     "id": "2020-21_analisis_enero#3",
@@ -1040,7 +1096,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "exam",
     "diff": 6.39,
-    "own": true
+    "own": true,
+    "hint": "(a) Cambio $n=4^k$ y $t(k)=T(4^k)$: queda $t(k)=2t(k-1)+2^k$, con raíz doble $2$; casos base $T(1)$ y $T(4)$. (b) Expande: el factor de $T$ crece como $2^i$ y en cada paso se suma un $\\sqrt n$; para y compara con (a)."
    }
   ],
   "kind": "analisis"
@@ -1065,7 +1122,8 @@ window.EXAMS = [
     "stage": "asintotica",
     "src": "exam",
     "diff": 4.11,
-    "own": true
+    "own": true,
+    "hint": "Escribe $n^{1{,}5}\\le c\\,n^2$ y simplifica. Piensa para qué $n$ una potencia menor es menor o igual que una mayor."
    },
    {
     "id": "2020-21_analisis_junio#2",
@@ -1082,7 +1140,8 @@ window.EXAMS = [
     "stage": "sumatorios",
     "src": "exam",
     "diff": 4.25,
-    "own": true
+    "own": true,
+    "hint": "$f(x)=x\\ln x$ es creciente en $x\\ge1$, así que cada término $f(i)$ queda por debajo de la integral en $[i,i+1]$. Suma y obtén una cota con una sola integral, evaluada con la primitiva que te dan."
    },
    {
     "id": "2020-21_analisis_junio#3",
@@ -1099,7 +1158,8 @@ window.EXAMS = [
     "stage": "expansion",
     "src": "exam",
     "diff": 6.27,
-    "own": true
+    "own": true,
+    "hint": "Expande $T(n)=T(n-1)+n^2$ hasta $T(0)$. Lo que queda es una suma de cuadrados conocida, $\\sum_{k=1}^{n}k^2$."
    }
   ],
   "kind": "analisis"
@@ -1124,7 +1184,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "exam",
     "diff": 4.43,
-    "own": true
+    "own": true,
+    "hint": "Con menos de dos elementos no hay parejas consecutivas. En el caso recursivo, la primera suma es $a_0+a_1$ y el resto son las sumas consecutivas de la lista sin su primer elemento."
    },
    {
     "id": "2020-21_diseno_enero#2",
@@ -1141,7 +1202,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "exam",
     "diff": 5.2,
-    "own": true
+    "own": true,
+    "hint": "Los enteros son distintos y están ordenados, así que cada uno es al menos el anterior más 1. Fíjate en $a[i]-i$: ¿crece o decrece? Mirando el elemento central, eso te dice de qué lado puede estar el índice buscado."
    },
    {
     "id": "2020-21_diseno_enero#3",
@@ -1158,7 +1220,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "exam",
     "diff": 6.61,
-    "own": true
+    "own": true,
+    "hint": "Mochila con árbol binario (el objeto $i$ entra o no). Lleva el peso acumulado y la suma de lo que queda por decidir para no recalcular. Dos podas: te pasas de la capacidad, o aun metiendo todo lo que queda no superarías el mejor valor hallado."
    }
   ],
   "kind": "diseno"
@@ -1183,7 +1246,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "exam",
     "diff": 6.14,
-    "own": true
+    "own": true,
+    "hint": "Caso base: matriz $1\\times1$. Para el caso recursivo, recorre la primera columna: para cada fila $i$ forma la matriz complementaria (sin la fila $i$ y sin la columna 0), calcula su determinante recursivamente y suma con el signo $(-1)^i$ y el elemento $a_{i,0}$."
    },
    {
     "id": "2020-21_diseno_junio#2",
@@ -1200,7 +1264,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "exam",
     "diff": 8.5,
-    "own": true
+    "own": true,
+    "hint": "Un ciclo euleriano recorre **cada arista** una vez, así que la solución parcial es una secuencia de vértices y en cada nivel eliges una arista no usada que salga del último vértice. Marca la arista usada (por ejemplo, poniendo a 0 sus dos posiciones en la matriz) y restáurala al volver. Antes de buscar, comprueba la condición de grados pares para podar de golpe."
    }
   ],
   "kind": "diseno"
@@ -1224,7 +1289,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "exam",
-    "diff": 3.57
+    "diff": 3.57,
+    "hint": "Escribe la desigualdad de la definición de $O$ con una constante $c>1$ (por ejemplo, 2), pasa todo a un lado y factoriza el polinomio que queda (Ruffini: prueba con raíces enteras pequeñas). Comprueba para qué $n$ es positivo el producto de factores."
    },
    {
     "id": "2021-22_analisis_mayo_sol#2",
@@ -1240,7 +1306,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "exam",
-    "diff": 4.5
+    "diff": 4.5,
+    "hint": "Aplica la fórmula del enunciado de dentro hacia fuera. El bucle interno recorre $j=0..2i-1$, es decir, $2i$ iteraciones, con cuerpo de 2 operaciones. Sustituye su coste en el externo (que va de 1 a $n-1$) y resuelve con $\\sum i=\\frac{(n-1)n}{2}$."
    },
    {
     "id": "2021-22_analisis_mayo_sol#3",
@@ -1256,7 +1323,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "exam",
-    "diff": 4.45
+    "diff": 4.45,
+    "hint": "Expande tres o cuatro pasos: el factor de $T$ crece como $3^i$ y lo que se acumula delante de $n^2$ es una serie geométrica de razón $1/3$. Termina en $n=3^i$ y usa $T(1)=0$."
    },
    {
     "id": "2021-22_analisis_mayo_sol#4",
@@ -1272,7 +1340,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "exam",
-    "diff": 4.5
+    "diff": 4.5,
+    "hint": "Cambio de variable $n=3^k$ y $t(k)=T(3^k)$: queda $t(k)=3t(k-1)+9^k$. Las raíces características son 3 y 9. Necesitas dos casos base: $T(1)$ y $T(3)$. Compara el resultado con el del ejercicio anterior."
    }
   ],
   "kind": "analisis"
@@ -1296,7 +1365,8 @@ window.EXAMS = [
     ],
     "stage": "dyv",
     "src": "exam",
-    "diff": 4.11
+    "diff": 4.11,
+    "hint": "Divide la lista por la mitad y obtén las sumas consecutivas de cada mitad. ¿Qué pareja de sumas queda sin cubrir al partir por la mitad? Falta la que une el último de la primera mitad con el primero de la segunda: añádela entre ambas soluciones."
    },
    {
     "id": "2021-22_diseno_enero_sol#2",
@@ -1312,7 +1382,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 5.46
+    "diff": 5.46,
+    "hint": "Es la bisección clásica sobre el segmento del origen a $q$: toma el punto medio, mira si cae dentro o fuera de la circunferencia (con $x^2+y^2$ frente a $r^2$) y quédate con la mitad que contiene el corte. Para cuando el segmento sea más corto que $\\epsilon$."
    },
    {
     "id": "2021-22_diseno_enero_sol#3",
@@ -1328,7 +1399,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 7.2
+    "diff": 7.2,
+    "hint": "Etiquetar los $n$ nodos con etiquetas distintas es una **permutación**. Adapta el esquema de permutaciones y lleva el coste parcial (suma de $|etiqueta_u-etiqueta_v|$ de las aristas ya decididas) para podar cuando ya no mejore el mejor valor hallado."
    }
   ],
   "kind": "diseno"
@@ -1352,7 +1424,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 3.41
+    "diff": 3.41,
+    "hint": "Quita el primer elemento: lo que queda es otra suma alternante, pero con los signos invertidos respecto a la que necesitas. ¿Cómo se combina $a_0$ con el resultado de la sublista? Caso base: lista vacía."
    },
    {
     "id": "2021-22_diseno_mayo_sol#2",
@@ -1368,7 +1441,8 @@ window.EXAMS = [
     ],
     "stage": "dyv",
     "src": "exam",
-    "diff": 6.7
+    "diff": 6.7,
+    "hint": "Divide la lista en dos mitades y permuta cada una recursivamente. Pregúntate cómo se mezclan los resultados: ¿qué elementos de cada mitad deben ir juntos en la lista final? Prueba con $p=2$ a mano ($[g_0,g_2,g_1,g_3]$)."
    },
    {
     "id": "2021-22_diseno_mayo_sol#3",
@@ -1384,7 +1458,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 6.7
+    "diff": 6.7,
+    "hint": "No son permutaciones ni subconjuntos: cada uno de los $n$ elementos va a **uno de los $m$ conjuntos**. Lleva un contador de cuántos elementos caben aún en cada conjunto y solo ofrece como candidato el que no esté lleno. Cuenta las soluciones completas."
    },
    {
     "id": "2021-22_diseno_mayo_sol#4",
@@ -1400,7 +1475,8 @@ window.EXAMS = [
     ],
     "stage": "voraz",
     "src": "exam",
-    "diff": 4.05
+    "diff": 4.05,
+    "hint": "Estrategia voraz: en cada paso, la moneda más grande que no supera lo que falta. Imprímela y repite con lo que queda. Cuidado con los decimales (trabaja en céntimos enteros o redondea). Caso base: no queda nada."
    }
   ],
   "kind": "diseno"
@@ -1424,7 +1500,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 3.44
+    "diff": 3.44,
+    "hint": "El tamaño es el número de cifras. Caso base: una sola cifra, ¿cuántas impares hay? Caso recursivo: cuenta las del número sin la última cifra y suma 1 si la última lo es."
    },
    {
     "id": "2022-23_diseno_mayo_sol#2",
@@ -1440,7 +1517,8 @@ window.EXAMS = [
     ],
     "stage": "dyv",
     "src": "exam",
-    "diff": 4.37
+    "diff": 4.37,
+    "hint": "Divide por la mitad y resuelve cada mitad. Cada una ya tiene sus pares delante y sus impares detrás. ¿Cómo debes juntar las cuatro partes (pares de la 1ª, pares de la 2ª, impares de la 1ª, impares de la 2ª)? Prueba con una lista de 4 y otra de 8 elementos a mano."
    },
    {
     "id": "2022-23_diseno_mayo_sol#3",
@@ -1456,7 +1534,8 @@ window.EXAMS = [
     ],
     "stage": "backtracking",
     "src": "exam",
-    "diff": 5.29
+    "diff": 5.29,
+    "hint": "Construye la cadena posición a posición con dos candidatos: abrir o cerrar. Lleva el número de paréntesis abiertos sin cerrar y poda: no cierres si no hay ninguno abierto, y no abras más de $n$ en total. Cuenta las secuencias completas."
    },
    {
     "id": "2022-23_diseno_mayo_sol#4",
@@ -1472,7 +1551,8 @@ window.EXAMS = [
     ],
     "stage": "recursion",
     "src": "exam",
-    "diff": 5.61
+    "diff": 5.61,
+    "hint": "Un fractal de orden $n$ son cinco fractales de orden $n-1$ unidos extremo con extremo. Calcula los extremos de cada uno a partir de $p$ y $q$ (en tercios del vector, con giros de 90° para subir y bajar) y haz cinco llamadas. Caso base: orden 0, dibuja el segmento."
    }
   ],
   "kind": "diseno"
@@ -1497,7 +1577,8 @@ window.EXAMS = [
     "stage": "asintotica",
     "src": "adic",
     "diff": 1.11,
-    "own": true
+    "own": true,
+    "hint": "Reparte el exponente entre numerador y denominador. En el denominador, $(b^k)^{\\log_b n}=(b^{\\log_b n})^k$ y $b^{\\log_b n}=n$. En el numerador necesitas la identidad $x^{\\log_b y}=y^{\\log_b x}$ (pruébala tomando $\\log_b$ de ambos lados)."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.2",
@@ -1514,7 +1595,8 @@ window.EXAMS = [
     "stage": "asintotica",
     "src": "adic",
     "diff": 1.23,
-    "own": true
+    "own": true,
+    "hint": "$\\log n!\\in\\Theta(n\\log n)$ equivale a que el límite del cociente sea una constante positiva y finita. Sustituye $n!$ por Stirling dentro del logaritmo, divide por $n\\ln n$ y mira qué términos tienden a 0."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.3",
@@ -1531,7 +1613,8 @@ window.EXAMS = [
     "stage": "asintotica",
     "src": "adic",
     "diff": 1.1,
-    "own": true
+    "own": true,
+    "hint": "Calcula $\\lim \\frac{n\\log n}{n^{1+a}}=\\lim\\frac{\\log n}{n^a}$: es una indeterminación $\\infty/\\infty$. Aplica L'Hôpital (deriva arriba y abajo) y simplifica."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.4",
@@ -1548,7 +1631,8 @@ window.EXAMS = [
     "stage": "sumatorios",
     "src": "adic",
     "diff": 1.12,
-    "own": true
+    "own": true,
+    "hint": "Cuenta cuántos valores toma el índice $i$ entre $m$ y $n$ (ambos incluidos). Comprueba con $m=3$, $n=7$."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.5",
@@ -1565,7 +1649,8 @@ window.EXAMS = [
     "stage": "sumatorios",
     "src": "adic",
     "diff": 1.22,
-    "own": true
+    "own": true,
+    "hint": "El $i$-ésimo impar es $2i-1$. Separa $\\sum(2i-1)$ en $2\\sum i-\\sum 1$ y usa las fórmulas conocidas."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.6",
@@ -1582,7 +1667,8 @@ window.EXAMS = [
     "stage": "sumatorios",
     "src": "adic",
     "diff": 1.2,
-    "own": true
+    "own": true,
+    "hint": "Desarrolla cada lado de la identidad en función de $S_1=\\sum i$ y $S_2=\\sum i^2$. Iguala y despeja $S_2$."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.7",
@@ -1599,7 +1685,8 @@ window.EXAMS = [
     "stage": "sumatorios",
     "src": "adic",
     "diff": 1.21,
-    "own": true
+    "own": true,
+    "hint": "Escribe $s_i=s_0+id$. Truco de Gauss: suma $S$ consigo misma escrita al revés; cada pareja de columnas suma lo mismo."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.8",
@@ -1616,7 +1703,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "adic",
     "diff": 1.33,
-    "own": true
+    "own": true,
+    "hint": "Pasa los términos con $T$ a la izquierda. La ecuación característica es la de la parte homogénea multiplicada por $(x-b)^{d+1}$ por cada término de la derecha de la forma $b^n\\cdot$(polinomio de grado $d$). Las constantes no hacen falta: escribe la forma general con las raíces y sus multiplicidades."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.9",
@@ -1633,7 +1721,8 @@ window.EXAMS = [
     "stage": "sumatorios",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Agrupa los números según cuántos ceros tienen a la derecha del primer 1. Un número con $k$ ceros finales hace procesar $k+1$ bits. Cuenta cuántos números hay de cada tipo (fija el 1 y los ceros; el resto de bits es libre) y suma con un sumatorio."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.10",
@@ -1650,7 +1739,8 @@ window.EXAMS = [
     "stage": "expansion",
     "src": "adic",
     "diff": 1.9,
-    "own": true
+    "own": true,
+    "hint": "Para cada función cuenta cuántas llamadas recursivas hace, con qué tamaño, y qué trabajo extra aparte de ellas (constante). Los casos base cuestan una constante. Ojo con (3): hay dos llamadas de tamaño $\\approx n/2$."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.11",
@@ -1668,7 +1758,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "adic",
     "diff": 1.45,
-    "own": true
+    "own": true,
+    "hint": "Cada llamada resta 2 y hace trabajo constante: $T(n)=T(n-2)+c$. Expande hasta llegar a un caso base ($n=0$ o $n=1$, según la paridad). En el método general, la parte no homogénea es una constante."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.12",
@@ -1685,7 +1776,8 @@ window.EXAMS = [
     "stage": "expansion",
     "src": "adic",
     "diff": 1.16,
-    "own": true
+    "own": true,
+    "hint": "Calcula $T(0),\\dots,T(3)$ para intuir el patrón. Después escribe $T(n)$ y $T(n-1)$ y réstalas: casi todos los sumandos se cancelan y queda una recurrencia sencilla."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.13",
@@ -1702,7 +1794,8 @@ window.EXAMS = [
     "stage": "expansion",
     "src": "adic",
     "diff": 1.16,
-    "own": true
+    "own": true,
+    "hint": "Supón $n=4^k$ y expande. Cada paso duplica el coeficiente de $T$ y el término de log baja en $2$ unidades (porque $\\log_2(n/4)=\\log_2 n-2$): aparece una suma de potencias de 2 por una progresión aritmética. Para al llegar a $T(1)$."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.14",
@@ -1719,7 +1812,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "adic",
     "diff": 1.16,
-    "own": true
+    "own": true,
+    "hint": "Pasa a la forma $T(n)-T(n-1)=b\\cdot1^n$. La raíz $1$ aparece con multiplicidad 2, así que $T(n)=C_1+C_2n$. Usa $T(1)$ y $T(2)$."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.15",
@@ -1737,7 +1831,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "adic",
     "diff": 1.55,
-    "own": true
+    "own": true,
+    "hint": "Hay una sola llamada recursiva con $n/2$ y trabajo constante. Plantea $T(n)=T(n/2)+c$ y resuélvela de tres formas: teorema maestro (compara $a$ y $b^k$ con $k=0$), expansión y cambio de variable $n=2^k$."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.16",
@@ -1755,7 +1850,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "adic",
     "diff": 1.31,
-    "own": true
+    "own": true,
+    "hint": "Teorema maestro con $a=3$, $b=2$, $f(n)=n$. En la expansión aparece una serie geométrica de razón $3/2$. En el método general, el cambio $n=2^k$ da raíces 3 y 2."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.17",
@@ -1772,7 +1868,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "adic",
     "diff": 1.16,
-    "own": true
+    "own": true,
+    "hint": "Cambio de variable $n=10^k$ y $t(k)=T(10^k)$: queda $t(k)=t(k-1)+1$. La raíz $1$ es doble. Usa $t(0)$ y $t(1)$ para las constantes."
    },
    {
     "id": "ejercicios_adicionales_1-2#1.18",
@@ -1789,7 +1886,8 @@ window.EXAMS = [
     "stage": "general",
     "src": "adic",
     "diff": 1.83,
-    "own": true
+    "own": true,
+    "hint": "Son diez recurrencias de tipos distintos: la a) es lineal con raíces 2 y 1; las de división se resuelven con expansión (serie geométrica o aritmética) o cambio de variable. Para cada una, identifica primero qué método es más cómodo y comprueba con un par de valores pequeños."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.1",
@@ -1805,7 +1903,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "adic",
-    "diff": 0.75
+    "diff": 0.75,
+    "hint": "Demuestra que el límite del cociente es 0: $\\frac{n\\ln n}{n^{1+a}}=\\frac{\\ln n}{n^a}$. Es del tipo $\\infty/\\infty$, así que aplica L'Hôpital."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.2",
@@ -1821,7 +1920,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "adic",
-    "diff": 0.74
+    "diff": 0.74,
+    "hint": "Elimina constantes y términos dominados por otros. Cuidado con dos variables: para comparar $mn^2$ con $m^3$ ningún límite basta, porque dependiendo de qué variable crezca gana uno u otro. Esos dos términos se quedan."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.3",
@@ -1837,7 +1937,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "adic",
-    "diff": 0.77
+    "diff": 0.77,
+    "hint": "Quita constantes ($\\log m^2=2\\log m$). Luego compara por límites cada término con $mn$: tanto $m\\log n$ como $n\\log m$ quedan dominados por él."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.4",
@@ -1853,7 +1954,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "adic",
-    "diff": 0.78
+    "diff": 0.78,
+    "hint": "$\\Theta$ exige dos cotas. Para la inferior, $c_1=1/4$ funciona (queda $3n-1\\ge0$). Para la superior, prueba con $c_2=1$ y busca desde qué $n$ se cumple $3n-1\\le\\frac34n^2$."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.5",
@@ -1869,7 +1971,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "adic",
-    "diff": 0.76
+    "diff": 0.76,
+    "hint": "Toma $c=1$ y aplica logaritmos naturales: $e\\ln n\\le n$. Estudia $g(n)=n-e\\ln n$: su mínimo está en $n=e$ y vale 0, así que se cumple para todo $n>0$."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.6",
@@ -1885,7 +1988,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "adic",
-    "diff": 1.14
+    "diff": 1.14,
+    "hint": "El tamaño depende de cómo lo midas: si el lado es $n$, hay $n^2$ elementos. Bubble sort sobre $N$ elementos hace $\\Theta(N^2)$ operaciones; sustituye $N$."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.7",
@@ -1901,7 +2005,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "adic",
-    "diff": 1.19
+    "diff": 1.19,
+    "hint": "Igual que el anterior, pero con dos parámetros: $n$ filas y $m$ columnas, así que $N=nm$ elementos. El resultado se expresa en $n$ y $m$."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.8",
@@ -1917,7 +2022,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "adic",
-    "diff": 1.4
+    "diff": 1.4,
+    "hint": "Estudia el mejor caso (diferencia en la primera comparación) y el peor (matriz simétrica, recorre todo). En el peor caso, el bucle de fuera va de 1 a $N$ y el interior hace $N-columna$ comparaciones; cuenta una operación por línea."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.9",
@@ -1933,7 +2039,8 @@ window.EXAMS = [
     ],
     "stage": "bucles",
     "src": "adic",
-    "diff": 1.15
+    "diff": 1.15,
+    "hint": "Es selección directa. Calcula el bucle interno (depende de $i$) con la fórmula de bucles; el `IF` interno tiene mejor y peor caso. Después suma sobre $i$ y compara ambos casos."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.10",
@@ -1949,7 +2056,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "adic",
-    "diff": 1.29
+    "diff": 1.29,
+    "hint": "$T_n=2T_{n-1}+1$ con $T_0=0$. Expande y reconoce la suma de potencias de 2, o usa el método general (raíces 2 y 1)."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.11",
@@ -1967,7 +2075,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "adic",
-    "diff": 1.37
+    "diff": 1.37,
+    "hint": "$T(n)=1+2T(n/2)$ con $T(1)=1$. Expande: sale una suma geométrica. Con el método general, cambia $n=2^k$ y $t(k)=T(2^k)$."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.12",
@@ -1983,7 +2092,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "adic",
-    "diff": 1.59
+    "diff": 1.59,
+    "hint": "Elimina la recursión mutua: despeja $C_{n-1}$ de la ecuación (6) y sustitúyelo en (5) para que solo quede $A$. Obtendrás una recurrencia lineal de orden 2 con parte no homogénea constante; resuélvela con el método general."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.13",
@@ -1999,7 +2109,8 @@ window.EXAMS = [
     ],
     "stage": "expansion",
     "src": "adic",
-    "diff": 1.7
+    "diff": 1.7,
+    "hint": "a) Cuenta las operaciones columna a columna (del bit más significativo al menos): el patrón es 1, 3, 7, 15… y suma esa secuencia. b) Plantea cuánto cuesta añadir un bit más: $T_n$ en función de $T_{n-1}$ más lo que aporta el nuevo bit. c) Con esa recurrencia no homogénea, usa el método general (raíces 2 y 1) con tres casos base. Al final puedes reexpresar el resultado en función del número de palabras procesadas $m=2^n-1$."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.14",
@@ -2016,7 +2127,8 @@ window.EXAMS = [
     ],
     "stage": "asintotica",
     "src": "adic",
-    "diff": 1.0
+    "diff": 1.0,
+    "hint": "a) Con Stirling, el límite del cociente es 1 (positivo). b) Acota $\\log n!=\\sum\\log i$ por abajo con una integral, $\\int_1^n\\log x\\,dx$, y compara con $c\\,n\\log n$."
    },
    {
     "id": "ejercicios_adicionales_1-2#2.15",
@@ -2032,7 +2144,8 @@ window.EXAMS = [
     ],
     "stage": "general",
     "src": "adic",
-    "diff": 0.88
+    "diff": 0.88,
+    "hint": "Escribe el polinomio característico: la parte homogénea aporta $(x-1)$; cada término de la derecha aporta un factor por su base y su grado. Con las raíces y multiplicidades, el término dominante es el de la base mayor con mayor potencia de $n$."
    }
   ],
   "kind": "adic"
@@ -2057,7 +2170,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.61,
-    "own": true
+    "own": true,
+    "hint": "Calcula $f(0),f(1),f(2),f(3),f(4)$ a mano y reconoce la secuencia. Después expande $f(n)=f(n-1)\\times n$ hasta llegar a $f(0)$."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.2",
@@ -2074,7 +2188,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.77,
-    "own": true
+    "own": true,
+    "hint": "Calcula los términos sumando 3 cada vez. Expande $s_n=s_{n-1}+3$ unas veces y mira qué se acumula: $s_n=s_0+\\dots$"
    },
    {
     "id": "ejercicios_adicionales_3-9#3.3",
@@ -2091,7 +2206,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.97,
-    "own": true
+    "own": true,
+    "hint": "Dos valores **consecutivos** bastan (hacia delante con la regla y hacia atrás despejando). Si los valores están separados, expresa los intermedios en función de las dos incógnitas $s_{i+1}, s_{i+2}$ y resuelve el sistema con el segundo dato. Para $s_1=1$, $s_5=17$ llama $x$ a $s_2$."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.4",
@@ -2108,7 +2224,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.01,
-    "own": true
+    "own": true,
+    "hint": "Escribe $D(p)$ como unión de dos cosas: los hijos de $p$ y, para cada hijo, sus descendientes. La recursión termina sola cuando no hay hijos (el conjunto vacío)."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.5",
@@ -2125,7 +2242,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.72,
-    "own": true
+    "own": true,
+    "hint": "Inducción sobre $n$. Caso base: $n=2$ (suma vacía). En el paso, escribe $F(n+1)=F(n)+F(n-1)$, aplica la hipótesis a $F(n)$ y simplifica."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.6",
@@ -2142,7 +2260,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.6,
-    "own": true
+    "own": true,
+    "hint": "Caso base: $0!=1$. Caso recursivo: llama a la función con $n-1$ y multiplica por $n$."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.7",
@@ -2159,7 +2278,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.38,
-    "own": true
+    "own": true,
+    "hint": "Sustituye la comprobación de lista vacía por `a == []`, la cabeza por `a[0]` y la cola por `a[1:]`. La suma de la lista vacía es 0."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.8",
@@ -2176,7 +2296,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.44,
-    "own": true
+    "own": true,
+    "hint": "Tres funciones, tres descomposiciones: (b) quita el último elemento, (c) quita el primero y (d) parte por la mitad. Para (d) piensa qué pasa con una lista de un solo elemento: necesita su propio caso base."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.9",
@@ -2193,7 +2314,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.71,
-    "own": true
+    "own": true,
+    "hint": "Inducción sobre $n$. Caso base $n=1$: ambos lados valen 1. En el paso, suma $x^n$ a los dos lados de la hipótesis y simplifica la fracción hasta obtener la fórmula con $n+1$."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.10",
@@ -2210,7 +2332,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.27,
-    "own": true
+    "own": true,
+    "hint": "Programa cada función de forma literal a su definición. Para las que llevan más parámetros (como $f(n,a,b)$) escribe una función auxiliar que solo reciba $n$ y fije los valores iniciales."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.11",
@@ -2227,7 +2350,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.92,
-    "own": true
+    "own": true,
+    "hint": "El tamaño es el número de bits de $n$ (≈ $\\log_2 n$). ¿Qué te dice el último bit ($n\\%2$) y qué subproblema queda al quitarlo ($n//2$)? Caso base: $n=1$ (o $n=0$)."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.12",
@@ -2244,7 +2368,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.85,
-    "own": true
+    "own": true,
+    "hint": "Si ahora $n$ puede ser 0, el caso base pasa a ser $n=0$ con $S(0)=0$ (la suma de cero enteros). El caso $n=1$ ya se deduce de la regla recursiva."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.13",
@@ -2261,7 +2386,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.5,
-    "own": true
+    "own": true,
+    "hint": "Piensa en $S(n)$ como el número de cuadrados de una escalera de altura $n$. Parte la escalera en cuatro cuadrantes: dos son escaleras de la mitad, uno está vacío y el cuarto es un cuadrado. Para impares, el cuadrado no es perfecto; ajusta con $(n\\pm1)/2$."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.14",
@@ -2278,7 +2404,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.32,
-    "own": true
+    "own": true,
+    "hint": "Para imprimir en orden normal, primero hay que imprimir los dígitos más significativos (resolver $n//10$) y después el último ($n\\%10$). El orden de las dos acciones es lo importante. Caso base: un solo dígito."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.15",
@@ -2295,7 +2422,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.7,
-    "own": true
+    "own": true,
+    "hint": "Divide la lista en dos mitades, calcula el máximo de cada una y quédate con el mayor de los dos. Dibuja el diagrama con notación general ($a_0\\ldots a_{h-1}$ y $a_h\\ldots a_{n-1}$)."
    },
    {
     "id": "ejercicios_adicionales_3-9#3.16",
@@ -2312,7 +2440,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 0.69,
-    "own": true
+    "own": true,
+    "hint": "Quita el último elemento: el máximo de la lista es el mayor entre el máximo de la sublista y ese último elemento. Caso base: lista de un elemento."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.1",
@@ -2329,7 +2458,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.47,
-    "own": true
+    "own": true,
+    "hint": "Para reducir el tamaño solo en una unidad, basta con un caso base ($n=0$) y la regla: $n$ es par si y solo si $n-1$ **no** lo es."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.2",
@@ -2346,7 +2476,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.17,
-    "own": true
+    "own": true,
+    "hint": "Divide el exponente por 2: $b^n=(b^{n/2})^2$ si $n$ es par y $b\\cdot(b^{\\lfloor n/2\\rfloor})^2$ si es impar. Calcula la mitad una sola vez. Para $n<0$, usa $1/b^{-n}$."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.3",
@@ -2363,7 +2494,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.56,
-    "own": true
+    "own": true,
+    "hint": "Misma idea que la potencia de un número, pero con matrices: caso base, la matriz identidad; luego eleva al cuadrado la mitad, y multiplica por $A$ si el exponente es impar. Las potencias de esta matriz producen una conocida secuencia."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.4",
@@ -2380,7 +2512,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.42,
-    "own": true
+    "own": true,
+    "hint": "El tamaño es el número de términos $n-m+1$. Caso base: $m>n$ (suma vacía = 0). Aísla el primer término: $f(m)$ más la suma de $m+1$ a $n$. Pasa $f$ como un parámetro más."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.5",
@@ -2397,7 +2530,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.84,
-    "own": true
+    "own": true,
+    "hint": "Dibuja el producto como un rectángulo $m\\times n$. Si quitas una fila, queda un rectángulo con $m-1$ y sobra una fila de $n$ cuadrados. Caso base: algún lado es 0."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.6",
@@ -2414,7 +2548,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.26,
-    "own": true
+    "own": true,
+    "hint": "Divide el rectángulo en cuatro bloques con $m=2a+r$ y $n=2b+s$ ($r,s\\in\\{0,1\\}$). El bloque grande vale $4ab$ (que es el producto de $a\\times b$ cuatro veces) y sobran una fila y una columna como máximo. Trata las cuatro combinaciones de paridad."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.7",
@@ -2431,7 +2566,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.12,
-    "own": true
+    "own": true,
+    "hint": "Quita la última cifra con `n // 10`: tiene un dígito menos. Caso base: `n < 10` (incluye el 0)."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.8",
@@ -2448,7 +2584,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.32,
-    "own": true
+    "own": true,
+    "hint": "Mira el último dígito (`n % 10`) y el resto (`n // 10`). Cada dígito que se añade a la derecha duplica el valor binario del resto y suma el último dígito. Caso base: un solo dígito."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.9",
@@ -2465,7 +2602,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.21,
-    "own": true
+    "own": true,
+    "hint": "El resto `n % b` es la última cifra y `n // b` el número sin ella. Construye el resultado del cociente y añade el resto a la derecha. Caso base: `n == 0`."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.10",
@@ -2482,7 +2620,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.4,
-    "own": true
+    "own": true,
+    "hint": "Si el último bit es 1 (`x` impar), la posición es 1. Si no, el bit buscado estará una posición más a la izquierda en `x // 2`: suma 1 al resultado de ese subproblema."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.11",
@@ -2499,7 +2638,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.23,
-    "own": true
+    "own": true,
+    "hint": "El ejercicio 1.9 suma, para todos los números de 1 a $2^n-1$, la posición de su primer 1. Usa la función de 4.10 para cada número y suma de forma recursiva (por ejemplo, de $2^n-1$ hacia abajo)."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.12",
@@ -2516,7 +2656,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.1,
-    "own": true
+    "own": true,
+    "hint": "Quita el primer carácter: el resultado es el número de vocales del resto más 1 si ese carácter es vocal. Caso base: cadena vacía."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.13",
@@ -2533,7 +2674,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.7,
-    "own": true
+    "own": true,
+    "hint": "En el código dado hay un nombre de variable equivocado. Para sustituir el bucle, escribe una función recursiva que reciba la fila anterior y devuelva la lista de sumas de elementos consecutivos (como en un ejercicio anterior)."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.14",
@@ -2550,7 +2692,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.63,
-    "own": true
+    "own": true,
+    "hint": "El dígito mayor está al final. Si $x$ es mayor o igual que el último dígito, va al final. Si no, deja ese último dígito donde está e inserta $x$ en el número sin él; después recompón."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.15",
@@ -2567,7 +2710,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.23,
-    "own": true
+    "own": true,
+    "hint": "Es el mismo esquema que 4.14, pero con listas: si $x$ es mayor o igual que el último elemento (o la lista es vacía), añádelo al final. Si no, inserta en la lista sin el último elemento y vuelve a poner ese último."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.16",
@@ -2584,7 +2728,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.72,
-    "own": true
+    "own": true,
+    "hint": "Con una sola llamada recursiva, usa la fórmula factorial para relacionar $\\binom nm$ con $\\binom{n-1}{m}$, con $\\binom n{m-1}$ o con $\\binom{n-1}{m-1}$, despejando el factor que cambia (los factoriales se cancelan casi todos)."
    },
    {
     "id": "ejercicios_adicionales_3-9#4.17",
@@ -2601,7 +2746,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Ordena los primeros $n-1$ elementos de forma recursiva y luego inserta el último en el resultado ya ordenado (usa la función del ejercicio 4.15). Caso base: lista de 0 o 1 elementos."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.1",
@@ -2618,7 +2764,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.69,
-    "own": true
+    "own": true,
+    "hint": "Mira el último dígito (`n % 10`) y el resto (`n // 10`). Para recursión lineal: es impar el último o lo es alguno del resto. Para recursión por cola: pasa lo hallado hasta ahora como acumulador y devuélvelo en el caso base. Caso base: `n == 0`."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.2",
@@ -2635,7 +2782,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.14,
-    "own": true
+    "own": true,
+    "hint": "Recorre los coeficientes del grado mayor al menor, saltando los nulos. Para cada uno decide signo, valor absoluto y la parte `x^i` (que no aparece en el término constante). Cuida el caso de un polinomio todo ceros. El coste es lineal en la longitud de la lista."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.3",
@@ -2652,7 +2800,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.5,
-    "own": true
+    "own": true,
+    "hint": "Dos pasos. Paso 1: recorre `a` con un índice y suma 1 en `b[a[i]]` en cada paso (recursión por cola). Paso 2: recorre `b` y, para cada valor `v`, escribe `b[v]` copias de `v` en `c`. El coste es $O(n+k)$."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.4",
@@ -2669,7 +2818,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.74,
-    "own": true
+    "own": true,
+    "hint": "En un árbol de búsqueda binario las claves menores están a la izquierda. Si el subárbol izquierdo está vacío, la raíz es el mínimo; si no, baja por la izquierda."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.5",
@@ -2686,7 +2836,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.18,
-    "own": true
+    "own": true,
+    "hint": "Sin `sup`, trabaja con una **sublista** (corta la lista en cada llamada) y lleva un parámetro `inf` que indica dónde empezaba esa sublista en la lista original, para devolver el índice correcto cuando bajas por la derecha."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.6",
@@ -2703,7 +2854,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 1.91,
-    "own": true
+    "own": true,
+    "hint": "Con solo `x` y `a`, la forma de reducir a la mitad es pasar la sublista izquierda o derecha. Lista vacía: `False`. Compara con el elemento central y decide. Coste: una división por dos por nivel, $\\Theta(\\log n)$ comparaciones (aunque el copiado de sublistas puede encarecerlo)."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.7",
@@ -2720,7 +2872,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.28,
-    "own": true
+    "own": true,
+    "hint": "En una lista creciente de enteros distintos, $a_i-i$ no decrece. Mira el elemento central: si $a_m>m$ no puede haber coincidencia a la derecha; si $a_m<m$, no a la izquierda. Caso base: tramo vacío, devuelve $-1$."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.8",
@@ -2737,7 +2890,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.43,
-    "own": true
+    "own": true,
+    "hint": "Todos los pares están antes que los impares: si el elemento central es par, todos los anteriores también lo son (busca a la derecha); si es impar, todos los siguientes lo son (busca a la izquierda). Cuando no quedan elementos, devuelve el último índice par conocido (o $-1$ si ninguno)."
    },
    {
     "id": "ejercicios_adicionales_3-9#5.9",
@@ -2754,7 +2908,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.5,
-    "own": true
+    "own": true,
+    "hint": "Aplica la regla de Newton-Raphson a la aproximación anterior: la estimación tras $n$ pasos se obtiene de la de $n-1$ pasos. Para la raíz cuadrada de $a$ usa $f(x)=x^2-a$. Caso base: $n=0$, devuelve la estimación inicial."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.1",
@@ -2771,7 +2926,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.14,
-    "own": true
+    "own": true,
+    "hint": "Divide el tramo en dos mitades y mira si `x` está en alguna. Casos base: tramo vacío (no está) y tramo de un elemento (compáralo)."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.2",
@@ -2788,7 +2944,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.48,
-    "own": true
+    "own": true,
+    "hint": "Función auxiliar: el conjunto de dígitos de un entero es su último dígito unido al conjunto de dígitos de `n // 10`. Para la lista, divide por la mitad y combina las dos soluciones con una operación de conjuntos (¿unión o intersección?)."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.3",
@@ -2805,7 +2962,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.48,
-    "own": true
+    "own": true,
+    "hint": "La mejor sublista está en la izquierda, en la derecha, o **cruza** la mitad. Para la que cruza, haz dos bucles: la mejor suma que termina en `mitad-1` hacia la izquierda y la mejor que empieza en `mitad` hacia la derecha; súmalas. Devuelve el máximo de las tres."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.4",
@@ -2822,7 +2980,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.58,
-    "own": true
+    "own": true,
+    "hint": "Como Karatsuba: parte cada polinomio en parte baja y alta, $P=P_0+x^mP_1$. El producto necesita $P_0Q_0$, $P_1Q_1$ y $(P_0+P_1)(Q_0+Q_1)$: solo tres multiplicaciones recursivas. El término cruzado se obtiene restando los otros dos. Necesitas suma y resta de polinomios."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.5",
@@ -2839,7 +2998,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.59,
-    "own": true
+    "own": true,
+    "hint": "Parte $A$ en cuatro bloques y traspón cada uno recursivamente. Luego recompón con el bloque $A_{2,1}^T$ y $A_{1,2}^T$ **intercambiados** de posición. Caso base: una sola fila o columna (basta cambiar las dimensiones)."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.6",
@@ -2856,7 +3016,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.3,
-    "own": true
+    "own": true,
+    "hint": "Strassen calcula el producto de bloques con 7 multiplicaciones $M_1,\\dots,M_7$ en lugar de 8, y recompone el resultado con sumas y restas. Funciona con matrices $2^k\\times2^k$: la función auxiliar rellena con ceros hasta ese tamaño y recorta el resultado."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.7",
@@ -2873,7 +3034,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.26,
-    "own": true
+    "own": true,
+    "hint": "Parte $A$ por columnas y $B$ por filas en el índice interno. El producto es la **suma** de los dos productos de bloques. Caso base: la dimensión interna es 1 (producto de una columna por una fila)."
    },
    {
     "id": "ejercicios_adicionales_3-9#6.8",
@@ -2890,7 +3052,8 @@ window.EXAMS = [
     "stage": "dyv",
     "src": "adic",
     "diff": 1.31,
-    "own": true
+    "own": true,
+    "hint": "Parte $A$ por filas y $B$ por columnas: el resultado se compone de cuatro bloques $A_iB_j$ colocados en una matriz $2\\times2$ de bloques. Cuatro llamadas recursivas y concatenación (no suma)."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.1",
@@ -2907,7 +3070,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Cada nodo del árbol **es** un subconjunto: imprímelo al entrar. Los hijos de un nodo se obtienen añadiendo un elemento de índice **mayor** que el último incluido; así cada subconjunto aparece una sola vez. Pasa como parámetro el índice desde el que se puede añadir."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.2",
@@ -2924,7 +3088,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 1.21,
-    "own": true
+    "own": true,
+    "hint": "Rellena las casillas vacías en orden. Para cada una, los candidatos son los dígitos 1 a 9 que no repiten fila, columna ni cuadrante 3×3. Al llegar a la última casilla, cuenta una solución. No pares al encontrar la primera: tienes que contarlas todas. Restaura la casilla al volver."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.3",
@@ -2941,7 +3106,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 1.55,
-    "own": true
+    "own": true,
+    "hint": "Una torre por fila, y columnas todas distintas: son las permutaciones de $0..n-1$. Usa el esquema de permutaciones (vector de columnas usadas) e imprime al llenar la última fila."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.4",
@@ -2958,7 +3124,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 1.82,
-    "own": true
+    "own": true,
+    "hint": "Los dígitos 1 a 9 sin repetir en 9 casillas son una permutación. No esperes a la hoja: en cuanto completes una fila, columna o diagonal, comprueba que suma 15 y poda si no. Así se descartan casi todas las ramas pronto."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.5",
@@ -2975,7 +3142,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Marca cada casilla con el número de salto. Los candidatos son los 8 saltos del caballo desde la posición actual (incrementos de fila y columna), válidos si están dentro del tablero y sin visitar. La solución está completa cuando has hecho $n^2$ saltos. Desmarca al volver."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.6",
@@ -2992,7 +3160,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Fija la ciudad 0 como inicio y permuta las demás. Lleva la longitud acumulada del camino y poda si ya supera la mejor ruta conocida. Al completar, suma la vuelta a la ciudad inicial antes de comparar."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.7",
@@ -3009,7 +3178,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Dos sublistas de $n/2$ elementos: asigna cada elemento a una de las dos. Lleva las dos sumas y los dos contadores. Poda si una sublista ya tiene $n/2$ elementos y se intenta añadir otro. Al llegar al final, calcula la diferencia de sumas y guarda la mejor."
    },
    {
     "id": "ejercicios_adicionales_3-9#7.8",
@@ -3026,7 +3196,8 @@ window.EXAMS = [
     "stage": "backtracking",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Esquema binario (el elemento entra o no) con la suma y la cardinalidad parciales. Como los números son positivos, poda cuando la suma ya pasa de $s$ o cuando la cardinalidad parcial ya no puede mejorar la mejor. Actualiza el óptimo solo cuando la suma sea exactamente $s$."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.1",
@@ -3043,7 +3214,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Piensa en tres criterios para ordenar las actividades: por inicio, por duración, por fin. Prueba cada uno con un contraejemplo pequeño y quédate con el que siempre da el máximo. Después recorre las actividades en ese orden y acepta cada una que no solape con la última aceptada."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.2",
@@ -3060,7 +3232,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 1.46,
-    "own": true
+    "own": true,
+    "hint": "Tres criterios naturales: mayor valor, menor peso y mayor valor/peso. Impleméntalos como \"ordena y mete mientras quepan\" y compáralos en la simulación contra el óptimo (si puedes calcularlo) o entre sí. Ninguno es óptimo en general en la mochila 0-1."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.3",
@@ -3077,7 +3250,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 1.73,
-    "own": true
+    "own": true,
+    "hint": "Trabaja en céntimos enteros para evitar errores de coma flotante. En cada paso, imprime la moneda más grande que no supera lo que queda y resta. Caso base: queda 0."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.4",
@@ -3094,7 +3268,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 2.0,
-    "own": true
+    "own": true,
+    "hint": "Mezclar dos listas de tamaños $a$ y $b$ cuesta $a+b$. Piensa en qué listas conviene mezclar antes: las que se vuelven a mezclar muchas veces pesan más. Es la misma idea que en los códigos de Huffman; usa una cola de prioridad."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.5",
@@ -3111,7 +3286,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 1.24,
-    "own": true
+    "own": true,
+    "hint": "Parte de un árbol por carácter y fusiona repetidamente los dos de menor frecuencia en un árbol nuevo cuya frecuencia es la suma (cola de prioridad). El código de cada carácter sale recorriendo el árbol final: 0 a la izquierda, 1 a la derecha."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.6",
@@ -3128,7 +3304,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 1.42,
-    "own": true
+    "own": true,
+    "hint": "Kruskal: ordena las aristas por peso y añade cada una que no cierre un ciclo. Prim: parte de un vértice y añade siempre la arista más barata que conecte con un vértice nuevo. Con 7 vértices el árbol tiene 6 aristas; ambos deben dar el mismo coste total."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.7",
@@ -3145,7 +3322,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 1.12,
-    "own": true
+    "own": true,
+    "hint": "Mantén el conjunto de vértices ya incluidos y una cola de prioridad con las aristas que salen de él. En cada paso, extrae la más barata cuyo destino aún no esté en el árbol y añádela."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.8",
@@ -3162,7 +3340,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 1.13,
-    "own": true
+    "own": true,
+    "hint": "Ordena las aristas por peso y recórrelas. Para saber si una arista cierra un ciclo, usa una estructura de conjuntos disjuntos (unión-búsqueda): si sus extremos ya están en el mismo conjunto, descártala; si no, únelos."
    },
    {
     "id": "ejercicios_adicionales_3-9#8.9",
@@ -3179,7 +3358,8 @@ window.EXAMS = [
     "stage": "voraz",
     "src": "adic",
     "diff": 1.6,
-    "own": true
+    "own": true,
+    "hint": "Modela la rejilla como un grafo: cada casilla libre es un vértice con aristas de peso 1 a sus vecinas libres. Aplica Dijkstra desde la entrada guardando el predecesor de cada vértice; el camino hasta la salida se reconstruye hacia atrás."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.1",
@@ -3196,7 +3376,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.16,
-    "own": true
+    "own": true,
+    "hint": "Aísla el último término: $S(n)=S(n-1)+(2n-1)$. Caso base: $S(0)=0$."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.2",
@@ -3213,7 +3394,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.77,
-    "own": true
+    "own": true,
+    "hint": "Horner: $p(x)=d_0+x\\cdot p'(x)$, donde $p'$ es el polinomio con los coeficientes $d_1,\\dots,d_n$. Pasa la lista sin su primer elemento. Caso base: un solo coeficiente."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.3",
@@ -3230,7 +3412,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.37,
-    "own": true
+    "own": true,
+    "hint": "Calcula los primeros valores a mano y reconoce la secuencia. Programa el sumatorio de dos formas: con un bucle que llama a $f(i)$ y con una función recursiva auxiliar que suma $f(1)+\\dots+f(n-2)$."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.4",
@@ -3247,7 +3430,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.72,
-    "own": true
+    "own": true,
+    "hint": "Un disco solo puede ir a una torre adyacente, así que para ir de un extremo al otro hay que pasar por el centro. Para mover $n$ discos del extremo al extremo opuesto: mueve $n-1$ al extremo opuesto, el grande al centro, $n-1$ de vuelta al origen, el grande al destino y $n-1$ de nuevo al destino."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.5",
@@ -3264,7 +3448,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.46,
-    "own": true
+    "own": true,
+    "hint": "Búsqueda binaria: compara con el elemento central, devuelve su índice si coincide, o baja a la mitad izquierda o derecha. Caso base: tramo vacío, devuelve $-1$."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.6",
@@ -3281,7 +3466,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.27,
-    "own": true
+    "own": true,
+    "hint": "La fila $i$ tiene $n-i$ espacios y $2i-1$ equis. Escribe una función auxiliar que imprima un carácter $k$ veces, y otra que recorra las filas (de la 1 a la $n$ o de la $n$ a la 1, según cómo quieras recursar)."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.7",
@@ -3298,7 +3484,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.53,
-    "own": true
+    "own": true,
+    "hint": "Calcula el punto medio $z$. Si $f(z)=0$ o el intervalo es menor que $2\\varepsilon$, devuelve $z$. Si no, quédate con la mitad donde $f$ cambia de signo (compara $f(a)\\cdot f(z)$ con 0)."
    },
    {
     "id": "ejercicios_adicionales_3-9#9.8",
@@ -3315,7 +3502,8 @@ window.EXAMS = [
     "stage": "recursion",
     "src": "adic",
     "diff": 2.29,
-    "own": true
+    "own": true,
+    "hint": "Función auxiliar: una cadena es palíndromo si tiene menos de dos caracteres o si sus extremos coinciden y lo de en medio lo es. Para la subcadena más larga, prueba longitudes **decrecientes** (desde la de toda la cadena): para cada longitud recorre las posiciones de inicio, y la primera subcadena que sea palíndromo es la más larga."
    }
   ],
   "kind": "adic"

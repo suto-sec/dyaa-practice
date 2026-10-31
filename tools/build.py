@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LEC = ROOT / "content" / "lectures"
 EXA = ROOT / "content" / "exams"
+PISTAS = EXA / "pistas"      # one real hint per exercise (a nudge, not the answer): <exam id>.md, same "### Ejercicio N" blocks
 OWN = EXA / "soluciones"   # proposed solutions for exercises that come without one: <exam id>.md with "### Ejercicio N.M" (or "### Ejercicio N") blocks
 APP = ROOT / "app"
 LADDER = ROOT / "content" / "peldanos"   # short graded exercises (peldaños) that lead into the harder ones, one file per stage
@@ -228,9 +229,9 @@ def difficulty(ex, adic, ch, has_sol):
 
 
 # ---------------- exams ----------------
-def load_own(stem):
-    """Proposed solutions written for the exercises of one exam file that has none: {n: markdown}."""
-    path = OWN / (stem + ".md")
+def load_own(stem, base=None):
+    """Proposed solutions written for the exercises of one exam file that has none: {n: markdown}. With base=PISTAS: the hints, one per exercise."""
+    path = (base or OWN) / (stem + ".md")
     out, n, buf = {}, None, []
     if not path.is_file():
         return out
@@ -517,6 +518,17 @@ def main():
             if not x["solution"] and own.get(x["n"]):
                 x["solution"] = own[x["n"]]
                 x["own"] = True
+    # hints: a nudge in the right direction that does not give the answer away
+    for e in exams:
+        hints = load_own(e["id"], PISTAS)
+        known = {x["n"] for x in e["exercises"]}
+        for n in hints:
+            if n not in known: warn("hint for an unknown exercise:", e["id"], n)
+        for x in e["exercises"]:
+            if hints.get(x["n"]):
+                x["hint"] = hints[x["n"]]
+            elif not x.get("hint"):
+                warn("no hint for", e["id"], x["n"])
     write_js(APP / "data-exams.js", "EXAMS", exams)
     order = {}
     for g in roadmap["stages"]:
